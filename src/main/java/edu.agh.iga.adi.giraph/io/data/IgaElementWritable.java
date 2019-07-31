@@ -1,11 +1,11 @@
-package edu.agh.iga.adi.giraph;
+package edu.agh.iga.adi.giraph.io.data;
 
 import org.apache.hadoop.io.WritableComparable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 
-public final class VertexWritable implements WritableComparable {
+public final class IgaElementWritable implements WritableComparable {
 
   @Override
   public void write(DataOutput dataOutput) {

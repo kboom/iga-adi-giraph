@@ -1,5 +1,6 @@
 package edu.agh.iga.adi.giraph.test;
 
+import org.apache.giraph.combiner.MessageCombiner;
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.graph.Computation;
 import org.apache.giraph.io.VertexInputFormat;
@@ -24,9 +25,13 @@ public class GiraphTestJob {
     this.dirManager = dirManager;
   }
 
-  public boolean run() throws Exception {
+  public boolean run() {
     dirManager.recreateDirectories();
-    return job.run(true);
+    try {
+      return job.run(true);
+    } catch (Exception e) {
+      throw new IllegalStateException("Could not run the job", e);
+    }
   }
 
   public static GiraphJobBuilder giraphJob() {
@@ -36,9 +41,15 @@ public class GiraphTestJob {
   public static class GiraphJobBuilder {
 
     private Class<? extends Computation> computationClazz;
+    private Class<? extends MessageCombiner> messageCombinerClazz;
     private Class<? extends VertexInputFormat> vertexInputFormatClazz;
     private Class<? extends VertexOutputFormat> vertexOutputFormatClazz;
     private Class<? extends WorkerContext> workerContextClazz;
+
+    public GiraphJobBuilder messageCombinerClazz(Class<? extends MessageCombiner> messageCombinerClazz) {
+      this.messageCombinerClazz = messageCombinerClazz;
+      return this;
+    }
 
     public GiraphJobBuilder workerContextClazz(Class<? extends WorkerContext> workerContextClazz) {
       this.workerContextClazz = workerContextClazz;
@@ -77,9 +88,11 @@ public class GiraphTestJob {
     private GiraphConfiguration createConfiguration() {
       GiraphConfiguration conf = new GiraphConfiguration();
       conf.setComputationClass(computationClazz);
+      conf.setMessageCombinerClass(messageCombinerClazz);
       conf.setVertexInputFormatClass(vertexInputFormatClazz);
       conf.setVertexOutputFormatClass(vertexOutputFormatClazz);
       conf.setWorkerContextClass(workerContextClazz);
+      conf.setLocalTestMode(true);
       conf.setMaxNumberOfSupersteps(3);
       conf.setMaxMasterSuperstepWaitMsecs(30 * 1000);
       conf.setEventWaitMsecs(3 * 1000);

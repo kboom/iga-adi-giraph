@@ -1,19 +1,23 @@
-package edu.agh.iga.adi.giraph;
+package edu.agh.iga.adi.giraph.io;
 
+import edu.agh.iga.adi.giraph.GraphPartition;
+import edu.agh.iga.adi.giraph.io.data.IgaElementWritable;
+import edu.agh.iga.adi.giraph.io.data.IgaOperationWritable;
 import org.apache.giraph.graph.Vertex;
 import org.apache.giraph.io.VertexInputFormat;
 import org.apache.giraph.io.VertexReader;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 
 import java.util.List;
 
-public class AdiTreeVertexFormat extends VertexInputFormat<VertexIdWritable, VertexWritable, EdgeWritable> {
+public class InitialStepInputFormat extends VertexInputFormat<LongWritable, IgaElementWritable, IgaOperationWritable> {
 
   @Override
-  public VertexReader<VertexIdWritable, VertexWritable, EdgeWritable> createVertexReader(
+  public VertexReader<LongWritable, IgaElementWritable, IgaOperationWritable> createVertexReader(
       InputSplit inputSplit,
       TaskAttemptContext taskAttemptContext
   ) {
@@ -30,10 +34,10 @@ public class AdiTreeVertexFormat extends VertexInputFormat<VertexIdWritable, Ver
     return null;
   }
 
-  private static class InMemoryVertexReader extends VertexReader<VertexIdWritable, VertexWritable, EdgeWritable> {
+  private static class InMemoryVertexReader extends VertexReader<LongWritable, IgaElementWritable, IgaOperationWritable> {
 
     private GraphPartition graphPartition;
-    private Vertex<VertexIdWritable, VertexWritable, EdgeWritable> currentVertex;
+    private Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> currentVertex;
 
     public void initialize(InputSplit inputSplit, TaskAttemptContext context) {
 
@@ -48,7 +52,7 @@ public class AdiTreeVertexFormat extends VertexInputFormat<VertexIdWritable, Ver
       }
     }
 
-    public Vertex<VertexIdWritable, VertexWritable, EdgeWritable> getCurrentVertex() {
+    public Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> getCurrentVertex() {
       return this.currentVertex;
     }
 
