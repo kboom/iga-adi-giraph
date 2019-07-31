@@ -4,9 +4,9 @@ import edu.agh.iga.adi.giraph.computation.ComputationResolver;
 import org.apache.giraph.master.DefaultMasterCompute;
 
 /**
- * This encodes the IGA-ADI algorithm in a series of Supersteps.
+ * Computes a one direction of the Alternating Directions Solver.
  */
-public class IgaComputation extends DefaultMasterCompute {
+public class DirectionComputation extends DefaultMasterCompute {
 
   private ComputationResolver computationResolver;
 
