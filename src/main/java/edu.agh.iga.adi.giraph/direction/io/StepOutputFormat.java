@@ -1,7 +1,7 @@
-package edu.agh.iga.adi.giraph.io;
+package edu.agh.iga.adi.giraph.direction.io;
 
-import edu.agh.iga.adi.giraph.io.data.IgaElementWritable;
-import edu.agh.iga.adi.giraph.io.data.IgaOperationWritable;
+import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
+import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import org.apache.giraph.graph.Vertex;
 import org.apache.giraph.io.formats.TextVertexOutputFormat;
 import org.apache.hadoop.io.LongWritable;

@@ -1,12 +1,19 @@
-package edu.agh.iga.adi.giraph.io.data;
+package edu.agh.iga.adi.giraph.direction.io.data;
 
+import edu.agh.iga.adi.giraph.direction.IgaOperation;
 import org.apache.hadoop.io.WritableComparable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class IgaMessageWritable implements WritableComparable {
+public class IgaOperationWritable implements WritableComparable {
+
+  private IgaOperation igaOperation;
+
+  public IgaOperationWritable(IgaOperation igaOperation) {
+    this.igaOperation = igaOperation;
+  }
 
   @Override
   public void write(DataOutput dataOutput) throws IOException {

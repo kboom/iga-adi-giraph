@@ -1,16 +1,16 @@
-package edu.agh.iga.adi.giraph;
+package edu.agh.iga.adi.giraph.direction;
 
 import org.apache.giraph.GiraphRunner;
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.ToolRunner;
 
-final class DirectionComputationLauncher {
+public final class DirectionComputationLauncher {
 
   /**
    * Use this or GiraphDriverTool implements Tool (example from the book)
    */
-  static void solveDirection(DirectionComputationConfig config) {
+  public static void solveDirection(DirectionComputationConfig config) {
     GiraphRunner giraphRunner = new GiraphRunner();
     giraphRunner.setConf(new GiraphConfiguration());
     ((GiraphConfiguration) giraphRunner.getConf()).setMaxNumberOfSupersteps(100);
@@ -21,7 +21,7 @@ final class DirectionComputationLauncher {
     }
   }
 
-  static DirectionComputationConfig computationConfig() {
+  public static DirectionComputationConfig computationConfig() {
     return new DirectionComputationConfig();
   }
 

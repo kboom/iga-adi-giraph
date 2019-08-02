@@ -1,8 +1,8 @@
-package edu.agh.iga.adi.giraph.io;
+package edu.agh.iga.adi.giraph.direction.io;
 
-import edu.agh.iga.adi.giraph.GraphPartition;
-import edu.agh.iga.adi.giraph.io.data.IgaElementWritable;
-import edu.agh.iga.adi.giraph.io.data.IgaOperationWritable;
+import edu.agh.iga.adi.giraph.direction.GraphPartition;
+import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
+import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import org.apache.giraph.graph.Vertex;
 import org.apache.giraph.io.VertexInputFormat;
 import org.apache.giraph.io.VertexReader;
@@ -14,7 +14,7 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 
 import java.util.List;
 
-public class InitialStepInputFormat extends VertexInputFormat<LongWritable, IgaElementWritable, IgaOperationWritable> {
+public class StepInputFormat extends VertexInputFormat<LongWritable, IgaElementWritable, IgaOperationWritable> {
 
   @Override
   public VertexReader<LongWritable, IgaElementWritable, IgaOperationWritable> createVertexReader(

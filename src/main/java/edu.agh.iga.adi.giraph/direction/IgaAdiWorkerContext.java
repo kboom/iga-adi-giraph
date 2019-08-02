@@ -1,4 +1,4 @@
-package edu.agh.iga.adi.giraph;
+package edu.agh.iga.adi.giraph.direction;
 
 import org.apache.giraph.worker.WorkerContext;
 

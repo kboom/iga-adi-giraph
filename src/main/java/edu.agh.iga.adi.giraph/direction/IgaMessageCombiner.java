@@ -1,6 +1,6 @@
-package edu.agh.iga.adi.giraph;
+package edu.agh.iga.adi.giraph.direction;
 
-import edu.agh.iga.adi.giraph.io.data.IgaMessageWritable;
+import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import org.apache.giraph.combiner.MessageCombiner;
 import org.apache.hadoop.io.LongWritable;
 

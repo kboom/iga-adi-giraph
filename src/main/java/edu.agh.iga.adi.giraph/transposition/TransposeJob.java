@@ -1,4 +1,4 @@
-package edu.agh.iga.adi.giraph.data;
+package edu.agh.iga.adi.giraph.transposition;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;

@@ -1,6 +1,6 @@
-package edu.agh.iga.adi.giraph;
+package edu.agh.iga.adi.giraph.direction;
 
-import edu.agh.iga.adi.giraph.computation.ComputationResolver;
+import edu.agh.iga.adi.giraph.direction.computation.ComputationResolver;
 import org.apache.giraph.master.DefaultMasterCompute;
 
 /**
@@ -11,8 +11,8 @@ public class DirectionComputation extends DefaultMasterCompute {
   private ComputationResolver computationResolver;
 
   @Override
-  public final void compute () {
-    setComputation(computationResolver.computationForStep(getSuperstep()));
+  public final void compute() {
+    computationResolver.computationForStep(getSuperstep()).ifPresent(this::setComputation);
   }
 
 }

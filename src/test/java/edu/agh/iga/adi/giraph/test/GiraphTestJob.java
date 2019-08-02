@@ -1,11 +1,12 @@
 package edu.agh.iga.adi.giraph.test;
 
+import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import org.apache.giraph.combiner.MessageCombiner;
 import org.apache.giraph.conf.GiraphConfiguration;
-import org.apache.giraph.graph.Computation;
 import org.apache.giraph.io.VertexInputFormat;
 import org.apache.giraph.io.VertexOutputFormat;
 import org.apache.giraph.job.GiraphJob;
+import org.apache.giraph.master.MasterCompute;
 import org.apache.giraph.partition.SimpleLongRangePartitionerFactory;
 import org.apache.giraph.worker.WorkerContext;
 
@@ -25,6 +26,10 @@ public class GiraphTestJob {
     this.dirManager = dirManager;
   }
 
+  public GiraphConfiguration getConfiguration() {
+    return new GiraphConfiguration(job.getConfiguration());
+  }
+
   public boolean run() {
     dirManager.recreateDirectories();
     try {
@@ -40,7 +45,7 @@ public class GiraphTestJob {
 
   public static class GiraphJobBuilder {
 
-    private Class<? extends Computation> computationClazz;
+    private Class<? extends MasterCompute> computationClazz;
     private Class<? extends MessageCombiner> messageCombinerClazz;
     private Class<? extends VertexInputFormat> vertexInputFormatClazz;
     private Class<? extends VertexOutputFormat> vertexOutputFormatClazz;
@@ -56,7 +61,7 @@ public class GiraphTestJob {
       return this;
     }
 
-    public GiraphJobBuilder computationClazz(Class<? extends Computation> computationClazz) {
+    public GiraphJobBuilder computationClazz(Class<? extends MasterCompute> computationClazz) {
       this.computationClazz = computationClazz;
       return this;
     }
@@ -87,7 +92,7 @@ public class GiraphTestJob {
 
     private GiraphConfiguration createConfiguration() {
       GiraphConfiguration conf = new GiraphConfiguration();
-      conf.setComputationClass(computationClazz);
+      conf.setMasterComputeClass(computationClazz);
       conf.setMessageCombinerClass(messageCombinerClazz);
       conf.setVertexInputFormatClass(vertexInputFormatClazz);
       conf.setVertexOutputFormatClass(vertexOutputFormatClazz);
@@ -100,6 +105,7 @@ public class GiraphTestJob {
       ZOOKEEPER_SERVERLIST_POLL_MSECS.set(conf, 500);
       SPLIT_MASTER_WORKER.set(conf, false);
       LOCAL_TEST_MODE.set(conf, true);
+      conf.set(MAX_WORKERS, "1");
       setDefaultDirs(conf);
       return conf;
     }
