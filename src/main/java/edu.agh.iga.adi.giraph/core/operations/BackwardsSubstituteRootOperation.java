@@ -8,7 +8,7 @@ import static edu.agh.iga.adi.giraph.core.operations.BackwardsSubstituteRootOper
 
 final class BackwardsSubstituteRootOperation implements IgaOperation<BackwardsSubstituteRootMessage> {
 
-  private static final BackwardsSubstituteRootOperation INSTANCE
+  static final BackwardsSubstituteRootOperation BACKWARDS_SUBSTITUTE_ROOT_OPERATION
       = new BackwardsSubstituteRootOperation();
 
   @Override
@@ -24,7 +24,7 @@ final class BackwardsSubstituteRootOperation implements IgaOperation<BackwardsSu
   public static class BackwardsSubstituteRootMessage extends IgaMessage {
 
     protected BackwardsSubstituteRootMessage(long srcId, long dstId) {
-      super(srcId, dstId, INSTANCE);
+      super(srcId, dstId, BACKWARDS_SUBSTITUTE_ROOT_OPERATION);
     }
   }
 

@@ -8,7 +8,7 @@ import static edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateInterimOpe
 
 final class MergeAndEliminateInterimOperation implements IgaOperation<MergeAndEliminateInterimMessage> {
 
-  private static final MergeAndEliminateInterimOperation INSTANCE
+  static final MergeAndEliminateInterimOperation MERGE_AND_ELIMINATE_INTERIM_OPERATION
       = new MergeAndEliminateInterimOperation();
 
   @Override
@@ -24,7 +24,7 @@ final class MergeAndEliminateInterimOperation implements IgaOperation<MergeAndEl
   public static class MergeAndEliminateInterimMessage extends IgaMessage {
 
     protected MergeAndEliminateInterimMessage(long srcId, long dstId) {
-      super(srcId, dstId, INSTANCE);
+      super(srcId, dstId, MERGE_AND_ELIMINATE_INTERIM_OPERATION);
     }
 
   }
