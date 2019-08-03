@@ -34,4 +34,13 @@ public final class IgaElementWritable implements WritableComparable {
 
   }
 
+  public IgaElement getElement() {
+    return igaElement;
+  }
+
+  public IgaElementWritable withValue(IgaElement igaElement) {
+    this.igaElement = igaElement;
+    return this;
+  }
+
 }

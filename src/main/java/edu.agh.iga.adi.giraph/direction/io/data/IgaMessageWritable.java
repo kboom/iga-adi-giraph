@@ -1,5 +1,6 @@
 package edu.agh.iga.adi.giraph.direction.io.data;
 
+import edu.agh.iga.adi.giraph.direction.IgaMessage;
 import org.apache.hadoop.io.WritableComparable;
 
 import java.io.DataInput;
@@ -7,6 +8,12 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 public class IgaMessageWritable implements WritableComparable {
+
+  private IgaMessage igaMessage;
+
+  public IgaMessageWritable(IgaMessage igaMessage) {
+    this.igaMessage = igaMessage;
+  }
 
   @Override
   public void write(DataOutput dataOutput) throws IOException {
@@ -21,6 +28,14 @@ public class IgaMessageWritable implements WritableComparable {
   @Override
   public int compareTo(Object o) {
     return 0;
+  }
+
+  public <T> T getMessageAs(Class<T> msgClass) {
+  }
+
+  @SuppressWarnings("unused")
+  public IgaMessageWritable() {
+
   }
 
 }

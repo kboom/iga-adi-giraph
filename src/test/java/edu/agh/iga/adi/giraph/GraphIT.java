@@ -7,7 +7,6 @@ import edu.agh.iga.adi.giraph.direction.IgaOperation;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import edu.agh.iga.adi.giraph.test.GiraphTestJob;
-import edu.agh.iga.adi.giraph.test.VertexFactory;
 import org.apache.giraph.io.formats.InMemoryVertexOutputFormat;
 import org.apache.giraph.utils.InMemoryVertexInputFormat;
 import org.apache.giraph.utils.TestGraph;
@@ -16,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import static edu.agh.iga.adi.giraph.test.GiraphTestJob.giraphJob;
 import static edu.agh.iga.adi.giraph.test.GraphFactory.graph;
+import static edu.agh.iga.adi.giraph.test.IgaTestGraph.igaTestGraphOn;
 
 class GraphIT {
 
@@ -31,9 +31,8 @@ class GraphIT {
 
     TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> graph = graph(job.getConfiguration());
 
-    VertexFactory vertexFactory = new VertexFactory(job.getConfiguration());
-
-    graph.addVertex(vertexFactory.makeVertex(1, new IgaOperation(), 2));
+    igaTestGraphOn(graph)
+        .withVertex(1, new IgaOperation(), 2);
 
     InMemoryVertexInputFormat.setGraph(graph);
 

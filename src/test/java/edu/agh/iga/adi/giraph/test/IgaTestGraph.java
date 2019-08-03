@@ -4,32 +4,36 @@ import edu.agh.iga.adi.giraph.direction.IgaElement;
 import edu.agh.iga.adi.giraph.direction.IgaOperation;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
-import org.apache.giraph.conf.GiraphConfiguration;
-import org.apache.giraph.conf.ImmutableClassesGiraphConfiguration;
 import org.apache.giraph.edge.Edge;
 import org.apache.giraph.edge.EdgeFactory;
 import org.apache.giraph.graph.Vertex;
+import org.apache.giraph.utils.TestGraph;
 import org.apache.hadoop.io.LongWritable;
 
 import java.util.List;
 
 import static java.util.Collections.singletonList;
 
-public final class VertexFactory {
+public final class IgaTestGraph {
 
-  private final ImmutableClassesGiraphConfiguration configuration;
+  private final TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> graph;
 
-  public VertexFactory(GiraphConfiguration configuration) {
-    this.configuration = new ImmutableClassesGiraphConfiguration(configuration);
+  public IgaTestGraph(TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> graph) {
+    this.graph = graph;
   }
 
-  public Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> makeVertex(
+  public static IgaTestGraph igaTestGraphOn(TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> graph) {
+    return new IgaTestGraph(graph);
+  }
+
+  public IgaTestGraph withVertex(
       long srcId, IgaOperation operation, long dstId
   ) {
-    return makeVertex(srcId, new IgaElement(), operation, dstId);
+    graph.addVertex(withVertex(srcId, new IgaElement(), operation, dstId));
+    return this;
   }
 
-  public Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> makeVertex(
+  private Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> withVertex(
       long srcId, IgaElement srcElement, IgaOperation operation, long dstId
   ) {
     Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex = createVertex();
@@ -48,7 +52,7 @@ public final class VertexFactory {
   }
 
   private Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> createVertex() {
-    return configuration.createVertex();
+    return graph.getConf().createVertex();
   }
 
 }
