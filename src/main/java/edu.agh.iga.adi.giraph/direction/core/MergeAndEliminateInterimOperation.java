@@ -8,7 +8,7 @@ import java.util.Iterator;
 
 import static edu.agh.iga.adi.giraph.direction.core.MergeAndEliminateInterimOperation.MergeAndEliminateInterimMessage;
 
-final class MergeAndEliminateInterimOperation implements IgaOperation<MergeAndEliminateInterimMessage> {
+public final class MergeAndEliminateInterimOperation implements IgaOperation<MergeAndEliminateInterimMessage> {
 
   @Override
   public Iterator<MergeAndEliminateInterimMessage> sendMessages(IgaElement element) {

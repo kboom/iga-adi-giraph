@@ -8,7 +8,7 @@ import java.util.Iterator;
 
 import static edu.agh.iga.adi.giraph.direction.core.BackwardsSubstituteRootOperation.BackwardsSubstituteRootMessage;
 
-final class BackwardsSubstituteRootOperation implements IgaOperation<BackwardsSubstituteRootMessage> {
+public final class BackwardsSubstituteRootOperation implements IgaOperation<BackwardsSubstituteRootMessage> {
 
   @Override
   public Iterator<BackwardsSubstituteRootMessage> sendMessages(IgaElement element) {

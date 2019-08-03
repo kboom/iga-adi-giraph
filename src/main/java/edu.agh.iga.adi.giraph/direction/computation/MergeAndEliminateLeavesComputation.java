@@ -1,19 +1,14 @@
 package edu.agh.iga.adi.giraph.direction.computation;
 
-import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
-import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
-import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
-import org.apache.giraph.graph.Vertex;
-import org.apache.hadoop.io.LongWritable;
+import edu.agh.iga.adi.giraph.direction.core.MergeAndEliminateLeavesOperation;
+import edu.agh.iga.adi.giraph.direction.core.MergeAndEliminateLeavesOperation.MergeAndEliminateLeavesMessage;
 
-public class MergeAndEliminateLeavesComputation extends AbstractIgaComputation {
+final class MergeAndEliminateLeavesComputation extends IgaComputation<MergeAndEliminateLeavesMessage> {
 
-  @Override
-  public void compute(
-      Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex,
-      Iterable<IgaMessageWritable> iterable
-  ) {
+  private static final MergeAndEliminateLeavesOperation OPERATION = new MergeAndEliminateLeavesOperation();
 
+  MergeAndEliminateLeavesComputation() {
+    super(OPERATION, MergeAndEliminateLeavesMessage.class);
   }
 
 }

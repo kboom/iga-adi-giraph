@@ -19,10 +19,10 @@ public final class ComputationResolver {
       return Optional.of(MergeAndEliminateLeavesComputation.class);
     }
     if (step == 1) {
-      return Optional.of(MergeAndEliminateBranchingComputation.class);
+      return Optional.of(MergeAndEliminateBranchComputation.class);
     }
     if (step < treeHeight - 1) {
-      return Optional.of(MergeAndEliminateBranchingComputation.class);
+      return Optional.of(MergeAndEliminateBranchComputation.class);
     }
     if (step == treeHeight) {
       return Optional.of(MergeAndEliminateRootComputation.class);

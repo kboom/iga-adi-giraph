@@ -8,7 +8,7 @@ import java.util.Iterator;
 
 import static edu.agh.iga.adi.giraph.direction.core.MergeAndEliminateBranchOperation.MergeAndEliminateBranchMessage;
 
-final class MergeAndEliminateBranchOperation implements IgaOperation<MergeAndEliminateBranchMessage> {
+public final class MergeAndEliminateBranchOperation implements IgaOperation<MergeAndEliminateBranchMessage> {
 
   @Override
   public Iterator<MergeAndEliminateBranchMessage> sendMessages(IgaElement element) {

@@ -1,9 +1,14 @@
 package edu.agh.iga.adi.giraph.direction.computation;
 
-import edu.agh.iga.adi.giraph.direction.EmptyMessage;
-import edu.agh.iga.adi.giraph.direction.core.BackwardsSubstituteInterimOperation;
+import edu.agh.iga.adi.giraph.direction.core.BackwardsSubstituteBranchOperation;
+import edu.agh.iga.adi.giraph.direction.core.BackwardsSubstituteBranchOperation.BackwardsSubstituteBranchMessage;
 
-public class BackwardsSubstituteBranchComputation extends IgaComputation<BackwardsSubstituteInterimOperation.BackwardsSubstituteInterimMessage, EmptyMessage> {
+final class BackwardsSubstituteBranchComputation extends IgaComputation<BackwardsSubstituteBranchMessage> {
 
+  private static final BackwardsSubstituteBranchOperation OPERATION = new BackwardsSubstituteBranchOperation();
+
+  BackwardsSubstituteBranchComputation() {
+    super(OPERATION, BackwardsSubstituteBranchMessage.class);
+  }
 
 }

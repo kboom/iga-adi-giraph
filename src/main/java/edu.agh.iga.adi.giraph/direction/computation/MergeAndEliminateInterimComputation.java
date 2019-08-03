@@ -1,19 +1,14 @@
 package edu.agh.iga.adi.giraph.direction.computation;
 
-import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
-import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
-import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
-import org.apache.giraph.graph.Vertex;
-import org.apache.hadoop.io.LongWritable;
+import edu.agh.iga.adi.giraph.direction.core.MergeAndEliminateInterimOperation;
+import edu.agh.iga.adi.giraph.direction.core.MergeAndEliminateInterimOperation.MergeAndEliminateInterimMessage;
 
-public class MergeAndEliminateInterimComputation extends AbstractIgaComputation {
+final class MergeAndEliminateInterimComputation extends IgaComputation<MergeAndEliminateInterimMessage> {
 
-  @Override
-  public void compute(
-      Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex,
-      Iterable<IgaMessageWritable> iterable
-  ) {
+  private static final MergeAndEliminateInterimOperation OPERATION = new MergeAndEliminateInterimOperation();
 
+  MergeAndEliminateInterimComputation() {
+    super(OPERATION, MergeAndEliminateInterimMessage.class);
   }
 
 }

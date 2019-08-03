@@ -1,19 +1,14 @@
 package edu.agh.iga.adi.giraph.direction.computation;
 
-import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
-import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
-import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
-import org.apache.giraph.graph.Vertex;
-import org.apache.hadoop.io.LongWritable;
+import edu.agh.iga.adi.giraph.direction.core.BackwardsSubstituteRootOperation;
+import edu.agh.iga.adi.giraph.direction.core.BackwardsSubstituteRootOperation.BackwardsSubstituteRootMessage;
 
-public class BackwardsSubstituteRootComputation extends AbstractIgaComputation {
+final class BackwardsSubstituteRootComputation extends IgaComputation<BackwardsSubstituteRootMessage> {
 
-  @Override
-  public void compute(
-      Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex,
-      Iterable<IgaMessageWritable> iterable
-  ) {
+  private static final BackwardsSubstituteRootOperation OPERATION = new BackwardsSubstituteRootOperation();
 
+  BackwardsSubstituteRootComputation() {
+    super(OPERATION, BackwardsSubstituteRootMessage.class);
   }
 
 }

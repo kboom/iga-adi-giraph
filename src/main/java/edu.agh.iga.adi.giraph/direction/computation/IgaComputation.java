@@ -10,18 +10,19 @@ import org.apache.giraph.graph.BasicComputation;
 import org.apache.giraph.graph.Vertex;
 import org.apache.hadoop.io.LongWritable;
 
-import static edu.agh.iga.adi.giraph.direction.computation.ComputationUtil.elementOf;
-import static edu.agh.iga.adi.giraph.direction.computation.ComputationUtil.messagesOf;
+import java.util.Iterator;
 
-abstract class IgaComputation<R extends IgaMessage, S extends IgaMessage>
+import static java.util.stream.StreamSupport.stream;
+
+abstract class IgaComputation<M extends IgaMessage>
     extends BasicComputation<LongWritable, IgaElementWritable, IgaOperationWritable, IgaMessageWritable> {
 
-  private final IgaOperation<R, S> operation;
-  private final Class<R> receivedMessagesClazz;
+  private final IgaOperation<M> operation;
+  private final Class<M> receivedMessagesClazz;
 
   IgaComputation(
-      IgaOperation<R, S> operation,
-      Class<R> receivedMessagesClazz
+      IgaOperation<M> operation,
+      Class<M> receivedMessagesClazz
   ) {
     this.operation = operation;
     this.receivedMessagesClazz = receivedMessagesClazz;
@@ -38,6 +39,16 @@ abstract class IgaComputation<R extends IgaMessage, S extends IgaMessage>
         s -> sendMessage(new LongWritable(s.getDstId()), new IgaMessageWritable(s))
     );
     vertex.voteToHalt();
+  }
+
+  private static IgaElement elementOf(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
+    return vertex.getValue().getElement();
+  }
+
+  private static <T extends IgaMessage> Iterator<T> messagesOf(Iterable<IgaMessageWritable> iterable, Class<T> msgClazz) {
+    return stream(iterable.spliterator(), false)
+        .map(msg -> msg.getMessageAs(msgClazz))
+        .iterator();
   }
 
 }
