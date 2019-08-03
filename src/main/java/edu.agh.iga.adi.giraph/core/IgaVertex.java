@@ -1,31 +1,56 @@
 package edu.agh.iga.adi.giraph.core;
 
-import java.util.Set;
+import com.google.common.collect.ImmutableList;
+import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.List;
+import java.util.Optional;
+
+import static com.google.common.math.LongMath.log2;
+import static edu.agh.iga.adi.giraph.core.IgaVertex.ChildPosition.*;
 import static java.lang.String.format;
+import static java.math.RoundingMode.UNNECESSARY;
 
 public class IgaVertex {
 
   private final long id;
+  private final DirectionTree tree;
 
-  private IgaVertex(long id) {
+  private IgaVertex(DirectionTree tree, long id) {
+    this.tree = tree;
     this.id = id;
   }
 
   public static IgaVertex vertexOf(DirectionTree tree, long id) {
     if (id == 1) {
-      return new RootVertex();
+      return new RootVertex(tree);
     }
     if (id < tree.firstIndexOfBranchingRow()) {
-      return new InterimVertex(id);
+      return new InterimVertex(tree, id);
     }
     if (id < tree.firstIndexOfLeafRow()) {
-      return new BranchVertex(id);
+      return new BranchVertex(tree, id);
     }
     if (id < tree.lastIndexOfLeafRow()) {
-      return new LeafVertex(id);
+      return new LeafVertex(tree, id);
     }
     throw new IllegalStateException(format("The problem tree does not have vertex %d", id));
+  }
+
+  private RootVertex rootVertex() {
+    return new RootVertex(tree);
+  }
+
+  private InterimVertex interimVertex(long id) {
+    return new InterimVertex(tree, id);
+  }
+
+  private BranchVertex branchVertex(long id) {
+    return new BranchVertex(tree, id);
+  }
+
+  private LeafVertex leafVertex(long id) {
+    return new LeafVertex(tree, id);
   }
 
   public boolean is(Class<? extends IgaVertex> clazz) {
@@ -40,39 +65,124 @@ public class IgaVertex {
     return id;
   }
 
-  public Set<IgaVertex> children() {
-    return null;
+  public int rowIndexOf() {
+    if(is(RootVertex.class)) {
+      return 1;
+    }
+    if(is(LeafVertex.class)) {
+      return tree.leafHeight();
+    }
+    if(is(BranchVertex.class)) {
+      return tree.branchingHeight();
+    }
+    return log2(id, UNNECESSARY) + 1;
+  }
+
+  public boolean onTopOfBranchingRow() {
+      return is(InterimVertex.class) && rowIndexOf() == tree.branchingHeight() - 1;
+  }
+
+  public long strengthOf() {
+    return tree.strengthOfRow(rowIndexOf());
+  }
+
+  public ChildPosition childPositionOf() {
+    if(is(LeafVertex.class)) {
+      int position = (int) (tree.strengthOfLeaves() + offsetLeft()) % 3;
+      switch (position) {
+        case 0:
+          return LEFT;
+        case 1:
+          return MIDDLE;
+        case 2:
+          return RIGHT;
+        default:
+          throw new IllegalStateException("Should have three children");
+      }
+    }
+    return id % 2 == 0 ? LEFT : RIGHT;
+  }
+
+  public long offsetLeft() {
+    return id - tree.firstIndexOfRow(rowIndexOf());
+  }
+
+  public Optional<? extends IgaVertex> leftChildOf() {
+    if(is(RootVertex.class)) {
+      return Optional.of(interimVertex(2));
+    }
+    if(is(InterimVertex.class)) {
+      return onTopOfBranchingRow() ? Optional.of(branchVertex(2 * id)) : Optional.of(interimVertex(2 * id));
+    }
+    if(is(BranchVertex.class)) {
+      return Optional.of(leafVertex(tree.firstIndexOfLeafRow() + 3 * (id - tree.firstIndexOfBranchingRow())));
+    }
+    return Optional.empty();
+  }
+
+  public List<IgaVertex> children() {
+    return leftChildOf().map(child -> {
+      if(child.is(InterimVertex.class)) {
+        return ImmutableList.<IgaVertex>of(interimVertex(id), interimVertex(id + 1));
+      }
+      if(child.is(LeafVertex.class)) {
+        return ImmutableList.<IgaVertex>of(leafVertex(id), leafVertex(id + 1), leafVertex(id + 2));
+      }
+      if(child.is(BranchVertex.class)) {
+        return ImmutableList.<IgaVertex>of(branchVertex(id), branchVertex(id + 1));
+      }
+      if(child.is(RootVertex.class)) {
+        return ImmutableList.<IgaVertex>of(interimVertex(1), interimVertex(2)); // todo bug? Should be 2 and 3
+      }
+      return null;
+    }).orElse(ImmutableList.of());
+}
+
+  public boolean inRegularArea() {
+    return id < tree.firstIndexOfBranchingRow();
+  }
+
+  public Pair<Double, Double> segmentOf() {
+    long share = tree.size() / strengthOf();
+    double lb = share * offsetLeft();
+    double ub = share * (offsetLeft() + 1);
+    return Pair.of(lb, ub);
+  }
+
+  public enum ChildPosition {
+    LEFT,
+    MIDDLE,
+    RIGHT
   }
 
   public static class RootVertex extends IgaVertex {
 
-    private RootVertex() {
-      super(1);
+    private RootVertex(DirectionTree tree) {
+      super(tree, 1);
     }
 
   }
 
-
   public static class InterimVertex extends IgaVertex {
 
-    private InterimVertex(long id) {
-      super(id);
+    private InterimVertex(DirectionTree tree, long id) {
+      super(tree, id);
     }
 
   }
 
   public static class BranchVertex extends IgaVertex {
 
-    private BranchVertex(long id) {
-      super(id);
+    private BranchVertex(DirectionTree tree, long id) {
+      super(tree, id);
     }
 
   }
 
   public static class LeafVertex extends IgaVertex {
 
-    private LeafVertex(long id) {
-      super(id);
+    private LeafVertex(DirectionTree tree, long id) {
+      super(tree, id);
     }
 
   }

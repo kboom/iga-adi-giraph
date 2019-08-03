@@ -1,5 +1,7 @@
 package edu.agh.iga.adi.giraph.core;
 
+import com.google.common.math.LongMath;
+
 import static com.google.common.math.IntMath.log2;
 import static com.google.common.math.IntMath.pow;
 import static java.math.RoundingMode.UNNECESSARY;
@@ -56,4 +58,7 @@ public final class DirectionTree {
     return strengthOfRow(leafHeight());
   }
 
+  public long size() {
+    return LongMath.pow(height - 1, 2) * 3;
+  }
 }
