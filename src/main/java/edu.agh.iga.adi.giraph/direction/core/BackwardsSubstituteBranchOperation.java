@@ -1,6 +1,5 @@
 package edu.agh.iga.adi.giraph.direction.core;
 
-import edu.agh.iga.adi.giraph.direction.EmptyMessage;
 import edu.agh.iga.adi.giraph.direction.IgaElement;
 import edu.agh.iga.adi.giraph.direction.IgaMessage;
 import edu.agh.iga.adi.giraph.direction.IgaOperation;
@@ -9,10 +8,10 @@ import java.util.Iterator;
 
 import static edu.agh.iga.adi.giraph.direction.core.BackwardsSubstituteBranchOperation.BackwardsSubstituteBranchMessage;
 
-final class BackwardsSubstituteBranchOperation implements IgaOperation<EmptyMessage, BackwardsSubstituteBranchMessage> {
+final class BackwardsSubstituteBranchOperation implements IgaOperation<BackwardsSubstituteBranchMessage> {
 
   @Override
-  public IgaElement consumeMessages(IgaElement element, Iterator<EmptyMessage> messages) {
+  public IgaElement consumeMessages(IgaElement element, Iterator<BackwardsSubstituteBranchMessage> messages) {
     return null;
   }
 
