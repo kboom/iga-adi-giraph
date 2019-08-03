@@ -30,7 +30,8 @@ public class IgaMessageWritable implements WritableComparable {
     return 0;
   }
 
-  public <T> T getMessageAs(Class<T> msgClass) {
+  public IgaMessage getIgaMessage() {
+    return igaMessage;
   }
 
   @SuppressWarnings("unused")

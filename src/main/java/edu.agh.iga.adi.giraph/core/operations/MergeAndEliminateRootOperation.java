@@ -14,12 +14,12 @@ public final class MergeAndEliminateRootOperation implements IgaOperation<MergeA
       = new MergeAndEliminateRootOperation();
 
   @Override
-  public Iterator<MergeAndEliminateRootMessage> sendMessages(IgaElement element) {
+  public Iterator<MergeAndEliminateRootMessage> sendMessage(IgaElement element) {
     return null;
   }
 
   @Override
-  public IgaElement consumeMessages(IgaElement element, Iterator<MergeAndEliminateRootMessage> messages) {
+  public IgaElement consumeMessage(IgaElement element, Iterator<MergeAndEliminateRootMessage> messages) {
     return null;
   }
 

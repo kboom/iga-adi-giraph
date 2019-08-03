@@ -30,4 +30,7 @@ public class IgaOperationWritable implements WritableComparable {
     return 0;
   }
 
+  public IgaOperation getIgaOperation() {
+    return igaOperation;
+  }
 }

@@ -14,12 +14,12 @@ public final class BackwardsSubstituteRootOperation implements IgaOperation<Back
       = new BackwardsSubstituteRootOperation();
 
   @Override
-  public Iterator<BackwardsSubstituteRootMessage> sendMessages(IgaElement element) {
+  public Iterator<BackwardsSubstituteRootMessage> sendMessage(IgaElement element) {
     return null;
   }
 
   @Override
-  public IgaElement consumeMessages(IgaElement element, Iterator<BackwardsSubstituteRootMessage> messages) {
+  public IgaElement consumeMessage(IgaElement element, Iterator<BackwardsSubstituteRootMessage> messages) {
     return null;
   }
 

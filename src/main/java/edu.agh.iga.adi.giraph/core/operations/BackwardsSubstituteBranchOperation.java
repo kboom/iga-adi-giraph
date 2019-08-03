@@ -14,12 +14,12 @@ public final class BackwardsSubstituteBranchOperation implements IgaOperation<Ba
       = new BackwardsSubstituteBranchOperation();
 
   @Override
-  public IgaElement consumeMessages(IgaElement element, Iterator<BackwardsSubstituteBranchMessage> messages) {
+  public Iterator<BackwardsSubstituteBranchMessage> sendMessage(IgaElement element) {
     return null;
   }
 
   @Override
-  public Iterator<BackwardsSubstituteBranchMessage> sendMessages(IgaElement element) {
+  public IgaElement consumeMessage(IgaElement element, Iterator<BackwardsSubstituteBranchMessage> messages) {
     return null;
   }
 

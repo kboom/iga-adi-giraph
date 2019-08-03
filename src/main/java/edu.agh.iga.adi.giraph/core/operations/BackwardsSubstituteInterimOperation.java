@@ -14,12 +14,12 @@ public final class BackwardsSubstituteInterimOperation implements IgaOperation<B
       = new BackwardsSubstituteInterimOperation();
 
   @Override
-  public Iterator<BackwardsSubstituteInterimMessage> sendMessages(IgaElement element) {
+  public Iterator<BackwardsSubstituteInterimMessage> sendMessage(IgaElement element) {
     return null;
   }
 
   @Override
-  public IgaElement consumeMessages(IgaElement element, Iterator<BackwardsSubstituteInterimMessage> messages) {
+  public IgaElement consumeMessage(IgaElement element, Iterator<BackwardsSubstituteInterimMessage> messages) {
     return null;
   }
 

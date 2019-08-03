@@ -8,18 +8,21 @@ import java.util.Iterator;
 
 import static edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateLeavesOperation.MergeAndEliminateLeavesMessage;
 
+/**
+ * Merges 3 leaf elements and eliminates 2 fully assembled rows at their parent.
+ */
 public final class MergeAndEliminateLeavesOperation implements IgaOperation<MergeAndEliminateLeavesMessage> {
 
   public static final MergeAndEliminateLeavesOperation MERGE_AND_ELIMINATE_LEAVES_OPERATION
       = new MergeAndEliminateLeavesOperation();
 
   @Override
-  public Iterator<MergeAndEliminateLeavesMessage> sendMessages(IgaElement element) {
+  public Iterator<MergeAndEliminateLeavesMessage> sendMessage(IgaElement element) {
     return null;
   }
 
   @Override
-  public IgaElement consumeMessages(IgaElement element, Iterator<MergeAndEliminateLeavesMessage> messages) {
+  public IgaElement consumeMessage(IgaElement element, Iterator<MergeAndEliminateLeavesMessage> messages) {
     return null;
   }
 

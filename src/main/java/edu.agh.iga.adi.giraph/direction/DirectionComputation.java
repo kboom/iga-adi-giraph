@@ -1,6 +1,6 @@
 package edu.agh.iga.adi.giraph.direction;
 
-import edu.agh.iga.adi.giraph.DirectionTree;
+import edu.agh.iga.adi.giraph.core.DirectionTree;
 import edu.agh.iga.adi.giraph.direction.computation.ComputationResolver;
 import org.apache.giraph.master.DefaultMasterCompute;
 

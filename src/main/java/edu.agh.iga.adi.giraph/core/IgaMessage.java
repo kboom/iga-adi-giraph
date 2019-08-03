@@ -20,4 +20,8 @@ public abstract class IgaMessage {
     return dstId;
   }
 
+  public IgaOperation getOperation() {
+    return operation;
+  }
+
 }

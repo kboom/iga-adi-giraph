@@ -14,12 +14,12 @@ public final class MergeAndEliminateInterimOperation implements IgaOperation<Mer
       = new MergeAndEliminateInterimOperation();
 
   @Override
-  public Iterator<MergeAndEliminateInterimMessage> sendMessages(IgaElement element) {
+  public Iterator<MergeAndEliminateInterimMessage> sendMessage(IgaElement element) {
     return null;
   }
 
   @Override
-  public IgaElement consumeMessages(IgaElement element, Iterator<MergeAndEliminateInterimMessage> messages) {
+  public IgaElement consumeMessage(IgaElement element, Iterator<MergeAndEliminateInterimMessage> messages) {
     return null;
   }
 

@@ -14,12 +14,12 @@ public final class MergeAndEliminateBranchOperation implements IgaOperation<Merg
       = new MergeAndEliminateBranchOperation();
 
   @Override
-  public Iterator<MergeAndEliminateBranchMessage> sendMessages(IgaElement element) {
+  public Iterator<MergeAndEliminateBranchMessage> sendMessage(IgaElement element) {
     return null;
   }
 
   @Override
-  public IgaElement consumeMessages(IgaElement element, Iterator<MergeAndEliminateBranchMessage> messages) {
+  public IgaElement consumeMessage(IgaElement element, Iterator<MergeAndEliminateBranchMessage> messages) {
     return null;
   }
 
