@@ -1,7 +1,7 @@
 package edu.agh.iga.adi.giraph.test;
 
-import edu.agh.iga.adi.giraph.direction.IgaElement;
-import edu.agh.iga.adi.giraph.direction.IgaOperation;
+import edu.agh.iga.adi.giraph.core.IgaElement;
+import edu.agh.iga.adi.giraph.core.IgaOperation;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import org.apache.giraph.edge.Edge;

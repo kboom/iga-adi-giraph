@@ -1,14 +1,17 @@
 package edu.agh.iga.adi.giraph.direction.core;
 
-import edu.agh.iga.adi.giraph.direction.IgaElement;
-import edu.agh.iga.adi.giraph.direction.IgaMessage;
-import edu.agh.iga.adi.giraph.direction.IgaOperation;
+import edu.agh.iga.adi.giraph.core.IgaElement;
+import edu.agh.iga.adi.giraph.core.IgaMessage;
+import edu.agh.iga.adi.giraph.core.IgaOperation;
 
 import java.util.Iterator;
 
 import static edu.agh.iga.adi.giraph.direction.core.MergeAndEliminateBranchOperation.MergeAndEliminateBranchMessage;
 
 public final class MergeAndEliminateBranchOperation implements IgaOperation<MergeAndEliminateBranchMessage> {
+
+  public static final MergeAndEliminateBranchOperation MERGE_AND_ELIMINATE_BRANCH_OPERATION
+      = new MergeAndEliminateBranchOperation();
 
   @Override
   public Iterator<MergeAndEliminateBranchMessage> sendMessages(IgaElement element) {
@@ -23,7 +26,7 @@ public final class MergeAndEliminateBranchOperation implements IgaOperation<Merg
   public static class MergeAndEliminateBranchMessage extends IgaMessage {
 
     protected MergeAndEliminateBranchMessage(long srcId, long dstId) {
-      super(srcId, dstId);
+      super(srcId, dstId, MERGE_AND_ELIMINATE_BRANCH_OPERATION);
     }
 
   }

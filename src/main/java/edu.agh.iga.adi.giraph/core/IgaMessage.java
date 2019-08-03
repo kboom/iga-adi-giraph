@@ -1,14 +1,15 @@
-package edu.agh.iga.adi.giraph.direction;
+package edu.agh.iga.adi.giraph.core;
 
 public abstract class IgaMessage {
 
   private final long srcId;
   private final long dstId;
-  private final IgaOperation
+  private final IgaOperation operation;
 
-  protected IgaMessage(long srcId, long dstId) {
+  protected IgaMessage(long srcId, long dstId, IgaOperation operation) {
     this.srcId = srcId;
     this.dstId = dstId;
+    this.operation = operation;
   }
 
   public long getSrcId() {

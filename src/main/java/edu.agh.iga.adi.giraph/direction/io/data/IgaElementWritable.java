@@ -1,6 +1,6 @@
 package edu.agh.iga.adi.giraph.direction.io.data;
 
-import edu.agh.iga.adi.giraph.direction.IgaElement;
+import edu.agh.iga.adi.giraph.core.IgaElement;
 import org.apache.hadoop.io.WritableComparable;
 
 import java.io.DataInput;

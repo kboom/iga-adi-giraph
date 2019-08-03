@@ -1,14 +1,17 @@
 package edu.agh.iga.adi.giraph.direction.core;
 
-import edu.agh.iga.adi.giraph.direction.IgaElement;
-import edu.agh.iga.adi.giraph.direction.IgaMessage;
-import edu.agh.iga.adi.giraph.direction.IgaOperation;
+import edu.agh.iga.adi.giraph.core.IgaElement;
+import edu.agh.iga.adi.giraph.core.IgaMessage;
+import edu.agh.iga.adi.giraph.core.IgaOperation;
 
 import java.util.Iterator;
 
 import static edu.agh.iga.adi.giraph.direction.core.BackwardsSubstituteInterimOperation.BackwardsSubstituteInterimMessage;
 
 public final class BackwardsSubstituteInterimOperation implements IgaOperation<BackwardsSubstituteInterimMessage> {
+
+  public static final BackwardsSubstituteInterimOperation BACKWARDS_SUBSTITUTE_INTERIM_OPERATION
+      = new BackwardsSubstituteInterimOperation();
 
   @Override
   public Iterator<BackwardsSubstituteInterimMessage> sendMessages(IgaElement element) {
@@ -23,7 +26,7 @@ public final class BackwardsSubstituteInterimOperation implements IgaOperation<B
   public static class BackwardsSubstituteInterimMessage extends IgaMessage {
 
     protected BackwardsSubstituteInterimMessage(long srcId, long dstId) {
-      super(srcId, dstId);
+      super(srcId, dstId, BACKWARDS_SUBSTITUTE_INTERIM_OPERATION);
     }
   }
 

@@ -1,5 +1,7 @@
 package edu.agh.iga.adi.giraph.direction;
 
+import edu.agh.iga.adi.giraph.core.IgaElement;
+import edu.agh.iga.adi.giraph.core.IgaOperation;
 import edu.agh.iga.adi.giraph.direction.computation.MergeAndEliminateLeavesComputation;
 import org.junit.jupiter.api.Test;
 

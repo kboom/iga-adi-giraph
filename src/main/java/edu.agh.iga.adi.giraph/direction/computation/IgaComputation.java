@@ -1,8 +1,8 @@
 package edu.agh.iga.adi.giraph.direction.computation;
 
-import edu.agh.iga.adi.giraph.direction.IgaElement;
-import edu.agh.iga.adi.giraph.direction.IgaMessage;
-import edu.agh.iga.adi.giraph.direction.IgaOperation;
+import edu.agh.iga.adi.giraph.core.IgaElement;
+import edu.agh.iga.adi.giraph.core.IgaMessage;
+import edu.agh.iga.adi.giraph.core.IgaOperation;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;

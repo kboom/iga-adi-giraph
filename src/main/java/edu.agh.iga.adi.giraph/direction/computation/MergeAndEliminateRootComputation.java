@@ -1,14 +1,13 @@
 package edu.agh.iga.adi.giraph.direction.computation;
 
-import edu.agh.iga.adi.giraph.direction.core.MergeAndEliminateRootOperation;
 import edu.agh.iga.adi.giraph.direction.core.MergeAndEliminateRootOperation.MergeAndEliminateRootMessage;
+
+import static edu.agh.iga.adi.giraph.direction.core.MergeAndEliminateRootOperation.MERGE_AND_ELIMINATE_ROOT_OPERATION;
 
 final class MergeAndEliminateRootComputation extends IgaComputation<MergeAndEliminateRootMessage> {
 
-  private static final MergeAndEliminateRootOperation OPERATION = new MergeAndEliminateRootOperation();
-
   MergeAndEliminateRootComputation() {
-    super(OPERATION, MergeAndEliminateRootMessage.class);
+    super(MERGE_AND_ELIMINATE_ROOT_OPERATION, MergeAndEliminateRootMessage.class);
   }
 
 }

@@ -3,7 +3,7 @@ package edu.agh.iga.adi.giraph;
 import edu.agh.iga.adi.giraph.direction.DirectionComputation;
 import edu.agh.iga.adi.giraph.direction.IgaAdiWorkerContext;
 import edu.agh.iga.adi.giraph.direction.IgaMessageCombiner;
-import edu.agh.iga.adi.giraph.direction.IgaOperation;
+import edu.agh.iga.adi.giraph.core.IgaOperation;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import edu.agh.iga.adi.giraph.test.GiraphTestJob;

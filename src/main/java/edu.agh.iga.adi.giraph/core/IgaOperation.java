@@ -1,4 +1,7 @@
-package edu.agh.iga.adi.giraph.direction;
+package edu.agh.iga.adi.giraph.core;
+
+import edu.agh.iga.adi.giraph.core.IgaElement;
+import edu.agh.iga.adi.giraph.core.IgaMessage;
 
 import java.util.Iterator;
 
