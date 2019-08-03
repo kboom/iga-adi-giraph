@@ -1,9 +1,9 @@
 package edu.agh.iga.adi.giraph;
 
+import edu.agh.iga.adi.giraph.core.DirectionTree;
 import edu.agh.iga.adi.giraph.direction.DirectionComputation;
 import edu.agh.iga.adi.giraph.direction.IgaAdiWorkerContext;
 import edu.agh.iga.adi.giraph.direction.IgaMessageCombiner;
-import edu.agh.iga.adi.giraph.core.IgaOperation;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import edu.agh.iga.adi.giraph.test.GiraphTestJob;
@@ -16,8 +16,11 @@ import org.junit.jupiter.api.Test;
 import static edu.agh.iga.adi.giraph.test.GiraphTestJob.giraphJob;
 import static edu.agh.iga.adi.giraph.test.GraphFactory.graph;
 import static edu.agh.iga.adi.giraph.test.IgaTestGraph.igaTestGraphOn;
+import static edu.agh.iga.adi.giraph.test.TestGraphFactory.directionGraph;
 
 class GraphIT {
+
+  private final DirectionTree directionTree = new DirectionTree(12);
 
   @Test
   void canRun() {
@@ -31,8 +34,7 @@ class GraphIT {
 
     TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> graph = graph(job.getConfiguration());
 
-    igaTestGraphOn(graph)
-        .withVertex(1, new IgaOperation(), 2);
+    directionGraph(directionTree, igaTestGraphOn(graph));
 
     InMemoryVertexInputFormat.setGraph(graph);
 

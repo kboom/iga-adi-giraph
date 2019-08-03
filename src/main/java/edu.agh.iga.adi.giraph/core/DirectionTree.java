@@ -16,35 +16,35 @@ public final class DirectionTree {
     return height;
   }
 
-  int leafHeight() {
+  public int leafHeight() {
     return branchingHeight() + 1;
   }
 
-  int branchingHeight() {
+  public int branchingHeight() {
     return log2(height / 3, UNNECESSARY) + 1;
   }
 
-  long firstIndexOfRow(int level) {
+  public long firstIndexOfRow(int level) {
     return pow(2, level - 1);
   }
 
-  long firstIndexOfLeafRow() {
+  public long firstIndexOfLeafRow() {
     return firstIndexOfRow(leafHeight());
   }
 
-  long lastIndexOfLeafRow() {
+  public long lastIndexOfLeafRow() {
     return firstIndexOfLeafRow() + strengthOfRow(leafHeight()) - 1;
   }
 
-  long firstIndexOfBranchingRow() {
+  public long firstIndexOfBranchingRow() {
     return firstIndexOfRow(branchingHeight());
   }
 
-  long lastIndexOfBranchingRow() {
+  public long lastIndexOfBranchingRow() {
     return firstIndexOfBranchingRow() + strengthOfRow(branchingHeight()) - 1;
   }
 
-  long strengthOfRow(int level) {
+  public long strengthOfRow(int level) {
     if (level < leafHeight()) {
       return pow(2, level - 1);
     } else {
@@ -52,7 +52,7 @@ public final class DirectionTree {
     }
   }
 
-  long strengthOfLeaves() {
+  public long strengthOfLeaves() {
     return strengthOfRow(leafHeight());
   }
 

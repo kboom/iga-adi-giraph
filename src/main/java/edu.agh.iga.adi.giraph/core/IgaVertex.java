@@ -1,5 +1,7 @@
 package edu.agh.iga.adi.giraph.core;
 
+import java.util.Set;
+
 import static java.lang.String.format;
 
 public class IgaVertex {
@@ -10,7 +12,7 @@ public class IgaVertex {
     this.id = id;
   }
 
-  static IgaVertex vertexOf(DirectionTree tree, long id) {
+  public static IgaVertex vertexOf(DirectionTree tree, long id) {
     if (id == 1) {
       return new RootVertex();
     }
@@ -32,6 +34,14 @@ public class IgaVertex {
 
   public boolean after(IgaVertex dst) {
     return id > dst.id;
+  }
+
+  public long id() {
+    return id;
+  }
+
+  public Set<IgaVertex> children() {
+    return null;
   }
 
   public static class RootVertex extends IgaVertex {
