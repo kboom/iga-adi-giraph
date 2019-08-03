@@ -11,7 +11,7 @@ import static edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateLeavesOper
  */
 final class MergeAndEliminateLeavesOperation implements IgaOperation<MergeAndEliminateLeavesMessage> {
 
-  private static final MergeAndEliminateLeavesOperation MERGE_AND_ELIMINATE_LEAVES_OPERATION
+  private static final MergeAndEliminateLeavesOperation INSTANCE
       = new MergeAndEliminateLeavesOperation();
 
   @Override
@@ -27,7 +27,7 @@ final class MergeAndEliminateLeavesOperation implements IgaOperation<MergeAndEli
   public static class MergeAndEliminateLeavesMessage extends IgaMessage {
 
     protected MergeAndEliminateLeavesMessage(long srcId, long dstId) {
-      super(srcId, dstId, MERGE_AND_ELIMINATE_LEAVES_OPERATION);
+      super(srcId, dstId, INSTANCE);
     }
   }
 

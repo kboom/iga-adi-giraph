@@ -8,7 +8,7 @@ import static edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateRootOperat
 
 final class MergeAndEliminateRootOperation implements IgaOperation<MergeAndEliminateRootMessage> {
 
-  private static final MergeAndEliminateRootOperation MERGE_AND_ELIMINATE_ROOT_OPERATION
+  private static final MergeAndEliminateRootOperation INSTANCE
       = new MergeAndEliminateRootOperation();
 
   @Override
@@ -24,7 +24,7 @@ final class MergeAndEliminateRootOperation implements IgaOperation<MergeAndElimi
   public static class MergeAndEliminateRootMessage extends IgaMessage {
 
     protected MergeAndEliminateRootMessage(long srcId, long dstId) {
-      super(srcId, dstId, MERGE_AND_ELIMINATE_ROOT_OPERATION);
+      super(srcId, dstId, INSTANCE);
     }
   }
 

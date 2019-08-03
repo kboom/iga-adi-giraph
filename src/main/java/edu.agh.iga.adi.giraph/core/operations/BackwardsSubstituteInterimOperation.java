@@ -8,7 +8,7 @@ import static edu.agh.iga.adi.giraph.core.operations.BackwardsSubstituteInterimO
 
 final class BackwardsSubstituteInterimOperation implements IgaOperation<BackwardsSubstituteInterimMessage> {
 
-  private static final BackwardsSubstituteInterimOperation BACKWARDS_SUBSTITUTE_INTERIM_OPERATION
+  private static final BackwardsSubstituteInterimOperation INSTANCE
       = new BackwardsSubstituteInterimOperation();
 
   @Override
@@ -24,7 +24,7 @@ final class BackwardsSubstituteInterimOperation implements IgaOperation<Backward
   public static class BackwardsSubstituteInterimMessage extends IgaMessage {
 
     protected BackwardsSubstituteInterimMessage(long srcId, long dstId) {
-      super(srcId, dstId, BACKWARDS_SUBSTITUTE_INTERIM_OPERATION);
+      super(srcId, dstId, INSTANCE);
     }
   }
 
