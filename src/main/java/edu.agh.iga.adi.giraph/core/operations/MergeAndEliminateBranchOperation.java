@@ -4,23 +4,21 @@ import edu.agh.iga.adi.giraph.core.IgaElement;
 import edu.agh.iga.adi.giraph.core.IgaMessage;
 import edu.agh.iga.adi.giraph.core.IgaOperation;
 
-import java.util.Iterator;
-
 import static edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateBranchOperation.MergeAndEliminateBranchMessage;
 
-public final class MergeAndEliminateBranchOperation implements IgaOperation<MergeAndEliminateBranchMessage> {
+final class MergeAndEliminateBranchOperation implements IgaOperation<MergeAndEliminateBranchMessage> {
 
-  public static final MergeAndEliminateBranchOperation MERGE_AND_ELIMINATE_BRANCH_OPERATION
+  private static final MergeAndEliminateBranchOperation MERGE_AND_ELIMINATE_BRANCH_OPERATION
       = new MergeAndEliminateBranchOperation();
 
   @Override
-  public Iterator<MergeAndEliminateBranchMessage> sendMessage(IgaElement element) {
+  public MergeAndEliminateBranchMessage sendMessage(long dstId, IgaElement element) {
     return null;
   }
 
   @Override
-  public IgaElement consumeMessage(IgaElement element, Iterator<MergeAndEliminateBranchMessage> messages) {
-    return null;
+  public void consumeMessage(IgaElement element, MergeAndEliminateBranchMessage message) {
+
   }
 
   public static class MergeAndEliminateBranchMessage extends IgaMessage {

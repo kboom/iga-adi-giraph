@@ -11,7 +11,7 @@ public interface IgaOperation<M extends IgaMessage> {
    * @param element the source element from which the messages are sent
    * @return the list of messages to send
    */
-  M sendMessage(Long dstId, IgaElement element);
+  M sendMessage(long dstId, IgaElement element);
 
   /**
    * Consumes message sent in the previous superstep by {@link #sendMessages(IgaElement, Iterator message)}
@@ -19,8 +19,7 @@ public interface IgaOperation<M extends IgaMessage> {
    *
    * @param element  the target element to which the message are destined for
    * @param message the message sent to the element
-   * @return the updated element
    */
-  IgaElement consumeMessage(IgaElement element, M message);
+  void consumeMessage(IgaElement element, M message);
 
 }
