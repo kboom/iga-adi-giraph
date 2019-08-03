@@ -1,8 +1,8 @@
 package edu.agh.iga.adi.giraph.direction.computation;
 
-import edu.agh.iga.adi.giraph.direction.core.BackwardsSubstituteBranchOperation.BackwardsSubstituteBranchMessage;
+import edu.agh.iga.adi.giraph.core.operations.BackwardsSubstituteBranchOperation.BackwardsSubstituteBranchMessage;
 
-import static edu.agh.iga.adi.giraph.direction.core.BackwardsSubstituteBranchOperation.BACKWARDS_SUBSTITUTE_BRANCH_OPERATION;
+import static edu.agh.iga.adi.giraph.core.operations.BackwardsSubstituteBranchOperation.BACKWARDS_SUBSTITUTE_BRANCH_OPERATION;
 
 final class BackwardsSubstituteBranchComputation extends IgaComputation<BackwardsSubstituteBranchMessage> {
 
