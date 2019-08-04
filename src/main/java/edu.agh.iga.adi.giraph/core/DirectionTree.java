@@ -4,18 +4,19 @@ import com.google.common.math.LongMath;
 
 import static com.google.common.math.IntMath.log2;
 import static com.google.common.math.IntMath.pow;
+import static com.google.common.math.LongMath.pow;
 import static java.math.RoundingMode.UNNECESSARY;
 
 public final class DirectionTree {
 
-  private final int height;
+  private final int problemSize;
 
   public DirectionTree(int problemSize) {
-    this.height = log2(problemSize / 3, UNNECESSARY) + 1;
+    this.problemSize = problemSize;
   }
 
   public int height() {
-    return height;
+    return log2(problemSize / 3, UNNECESSARY) + 1;
   }
 
   public int leafHeight() {
@@ -23,7 +24,7 @@ public final class DirectionTree {
   }
 
   public int branchingHeight() {
-    return log2(height / 3, UNNECESSARY) + 1;
+    return log2(problemSize / 3, UNNECESSARY) + 1;
   }
 
   public long firstIndexOfRow(int level) {
@@ -59,6 +60,6 @@ public final class DirectionTree {
   }
 
   public long size() {
-    return LongMath.pow(height - 1, 2) * 3;
+    return LongMath.pow(problemSize - 1, 2) * 3;
   }
 }

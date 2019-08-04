@@ -33,4 +33,10 @@ public class IgaOperationWritable implements WritableComparable {
   public IgaOperation getIgaOperation() {
     return igaOperation;
   }
+
+  @SuppressWarnings("unused")
+  public IgaOperationWritable() {
+
+  }
+
 }

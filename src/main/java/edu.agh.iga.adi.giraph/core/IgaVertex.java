@@ -9,7 +9,7 @@ import java.util.Optional;
 import static com.google.common.math.LongMath.log2;
 import static edu.agh.iga.adi.giraph.core.IgaVertex.ChildPosition.*;
 import static java.lang.String.format;
-import static java.math.RoundingMode.UNNECESSARY;
+import static java.math.RoundingMode.FLOOR;
 
 public class IgaVertex {
 
@@ -31,7 +31,7 @@ public class IgaVertex {
     if (id < tree.firstIndexOfLeafRow()) {
       return new BranchVertex(tree, id);
     }
-    if (id < tree.lastIndexOfLeafRow()) {
+    if (id <= tree.lastIndexOfLeafRow()) {
       return new LeafVertex(tree, id);
     }
     throw new IllegalStateException(format("The problem tree does not have vertex %d", id));
@@ -75,7 +75,7 @@ public class IgaVertex {
     if(is(BranchVertex.class)) {
       return tree.branchingHeight();
     }
-    return log2(id, UNNECESSARY) + 1;
+    return log2(id, FLOOR) + 1;
   }
 
   public boolean onTopOfBranchingRow() {
