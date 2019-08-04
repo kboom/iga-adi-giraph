@@ -15,6 +15,7 @@ class DirectionComputationTest {
   @Test
   void canSolve() {
     whenComputation(DirectionComputation.class, InitialComputation.class)
+        .ofProblemSize(12)
         .isRunForGraph((graph) -> directionGraph(directionTree, graph))
         .thenAssertThatGraph(assertions -> assertions.hasElement(1L, new IgaElement()));
   }
