@@ -9,7 +9,7 @@ import static edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateLeavesOper
 /**
  * Merges 3 leaf elements and eliminates 2 fully assembled rows at their parent.
  */
-final class MergeAndEliminateLeavesOperation implements IgaOperation<MergeAndEliminateLeavesMessage> {
+public final class MergeAndEliminateLeavesOperation implements IgaOperation<MergeAndEliminateLeavesMessage> {
 
   static final MergeAndEliminateLeavesOperation MERGE_AND_ELIMINATE_LEAVES_OPERATION
       = new MergeAndEliminateLeavesOperation();
@@ -26,7 +26,7 @@ final class MergeAndEliminateLeavesOperation implements IgaOperation<MergeAndEli
 
   public static class MergeAndEliminateLeavesMessage extends IgaMessage {
 
-    protected MergeAndEliminateLeavesMessage(long srcId, long dstId) {
+    public MergeAndEliminateLeavesMessage(long srcId, long dstId) {
       super(srcId, dstId, MERGE_AND_ELIMINATE_LEAVES_OPERATION);
     }
   }

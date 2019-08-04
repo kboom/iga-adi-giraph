@@ -21,7 +21,7 @@ public final class IgaElementWritable implements WritableComparable {
 
   @Override
   public void readFields(DataInput dataInput) {
-
+    igaElement = new IgaElement();
   }
 
   @Override

@@ -6,7 +6,7 @@ import edu.agh.iga.adi.giraph.core.IgaOperation;
 
 import static edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateBranchOperation.MergeAndEliminateBranchMessage;
 
-final class MergeAndEliminateBranchOperation implements IgaOperation<MergeAndEliminateBranchMessage> {
+public final class MergeAndEliminateBranchOperation implements IgaOperation<MergeAndEliminateBranchMessage> {
 
   static final MergeAndEliminateBranchOperation MERGE_AND_ELIMINATE_BRANCH_OPERATION
       = new MergeAndEliminateBranchOperation();
@@ -23,7 +23,7 @@ final class MergeAndEliminateBranchOperation implements IgaOperation<MergeAndEli
 
   public static class MergeAndEliminateBranchMessage extends IgaMessage {
 
-    protected MergeAndEliminateBranchMessage(long srcId, long dstId) {
+    public MergeAndEliminateBranchMessage(long srcId, long dstId) {
       super(srcId, dstId, MERGE_AND_ELIMINATE_BRANCH_OPERATION);
     }
 

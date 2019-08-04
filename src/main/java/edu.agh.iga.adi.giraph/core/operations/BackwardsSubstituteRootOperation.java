@@ -6,7 +6,7 @@ import edu.agh.iga.adi.giraph.core.IgaOperation;
 
 import static edu.agh.iga.adi.giraph.core.operations.BackwardsSubstituteRootOperation.BackwardsSubstituteRootMessage;
 
-final class BackwardsSubstituteRootOperation implements IgaOperation<BackwardsSubstituteRootMessage> {
+public final class BackwardsSubstituteRootOperation implements IgaOperation<BackwardsSubstituteRootMessage> {
 
   static final BackwardsSubstituteRootOperation BACKWARDS_SUBSTITUTE_ROOT_OPERATION
       = new BackwardsSubstituteRootOperation();
@@ -23,9 +23,10 @@ final class BackwardsSubstituteRootOperation implements IgaOperation<BackwardsSu
 
   public static class BackwardsSubstituteRootMessage extends IgaMessage {
 
-    protected BackwardsSubstituteRootMessage(long srcId, long dstId) {
+    public BackwardsSubstituteRootMessage(long srcId, long dstId) {
       super(srcId, dstId, BACKWARDS_SUBSTITUTE_ROOT_OPERATION);
     }
+
   }
 
 }
