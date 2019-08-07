@@ -60,11 +60,11 @@ public final class MergeAndEliminateLeavesOperation implements IgaOperation<Merg
         element.mb.regionByRows(0, 1, 2).modifyMatching(ADD, message.mb);
         break;
       case MIDDLE:
-        element.ma.regionByOffsets(1, 1).regionByLimits(4, 4).modifyMatching(ADD, message.ma);
+        element.ma.regionByLimits(4, 4).regionByOffsets(1, 1).modifyMatching(ADD, message.ma);
         element.mb.regionByRows(1, 2, 3).modifyMatching(ADD, message.mb);
         break;
       case RIGHT:
-        element.ma.regionByOffsets(2, 2).regionByLimits(5, 5).modifyMatching(ADD, message.ma);
+        element.ma.regionByLimits(5, 5).regionByOffsets(2, 2).modifyMatching(ADD, message.ma);
         element.mb.regionByRows(2, 3, 4).modifyMatching(ADD, message.mb);
         break;
     }
