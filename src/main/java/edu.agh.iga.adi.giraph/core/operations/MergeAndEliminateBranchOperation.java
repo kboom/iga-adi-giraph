@@ -19,6 +19,11 @@ public final class MergeAndEliminateBranchOperation implements IgaOperation<Merg
 
   }
 
+  @Override
+  public void process(IgaElement element) {
+
+  }
+
   public static class MergeAndEliminateBranchMessage extends IgaMessage {
 
     public MergeAndEliminateBranchMessage(long srcId) {

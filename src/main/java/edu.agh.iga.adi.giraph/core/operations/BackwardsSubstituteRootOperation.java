@@ -19,6 +19,11 @@ public final class BackwardsSubstituteRootOperation implements IgaOperation<Back
 
   }
 
+  @Override
+  public void process(IgaElement element) {
+
+  }
+
   public static class BackwardsSubstituteRootMessage extends IgaMessage {
 
     public BackwardsSubstituteRootMessage(long srcId) {

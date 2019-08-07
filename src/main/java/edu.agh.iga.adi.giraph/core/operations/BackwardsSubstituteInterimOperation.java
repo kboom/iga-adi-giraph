@@ -19,6 +19,11 @@ public final class BackwardsSubstituteInterimOperation implements IgaOperation<B
 
   }
 
+  @Override
+  public void process(IgaElement element) {
+
+  }
+
   public static class BackwardsSubstituteInterimMessage extends IgaMessage {
 
     public BackwardsSubstituteInterimMessage(long srcId) {

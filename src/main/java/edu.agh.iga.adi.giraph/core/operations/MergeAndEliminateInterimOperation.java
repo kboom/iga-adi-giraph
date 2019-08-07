@@ -19,6 +19,11 @@ public final class MergeAndEliminateInterimOperation implements IgaOperation<Mer
 
   }
 
+  @Override
+  public void process(IgaElement element) {
+
+  }
+
   public static class MergeAndEliminateInterimMessage extends IgaMessage {
 
     public MergeAndEliminateInterimMessage(long srcId) {

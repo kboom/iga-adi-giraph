@@ -22,4 +22,10 @@ public interface IgaOperation<M extends IgaMessage> {
    */
   void consumeMessage(IgaElement element, M message, DirectionTree tree);
 
+  /**
+   * After all messages are consumed, the processing can take place
+   * @param element
+   */
+  void process(IgaElement element);
+
 }

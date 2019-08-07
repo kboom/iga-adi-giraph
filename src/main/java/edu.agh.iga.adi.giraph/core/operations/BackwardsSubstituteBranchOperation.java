@@ -19,6 +19,11 @@ public final class BackwardsSubstituteBranchOperation implements IgaOperation<Ba
 
   }
 
+  @Override
+  public void process(IgaElement element) {
+    
+  }
+
   public static class BackwardsSubstituteBranchMessage extends IgaMessage {
 
     public BackwardsSubstituteBranchMessage(long srcId) {

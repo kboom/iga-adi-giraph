@@ -5,6 +5,7 @@ import org.ojalgo.matrix.store.TransformableRegion;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateLeavesOperation.MergeAndEliminateLeavesMessage;
+import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.swapDofs;
 import static org.ojalgo.function.constant.PrimitiveMath.ADD;
 
 /**
@@ -54,6 +55,16 @@ public final class MergeAndEliminateLeavesOperation implements IgaOperation<Merg
 
   @Override
   public void consumeMessage(IgaElement element, MergeAndEliminateLeavesMessage message, DirectionTree tree) {
+    consumeMatrices(element, message, tree);
+  }
+
+  @Override
+  public void process(IgaElement element) {
+    swapDofs(element, 0, 2, 5);
+    swapDofs(element, 1, 2, 5);
+  }
+
+  private void consumeMatrices(IgaElement element, MergeAndEliminateLeavesMessage message, DirectionTree tree) {
     switch (vertexOf(tree, message.getSrcId()).childPosition()) {
       case LEFT:
         element.ma.regionByLimits(3, 3).modifyMatching(ADD, message.ma);
