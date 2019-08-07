@@ -1,6 +1,7 @@
 package edu.agh.iga.adi.giraph.core.operations;
 
 import edu.agh.iga.adi.giraph.core.*;
+import org.ojalgo.matrix.store.TransformableRegion;
 
 import static edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateBranchOperation.MergeAndEliminateBranchMessage;
 
@@ -26,8 +27,21 @@ public final class MergeAndEliminateBranchOperation implements IgaOperation<Merg
 
   public static class MergeAndEliminateBranchMessage extends IgaMessage {
 
-    public MergeAndEliminateBranchMessage(long srcId) {
+    public final TransformableRegion<Double> ma;
+    public final TransformableRegion<Double> mb;
+
+    public MergeAndEliminateBranchMessage(long srcId, TransformableRegion<Double> ma, TransformableRegion<Double> mb) {
       super(srcId, MERGE_AND_ELIMINATE_BRANCH_OPERATION);
+      this.ma = ma;
+      this.mb = mb;
+    }
+
+    public TransformableRegion<Double> getMa() {
+      return ma;
+    }
+
+    public TransformableRegion<Double> getMb() {
+      return mb;
     }
 
   }

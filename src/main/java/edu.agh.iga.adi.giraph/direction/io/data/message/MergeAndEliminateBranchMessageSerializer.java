@@ -19,7 +19,7 @@ final class MergeAndEliminateBranchMessageSerializer implements MessageSerialize
   @Override
   public MergeAndEliminateBranchMessage readMessage(DataInput dataInput) throws IOException {
     final long srcId = dataInput.readLong();
-    return new MergeAndEliminateBranchMessage(srcId);
+    return new MergeAndEliminateBranchMessage(srcId, null, null);
   }
 
 }
