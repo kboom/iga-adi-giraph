@@ -30,6 +30,10 @@ public class IgaElementBuilder {
     return this;
   }
 
+  public IgaElement withSpecificMatrixA(PrimitiveDenseStore ma) {
+    return withMatrixA(ma).build();
+  }
+
   public IgaElementBuilder withMatrixB(PrimitiveDenseStore mb) {
     this.mb = mb;
     return this;
