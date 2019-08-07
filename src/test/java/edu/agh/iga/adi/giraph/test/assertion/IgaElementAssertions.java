@@ -25,4 +25,10 @@ public class IgaElementAssertions extends AbstractAssert<IgaElementAssertions, I
     assertValues(actual.mb, ds, "Matrix B");
     return this;
   }
+
+  public IgaElementAssertions hasMx(PrimitiveDenseStore ds) {
+    assertValues(actual.mb, ds, "Matrix X");
+    return this;
+  }
+
 }

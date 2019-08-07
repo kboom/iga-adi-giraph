@@ -1,9 +1,6 @@
 package edu.agh.iga.adi.giraph.direction.computation;
 
-import edu.agh.iga.adi.giraph.core.DirectionTree;
-import edu.agh.iga.adi.giraph.core.IgaElement;
-import edu.agh.iga.adi.giraph.core.IgaMessage;
-import edu.agh.iga.adi.giraph.core.IgaVertex;
+import edu.agh.iga.adi.giraph.core.*;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
@@ -15,6 +12,7 @@ import org.apache.giraph.graph.Vertex;
 import org.apache.giraph.worker.WorkerGlobalCommUsage;
 import org.apache.hadoop.io.LongWritable;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
@@ -40,8 +38,16 @@ final class IgaComputation extends BasicComputation<LongWritable, IgaElementWrit
   ) {
     IgaElement element = elementOf(vertex);
     messagesOf(messages).forEach(msg -> consume(element, msg));
+    operationOf(messages).ifPresent(operation -> operation.process(element));
+
     vertex.setValue(vertex.getValue().withValue(element));
     return element;
+  }
+
+  private Optional<IgaOperation> operationOf(Iterable<IgaMessageWritable> messages) {
+    return messagesOf(messages)
+        .map(IgaMessage::getOperation)
+        .findFirst();
   }
 
   @SuppressWarnings("unchecked")
