@@ -1,11 +1,10 @@
 package edu.agh.iga.adi.giraph.direction;
 
-import edu.agh.iga.adi.giraph.IgaConfiguration;
 import edu.agh.iga.adi.giraph.direction.computation.IgaComputationFactory;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import edu.agh.iga.adi.giraph.test.IgaTestGraph;
-import edu.agh.iga.adi.giraph.test.TestGraphAssertions;
+import edu.agh.iga.adi.giraph.test.assertion.TestGraphAssertions;
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.graph.Computation;
 import org.apache.giraph.master.MasterCompute;
@@ -16,7 +15,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
-import static edu.agh.iga.adi.giraph.test.TestGraphAssertions.assertThat;
+import static edu.agh.iga.adi.giraph.test.assertion.TestGraphAssertions.assertThat;
 import static org.apache.giraph.conf.GiraphConstants.COMPUTATION_FACTORY_CLASS;
 import static org.apache.giraph.utils.InternalVertexRunner.runWithInMemoryOutput;
 

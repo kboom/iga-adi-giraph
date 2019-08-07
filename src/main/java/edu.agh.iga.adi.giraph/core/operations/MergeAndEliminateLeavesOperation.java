@@ -47,8 +47,8 @@ public final class MergeAndEliminateLeavesOperation implements IgaOperation<Merg
   public MergeAndEliminateLeavesMessage sendMessage(IgaVertex dst, IgaElement element) {
     return new MergeAndEliminateLeavesMessage(
         element.id,
-        element.ma.regionByLimits(3, 0), // todo is this really inclusive/inclusive?
-        element.mb.regionByLimits(3, 3) // todo is this really inclusive/inclusive?
+        element.ma.regionByLimits(3, 3), // todo is this really inclusive/inclusive?
+        element.mb.regionByRows(0, 1, 2) // todo is this really inclusive/inclusive?
     );
   }
 
@@ -79,6 +79,14 @@ public final class MergeAndEliminateLeavesOperation implements IgaOperation<Merg
       super(srcId, MERGE_AND_ELIMINATE_LEAVES_OPERATION);
       this.ma = ma;
       this.mb = mb;
+    }
+
+    public TransformableRegion<Double> getMa() {
+      return ma;
+    }
+
+    public TransformableRegion<Double> getMb() {
+      return mb;
     }
 
   }
