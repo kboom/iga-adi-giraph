@@ -4,8 +4,8 @@ import org.assertj.core.api.AbstractAssert;
 import org.ojalgo.matrix.store.PrimitiveDenseStore;
 import org.ojalgo.matrix.store.TransformableRegion;
 
+import static edu.agh.iga.adi.giraph.test.assertion.MatrixAssertions.assertValues;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 public class TransformableRegionAssertions extends AbstractAssert<TransformableRegionAssertions, TransformableRegion<Double>> {
 
@@ -24,13 +24,7 @@ public class TransformableRegionAssertions extends AbstractAssert<TransformableR
   }
 
   public TransformableRegionAssertions hasElementsMatching(PrimitiveDenseStore ds) {
-    assertSoftly(softly -> actual.loopAll((row, col) -> {
-      double expected = ds.get(row, col);
-      double actualValue = actual.get(row, col);
-      softly.assertThat(actualValue)
-          .as("Should contain value %s at (%s, %s)", expected, row, col)
-          .isEqualTo(expected);
-    }));
+    assertValues(actual, ds, "Matrix ");
     return this;
   }
 

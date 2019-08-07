@@ -5,6 +5,8 @@ import org.ojalgo.structure.Access2D;
 import org.ojalgo.structure.Mutate2D;
 import org.ojalgo.structure.Transformation2D;
 
+import java.util.Arrays;
+
 import static java.lang.System.arraycopy;
 import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
@@ -41,13 +43,19 @@ public class MatrixBuilder {
       this.cols = cols;
     }
 
+    public PrimitiveDenseStore withValue(double value) {
+      double[] values = new double[rows * cols];
+      Arrays.fill(values, value);
+      return new MatrixBuilder(rows, cols, values).build();
+    }
+
     public PrimitiveDenseStore withValues(double... values) {
       return new MatrixBuilder(rows, cols, values).build();
     }
   }
 
   private double valueAt(int row, int col) {
-    return values[rows * row + col];
+    return values[cols * row + col];
   }
 
   private class Transformation implements Transformation2D<Double> {
