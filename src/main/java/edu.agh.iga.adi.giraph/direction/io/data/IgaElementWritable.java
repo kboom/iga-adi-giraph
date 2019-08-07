@@ -16,12 +16,11 @@ public final class IgaElementWritable implements WritableComparable {
 
   @Override
   public void write(DataOutput dataOutput) {
-
   }
 
   @Override
   public void readFields(DataInput dataInput) {
-    igaElement = new IgaElement();
+    igaElement = IgaElement.igaElement(0L, 12);
   }
 
   @Override

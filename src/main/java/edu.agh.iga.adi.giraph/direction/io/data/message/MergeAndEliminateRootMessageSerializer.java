@@ -14,14 +14,12 @@ final class MergeAndEliminateRootMessageSerializer implements MessageSerializer<
   @Override
   public void writeMessage(DataOutput dataOutput, MergeAndEliminateRootMessage message) throws IOException {
     dataOutput.writeLong(message.getSrcId());
-    dataOutput.writeLong(message.getDstId());
   }
 
   @Override
   public MergeAndEliminateRootMessage readMessage(DataInput dataInput) throws IOException {
     final long srcId = dataInput.readLong();
-    final long dstId = dataInput.readLong();
-    return new MergeAndEliminateRootMessage(srcId, dstId);
+    return new MergeAndEliminateRootMessage(srcId);
   }
 
 }

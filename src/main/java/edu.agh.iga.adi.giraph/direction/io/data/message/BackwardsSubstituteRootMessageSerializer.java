@@ -14,14 +14,12 @@ final class BackwardsSubstituteRootMessageSerializer implements MessageSerialize
   @Override
   public void writeMessage(DataOutput dataOutput, BackwardsSubstituteRootMessage message) throws IOException {
     dataOutput.writeLong(message.getSrcId());
-    dataOutput.writeLong(message.getDstId());
   }
 
   @Override
   public BackwardsSubstituteRootMessage readMessage(DataInput dataInput) throws IOException {
     final long srcId = dataInput.readLong();
-    final long dstId = dataInput.readLong();
-    return new BackwardsSubstituteRootMessage(srcId, dstId);
+    return new BackwardsSubstituteRootMessage(srcId);
   }
 
 }

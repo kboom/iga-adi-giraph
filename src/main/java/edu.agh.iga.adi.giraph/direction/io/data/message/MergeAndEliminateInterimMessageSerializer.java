@@ -14,14 +14,12 @@ final class MergeAndEliminateInterimMessageSerializer implements MessageSerializ
   @Override
   public void writeMessage(DataOutput dataOutput, MergeAndEliminateInterimMessage message) throws IOException {
     dataOutput.writeLong(message.getSrcId());
-    dataOutput.writeLong(message.getDstId());
   }
 
   @Override
   public MergeAndEliminateInterimMessage readMessage(DataInput dataInput) throws IOException {
     final long srcId = dataInput.readLong();
-    final long dstId = dataInput.readLong();
-    return new MergeAndEliminateInterimMessage(srcId, dstId);
+    return new MergeAndEliminateInterimMessage(srcId);
   }
 
 }

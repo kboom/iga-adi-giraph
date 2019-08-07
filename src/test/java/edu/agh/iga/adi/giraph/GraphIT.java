@@ -3,7 +3,6 @@ package edu.agh.iga.adi.giraph;
 import edu.agh.iga.adi.giraph.core.DirectionTree;
 import edu.agh.iga.adi.giraph.direction.DirectionComputation;
 import edu.agh.iga.adi.giraph.direction.IgaAdiWorkerContext;
-import edu.agh.iga.adi.giraph.direction.IgaMessageCombiner;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import edu.agh.iga.adi.giraph.test.GiraphTestJob;
@@ -26,7 +25,6 @@ class GraphIT {
   void canRun() {
     GiraphTestJob job = giraphJob()
         .computationClazz(DirectionComputation.class)
-        .messageCombinerClazz(IgaMessageCombiner.class)
         .workerContextClazz(IgaAdiWorkerContext.class)
         .vertexInputFormatClazz(InMemoryVertexInputFormat.class)
         .vertexOutputFormatClazz(InMemoryVertexOutputFormat.class)

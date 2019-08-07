@@ -12,6 +12,7 @@ import org.apache.hadoop.io.LongWritable;
 
 import java.util.List;
 
+import static edu.agh.iga.adi.giraph.core.IgaElement.igaElement;
 import static java.util.Collections.singletonList;
 
 public final class IgaTestGraph {
@@ -29,7 +30,7 @@ public final class IgaTestGraph {
   public IgaTestGraph withVertex(
       long srcId, IgaOperation operation, long dstId
   ) {
-    graph.addVertex(withVertex(srcId, new IgaElement(), operation, dstId));
+    graph.addVertex(withVertex(srcId, igaElement(0L, 12), operation, dstId));
     return this;
   }
 

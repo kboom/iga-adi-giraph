@@ -14,14 +14,12 @@ final class BackwardsSubstituteBranchMessageSerializer implements MessageSeriali
   @Override
   public void writeMessage(DataOutput dataOutput, BackwardsSubstituteBranchMessage message) throws IOException {
     dataOutput.writeLong(message.getSrcId());
-    dataOutput.writeLong(message.getDstId());
   }
 
   @Override
   public BackwardsSubstituteBranchMessage readMessage(DataInput dataInput) throws IOException {
     final long srcId = dataInput.readLong();
-    final long dstId = dataInput.readLong();
-    return new BackwardsSubstituteBranchMessage(srcId, dstId);
+    return new BackwardsSubstituteBranchMessage(srcId);
   }
 
 }

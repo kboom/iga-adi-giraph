@@ -1,8 +1,6 @@
 package edu.agh.iga.adi.giraph.core.operations;
 
-import edu.agh.iga.adi.giraph.core.IgaElement;
-import edu.agh.iga.adi.giraph.core.IgaMessage;
-import edu.agh.iga.adi.giraph.core.IgaOperation;
+import edu.agh.iga.adi.giraph.core.*;
 
 import static edu.agh.iga.adi.giraph.core.operations.BackwardsSubstituteRootOperation.BackwardsSubstituteRootMessage;
 
@@ -12,19 +10,19 @@ public final class BackwardsSubstituteRootOperation implements IgaOperation<Back
       = new BackwardsSubstituteRootOperation();
 
   @Override
-  public BackwardsSubstituteRootMessage sendMessage(long dstId, IgaElement element) {
+  public BackwardsSubstituteRootMessage sendMessage(IgaVertex dstId, IgaElement element) {
     return null;
   }
 
   @Override
-  public void consumeMessage(IgaElement element, BackwardsSubstituteRootMessage message) {
+  public void consumeMessage(IgaElement element, BackwardsSubstituteRootMessage message, DirectionTree tree) {
 
   }
 
   public static class BackwardsSubstituteRootMessage extends IgaMessage {
 
-    public BackwardsSubstituteRootMessage(long srcId, long dstId) {
-      super(srcId, dstId, BACKWARDS_SUBSTITUTE_ROOT_OPERATION);
+    public BackwardsSubstituteRootMessage(long srcId) {
+      super(srcId, BACKWARDS_SUBSTITUTE_ROOT_OPERATION);
     }
 
   }

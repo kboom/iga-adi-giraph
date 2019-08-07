@@ -1,8 +1,6 @@
 package edu.agh.iga.adi.giraph.core.operations;
 
-import edu.agh.iga.adi.giraph.core.IgaElement;
-import edu.agh.iga.adi.giraph.core.IgaMessage;
-import edu.agh.iga.adi.giraph.core.IgaOperation;
+import edu.agh.iga.adi.giraph.core.*;
 
 import static edu.agh.iga.adi.giraph.core.operations.BackwardsSubstituteBranchOperation.BackwardsSubstituteBranchMessage;
 
@@ -12,19 +10,19 @@ public final class BackwardsSubstituteBranchOperation implements IgaOperation<Ba
       = new BackwardsSubstituteBranchOperation();
 
   @Override
-  public BackwardsSubstituteBranchMessage sendMessage(long dstId, IgaElement element) {
+  public BackwardsSubstituteBranchMessage sendMessage(IgaVertex dstId, IgaElement element) {
     return null;
   }
 
   @Override
-  public void consumeMessage(IgaElement element, BackwardsSubstituteBranchMessage message) {
+  public void consumeMessage(IgaElement element, BackwardsSubstituteBranchMessage message, DirectionTree tree) {
 
   }
 
   public static class BackwardsSubstituteBranchMessage extends IgaMessage {
 
-    public BackwardsSubstituteBranchMessage(long srcId, long dstId) {
-      super(srcId, dstId, BACKWARDS_SUBSTITUTE_BRANCH_OPERATION);
+    public BackwardsSubstituteBranchMessage(long srcId) {
+      super(srcId, BACKWARDS_SUBSTITUTE_BRANCH_OPERATION);
     }
 
   }

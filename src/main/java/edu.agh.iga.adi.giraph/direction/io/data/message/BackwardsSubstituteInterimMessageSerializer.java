@@ -14,14 +14,12 @@ final class BackwardsSubstituteInterimMessageSerializer implements MessageSerial
   @Override
   public void writeMessage(DataOutput dataOutput, BackwardsSubstituteInterimMessage message) throws IOException {
     dataOutput.writeLong(message.getSrcId());
-    dataOutput.writeLong(message.getDstId());
   }
 
   @Override
   public BackwardsSubstituteInterimMessage readMessage(DataInput dataInput) throws IOException {
     final long srcId = dataInput.readLong();
-    final long dstId = dataInput.readLong();
-    return new BackwardsSubstituteInterimMessage(srcId, dstId);
+    return new BackwardsSubstituteInterimMessage(srcId);
   }
 
 }

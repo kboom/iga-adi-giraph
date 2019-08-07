@@ -86,7 +86,7 @@ public class IgaVertex {
     return tree.strengthOfRow(rowIndexOf());
   }
 
-  public ChildPosition childPositionOf() {
+  public ChildPosition childPosition() {
     if(is(LeafVertex.class)) {
       int position = (int) (tree.strengthOfLeaves() + offsetLeft()) % 3;
       switch (position) {

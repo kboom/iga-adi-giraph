@@ -27,15 +27,9 @@
             <version>1.2.1</version>
         </dependency>
         <dependency>
-            <groupId>org.nd4j</groupId>
-            <artifactId>nd4j-api</artifactId>
-            <version>0.9.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.nd4j</groupId>
-            <artifactId>nd4j-native</artifactId>
-            <version>0.9.1</version>
-            <scope>test</scope>
+            <groupId>org.ojalgo</groupId>
+            <artifactId>ojalgo</artifactId>
+            <version>47.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

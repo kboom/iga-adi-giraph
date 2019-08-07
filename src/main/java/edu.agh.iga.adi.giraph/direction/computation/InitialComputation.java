@@ -16,6 +16,7 @@ import org.apache.giraph.worker.WorkerGlobalCommUsage;
 import org.apache.hadoop.io.LongWritable;
 
 import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
+import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 
 /**
  * Kicks off the cascade of operations at the leaf vertices.
@@ -31,12 +32,13 @@ public final class InitialComputation
       Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex,
       Iterable<IgaMessageWritable> messages
   ) {
-    final IgaVertex igaVertex = IgaVertex.vertexOf(directionTree, vertex.getId().get());
+    final IgaVertex igaVertex = vertexOf(directionTree, vertex.getId().get());
     if (igaVertex.is(LeafVertex.class)) {
       final IgaElement element = vertex.getValue().getElement();
       vertex.getEdges().forEach(edge -> {
-        LongWritable dstId = edge.getTargetVertexId();
-        sendMessage(dstId, new IgaMessageWritable(edge.getValue().getIgaOperation().sendMessage(dstId.get(), element)));
+        final LongWritable dstId = edge.getTargetVertexId();
+        final IgaVertex dstVertex = vertexOf(directionTree, dstId.get());
+        sendMessage(dstId, new IgaMessageWritable(edge.getValue().getIgaOperation().sendMessage(dstVertex, element)));
       });
     }
     vertex.voteToHalt();

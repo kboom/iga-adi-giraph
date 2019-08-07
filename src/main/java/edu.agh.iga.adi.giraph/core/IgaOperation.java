@@ -11,15 +11,15 @@ public interface IgaOperation<M extends IgaMessage> {
    * @param element the source element from which the messages are sent
    * @return the list of messages to send
    */
-  M sendMessage(long dstId, IgaElement element);
+  M sendMessage(IgaVertex dstId, IgaElement element);
 
   /**
    * Consumes message sent in the previous superstep by {@link #sendMessages(IgaElement, Iterator message)}
    * and updates the vertex state
-   *
-   * @param element  the target element to which the message are destined for
+   *  @param element the target element to which the message are destined for
    * @param message the message sent to the element
+   * @param tree the direction tree for this computation
    */
-  void consumeMessage(IgaElement element, M message);
+  void consumeMessage(IgaElement element, M message, DirectionTree tree);
 
 }

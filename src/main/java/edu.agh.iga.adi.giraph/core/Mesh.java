@@ -69,6 +69,12 @@ public final class Mesh {
             return this;
         }
 
+        public MeshBuilder withElements(int elements) {
+            withElementsX(elements);
+            withElementsX(elements);
+            return this;
+        }
+
         public MeshBuilder withElementsX(int elementsX) {
             mesh.elementsX = elementsX;
             return this;
