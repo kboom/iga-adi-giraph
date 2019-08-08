@@ -79,7 +79,7 @@ public final class MergeAndEliminateBranchOperation implements IgaOperation<Merg
   }
 
   @Override
-  public void process(IgaElement element) {
+  public void process(IgaElement element, DirectionTree tree) {
     swapDofs(element, 0, 2, 6);
     swapDofs(element, 1, 3, 6);
     partialForwardElimination(element, 2, 6);

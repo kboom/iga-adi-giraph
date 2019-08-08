@@ -4,8 +4,7 @@ import edu.agh.iga.adi.giraph.core.*;
 import org.ojalgo.matrix.store.TransformableRegion;
 
 import static edu.agh.iga.adi.giraph.core.operations.BackwardsSubstituteRootOperation.BackwardsSubstituteRootMessage;
-import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.partialForwardElimination;
-import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.swapDofs;
+import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.*;
 import static org.ojalgo.function.constant.PrimitiveMath.ADD;
 
 /*
@@ -66,8 +65,8 @@ public final class BackwardsSubstituteRootOperation implements IgaOperation<Back
   }
 
   @Override
-  public void process(IgaElement element) {
-    partialForwardElimination(element, 2, 6);
+  public void process(IgaElement element, DirectionTree tree) {
+    partialBackwardsSubstitution(element, 2, 6);
     swapDofs(element, 0, 2, 6);
     swapDofs(element, 1, 3, 6);
   }

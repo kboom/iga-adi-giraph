@@ -38,7 +38,7 @@ final class IgaComputation extends BasicComputation<LongWritable, IgaElementWrit
   ) {
     IgaElement element = elementOf(vertex);
     messagesOf(messages).forEach(msg -> consume(element, msg));
-    operationOf(messages).ifPresent(operation -> operation.process(element));
+    operationOf(messages).ifPresent(operation -> operation.process(element, directionTree));
 
     vertex.setValue(vertex.getValue().withValue(element));
     return element;

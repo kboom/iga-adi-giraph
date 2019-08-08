@@ -19,7 +19,7 @@ final class BackwardsSubstituteInterimMessageSerializer implements MessageSerial
   @Override
   public BackwardsSubstituteInterimMessage readMessage(DataInput dataInput) throws IOException {
     final long srcId = dataInput.readLong();
-    return new BackwardsSubstituteInterimMessage(srcId);
+    return new BackwardsSubstituteInterimMessage(srcId, null);
   }
 
 }

@@ -25,7 +25,8 @@ public interface IgaOperation<M extends IgaMessage> {
   /**
    * After all messages are consumed, the processing can take place
    * @param element
+   * @param tree
    */
-  void process(IgaElement element);
+  void process(IgaElement element, DirectionTree tree);
 
 }

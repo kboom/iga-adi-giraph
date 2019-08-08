@@ -216,7 +216,7 @@ class MergeAndEliminateBranchOperationTest {
   }
 
   private IgaElement elementAfterProcessing(IgaElement element) {
-    MERGE_AND_ELIMINATE_BRANCH_OPERATION.process(element);
+    MERGE_AND_ELIMINATE_BRANCH_OPERATION.process(element, DIRECTION_TREE);
     return element;
   }
 
