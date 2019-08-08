@@ -19,7 +19,7 @@ final class BackwardsSubstituteRootMessageSerializer implements MessageSerialize
   @Override
   public BackwardsSubstituteRootMessage readMessage(DataInput dataInput) throws IOException {
     final long srcId = dataInput.readLong();
-    return new BackwardsSubstituteRootMessage(srcId);
+    return new BackwardsSubstituteRootMessage(srcId, null);
   }
 
 }
