@@ -52,7 +52,7 @@ final class OperationUtil {
           ma[icol * ROWS + isub] -= ma[icol * ROWS + irow] * mult;
         }
         for (int irhs = 0; irhs < nrhs; irhs++) {
-          mb[isub * nrhs + irhs] -= mb[irow * nrhs + irhs] * mult;
+          mb[irhs * ROWS + isub] -= mb[irhs * ROWS + irow] * mult;
         }
       }
     }
