@@ -2,6 +2,8 @@ package edu.agh.iga.adi.giraph.core.operations;
 
 import edu.agh.iga.adi.giraph.core.IgaElement;
 
+import static org.ojalgo.function.constant.PrimitiveMath.DIVIDE;
+
 final class OperationUtil {
 
   private static final int ROWS = 6;
@@ -79,6 +81,19 @@ final class OperationUtil {
         for (int irhs = 0; irhs < nrhs; irhs++) {
           mb[irhs * ROWS + isub] -= mb[irhs * ROWS + irow] * mult;
         }
+      }
+    }
+  }
+
+  static void partialBackwardsSubstitution(IgaElement e, int elim, int size) {
+    final int nrhs = (int) e.mx.countColumns();
+    for (int irhs = 0; irhs < nrhs; irhs++) {
+      for (int irow = elim - 1; irow >= 0; irow--) {
+        e.mx.set(irow, irhs, e.mb.doubleValue(irow, irhs));
+        for (int icol = irow + 1; icol < size; icol++) {
+          e.mx.set(irow, irhs, e.mx.doubleValue(irow, irhs) - e.ma.doubleValue(irow, icol) * e.mx.doubleValue(icol, irhs));
+        }
+        e.mx.modifyOne(irow, irhs, DIVIDE.by(e.ma.doubleValue(irow, irow)));
       }
     }
   }

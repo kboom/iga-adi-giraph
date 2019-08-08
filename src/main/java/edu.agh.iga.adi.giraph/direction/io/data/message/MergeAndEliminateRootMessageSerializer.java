@@ -19,7 +19,7 @@ final class MergeAndEliminateRootMessageSerializer implements MessageSerializer<
   @Override
   public MergeAndEliminateRootMessage readMessage(DataInput dataInput) throws IOException {
     final long srcId = dataInput.readLong();
-    return new MergeAndEliminateRootMessage(srcId);
+    return new MergeAndEliminateRootMessage(srcId, null, null);
   }
 
 }
