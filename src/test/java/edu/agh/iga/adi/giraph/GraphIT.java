@@ -10,6 +10,7 @@ import org.apache.giraph.io.formats.InMemoryVertexOutputFormat;
 import org.apache.giraph.utils.InMemoryVertexInputFormat;
 import org.apache.giraph.utils.TestGraph;
 import org.apache.hadoop.io.LongWritable;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static edu.agh.iga.adi.giraph.test.GiraphTestJob.giraphJob;
@@ -22,6 +23,7 @@ class GraphIT {
   private final DirectionTree directionTree = new DirectionTree(12);
 
   @Test
+  @Disabled
   void canRun() {
     GiraphTestJob job = giraphJob()
         .computationClazz(DirectionComputation.class)

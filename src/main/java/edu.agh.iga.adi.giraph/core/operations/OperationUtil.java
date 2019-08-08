@@ -10,9 +10,34 @@ final class OperationUtil {
 
   }
 
+  /*
+    def swapDofs(a: Int, b: Int, size: Int)(implicit p: IgaElement): Unit = {
+      p.mA.swapRows(a, b, size)
+      p.mA.swapCols(a, b, size)
+      p.mB.swapRows(a, b)
+      p.mX.swapRows(a, b)
+  }
+
+  def swapRows(r1: Int, r2: Int, size: Int): DenseMatrix[Double] = {
+    val old = d(r1, 0 until size).inner.copy.t
+    d(r1, 0 until size) := d(r2, 0 until size)
+    d(r2, 0 until size) := old
+        d
+  }
+
+  def swapCols(c1: Int, c2: Int, size: Int): DenseMatrix[Double] = {
+    val old = d(0 until size, c1).copy
+    d(0 until size, c1) := d(0 until size, c2)
+    d(0 until size, c2) := old
+        d
+  }
+
+   */
   static void swapDofs(IgaElement e, int a, int b, int size) {
-    e.ma.regionByLimits(size, 1).exchangeRows(a, b);
-    e.ma.regionByLimits(1, size).exchangeColumns(a, b);
+    final int rows = (int) e.ma.countRows();
+    final int cols = (int) e.ma.countColumns();
+    e.ma.regionByLimits(rows, size).exchangeRows(a, b);
+    e.ma.regionByLimits(size, cols).exchangeColumns(a, b);
     e.mb.exchangeRows(a, b);
     e.mx.exchangeRows(a, b);
   }

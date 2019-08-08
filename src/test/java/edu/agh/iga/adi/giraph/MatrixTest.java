@@ -27,7 +27,7 @@ class MatrixTest {
         .operateOnMatching(b2, PrimitiveMath.ADD)
         .get();
 
-    assertThat(b3.aggregateAll(SMALLEST)).isEqualTo(5);
+    assertThat(b3.aggregateAll(SMALLEST)).isEqualTo(10);
     BasicLogger.debug("Arr", b3);
   }
 
