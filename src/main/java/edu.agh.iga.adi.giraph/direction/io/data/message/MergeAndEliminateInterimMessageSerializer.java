@@ -19,7 +19,7 @@ final class MergeAndEliminateInterimMessageSerializer implements MessageSerializ
   @Override
   public MergeAndEliminateInterimMessage readMessage(DataInput dataInput) throws IOException {
     final long srcId = dataInput.readLong();
-    return new MergeAndEliminateInterimMessage(srcId);
+    return new MergeAndEliminateInterimMessage(srcId, null, null);
   }
 
 }

@@ -1,7 +1,6 @@
 package edu.agh.iga.adi.giraph.direction.io.data;
 
 import org.junit.jupiter.api.Test;
-import org.ojalgo.matrix.PrimitiveMatrix;
 import org.ojalgo.matrix.store.MatrixStore;
 import org.ojalgo.matrix.store.PrimitiveDenseStore;
 import org.ojalgo.netio.BasicLogger;
@@ -15,7 +14,6 @@ import static com.google.common.io.ByteStreams.newDataOutput;
 import static edu.agh.iga.adi.giraph.direction.io.data.DataInputAccessStore.dataInputAccessStore;
 import static edu.agh.iga.adi.giraph.direction.io.data.DataOutputReceiver.receiveInto;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.ojalgo.array.Array2D.DIRECT32;
 
 class DataOutputReceiverTest {
 
