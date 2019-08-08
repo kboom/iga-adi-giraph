@@ -13,6 +13,35 @@ import static edu.agh.iga.adi.giraph.test.matrix.MatrixBuilder.matrixOfSize;
 class OperationUtilTest {
 
   @Test
+  void doesNotModifyIdentityMatrix() {
+    IgaElement element = elementFor(INTERIM, MESH)
+        .withSpecificMatrixA(
+            matrixOfSize(6, 6).withValues(
+                1, 0, 0, 0, 0, 0,
+                0, 1, 0, 0, 0, 0,
+                0, 0, 1, 0, 0, 0,
+                0, 0, 0, 1, 0, 0,
+                0, 0, 0, 0, 1, 0,
+                0, 0, 0, 0, 0, 1
+            )
+        );
+
+    partialForwardElimination(element, 1, 6);
+
+    assertThatElement(element)
+        .hasMa(
+            matrixOfSize(6, 6).withValues(
+                1, 0, 0, 0, 0, 0,
+                0, 1, 0, 0, 0, 0,
+                0, 0, 1, 0, 0, 0,
+                0, 0, 0, 1, 0, 0,
+                0, 0, 0, 0, 1, 0,
+                0, 0, 0, 0, 0, 1
+            )
+        );
+  }
+
+  @Test
   void canEliminateUnitaryCoefficientMatrix() {
     IgaElement element = elementFor(INTERIM, MESH)
         .withSpecificMatrixA(
