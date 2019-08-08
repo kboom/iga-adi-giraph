@@ -61,7 +61,7 @@ public final class BackwardsSubstituteRootOperation implements IgaOperation<Back
 
   @Override
   public void consumeMessage(IgaElement element, BackwardsSubstituteRootMessage message, DirectionTree tree) {
-    element.ma.regionByOffsets(2, 0).modifyMatching(ADD, message.mx);
+    element.mx.regionByOffsets(2, 0).modifyMatching(ADD, message.mx);
   }
 
   @Override
@@ -78,10 +78,6 @@ public final class BackwardsSubstituteRootOperation implements IgaOperation<Back
     public BackwardsSubstituteRootMessage(long srcId, TransformableRegion<Double> mx) {
       super(srcId, BACKWARDS_SUBSTITUTE_ROOT_OPERATION);
       this.mx = mx;
-    }
-
-    public TransformableRegion<Double> getMx() {
-      return mx;
     }
 
   }

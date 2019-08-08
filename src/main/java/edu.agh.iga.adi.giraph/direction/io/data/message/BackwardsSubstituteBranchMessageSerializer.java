@@ -19,7 +19,7 @@ final class BackwardsSubstituteBranchMessageSerializer implements MessageSeriali
   @Override
   public BackwardsSubstituteBranchMessage readMessage(DataInput dataInput) throws IOException {
     final long srcId = dataInput.readLong();
-    return new BackwardsSubstituteBranchMessage(srcId);
+    return new BackwardsSubstituteBranchMessage(srcId, null);
   }
 
 }
