@@ -5,10 +5,9 @@ import edu.agh.iga.adi.giraph.direction.computation.IgaComputationFactory;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import edu.agh.iga.adi.giraph.test.IgaTestGraph;
-import edu.agh.iga.adi.giraph.test.SmallProblem;
 import edu.agh.iga.adi.giraph.test.assertion.TestGraphAssertions;
 import org.apache.giraph.conf.GiraphConfiguration;
-import org.apache.giraph.edge.ByteArrayEdges;
+import org.apache.giraph.edge.HashMapEdges;
 import org.apache.giraph.graph.Computation;
 import org.apache.giraph.master.MasterCompute;
 import org.apache.giraph.utils.TestGraph;
@@ -33,7 +32,7 @@ public class ComputationTestRunner {
     GiraphConfiguration conf = new GiraphConfiguration();
     conf.setComputationClass(computation);
     conf.setMasterComputeClass(masterCompute);
-    conf.setOutEdgesClass(ByteArrayEdges.class);
+    conf.setOutEdgesClass(HashMapEdges.class);
     COMPUTATION_FACTORY_CLASS.set(conf, IgaComputationFactory.class);
 //    USE_SUPERSTEP_COUNTERS.set(conf, false);
     USE_MESSAGE_SIZE_ENCODING.set(conf, true); // this has to be enabled as we don't use message merging

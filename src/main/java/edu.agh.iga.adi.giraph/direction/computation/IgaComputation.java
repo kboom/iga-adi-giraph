@@ -10,6 +10,7 @@ import org.apache.giraph.graph.BasicComputation;
 import org.apache.giraph.graph.GraphState;
 import org.apache.giraph.graph.Vertex;
 import org.apache.giraph.worker.WorkerGlobalCommUsage;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.log4j.Logger;
 
@@ -26,7 +27,26 @@ public final class IgaComputation extends BasicComputation<LongWritable, IgaElem
 
   private static final Logger LOG = Logger.getLogger(IgaComputation.class);
 
+  public static final String PHASE = "iga.direction.phase";
+
   private DirectionTree directionTree;
+  private IgaComputationPhase phase;
+
+  @Override
+  public void preSuperstep() {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Before superstep");
+    }
+    IntWritable phaseWritable = getAggregatedValue(PHASE);
+    phase = IgaComputationPhase.getPhase(phaseWritable.get());
+  }
+
+  @Override
+  public void postSuperstep() {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("After superstep");
+    }
+  }
 
   @Override
   public final void compute(
@@ -69,9 +89,12 @@ public final class IgaComputation extends BasicComputation<LongWritable, IgaElem
 
   private void send(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex, IgaElement element) {
     vertex.getEdges().forEach(edge -> {
-      LongWritable dstId = edge.getTargetVertexId();
-      final IgaVertex dstVertex = vertexOf(directionTree, dstId.get());
-      sendMessage(dstId, new IgaMessageWritable(edge.getValue().getIgaOperation().sendMessage(dstVertex, element)));
+      final IgaOperation igaOperation = edge.getValue().getIgaOperation();
+      if (phase.matches(igaOperation)) {
+        LongWritable dstId = edge.getTargetVertexId();
+        final IgaVertex dstVertex = vertexOf(directionTree, dstId.get());
+        sendMessage(dstId, new IgaMessageWritable(igaOperation.sendMessage(dstVertex, element)));
+      }
     });
   }
 
