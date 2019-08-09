@@ -36,4 +36,13 @@ public class IgaElement {
     );
   }
 
+  public static IgaElement igaElement(
+      long id,
+      PrimitiveDenseStore ma,
+      PrimitiveDenseStore mb,
+      PrimitiveDenseStore mx
+  ) {
+    return new IgaElement(id, ma, mb, mx);
+  }
+
 }

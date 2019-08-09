@@ -6,6 +6,7 @@ import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import edu.agh.iga.adi.giraph.test.IgaTestGraph;
 import edu.agh.iga.adi.giraph.test.assertion.TestGraphAssertions;
 import org.apache.giraph.conf.GiraphConfiguration;
+import org.apache.giraph.edge.ByteArrayEdges;
 import org.apache.giraph.graph.Computation;
 import org.apache.giraph.master.MasterCompute;
 import org.apache.giraph.utils.TestGraph;
@@ -17,6 +18,7 @@ import java.util.function.Function;
 import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.test.assertion.TestGraphAssertions.assertThat;
 import static org.apache.giraph.conf.GiraphConstants.COMPUTATION_FACTORY_CLASS;
+import static org.apache.giraph.conf.GiraphConstants.USE_MESSAGE_SIZE_ENCODING;
 import static org.apache.giraph.utils.InternalVertexRunner.runWithInMemoryOutput;
 
 public class ComputationTestRunner {
@@ -28,7 +30,9 @@ public class ComputationTestRunner {
     GiraphConfiguration conf = new GiraphConfiguration();
     conf.setComputationClass(computation);
     conf.setMasterComputeClass(masterCompute);
+    conf.setOutEdgesClass(ByteArrayEdges.class);
     COMPUTATION_FACTORY_CLASS.set(conf, IgaComputationFactory.class);
+    USE_MESSAGE_SIZE_ENCODING.set(conf, true); // this has to be enabled as we don't use message merging
     return new ComputationRunnerPreconditions(conf);
   }
 

@@ -19,6 +19,7 @@ public class DirectionComputation extends DefaultMasterCompute {
     computationResolver = new ComputationResolver(new DirectionTree(problemSize));
   }
 
+  // alternatively org.apache.giraph.examples.scc.SccPhaseMasterCompute in giraph repo
   @Override
   public final void compute() {
     computationResolver.computationForStep(getSuperstep()).ifPresent(this::setComputation);

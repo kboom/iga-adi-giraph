@@ -51,7 +51,8 @@ public final class MessageSerializerFacade {
   public void writeMessage(DataOutput dataOutput, IgaMessage message) {
     final Class<? extends IgaMessage> clazz = message.getClass();
     try {
-      dataOutput.writeInt(MESSAGE_TYPE_MAPPING.get(clazz));
+      int mapping = MESSAGE_TYPE_MAPPING.get(clazz);
+      dataOutput.writeInt(mapping);
       SERIALIZER_MAP.get(clazz).writeMessage(dataOutput, message);
     } catch (IOException e) {
       throw new IllegalStateException("Could not serialize message");

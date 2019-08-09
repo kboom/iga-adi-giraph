@@ -4,13 +4,13 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import edu.agh.iga.adi.giraph.core.IgaOperation;
 import edu.agh.iga.adi.giraph.core.operations.*;
-import org.apache.hadoop.io.WritableComparable;
+import org.apache.hadoop.io.Writable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public final class IgaOperationWritable implements WritableComparable {
+public final class IgaOperationWritable implements Writable {
 
   private static final BiMap<Class<?>, Integer> OPERATION_MAPPING = ImmutableBiMap.<Class<?>, Integer>builder()
       .put(BackwardsSubstituteBranchOperation.class, 1)
@@ -38,15 +38,9 @@ public final class IgaOperationWritable implements WritableComparable {
     igaOperation = operationOfCode(dataInput.readInt());
   }
 
-  @Override
-  public int compareTo(Object o) {
-    return 0;
-  }
-
   public IgaOperation getIgaOperation() {
     return igaOperation;
   }
-
 
   private static int codeOfOperation(IgaOperation operation) {
     return OPERATION_MAPPING.get(operation.getClass());

@@ -51,6 +51,7 @@ public final class InitialComputation
       CentralizedServiceWorker<LongWritable, IgaElementWritable, IgaOperationWritable> serviceWorker,
       WorkerGlobalCommUsage workerGlobalCommUsage
   ) {
+    super.initialize(graphState, workerClientRequestProcessor, serviceWorker, workerGlobalCommUsage);
     directionTree = new DirectionTree(PROBLEM_SIZE.get(getConf()));
   }
 

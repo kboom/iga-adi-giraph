@@ -29,7 +29,8 @@ public class IgaMessageWritable implements WritableComparable {
 
   @Override
   public int compareTo(Object o) {
-    return 0;
+    IgaMessageWritable other = (IgaMessageWritable) o;
+    return (int) (igaMessage.getSrcId() - other.igaMessage.getSrcId());
   }
 
   public IgaMessage getIgaMessage() {
