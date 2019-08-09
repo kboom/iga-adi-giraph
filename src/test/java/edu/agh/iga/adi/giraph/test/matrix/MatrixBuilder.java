@@ -34,6 +34,10 @@ public class MatrixBuilder {
     return new MatrixValuesBuilder(rows, cols);
   }
 
+  public static PrimitiveDenseStore emptyMatrixOfSize(int rows, int cols) {
+    return FACTORY.makeZero(rows, cols);
+  }
+
   public static class MatrixValuesBuilder {
     private final int rows;
     private final int cols;

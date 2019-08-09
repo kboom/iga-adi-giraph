@@ -11,15 +11,20 @@ import org.apache.giraph.graph.GraphState;
 import org.apache.giraph.graph.Vertex;
 import org.apache.giraph.worker.WorkerGlobalCommUsage;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.log4j.Logger;
 
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
+import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.StreamSupport.stream;
 
 public final class IgaComputation extends BasicComputation<LongWritable, IgaElementWritable, IgaOperationWritable, IgaMessageWritable> {
+
+  private static final Logger LOG = Logger.getLogger(IgaComputation.class);
 
   private DirectionTree directionTree;
 
@@ -36,6 +41,13 @@ public final class IgaComputation extends BasicComputation<LongWritable, IgaElem
       Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex,
       Iterable<IgaMessageWritable> messages
   ) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(format(
+          "Running on %d with messages %s",
+          vertex.getId().get(),
+          messagesOf(messages).map(IgaMessage::getSrcId).map(String::valueOf).collect(joining(","))
+      ));
+    }
     IgaElement element = elementOf(vertex);
     messagesOf(messages).forEach(msg -> consume(element, msg));
     operationOf(messages).ifPresent(operation -> operation.process(element, directionTree));
