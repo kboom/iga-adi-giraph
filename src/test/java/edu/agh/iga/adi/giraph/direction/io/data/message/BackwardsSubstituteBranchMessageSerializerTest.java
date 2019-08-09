@@ -6,7 +6,7 @@ import org.ojalgo.random.Uniform;
 import static edu.agh.iga.adi.giraph.test.SmallProblem.BRANCH_ID;
 import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
-class BackwardsSubstituteBranchMessageSerializerTest extends MessageSerializerTest<BackwardsSubstituteBranchMessage> {
+final class BackwardsSubstituteBranchMessageSerializerTest extends MessageSerializerTest<BackwardsSubstituteBranchMessage> {
 
   BackwardsSubstituteBranchMessageSerializerTest() {
     super(new BackwardsSubstituteBranchMessageSerializer());
