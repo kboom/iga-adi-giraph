@@ -16,7 +16,7 @@ final class BackwardsSubstituteInterimMessageSerializerTest extends MessageSeria
   BackwardsSubstituteInterimMessage createMessage() {
     return new BackwardsSubstituteInterimMessage(
         BRANCH_ID,
-        FACTORY.makeFilled(6, 14, new Uniform())
+        FACTORY.makeFilled(4, 14, new Uniform())
     );
   }
 

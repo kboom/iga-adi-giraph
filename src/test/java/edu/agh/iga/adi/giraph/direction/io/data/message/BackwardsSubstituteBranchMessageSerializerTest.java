@@ -16,7 +16,7 @@ final class BackwardsSubstituteBranchMessageSerializerTest extends MessageSerial
   BackwardsSubstituteBranchMessage createMessage() {
     return new BackwardsSubstituteBranchMessage(
         BRANCH_ID,
-        FACTORY.makeFilled(6, 14, new Uniform())
+        FACTORY.makeFilled(4, 14, new Uniform())
     );
   }
 

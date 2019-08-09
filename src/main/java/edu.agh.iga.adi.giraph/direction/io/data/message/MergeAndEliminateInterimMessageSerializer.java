@@ -17,6 +17,9 @@ final class MergeAndEliminateInterimMessageSerializer implements MessageSerializ
   static final MergeAndEliminateInterimMessageSerializer MERGE_AND_ELIMINATE_INTERIM_MESSAGE_SERIALIZER
       = new MergeAndEliminateInterimMessageSerializer();
 
+  private static final int CONTRIBUTED_ROWS = 4;
+  private static final int CONTRIBUTED_COLS = 4;
+
   @Override
   public void writeMessage(DataOutput dataOutput, MergeAndEliminateInterimMessage message) throws IOException {
     dataOutput.writeLong(message.getSrcId());
@@ -29,10 +32,10 @@ final class MergeAndEliminateInterimMessageSerializer implements MessageSerializ
   public MergeAndEliminateInterimMessage readMessage(DataInput dataInput) throws IOException {
     final long srcId = dataInput.readLong();
     final long dofs = dataInput.readInt();
-    PrimitiveDenseStore ma = PrimitiveDenseStore.FACTORY.makeZero(ROWS_BOUND_TO_NODE, COLS_BOUND_TO_NODE);
-    ma.fillMatching(dataInputAccessStore(dataInput, ROWS_BOUND_TO_NODE * COLS_BOUND_TO_NODE));
-    PrimitiveDenseStore mb = PrimitiveDenseStore.FACTORY.makeZero(ROWS_BOUND_TO_NODE, dofs);
-    mb.fillMatching(dataInputAccessStore(dataInput, ROWS_BOUND_TO_NODE * dofs));
+    PrimitiveDenseStore ma = PrimitiveDenseStore.FACTORY.makeZero(CONTRIBUTED_ROWS, CONTRIBUTED_COLS);
+    ma.fillMatching(dataInputAccessStore(dataInput, CONTRIBUTED_ROWS * CONTRIBUTED_COLS));
+    PrimitiveDenseStore mb = PrimitiveDenseStore.FACTORY.makeZero(CONTRIBUTED_ROWS, dofs);
+    mb.fillMatching(dataInputAccessStore(dataInput, CONTRIBUTED_ROWS * dofs));
     return new MergeAndEliminateInterimMessage(srcId, ma, mb);
   }
 

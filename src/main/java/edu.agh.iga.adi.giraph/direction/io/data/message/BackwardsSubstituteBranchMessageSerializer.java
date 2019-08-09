@@ -7,7 +7,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import static edu.agh.iga.adi.giraph.core.IgaConstants.ROWS_BOUND_TO_NODE;
 import static edu.agh.iga.adi.giraph.direction.io.data.DataInputAccessStore.dataInputAccessStore;
 import static edu.agh.iga.adi.giraph.direction.io.data.DataOutputReceiver.receiveInto;
 
@@ -15,6 +14,8 @@ final class BackwardsSubstituteBranchMessageSerializer implements MessageSeriali
 
   static final BackwardsSubstituteBranchMessageSerializer BACKWARDS_SUBSTITUTE_BRANCH_MESSAGE_SERIALIZER
       = new BackwardsSubstituteBranchMessageSerializer();
+
+  private static final int CONTRIBUTED_ROWS = 4;
 
   @Override
   public void writeMessage(DataOutput dataOutput, BackwardsSubstituteBranchMessage message) throws IOException {
@@ -27,8 +28,8 @@ final class BackwardsSubstituteBranchMessageSerializer implements MessageSeriali
   public BackwardsSubstituteBranchMessage readMessage(DataInput dataInput) throws IOException {
     final long srcId = dataInput.readLong();
     final long dofs = dataInput.readInt();
-    PrimitiveDenseStore ds = PrimitiveDenseStore.FACTORY.makeZero(ROWS_BOUND_TO_NODE, dofs);
-    ds.fillMatching(dataInputAccessStore(dataInput, ROWS_BOUND_TO_NODE * dofs));
+    PrimitiveDenseStore ds = PrimitiveDenseStore.FACTORY.makeZero(CONTRIBUTED_ROWS, dofs);
+    ds.fillMatching(dataInputAccessStore(dataInput, CONTRIBUTED_ROWS * dofs));
     return new BackwardsSubstituteBranchMessage(srcId, ds);
   }
 

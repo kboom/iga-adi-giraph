@@ -6,9 +6,9 @@ import org.ojalgo.random.Uniform;
 import static edu.agh.iga.adi.giraph.test.SmallProblem.BRANCH_ID;
 import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
-final class MergeAndEliminateInterimRootSerializerTest extends MessageSerializerTest<MergeAndEliminateRootMessage> {
+final class MergeAndEliminateRootMessageSerializerTest extends MessageSerializerTest<MergeAndEliminateRootMessage> {
 
-  MergeAndEliminateInterimRootSerializerTest() {
+  MergeAndEliminateRootMessageSerializerTest() {
     super(new MergeAndEliminateRootMessageSerializer());
   }
 
@@ -16,8 +16,8 @@ final class MergeAndEliminateInterimRootSerializerTest extends MessageSerializer
   MergeAndEliminateRootMessage createMessage() {
     return new MergeAndEliminateRootMessage(
         BRANCH_ID,
-        FACTORY.makeFilled(6, 6, new Uniform()),
-        FACTORY.makeFilled(6, 14, new Uniform())
+        FACTORY.makeFilled(4, 4, new Uniform()),
+        FACTORY.makeFilled(4, 14, new Uniform())
     );
   }
 

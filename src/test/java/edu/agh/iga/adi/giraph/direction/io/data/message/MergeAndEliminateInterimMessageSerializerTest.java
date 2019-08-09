@@ -16,8 +16,8 @@ final class MergeAndEliminateInterimMessageSerializerTest extends MessageSeriali
   MergeAndEliminateInterimMessage createMessage() {
     return new MergeAndEliminateInterimMessage(
         BRANCH_ID,
-        FACTORY.makeFilled(6, 6, new Uniform()),
-        FACTORY.makeFilled(6, 14, new Uniform())
+        FACTORY.makeFilled(4, 4, new Uniform()),
+        FACTORY.makeFilled(4, 14, new Uniform())
     );
   }
 

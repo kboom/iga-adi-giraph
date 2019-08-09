@@ -16,8 +16,8 @@ final class MergeAndEliminateLeavesMessageSerializerTest extends MessageSerializ
   MergeAndEliminateLeavesMessage createMessage() {
     return new MergeAndEliminateLeavesMessage(
         BRANCH_ID,
-        FACTORY.makeFilled(6, 6, new Uniform()),
-        FACTORY.makeFilled(6, 14, new Uniform())
+        FACTORY.makeFilled(3, 3, new Uniform()),
+        FACTORY.makeFilled(3, 14, new Uniform())
     );
   }
 

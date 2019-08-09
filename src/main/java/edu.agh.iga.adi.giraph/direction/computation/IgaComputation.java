@@ -19,7 +19,7 @@ import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static java.util.stream.StreamSupport.stream;
 
-final class IgaComputation extends BasicComputation<LongWritable, IgaElementWritable, IgaOperationWritable, IgaMessageWritable> {
+public final class IgaComputation extends BasicComputation<LongWritable, IgaElementWritable, IgaOperationWritable, IgaMessageWritable> {
 
   private DirectionTree directionTree;
 
@@ -79,6 +79,7 @@ final class IgaComputation extends BasicComputation<LongWritable, IgaElementWrit
       CentralizedServiceWorker<LongWritable, IgaElementWritable, IgaOperationWritable> serviceWorker,
       WorkerGlobalCommUsage workerGlobalCommUsage
   ) {
+    super.initialize(graphState, workerClientRequestProcessor, serviceWorker, workerGlobalCommUsage);
     directionTree = new DirectionTree(PROBLEM_SIZE.get(getConf()));
   }
 

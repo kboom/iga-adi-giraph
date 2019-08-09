@@ -16,7 +16,7 @@ final class BackwardsSubstituteRootMessageSerializerTest extends MessageSerializ
   BackwardsSubstituteRootMessage createMessage() {
     return new BackwardsSubstituteRootMessage(
         BRANCH_ID,
-        FACTORY.makeFilled(6, 14, new Uniform())
+        FACTORY.makeFilled(4, 14, new Uniform())
     );
   }
 

@@ -25,7 +25,7 @@ public class DataInputAccessStore implements Access1D<Double> {
     try {
       return dataInput.readDouble();
     } catch (IOException e) {
-      throw new IllegalStateException("Could not read value");
+      throw new IllegalStateException("Could not read value", e);
     }
   }
 
