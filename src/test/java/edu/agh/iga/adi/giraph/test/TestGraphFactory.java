@@ -13,7 +13,8 @@ import static edu.agh.iga.adi.giraph.core.operations.OperationFactory.operationF
 
 public class TestGraphFactory {
 
-  public static IgaTestGraph directionGraph(DirectionTree tree, IgaTestGraph igaTestGraph) {
+  public static IgaTestGraph directionGraph(IgaTestGraph igaTestGraph) {
+    final DirectionTree tree = igaTestGraph.getDirectionTree();
     LongStream.range(1L, tree.lastIndexOfLeafRow() + 1)
         .boxed()
         .map(i -> vertexOf(tree, i))

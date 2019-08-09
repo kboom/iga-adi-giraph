@@ -58,7 +58,7 @@ public final class DirectionTree {
     return strengthOfRow(leafHeight());
   }
 
-  public long size() {
-    return LongMath.pow(problemSize - 1, 2) * 3;
+  public int size() {
+    return (int) (LongMath.pow(problemSize - 1, 2) * 3);
   }
 }

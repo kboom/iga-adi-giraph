@@ -18,8 +18,8 @@ class DirectionComputationTest {
   void canSolve() {
     whenComputation(DirectionComputation.class, InitialComputation.class)
         .ofProblemSize(12)
-        .isRunForGraph((graph) ->
-            directionGraph(directionTree, graph)
+        .isRunForGraph(graph ->
+            directionGraph(graph)
                 .withVertexElement(igaElement(
                     8L,
                     matrixOfSize(6, 6).withValues(

@@ -1,5 +1,6 @@
 package edu.agh.iga.adi.giraph.test;
 
+import edu.agh.iga.adi.giraph.core.DirectionTree;
 import edu.agh.iga.adi.giraph.core.IgaElement;
 import edu.agh.iga.adi.giraph.core.IgaOperation;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
@@ -18,19 +19,28 @@ import static java.util.Collections.singletonList;
 public final class IgaTestGraph {
 
   private final TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> graph;
+  private final DirectionTree directionTree;
 
-  public IgaTestGraph(TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> graph) {
+  public IgaTestGraph(TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> graph, DirectionTree directionTree) {
     this.graph = graph;
+    this.directionTree = directionTree;
   }
 
-  public static IgaTestGraph igaTestGraphOn(TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> graph) {
-    return new IgaTestGraph(graph);
+  public DirectionTree getDirectionTree() {
+    return directionTree;
+  }
+
+  public static IgaTestGraph igaTestGraphOn(
+      TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> graph,
+      DirectionTree directionTree
+  ) {
+    return new IgaTestGraph(graph, directionTree);
   }
 
   public IgaTestGraph withVertex(
       long srcId, IgaOperation operation, long dstId
   ) {
-    graph.addVertex(withVertex(srcId, igaElement(0L, 12), operation, dstId));
+    graph.addVertex(withVertex(srcId, igaElement(srcId, directionTree.size()), operation, dstId));
     return this;
   }
 

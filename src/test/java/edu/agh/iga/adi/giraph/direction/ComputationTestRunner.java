@@ -1,9 +1,11 @@
 package edu.agh.iga.adi.giraph.direction;
 
+import edu.agh.iga.adi.giraph.core.DirectionTree;
 import edu.agh.iga.adi.giraph.direction.computation.IgaComputationFactory;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import edu.agh.iga.adi.giraph.test.IgaTestGraph;
+import edu.agh.iga.adi.giraph.test.SmallProblem;
 import edu.agh.iga.adi.giraph.test.assertion.TestGraphAssertions;
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.edge.ByteArrayEdges;
@@ -16,8 +18,10 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
+import static edu.agh.iga.adi.giraph.test.SmallProblem.DIRECTION_TREE;
 import static edu.agh.iga.adi.giraph.test.assertion.TestGraphAssertions.assertThatGraph;
-import static org.apache.giraph.conf.GiraphConstants.*;
+import static org.apache.giraph.conf.GiraphConstants.COMPUTATION_FACTORY_CLASS;
+import static org.apache.giraph.conf.GiraphConstants.USE_MESSAGE_SIZE_ENCODING;
 import static org.apache.giraph.utils.InternalVertexRunner.runWithInMemoryOutput;
 
 public class ComputationTestRunner {
@@ -39,18 +43,21 @@ public class ComputationTestRunner {
   public static class ComputationRunnerPreconditions {
     private final GiraphConfiguration config;
 
+    private DirectionTree tree = DIRECTION_TREE;
+
     private ComputationRunnerPreconditions(GiraphConfiguration config) {
       this.config = config;
     }
 
     public ComputationRunnerPreconditions ofProblemSize(int problemSize) {
       PROBLEM_SIZE.set(config, problemSize);
+      tree = new DirectionTree(problemSize);
       return this;
     }
 
     public ComputationTestRunAssertions isRunForGraph(Function<IgaTestGraph, IgaTestGraph> modifier) {
       TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> graph = new TestGraph<>(config);
-      modifier.apply(new IgaTestGraph(graph));
+      modifier.apply(new IgaTestGraph(graph, tree));
       try {
         return new ComputationTestRunAssertions(runWithInMemoryOutput(config, graph));
       } catch (Exception e) {
