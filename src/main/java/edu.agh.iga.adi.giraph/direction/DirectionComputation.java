@@ -2,7 +2,10 @@ package edu.agh.iga.adi.giraph.direction;
 
 import edu.agh.iga.adi.giraph.core.DirectionTree;
 import edu.agh.iga.adi.giraph.direction.computation.ComputationResolver;
+import org.apache.giraph.graph.Computation;
 import org.apache.giraph.master.DefaultMasterCompute;
+
+import java.util.Optional;
 
 import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
 
@@ -22,7 +25,12 @@ public class DirectionComputation extends DefaultMasterCompute {
   // alternatively org.apache.giraph.examples.scc.SccPhaseMasterCompute in giraph repo
   @Override
   public final void compute() {
-    computationResolver.computationForStep(getSuperstep()).ifPresent(this::setComputation);
+    Optional<Class<? extends Computation>> nextComputation = computationResolver.computationForStep(getSuperstep());
+    if (nextComputation.isPresent()) {
+      setComputation(nextComputation.get());
+    } else {
+      haltComputation();
+    }
   }
 
 }
