@@ -2,11 +2,11 @@ package edu.agh.iga.adi.giraph.core;
 
 import org.ojalgo.matrix.store.PrimitiveDenseStore;
 
+import static edu.agh.iga.adi.giraph.core.IgaConstants.ROWS_BOUND_TO_NODE;
 import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
 public class IgaElement {
 
-  private static final int ROWS_BOUND_TO_NODE = 6;
   private static final int COLS_BOUND_TO_NODE = 6;
 
   public final long id;
