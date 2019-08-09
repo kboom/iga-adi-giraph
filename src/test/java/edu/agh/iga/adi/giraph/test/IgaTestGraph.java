@@ -34,6 +34,11 @@ public final class IgaTestGraph {
     return this;
   }
 
+  public IgaTestGraph withVertexElement(IgaElement element) {
+    graph.getVertex(new LongWritable(element.id)).setValue(new IgaElementWritable(element));
+    return this;
+  }
+
   private Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> withVertex(
       long srcId, IgaElement srcElement, IgaOperation operation, long dstId
   ) {

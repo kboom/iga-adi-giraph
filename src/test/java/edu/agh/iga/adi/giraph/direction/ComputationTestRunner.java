@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
-import static edu.agh.iga.adi.giraph.test.assertion.TestGraphAssertions.assertThat;
+import static edu.agh.iga.adi.giraph.test.assertion.TestGraphAssertions.assertThatGraph;
 import static org.apache.giraph.conf.GiraphConstants.*;
 import static org.apache.giraph.utils.InternalVertexRunner.runWithInMemoryOutput;
 
@@ -69,7 +69,7 @@ public class ComputationTestRunner {
     }
 
     public ComputationTestRunAssertions thenAssertThatGraph(Consumer<TestGraphAssertions> consumer) {
-      consumer.accept(assertThat(output));
+      consumer.accept(assertThatGraph(output));
       return this;
     }
 
