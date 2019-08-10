@@ -106,4 +106,9 @@ public final class MergeAndEliminateBranchOperation implements IgaOperation<Merg
 
   }
 
+  @Override
+  public String toString() {
+    return "MergeAndEliminateBranchOperation";
+  }
+
 }

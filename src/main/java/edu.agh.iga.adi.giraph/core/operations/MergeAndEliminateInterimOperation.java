@@ -100,4 +100,9 @@ public final class MergeAndEliminateInterimOperation implements IgaOperation<Mer
 
   }
 
+  @Override
+  public String toString() {
+    return "MergeAndEliminateInterimOperation";
+  }
+
 }

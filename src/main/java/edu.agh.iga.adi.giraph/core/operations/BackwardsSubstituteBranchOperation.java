@@ -82,4 +82,9 @@ public final class BackwardsSubstituteBranchOperation implements IgaOperation<Ba
 
   }
 
+  @Override
+  public String toString() {
+    return "BackwardsSubstituteBranchOperation";
+  }
+
 }

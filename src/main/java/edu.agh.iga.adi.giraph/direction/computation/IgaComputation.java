@@ -34,17 +34,17 @@ public final class IgaComputation extends BasicComputation<LongWritable, IgaElem
 
   @Override
   public void preSuperstep() {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Before superstep");
-    }
     IntWritable phaseWritable = getAggregatedValue(PHASE);
     phase = IgaComputationPhase.getPhase(phaseWritable.get());
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Before superstep " + phase);
+    }
   }
 
   @Override
   public void postSuperstep() {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("After superstep");
+      LOG.debug("After superstep " + phase);
     }
   }
 

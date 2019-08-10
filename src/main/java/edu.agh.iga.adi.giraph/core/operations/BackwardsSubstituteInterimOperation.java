@@ -104,4 +104,9 @@ public final class BackwardsSubstituteInterimOperation implements IgaOperation<B
 
   }
 
+  @Override
+  public String toString() {
+    return "BackwardsSubstituteInterimOperation";
+  }
+
 }

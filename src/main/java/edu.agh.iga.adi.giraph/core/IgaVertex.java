@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.google.common.math.LongMath.log2;
@@ -122,17 +123,18 @@ public class IgaVertex {
 
   public List<IgaVertex> children() {
     return leftChildOf().map(child -> {
+      final long offset = child.id();
       if(child.is(InterimVertex.class)) {
-        return ImmutableList.<IgaVertex>of(interimVertex(id), interimVertex(id + 1));
+        return ImmutableList.<IgaVertex>of(interimVertex(offset), interimVertex(offset + 1));
       }
       if(child.is(LeafVertex.class)) {
-        return ImmutableList.<IgaVertex>of(leafVertex(id), leafVertex(id + 1), leafVertex(id + 2));
+        return ImmutableList.<IgaVertex>of(leafVertex(offset), leafVertex(offset + 1), leafVertex(offset + 2));
       }
       if(child.is(BranchVertex.class)) {
-        return ImmutableList.<IgaVertex>of(branchVertex(id), branchVertex(id + 1));
+        return ImmutableList.<IgaVertex>of(branchVertex(offset), branchVertex(offset + 1));
       }
       if(child.is(RootVertex.class)) {
-        return ImmutableList.<IgaVertex>of(interimVertex(1), interimVertex(2)); // todo bug? Should be 2 and 3
+        return ImmutableList.<IgaVertex>of(interimVertex(2), interimVertex(3));
       }
       return null;
     }).orElse(ImmutableList.of());
@@ -185,6 +187,29 @@ public class IgaVertex {
       super(tree, id);
     }
 
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    IgaVertex igaVertex = (IgaVertex) o;
+    return id == igaVertex.id &&
+        tree.equals(igaVertex.tree);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, tree);
+  }
+
+  @Override
+  public String toString() {
+    return getClass().getSimpleName() + ":" + id;
   }
 
 }

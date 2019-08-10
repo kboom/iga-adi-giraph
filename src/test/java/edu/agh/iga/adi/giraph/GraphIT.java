@@ -16,7 +16,7 @@ import static edu.agh.iga.adi.giraph.test.GiraphTestJob.giraphJob;
 import static edu.agh.iga.adi.giraph.test.GraphFactory.graph;
 import static edu.agh.iga.adi.giraph.test.IgaTestGraph.igaTestGraphOn;
 import static edu.agh.iga.adi.giraph.test.SmallProblem.DIRECTION_TREE;
-import static edu.agh.iga.adi.giraph.test.TestGraphFactory.directionGraph;
+import static edu.agh.iga.adi.giraph.test.TestIgaOperationGraph.igaTestGraph;
 
 class GraphIT {
 
@@ -32,7 +32,7 @@ class GraphIT {
 
     TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> graph = graph(job.getConfiguration());
 
-    directionGraph(igaTestGraphOn(graph, DIRECTION_TREE));
+    igaTestGraph(igaTestGraphOn(graph, DIRECTION_TREE));
 
     InMemoryVertexInputFormat.setGraph(graph);
 

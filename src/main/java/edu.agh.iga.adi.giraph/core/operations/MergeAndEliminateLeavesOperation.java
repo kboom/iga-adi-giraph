@@ -100,4 +100,9 @@ public final class MergeAndEliminateLeavesOperation implements IgaOperation<Merg
 
   }
 
+  @Override
+  public String toString() {
+    return "MergeAndEliminateLeavesOperation";
+  }
+
 }

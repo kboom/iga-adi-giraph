@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static edu.agh.iga.adi.giraph.core.IgaElement.igaElement;
 import static edu.agh.iga.adi.giraph.direction.ComputationTestRunner.whenComputation;
-import static edu.agh.iga.adi.giraph.test.TestGraphFactory.directionGraph;
+import static edu.agh.iga.adi.giraph.test.TestIgaOperationGraph.igaTestGraph;
 import static edu.agh.iga.adi.giraph.test.matrix.MatrixBuilder.emptyMatrixOfSize;
 import static edu.agh.iga.adi.giraph.test.matrix.MatrixBuilder.matrixOfSize;
 
@@ -19,7 +19,7 @@ class DirectionComputationTest {
     whenComputation(DirectionComputation.class, InitialComputation.class)
         .ofProblemSize(12)
         .isRunForGraph(graph ->
-            directionGraph(graph)
+            igaTestGraph(graph)
                 .withVertexElement(igaElement(
                     8L,
                     matrixOfSize(6, 6).withValues(
