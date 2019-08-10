@@ -90,10 +90,11 @@ public final class IgaComputation extends BasicComputation<LongWritable, IgaElem
   private void send(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex, IgaElement element) {
     vertex.getEdges().forEach(edge -> {
       final IgaOperation igaOperation = edge.getValue().getIgaOperation();
-      if (phase.matches(igaOperation)) {
-        LongWritable dstId = edge.getTargetVertexId();
-        final IgaVertex dstVertex = vertexOf(directionTree, dstId.get());
-        sendMessage(dstId, new IgaMessageWritable(igaOperation.sendMessage(dstVertex, element)));
+      final LongWritable dstIdWritable = edge.getTargetVertexId();
+      final long dstId = dstIdWritable.get();
+      if (phase.matchesDirection(element.id, dstId)) {
+        final IgaVertex dstVertex = vertexOf(directionTree, dstId);
+        sendMessage(dstIdWritable, new IgaMessageWritable(igaOperation.sendMessage(dstVertex, element)));
       }
     });
   }
