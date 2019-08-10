@@ -46,7 +46,7 @@ override def emit(src: IgaElement, dst: IgaElement)(implicit ctx: IgaTaskContext
  */
 public final class MergeAndEliminateInterimOperation implements IgaOperation<MergeAndEliminateInterimMessage> {
 
-  static final MergeAndEliminateInterimOperation MERGE_AND_ELIMINATE_INTERIM_OPERATION
+  public static final MergeAndEliminateInterimOperation MERGE_AND_ELIMINATE_INTERIM_OPERATION
       = new MergeAndEliminateInterimOperation();
 
   @Override

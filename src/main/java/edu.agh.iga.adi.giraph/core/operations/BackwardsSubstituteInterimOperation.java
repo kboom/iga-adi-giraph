@@ -48,7 +48,7 @@ case object BackwardsSubstituteInterim extends Production
  */
 public final class BackwardsSubstituteInterimOperation implements IgaOperation<BackwardsSubstituteInterimMessage> {
 
-  static final BackwardsSubstituteInterimOperation BACKWARDS_SUBSTITUTE_INTERIM_OPERATION
+  public static final BackwardsSubstituteInterimOperation BACKWARDS_SUBSTITUTE_INTERIM_OPERATION
       = new BackwardsSubstituteInterimOperation();
 
   @Override

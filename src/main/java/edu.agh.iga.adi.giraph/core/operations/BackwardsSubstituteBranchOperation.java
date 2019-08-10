@@ -38,7 +38,7 @@ case object BackwardsSubstituteBranch extends Production
  */
 public final class BackwardsSubstituteBranchOperation implements IgaOperation<BackwardsSubstituteBranchMessage> {
 
-  static final BackwardsSubstituteBranchOperation BACKWARDS_SUBSTITUTE_BRANCH_OPERATION
+  public static final BackwardsSubstituteBranchOperation BACKWARDS_SUBSTITUTE_BRANCH_OPERATION
       = new BackwardsSubstituteBranchOperation();
 
   @Override

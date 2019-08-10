@@ -53,8 +53,41 @@ class IgaVertexTest {
   @Test
   void childrenRoot() {
     assertThat(vertexOf(TREE, 1L).children())
+        .hasOnlyElementsOfType(InterimVertex.class)
         .extracting(IgaVertex::id)
         .containsExactlyInAnyOrder(2L, 3L);
+  }
+
+  @Test
+  void v2children() {
+    assertThat(vertexOf(TREE, 2L).children())
+        .hasOnlyElementsOfType(BranchVertex.class)
+        .extracting(IgaVertex::id)
+        .containsExactlyInAnyOrder(4L, 5L);
+  }
+
+  @Test
+  void v3children() {
+    assertThat(vertexOf(TREE, 3L).children())
+        .hasOnlyElementsOfType(BranchVertex.class)
+        .extracting(IgaVertex::id)
+        .containsExactlyInAnyOrder(6L, 7L);
+  }
+
+  @Test
+  void v4children() {
+    assertThat(vertexOf(TREE, 4L).children())
+        .hasOnlyElementsOfType(LeafVertex.class)
+        .extracting(IgaVertex::id)
+        .containsExactlyInAnyOrder(8L, 9L, 10L);
+  }
+
+  @Test
+  void v7children() {
+    assertThat(vertexOf(TREE, 7L).children())
+        .hasOnlyElementsOfType(LeafVertex.class)
+        .extracting(IgaVertex::id)
+        .containsExactlyInAnyOrder(17L, 18L, 19L);
   }
 
 }

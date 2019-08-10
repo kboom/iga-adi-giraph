@@ -38,10 +38,6 @@ public class IgaVertex {
     throw new IllegalStateException(format("The problem tree does not have vertex %d", id));
   }
 
-  private RootVertex rootVertex() {
-    return new RootVertex(tree);
-  }
-
   private InterimVertex interimVertex(long id) {
     return new InterimVertex(tree, id);
   }

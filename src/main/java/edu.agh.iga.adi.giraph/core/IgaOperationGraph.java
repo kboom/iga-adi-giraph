@@ -32,7 +32,7 @@ public class IgaOperationGraph {
     private final IgaVertex dst;
     private final IgaOperation operation;
 
-    private DirectedOperation(IgaVertex src, IgaVertex dst, IgaOperation operation) {
+    public DirectedOperation(IgaVertex src, IgaVertex dst, IgaOperation operation) {
       this.src = src;
       this.dst = dst;
       this.operation = operation;

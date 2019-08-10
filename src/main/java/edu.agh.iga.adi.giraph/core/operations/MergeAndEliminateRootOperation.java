@@ -48,7 +48,7 @@ case object MergeAndEliminateRoot extends Production
  */
 public final class MergeAndEliminateRootOperation implements IgaOperation<MergeAndEliminateRootMessage> {
 
-  static final MergeAndEliminateRootOperation MERGE_AND_ELIMINATE_ROOT_OPERATION
+  public static final MergeAndEliminateRootOperation MERGE_AND_ELIMINATE_ROOT_OPERATION
       = new MergeAndEliminateRootOperation();
 
   @Override

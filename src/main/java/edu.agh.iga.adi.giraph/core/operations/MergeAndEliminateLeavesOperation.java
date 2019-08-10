@@ -42,7 +42,7 @@ case LEFT_CHILD => MergeAndEliminateLeafMessage(
  */
 public final class MergeAndEliminateLeavesOperation implements IgaOperation<MergeAndEliminateLeavesMessage> {
 
-  static final MergeAndEliminateLeavesOperation MERGE_AND_ELIMINATE_LEAVES_OPERATION
+  public static final MergeAndEliminateLeavesOperation MERGE_AND_ELIMINATE_LEAVES_OPERATION
       = new MergeAndEliminateLeavesOperation();
 
   @Override

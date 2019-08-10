@@ -52,7 +52,7 @@ case object MergeAndEliminateBranch extends Production
  */
 public final class MergeAndEliminateBranchOperation implements IgaOperation<MergeAndEliminateBranchMessage> {
 
-  static final MergeAndEliminateBranchOperation MERGE_AND_ELIMINATE_BRANCH_OPERATION
+  public static final MergeAndEliminateBranchOperation MERGE_AND_ELIMINATE_BRANCH_OPERATION
       = new MergeAndEliminateBranchOperation();
 
   @Override
