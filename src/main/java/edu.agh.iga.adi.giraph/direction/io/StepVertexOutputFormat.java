@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * Dumps the elements
  */
-public class StepOutputFormat extends TextVertexOutputFormat<LongWritable, IgaElementWritable, IgaOperationWritable> {
+public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable, IgaElementWritable, IgaOperationWritable> {
 
   private static final String LINE_TOKENIZE_VALUE = "output.delimiter";
   private static final String LINE_TOKENIZE_VALUE_DEFAULT = "\t";
