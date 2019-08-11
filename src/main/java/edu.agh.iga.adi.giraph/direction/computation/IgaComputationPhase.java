@@ -11,7 +11,7 @@ public enum IgaComputationPhase {
   MERGE_AND_ELIMINATE_LEAVES(MergeAndEliminateLeavesOperation.class, UP),
   MERGE_AND_ELIMINATE_BRANCH(MergeAndEliminateBranchOperation.class, UP),
   MERGE_AND_ELIMINATE_INTERIM(MergeAndEliminateInterimOperation.class, UP),
-  MERGE_AND_ELIMINATE_ROOT(MergeAndEliminateRootOperation.class, UP),
+  MERGE_AND_ELIMINATE_ROOT(MergeAndEliminateRootOperation.class, DOWN),
   BACKWARDS_SUBSTITUTE_ROOT(BackwardsSubstituteRootOperation.class, DOWN),
   BACKWARDS_SUBSTITUTE_INTERIM(BackwardsSubstituteInterimOperation.class, DOWN),
   BACKWARDS_SUBSTITUTE_BRANCH(BackwardsSubstituteBranchOperation.class, DOWN);
@@ -26,28 +26,28 @@ public enum IgaComputationPhase {
 
   public static IgaComputationPhase phaseFor(DirectionTree tree, int step) {
     final int verticalSteps = tree.height() - 1;
-    if(step == 0) {
+    if (step == 0) {
       return MERGE_AND_ELIMINATE_LEAVES;
     }
-    if(step == 1) {
+    if (step == 1) {
       return MERGE_AND_ELIMINATE_BRANCH;
     }
-    if(step == verticalSteps) {
+    if (step == verticalSteps) {
       return MERGE_AND_ELIMINATE_ROOT;
     }
-    if(step < verticalSteps) {
+    if (step < verticalSteps) {
       return MERGE_AND_ELIMINATE_INTERIM;
     }
-    if(step == verticalSteps + 1) {
+    if (step == verticalSteps + 1) {
       return BACKWARDS_SUBSTITUTE_ROOT;
     }
-    if(step < 2 * verticalSteps + 1) {
-      return BACKWARDS_SUBSTITUTE_INTERIM;
-    }
-    if(step == 2 * verticalSteps + 1) {
+    if (step == 2 * verticalSteps) {
       return BACKWARDS_SUBSTITUTE_BRANCH;
     }
-    throw new IllegalArgumentException("Should not have this step");
+    if (step < 2 * verticalSteps) {
+      return BACKWARDS_SUBSTITUTE_INTERIM;
+    }
+    return null;
   }
 
   public static IgaComputationPhase getPhase(int phaseInt) {
@@ -57,4 +57,5 @@ public enum IgaComputationPhase {
   public boolean matchesDirection(long src, long dst) {
     return direction == UP ? src > dst : src < dst;
   }
+
 }

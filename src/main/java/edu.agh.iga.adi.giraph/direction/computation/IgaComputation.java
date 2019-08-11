@@ -14,6 +14,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -37,14 +38,7 @@ public final class IgaComputation extends BasicComputation<LongWritable, IgaElem
     IntWritable phaseWritable = getAggregatedValue(PHASE);
     phase = IgaComputationPhase.getPhase(phaseWritable.get());
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Before superstep " + phase);
-    }
-  }
-
-  @Override
-  public void postSuperstep() {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("After superstep " + phase);
+      LOG.debug(format("================ SUPERSTEP (%d) %s ================", getSuperstep() - 1, phase));
     }
   }
 
@@ -63,7 +57,7 @@ public final class IgaComputation extends BasicComputation<LongWritable, IgaElem
   ) {
     if (LOG.isDebugEnabled()) {
       LOG.debug(format(
-          "Running on %d with messages %s",
+          "Processing messages on %d with messages %s",
           vertex.getId().get(),
           messagesOf(messages).map(IgaMessage::getSrcId).map(String::valueOf).collect(joining(","))
       ));
@@ -95,6 +89,14 @@ public final class IgaComputation extends BasicComputation<LongWritable, IgaElem
       if (phase.matchesDirection(element.id, dstId)) {
         final IgaVertex dstVertex = vertexOf(directionTree, dstId);
         sendMessage(dstIdWritable, new IgaMessageWritable(igaOperation.sendMessage(dstVertex, element)));
+        if (LOG.isDebugEnabled()) {
+          LOG.debug(format("Sending message to %d %s", dstId, igaOperation));
+        }
+        try {
+          removeEdgesRequest(vertex.getId(), dstIdWritable);
+        } catch (IOException e) {
+          throw new IllegalStateException("Could not remove edge");
+        }
       }
     });
   }

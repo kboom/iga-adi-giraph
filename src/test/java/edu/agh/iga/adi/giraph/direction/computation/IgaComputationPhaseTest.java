@@ -48,13 +48,8 @@ class IgaComputationPhaseTest {
   }
 
   @Test
-  void isBackwardsSubstituteInterimForFour12() {
-    assertThat(phaseFor(TREE_12, 4)).isEqualTo(BACKWARDS_SUBSTITUTE_INTERIM);
-  }
-
-  @Test
-  void isBackwardsSubstituteBranchForFive12() {
-    assertThat(phaseFor(TREE_12, 5)).isEqualTo(BACKWARDS_SUBSTITUTE_BRANCH);
+  void isBackwardsSubstituteBranchForFour12() {
+    assertThat(phaseFor(TREE_12, 4)).isEqualTo(BACKWARDS_SUBSTITUTE_BRANCH);
   }
 
   @Test
@@ -73,18 +68,8 @@ class IgaComputationPhaseTest {
   }
 
   @Test
-  void isBackwardsSubstituteInterimForSix24() {
-    assertThat(phaseFor(TREE_24, 6)).isEqualTo(BACKWARDS_SUBSTITUTE_INTERIM);
-  }
-
-  @Test
-  void isBackwardsSubstituteInterimForSixAnd24() {
-    assertThat(phaseFor(TREE_24, 6)).isEqualTo(BACKWARDS_SUBSTITUTE_INTERIM);
-  }
-
-  @Test
-  void isBackwardsSubstituteBranchForSevenAnd24() {
-    assertThat(phaseFor(TREE_24, 7)).isEqualTo(BACKWARDS_SUBSTITUTE_BRANCH);
+  void isBackwardsSubstituteBranchForSixAnd24() {
+    assertThat(phaseFor(TREE_24, 6)).isEqualTo(BACKWARDS_SUBSTITUTE_BRANCH);
   }
 
   @Test
