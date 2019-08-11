@@ -13,38 +13,58 @@ class IgaComputationPhaseTest {
   private static final DirectionTree TREE_24 = new DirectionTree(24);
 
   @Test
-  void isMergeAndEliminateLeafForZero() {
+  void isMergeAndEliminateLeafForZero12() {
     assertThat(phaseFor(TREE_12, 0)).isEqualTo(MERGE_AND_ELIMINATE_LEAVES);
   }
 
   @Test
-  void isMergeAndEliminateBranchForOne() {
+  void isMergeAndEliminateLeafForZero24() {
+    assertThat(phaseFor(TREE_24, 0)).isEqualTo(MERGE_AND_ELIMINATE_LEAVES);
+  }
+
+  @Test
+  void isMergeAndEliminateBranchForOne12() {
     assertThat(phaseFor(TREE_12, 1)).isEqualTo(MERGE_AND_ELIMINATE_BRANCH);
   }
 
   @Test
-  void isMergeAndEliminateInterimForTwo() {
-    assertThat(phaseFor(TREE_12, 2)).isEqualTo(MERGE_AND_ELIMINATE_INTERIM);
+  void isMergeAndEliminateBranchForOne24() {
+    assertThat(phaseFor(TREE_24, 1)).isEqualTo(MERGE_AND_ELIMINATE_BRANCH);
   }
 
   @Test
-  void isMergeAndEliminateRootForThree() {
-    assertThat(phaseFor(TREE_12, 3)).isEqualTo(MERGE_AND_ELIMINATE_ROOT);
+  void isMergeAndEliminateRootForTwo12() {
+    assertThat(phaseFor(TREE_12, 2)).isEqualTo(MERGE_AND_ELIMINATE_ROOT);
   }
 
   @Test
-  void isBackwardsSubstituteRootForFour() {
-    assertThat(phaseFor(TREE_12, 4)).isEqualTo(BACKWARDS_SUBSTITUTE_ROOT);
+  void isMergeAndEliminateInterimForTwo24() {
+    assertThat(phaseFor(TREE_24, 2)).isEqualTo(MERGE_AND_ELIMINATE_INTERIM);
   }
 
   @Test
-  void isBackwardsSubstituteInterimForFive() {
-    assertThat(phaseFor(TREE_12, 5)).isEqualTo(BACKWARDS_SUBSTITUTE_INTERIM);
+  void isBackwardsSubstituteRootForThree12() {
+    assertThat(phaseFor(TREE_12, 3)).isEqualTo(BACKWARDS_SUBSTITUTE_ROOT);
   }
 
   @Test
-  void isBackwardsSubstituteBranchForSix() {
-    assertThat(phaseFor(TREE_12, 6)).isEqualTo(BACKWARDS_SUBSTITUTE_BRANCH);
+  void isMergeAndEliminateRootForThree24() {
+    assertThat(phaseFor(TREE_24, 3)).isEqualTo(MERGE_AND_ELIMINATE_ROOT);
+  }
+
+  @Test
+  void isBackwardsSubstituteRootForFour24() {
+    assertThat(phaseFor(TREE_24, 4)).isEqualTo(BACKWARDS_SUBSTITUTE_ROOT);
+  }
+
+  @Test
+  void isBackwardsSubstituteInterimForFive24() {
+    assertThat(phaseFor(TREE_24, 5)).isEqualTo(BACKWARDS_SUBSTITUTE_INTERIM);
+  }
+
+  @Test
+  void isBackwardsSubstituteInterimForSix24() {
+    assertThat(phaseFor(TREE_24, 6)).isEqualTo(BACKWARDS_SUBSTITUTE_INTERIM);
   }
 
   @Test
@@ -53,18 +73,13 @@ class IgaComputationPhaseTest {
   }
 
   @Test
-  void isBackwardsSubstituteInterimForSevenAnd24() {
-    assertThat(phaseFor(TREE_24, 7)).isEqualTo(BACKWARDS_SUBSTITUTE_INTERIM);
+  void isBackwardsSubstituteBranchForSevenAnd24() {
+    assertThat(phaseFor(TREE_24, 7)).isEqualTo(BACKWARDS_SUBSTITUTE_BRANCH);
   }
 
   @Test
-  void isBackwardsSubstituteBranchForEightAnd24() {
-    assertThat(phaseFor(TREE_24, 8)).isEqualTo(BACKWARDS_SUBSTITUTE_BRANCH);
-  }
-
-  @Test
-  void isMergeAndEliminateRootForFourAnd24() {
-    assertThat(phaseFor(TREE_24, 4)).isEqualTo(MERGE_AND_ELIMINATE_ROOT);
+  void isBackwardsSubstituteRootForFourAnd24() {
+    assertThat(phaseFor(TREE_24, 4)).isEqualTo(BACKWARDS_SUBSTITUTE_ROOT);
   }
 
 }

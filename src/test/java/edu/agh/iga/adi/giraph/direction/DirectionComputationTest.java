@@ -17,7 +17,7 @@ class DirectionComputationTest {
   @Test
   void canSolve() {
     whenComputation(DirectionComputation.class, InitialComputation.class)
-        .ofProblemSize(12)
+        .ofProblemSize(24)
         .isRunForGraph(graph ->
             igaTestGraph(graph)
                 .withVertexElement(igaElement(

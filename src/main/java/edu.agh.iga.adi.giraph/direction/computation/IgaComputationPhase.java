@@ -25,26 +25,26 @@ public enum IgaComputationPhase {
   }
 
   public static IgaComputationPhase phaseFor(DirectionTree tree, int step) {
-    final int height = tree.height();
+    final int verticalSteps = tree.height() - 1;
     if(step == 0) {
       return MERGE_AND_ELIMINATE_LEAVES;
     }
     if(step == 1) {
       return MERGE_AND_ELIMINATE_BRANCH;
     }
-    if(step < height) {
-      return MERGE_AND_ELIMINATE_INTERIM;
-    }
-    if(step == height) {
+    if(step == verticalSteps) {
       return MERGE_AND_ELIMINATE_ROOT;
     }
-    if(step == height + 1) {
+    if(step < verticalSteps) {
+      return MERGE_AND_ELIMINATE_INTERIM;
+    }
+    if(step == verticalSteps + 1) {
       return BACKWARDS_SUBSTITUTE_ROOT;
     }
-    if(step < 2 * height) {
+    if(step < 2 * verticalSteps + 1) {
       return BACKWARDS_SUBSTITUTE_INTERIM;
     }
-    if(step == 2 * height) {
+    if(step == 2 * verticalSteps + 1) {
       return BACKWARDS_SUBSTITUTE_BRANCH;
     }
     throw new IllegalArgumentException("Should not have this step");

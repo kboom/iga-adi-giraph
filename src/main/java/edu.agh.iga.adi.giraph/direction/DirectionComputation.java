@@ -14,6 +14,7 @@ import java.util.Optional;
 import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputation.PHASE;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationPhase.getPhase;
+import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationPhase.phaseFor;
 
 /**
  * Computes a one direction of the Alternating Directions Solver.
@@ -44,9 +45,6 @@ public class DirectionComputation extends DefaultMasterCompute {
   private void selectComputation() {
     Optional<Class<? extends Computation>> nextComputation = computationResolver.computationForStep(getSuperstep());
     if (nextComputation.isPresent()) {
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("Running next stage");
-      }
       setComputation(nextComputation.get());
     } else {
       haltComputation();
@@ -55,7 +53,7 @@ public class DirectionComputation extends DefaultMasterCompute {
 
   private void selectPhase() {
     if(getSuperstep() > 0) {
-      setPhase(getPhase((int) getSuperstep() - 1));
+      setPhase(phaseFor(tree, (int) getSuperstep() - 1));
     }
   }
 
