@@ -1,10 +1,12 @@
 package edu.agh.iga.adi.giraph.direction;
 
 import edu.agh.iga.adi.giraph.core.DirectionTree;
+import edu.agh.iga.adi.giraph.core.Mesh;
 import edu.agh.iga.adi.giraph.direction.computation.IgaComputationFactory;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import edu.agh.iga.adi.giraph.test.IgaTestGraph;
+import edu.agh.iga.adi.giraph.test.SmallProblem;
 import edu.agh.iga.adi.giraph.test.assertion.TestGraphAssertions;
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.edge.HashMapEdges;
@@ -43,6 +45,7 @@ public class ComputationTestRunner {
     private final GiraphConfiguration config;
 
     private DirectionTree tree = DIRECTION_TREE;
+    private Mesh mesh = SmallProblem.MESH;
 
     private ComputationRunnerPreconditions(GiraphConfiguration config) {
       this.config = config;
@@ -51,12 +54,13 @@ public class ComputationTestRunner {
     public ComputationRunnerPreconditions ofProblemSize(int problemSize) {
       PROBLEM_SIZE.set(config, problemSize);
       tree = new DirectionTree(problemSize);
+      mesh = Mesh.aMesh().withElements(problemSize).build();
       return this;
     }
 
     public ComputationTestRunAssertions isRunForGraph(Function<IgaTestGraph, IgaTestGraph> modifier) {
       TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> graph = new TestGraph<>(config);
-      modifier.apply(new IgaTestGraph(graph, tree));
+      modifier.apply(new IgaTestGraph(graph, mesh, tree));
       try {
         return new ComputationTestRunAssertions(runWithInMemoryOutput(config, graph));
       } catch (Exception e) {

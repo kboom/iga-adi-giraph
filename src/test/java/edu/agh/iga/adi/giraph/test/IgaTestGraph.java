@@ -3,6 +3,7 @@ package edu.agh.iga.adi.giraph.test;
 import edu.agh.iga.adi.giraph.core.DirectionTree;
 import edu.agh.iga.adi.giraph.core.IgaElement;
 import edu.agh.iga.adi.giraph.core.IgaOperation;
+import edu.agh.iga.adi.giraph.core.Mesh;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import org.apache.giraph.edge.Edge;
@@ -20,9 +21,15 @@ public final class IgaTestGraph {
 
   private final TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> graph;
   private final DirectionTree directionTree;
+  private final Mesh mesh;
 
-  public IgaTestGraph(TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> graph, DirectionTree directionTree) {
+  public IgaTestGraph(
+      TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> graph,
+      Mesh mesh,
+      DirectionTree directionTree
+  ) {
     this.graph = graph;
+    this.mesh = mesh;
     this.directionTree = directionTree;
   }
 
@@ -32,15 +39,16 @@ public final class IgaTestGraph {
 
   public static IgaTestGraph igaTestGraphOn(
       TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> graph,
+      Mesh mesh,
       DirectionTree directionTree
   ) {
-    return new IgaTestGraph(graph, directionTree);
+    return new IgaTestGraph(graph, mesh, directionTree);
   }
 
   public IgaTestGraph withVertex(
       long srcId, IgaOperation operation, long dstId
   ) {
-    graph.addVertex(withVertex(srcId, igaElement(srcId, directionTree.size()), operation, dstId));
+    graph.addVertex(withVertex(srcId, igaElement(srcId, mesh.getDofsX()), operation, dstId));
     return this;
   }
 
