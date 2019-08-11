@@ -48,6 +48,16 @@ class IgaComputationPhaseTest {
   }
 
   @Test
+  void isBackwardsSubstituteInterimForFour12() {
+    assertThat(phaseFor(TREE_12, 4)).isEqualTo(BACKWARDS_SUBSTITUTE_INTERIM);
+  }
+
+  @Test
+  void isBackwardsSubstituteBranchForFive12() {
+    assertThat(phaseFor(TREE_12, 5)).isEqualTo(BACKWARDS_SUBSTITUTE_BRANCH);
+  }
+
+  @Test
   void isMergeAndEliminateRootForThree24() {
     assertThat(phaseFor(TREE_24, 3)).isEqualTo(MERGE_AND_ELIMINATE_ROOT);
   }
