@@ -4,7 +4,7 @@ import edu.agh.iga.adi.giraph.core.Mesh;
 import edu.agh.iga.adi.giraph.core.splines.BSpline1;
 import edu.agh.iga.adi.giraph.core.splines.BSpline2;
 import edu.agh.iga.adi.giraph.core.splines.BSpline3;
-import org.ojalgo.matrix.PrimitiveMatrix;
+import org.ojalgo.structure.Access2D;
 
 public final class CoefficientSolution implements PartialSolution {
 
@@ -13,9 +13,9 @@ public final class CoefficientSolution implements PartialSolution {
   private static final BSpline3 b3 = new BSpline3();
 
   private final Mesh mesh;
-  private final PrimitiveMatrix coefficients;
+  private final Access2D<Double> coefficients;
 
-  public CoefficientSolution(Mesh mesh, PrimitiveMatrix coefficients) {
+  public CoefficientSolution(Mesh mesh, Access2D<Double> coefficients) {
     this.mesh = mesh;
     this.coefficients = coefficients;
   }

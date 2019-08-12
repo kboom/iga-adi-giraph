@@ -16,7 +16,7 @@ import static edu.agh.iga.adi.giraph.core.factory.ExplicitMethodCoefficients.COE
 import static org.ojalgo.function.constant.PrimitiveMath.ADD;
 import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
-public class HorizontalElementFactory implements ElementFactory {
+public final class HorizontalElementFactory implements ElementFactory {
 
   private static final BSpline1 b1 = new BSpline1();
   private static final BSpline2 b2 = new BSpline2();

@@ -1,6 +1,14 @@
 package edu.agh.iga.adi.giraph.direction.io;
 
+import edu.agh.iga.adi.giraph.core.DirectionTree;
+import edu.agh.iga.adi.giraph.core.IgaElement;
+import edu.agh.iga.adi.giraph.core.IgaVertex;
 import edu.agh.iga.adi.giraph.core.Mesh;
+import edu.agh.iga.adi.giraph.core.factory.ElementFactory;
+import edu.agh.iga.adi.giraph.core.factory.HorizontalElementFactory;
+import edu.agh.iga.adi.giraph.core.problem.CoefficientSolution;
+import edu.agh.iga.adi.giraph.core.problem.HeatTransferProblem;
+import edu.agh.iga.adi.giraph.core.problem.Problem;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import org.apache.giraph.io.formats.TextVertexValueInputFormat;
@@ -8,48 +16,51 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputSplit;
-import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
+import org.ojalgo.matrix.store.MatrixStore;
+import org.ojalgo.matrix.store.PrimitiveDenseStore;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
+import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 
 /*
 TextVertexInputFormat
 IntIntTextVertexValueInputFormat
  */
+
+/**
+ * The vertex input format is:
+ * <pre>
+ *   [vertexId 1] [coefficients for 1]
+ *   [vertexId 2] [coefficients for 2]
+ * </pre>
+ */
 public class StepVertexInputFormat extends TextVertexValueInputFormat<LongWritable, IgaElementWritable, IgaOperationWritable> {
 
   private static final Pattern SEPARATOR = Pattern.compile("[ ]");
 
+  private ElementFactory elementFactory;
+  private DirectionTree directionTree;
+  private Mesh mesh;
+
   @Override
   public void checkInputSpecs(Configuration conf) {
-
-  }
-
-  @Override
-  public List<InputSplit> getSplits(JobContext jobContext, int minSplitCountHint) {
-    return null;
+    final int problemSize = PROBLEM_SIZE.get(getConf());
+    mesh = Mesh.aMesh().withElements(problemSize).build();
+    directionTree = new DirectionTree(problemSize);
+    elementFactory = new HorizontalElementFactory(mesh, directionTree);
   }
 
   @Override
   public DoubleArrayVertexValueReader createVertexValueReader(InputSplit split, TaskAttemptContext context) {
-    final int problemSize = PROBLEM_SIZE.get(getConf());
-    Mesh mesh = Mesh.aMesh().withElements(problemSize).build();
-    return new DoubleArrayVertexValueReader(mesh);
+    return new DoubleArrayVertexValueReader();
   }
 
   public class DoubleArrayVertexValueReader extends TextVertexValueReaderFromEachLineProcessed<double[]> {
-
-    private final Mesh mesh;
-
-    private DoubleArrayVertexValueReader(Mesh mesh) {
-      this.mesh = mesh;
-    }
 
     @Override
     public void initialize(InputSplit inputSplit, TaskAttemptContext context) throws IOException, InterruptedException {
@@ -70,8 +81,18 @@ public class StepVertexInputFormat extends TextVertexValueInputFormat<LongWritab
     }
 
     @Override
-    protected IgaElementWritable getValue(double[] line) {
-      return null;
+    protected IgaElementWritable getValue(final double[] line) {
+      IgaVertex igaVertex = vertexOf(directionTree, (long) line[0]);
+      final int dofsX = mesh.getDofsX();
+
+      MatrixStore<Double> sol = PrimitiveDenseStore.FACTORY.builder()
+          .makeWrapper(new DoubleArrayAccess(3, dofsX, 1, line))
+          .get();
+
+      CoefficientSolution coefficientSolution = new CoefficientSolution(mesh, sol);
+      Problem problem = new HeatTransferProblem(coefficientSolution);
+      IgaElement igaElement = elementFactory.createElement(problem, igaVertex);
+      return new IgaElementWritable(igaElement);
     }
 
   }
