@@ -3,11 +3,12 @@ package edu.agh.iga.adi.giraph.core;
 import edu.agh.iga.adi.giraph.test.TestOperationFactory;
 import org.junit.jupiter.api.Test;
 
-import static edu.agh.iga.adi.giraph.core.IgaOperationGraph.directionGraph;
+import static edu.agh.iga.adi.giraph.core.IgaOperationFactory.operationsFor;
+import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class IgaOperationGraphTest {
+class IgaOperationFactoryTest {
 
   private static final DirectionTree TREE_12 = new DirectionTree(12);
   private static final DirectionTree TREE_24 = new DirectionTree(24);
@@ -16,8 +17,29 @@ class IgaOperationGraphTest {
   private static final TestOperationFactory T24OF = new TestOperationFactory(TREE_24);
 
   @Test
+  void canGenerateTopTriangle() {
+    assertThat(operationsFor(TREE_12, vertexOf(TREE_12, 1L), 1))
+        .containsExactlyInAnyOrder(
+            T12OF.mergeAndEliminateRoot(2, 1),
+            T12OF.mergeAndEliminateRoot(3, 1),
+            T12OF.backwardsSubstituteRoot(1, 2),
+            T12OF.backwardsSubstituteRoot(1, 3)
+        );
+  }
+
+  @Test
+  void canGenerateBottomTriangle() {
+    assertThat(operationsFor(TREE_12, vertexOf(TREE_12, 4L), 1))
+        .containsExactlyInAnyOrder(
+            T12OF.mergeAndEliminateLeaves(8, 4),
+            T12OF.mergeAndEliminateLeaves(9, 4),
+            T12OF.mergeAndEliminateLeaves(10, 4)
+        );
+  }
+
+  @Test
   void canGenerateGraphFor12Elements() {
-    assertThat(directionGraph(TREE_12))
+    assertThat(operationsFor(TREE_12))
         .containsExactlyInAnyOrder(
             T12OF.mergeAndEliminateLeaves(8, 4),
             T12OF.mergeAndEliminateLeaves(9, 4),
@@ -48,7 +70,7 @@ class IgaOperationGraphTest {
 
   @Test
   void canGenerateGraphFor24Elements() {
-    assertThat(directionGraph(TREE_24))
+    assertThat(operationsFor(TREE_24))
         .containsExactlyInAnyOrder(
             T24OF.mergeAndEliminateLeaves(16, 8),
             T24OF.mergeAndEliminateLeaves(17, 8),
@@ -125,7 +147,6 @@ class IgaOperationGraphTest {
             T24OF.backwardsSubstituteBranch(7, 15)
         );
   }
-
 
 
 }

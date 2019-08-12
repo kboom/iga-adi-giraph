@@ -33,7 +33,7 @@ public class InMemoryStepInputFormat extends VertexValueInputFormat<LongWritable
 
   @Override
   public VertexValueReader<LongWritable, IgaElementWritable> createVertexValueReader(InputSplit split, TaskAttemptContext context) {
-    VertexInputSplit vertexSplit = (VertexInputSplit) split;
+    IgaInputSplit vertexSplit = (IgaInputSplit) split;
     final int size = PROBLEM_SIZE.get(getConf());
     final DirectionTree tree = new DirectionTree(size);
     final Mesh mesh = Mesh.aMesh().withElements(size).build();
@@ -42,8 +42,8 @@ public class InMemoryStepInputFormat extends VertexValueInputFormat<LongWritable
         elementFactory,
         new ConstantProblem(), // todo for now
         childrenOf(
-            vertexOf(tree, vertexSplit.root),
-            vertexSplit.height
+            vertexOf(tree, vertexSplit.getRoot()),
+            vertexSplit.getHeight()
         )
     );
   }
@@ -57,28 +57,6 @@ public class InMemoryStepInputFormat extends VertexValueInputFormat<LongWritable
   public List<InputSplit> getSplits(JobContext context, int minSplitCountHint) {
 //    context.getConfiguration()
     return Collections.emptyList();
-  }
-
-  public class VertexInputSplit extends InputSplit {
-
-    private long root;
-    private int height;
-
-    public VertexInputSplit(long root, int height) {
-      this.root = root;
-      this.height = height;
-    }
-
-    @Override
-    public long getLength() {
-      return 0;
-    }
-
-    @Override
-    public String[] getLocations() {
-      return new String[0];
-    }
-
   }
 
   public final class StaticProblemInputReader extends VertexValueReader<LongWritable, IgaElementWritable> {

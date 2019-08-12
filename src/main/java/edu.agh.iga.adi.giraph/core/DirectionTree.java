@@ -30,6 +30,10 @@ public final class DirectionTree {
     return pow(2, level - 1);
   }
 
+  public long lastIndexOfRow(int level) {
+    return firstIndexOfRow(level) + strengthOfRow(level) - 1;
+  }
+
   public long firstIndexOfLeafRow() {
     return firstIndexOfRow(leafHeight());
   }

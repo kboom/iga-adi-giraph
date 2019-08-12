@@ -1,8 +1,7 @@
 package edu.agh.iga.adi.giraph.test;
 
 import edu.agh.iga.adi.giraph.core.DirectionTree;
-import edu.agh.iga.adi.giraph.core.IgaOperationGraph.DirectedOperation;
-import edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateInterimOperation;
+import edu.agh.iga.adi.giraph.core.IgaOperationFactory.DirectedOperation;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.core.operations.BackwardsSubstituteBranchOperation.BACKWARDS_SUBSTITUTE_BRANCH_OPERATION;

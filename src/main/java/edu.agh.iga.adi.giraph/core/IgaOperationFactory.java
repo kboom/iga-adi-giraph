@@ -5,17 +5,23 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.core.operations.OperationFactory.operationFor;
 import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.LongStream.range;
 
-public class IgaOperationGraph {
+public class IgaOperationFactory {
 
-  public static Set<DirectedOperation> directionGraph(DirectionTree tree) {
-    return LongStream.range(1L, tree.lastIndexOfLeafRow() + 1)
+  public static Set<DirectedOperation> operationsFor(DirectionTree tree) {
+    return operationsFor(tree, vertexOf(tree, 1L), tree.height());
+  }
+
+  public static Set<DirectedOperation> operationsFor(DirectionTree tree, IgaVertex parent, int height) {
+    final int parentLevel = parent.rowIndexOf();
+    return range(parentLevel, parentLevel + height)
+        .flatMap(level -> range(parent.leftDescendantOffsetAt((int) level), parent.rightDescendantOffsetAt((int) level) + 1))
         .boxed()
         .map(i -> vertexOf(tree, i))
         .flatMap(va -> va.children().stream().flatMap(vb -> Stream.of(
