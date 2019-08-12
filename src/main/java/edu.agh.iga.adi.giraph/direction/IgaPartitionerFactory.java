@@ -1,13 +1,16 @@
 package edu.agh.iga.adi.giraph.direction;
 
+import edu.agh.iga.adi.giraph.core.DirectionTree;
+import edu.agh.iga.adi.giraph.core.IgaVertex;
+import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
+import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import org.apache.giraph.conf.ImmutableClassesGiraphConfiguration;
 import org.apache.giraph.partition.GraphPartitionerFactory;
 import org.apache.giraph.partition.SimpleLongRangePartitionerFactory;
 import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.Writable;
 
-import static java.lang.String.format;
-import static org.apache.giraph.conf.GiraphConstants.PARTITION_VERTEX_KEY_SPACE_SIZE;
+import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
+import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 
 /**
  * As our operations go up and down the problem tree we can greatly benefit from separating a sub-trees
@@ -16,30 +19,25 @@ import static org.apache.giraph.conf.GiraphConstants.PARTITION_VERTEX_KEY_SPACE_
  *
  * @see SimpleLongRangePartitionerFactory
  */
-public class IgaPartitionerFactory<V extends Writable, E extends Writable>
-    extends GraphPartitionerFactory<LongWritable, V, E> {
+public class IgaPartitionerFactory extends GraphPartitionerFactory<LongWritable, IgaElementWritable, IgaOperationWritable> {
 
-  private int partitionSize;
+  private DirectionTree directionTree;
 
   @Override
   public int getPartition(LongWritable id, int partitionCount, int workerCount) {
-    return 0;
+    IgaVertex igaVertex = vertexOf(directionTree, id.get());
+    return getPartitionInRange(igaVertex.offsetLeft(), igaVertex.strengthOf(), partitionCount); // todo this might be inaccurate for certain partition sizes compared to problem sizes
   }
 
   @Override
   public int getWorker(int partition, int partitionCount, int workerCount) {
-    return 0;
+    return getPartitionInRange(partition, partitionCount, workerCount);
   }
 
   @Override
   public void setConf(ImmutableClassesGiraphConfiguration conf) {
     super.setConf(conf);
-    partitionSize = conf.getInt(PARTITION_VERTEX_KEY_SPACE_SIZE, -1);
-    if (partitionSize == -1) {
-      throw new IllegalStateException(
-          format("Need to specify %s when using IgaPartitionerFactory", PARTITION_VERTEX_KEY_SPACE_SIZE)
-      );
-    }
+    directionTree = new DirectionTree(PROBLEM_SIZE.get(conf));
   }
 
 }

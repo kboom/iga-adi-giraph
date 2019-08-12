@@ -1,0 +1,129 @@
+package edu.agh.iga.adi.giraph.direction.io;
+
+import edu.agh.iga.adi.giraph.core.DirectionTree;
+import edu.agh.iga.adi.giraph.core.IgaVertex;
+import edu.agh.iga.adi.giraph.core.Mesh;
+import edu.agh.iga.adi.giraph.core.factory.ElementFactory;
+import edu.agh.iga.adi.giraph.core.factory.HorizontalElementFactory;
+import edu.agh.iga.adi.giraph.core.problem.ConstantProblem;
+import edu.agh.iga.adi.giraph.core.problem.Problem;
+import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
+import org.apache.giraph.io.VertexValueInputFormat;
+import org.apache.giraph.io.VertexValueReader;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.mapreduce.InputSplit;
+import org.apache.hadoop.mapreduce.JobContext;
+import org.apache.hadoop.mapreduce.TaskAttemptContext;
+
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
+import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
+import static edu.agh.iga.adi.giraph.core.IgaVertexFactory.childrenOf;
+
+/**
+ * A step that uses no coefficients from HDFS.
+ * This is useful mainly for solving dummy problems which initial values can be found through math formulas.
+ * Real problems tend to need a series of values which correspond to a bitmap surface which needs to be projected onto BSpline basis.
+ */
+public class InMemoryStepInputFormat extends VertexValueInputFormat<LongWritable, IgaElementWritable> {
+
+  @Override
+  public VertexValueReader<LongWritable, IgaElementWritable> createVertexValueReader(InputSplit split, TaskAttemptContext context) {
+    VertexInputSplit vertexSplit = (VertexInputSplit) split;
+    final int size = PROBLEM_SIZE.get(getConf());
+    final DirectionTree tree = new DirectionTree(size);
+    final Mesh mesh = Mesh.aMesh().withElements(size).build();
+    final ElementFactory elementFactory = new HorizontalElementFactory(mesh, tree);
+    return new StaticProblemInputReader(
+        elementFactory,
+        new ConstantProblem(), // todo for now
+        childrenOf(
+            vertexOf(tree, vertexSplit.root),
+            vertexSplit.height
+        )
+    );
+  }
+
+  @Override
+  public void checkInputSpecs(Configuration conf) {
+
+  }
+
+  @Override
+  public List<InputSplit> getSplits(JobContext context, int minSplitCountHint) {
+//    context.getConfiguration()
+    return Collections.emptyList();
+  }
+
+  public class VertexInputSplit extends InputSplit {
+
+    private long root;
+    private int height;
+
+    public VertexInputSplit(long root, int height) {
+      this.root = root;
+      this.height = height;
+    }
+
+    @Override
+    public long getLength() {
+      return 0;
+    }
+
+    @Override
+    public String[] getLocations() {
+      return new String[0];
+    }
+
+  }
+
+  public final class StaticProblemInputReader extends VertexValueReader<LongWritable, IgaElementWritable> {
+
+    private final Iterator<IgaVertex> vertices;
+    private final ElementFactory elementFactory;
+    private final Problem problem;
+    private IgaVertex currentVertex;
+
+    private StaticProblemInputReader(ElementFactory elementFactory, Problem problem, Iterator<IgaVertex> vertices) {
+      this.problem = problem;
+      this.vertices = vertices;
+      this.elementFactory = elementFactory;
+    }
+
+    @Override
+    public LongWritable getCurrentVertexId() {
+      return new LongWritable(currentVertex.id());
+    }
+
+    @Override
+    public IgaElementWritable getCurrentVertexValue() {
+      return new IgaElementWritable(elementFactory.createElement(problem, currentVertex));
+    }
+
+    @Override
+    public boolean nextVertex() {
+      if (vertices.hasNext()) {
+        currentVertex = vertices.next();
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    @Override
+    public void close() {
+
+    }
+
+    @Override
+    public float getProgress() {
+      return 0;
+    }
+
+  }
+
+}

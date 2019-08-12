@@ -1,12 +1,16 @@
 package edu.agh.iga.adi.giraph.test;
 
+import edu.agh.iga.adi.giraph.direction.IgaPartitionerFactory;
+import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
+import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
+import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.io.VertexInputFormat;
 import org.apache.giraph.io.VertexOutputFormat;
 import org.apache.giraph.job.GiraphJob;
 import org.apache.giraph.master.MasterCompute;
-import org.apache.giraph.partition.SimpleLongRangePartitionerFactory;
 import org.apache.giraph.worker.WorkerContext;
+import org.apache.hadoop.io.LongWritable;
 
 import java.io.IOException;
 
@@ -92,7 +96,11 @@ public class GiraphTestJob {
       conf.setMaxNumberOfSupersteps(3);
       conf.setMaxMasterSuperstepWaitMsecs(30 * 1000);
       conf.setEventWaitMsecs(3 * 1000);
-      conf.setGraphPartitionerFactoryClass(SimpleLongRangePartitionerFactory.class);
+      conf.setGraphPartitionerFactoryClass(IgaPartitionerFactory.class);
+      VERTEX_ID_CLASS.set(conf, LongWritable.class);
+      VERTEX_VALUE_CLASS.set(conf, IgaElementWritable.class);
+      EDGE_VALUE_CLASS.set(conf, IgaOperationWritable.class);
+      OUTGOING_MESSAGE_VALUE_CLASS.set(conf, IgaMessageWritable.class);
       ZOOKEEPER_SERVERLIST_POLL_MSECS.set(conf, 500);
       SPLIT_MASTER_WORKER.set(conf, false);
       LOCAL_TEST_MODE.set(conf, true);
