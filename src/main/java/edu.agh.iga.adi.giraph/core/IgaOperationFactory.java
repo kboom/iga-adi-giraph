@@ -1,24 +1,21 @@
 package edu.agh.iga.adi.giraph.core;
 
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.core.operations.OperationFactory.operationFor;
-import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.LongStream.range;
 
 public class IgaOperationFactory {
 
-  public static Set<DirectedOperation> operationsFor(DirectionTree tree) {
+  public static Iterator<DirectedOperation> operationsFor(DirectionTree tree) {
     return operationsFor(tree, vertexOf(tree, 1L), tree.height());
   }
 
-  public static Set<DirectedOperation> operationsFor(DirectionTree tree, IgaVertex parent, int height) {
+  public static Iterator<DirectedOperation> operationsFor(DirectionTree tree, IgaVertex parent, int height) {
     final int parentLevel = parent.rowIndexOf();
     return range(parentLevel, parentLevel + height)
         .flatMap(level -> range(parent.leftDescendantOffsetAt((int) level), parent.rightDescendantOffsetAt((int) level) + 1))
@@ -30,7 +27,7 @@ public class IgaOperationFactory {
         )))
         .filter(Optional::isPresent)
         .map(Optional::get)
-        .collect(collectingAndThen(Collectors.toSet(), Collections::unmodifiableSet));
+        .iterator();
   }
 
   public static class DirectedOperation {

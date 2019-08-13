@@ -1,7 +1,11 @@
 package edu.agh.iga.adi.giraph.direction.io;
 
+import edu.agh.iga.adi.giraph.core.DirectionTree;
+import edu.agh.iga.adi.giraph.core.IgaOperationFactory;
+import edu.agh.iga.adi.giraph.core.IgaOperationFactory.DirectedOperation;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import org.apache.giraph.edge.Edge;
+import org.apache.giraph.edge.EdgeFactory;
 import org.apache.giraph.io.EdgeInputFormat;
 import org.apache.giraph.io.EdgeReader;
 import org.apache.hadoop.conf.Configuration;
@@ -11,7 +15,12 @@ import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
+
+import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
+import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
+import static java.util.Collections.emptyList;
 
 public final class IgaEdgeInputFormat extends EdgeInputFormat<LongWritable, IgaOperationWritable> {
 
@@ -22,34 +31,53 @@ public final class IgaEdgeInputFormat extends EdgeInputFormat<LongWritable, IgaO
 
   @Override
   public List<InputSplit> getSplits(JobContext context, int minSplitCountHint) {
-    return null;
+    return emptyList();
   }
 
   @Override
   public EdgeReader<LongWritable, IgaOperationWritable> createEdgeReader(InputSplit split, TaskAttemptContext context) {
-    return null;
+    IgaInputSplit vertexSplit = (IgaInputSplit) split;
+    final int size = PROBLEM_SIZE.get(getConf());
+    final DirectionTree tree = new DirectionTree(size);
+    return new IgaEdgeReader(
+        IgaOperationFactory.operationsFor(
+            tree,
+            vertexOf(tree, vertexSplit.getRoot()),
+            vertexSplit.getHeight()
+        )
+    );
   }
 
   public class IgaEdgeReader extends EdgeReader<LongWritable, IgaOperationWritable> {
 
-    @Override
-    public void initialize(InputSplit inputSplit, TaskAttemptContext context) throws IOException, InterruptedException {
+    private final Iterator<DirectedOperation> operations;
+    private DirectedOperation currentOperation;
 
+    private IgaEdgeReader(Iterator<DirectedOperation> operations) {
+      this.operations = operations;
     }
 
     @Override
-    public boolean nextEdge() throws IOException, InterruptedException {
-      return false;
+    public boolean nextEdge() {
+      if (operations.hasNext()) {
+        currentOperation = operations.next();
+        return true;
+      } else {
+        return false;
+      }
     }
 
     @Override
-    public LongWritable getCurrentSourceId() throws IOException, InterruptedException {
-      return null;
+    public LongWritable getCurrentSourceId() {
+      return new LongWritable(currentOperation.getSrc().id());
     }
 
     @Override
-    public Edge<LongWritable, IgaOperationWritable> getCurrentEdge() throws IOException, InterruptedException {
-      return null;
+    public Edge<LongWritable, IgaOperationWritable> getCurrentEdge() {
+      return EdgeFactory.create(
+          new LongWritable(currentOperation.getDst().id()),
+          new IgaOperationWritable(currentOperation.getOperation())
+      );
     }
 
     @Override
@@ -60,6 +88,11 @@ public final class IgaEdgeInputFormat extends EdgeInputFormat<LongWritable, IgaO
     @Override
     public float getProgress() throws IOException, InterruptedException {
       return 0;
+    }
+
+    @Override
+    public void initialize(InputSplit inputSplit, TaskAttemptContext context) throws IOException, InterruptedException {
+
     }
 
   }

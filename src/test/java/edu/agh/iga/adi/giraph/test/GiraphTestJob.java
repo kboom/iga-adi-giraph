@@ -1,6 +1,7 @@
 package edu.agh.iga.adi.giraph.test;
 
 import edu.agh.iga.adi.giraph.direction.IgaPartitionerFactory;
+import edu.agh.iga.adi.giraph.direction.io.IgaEdgeInputFormat;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
@@ -96,6 +97,7 @@ public class GiraphTestJob {
       conf.setMaxNumberOfSupersteps(3);
       conf.setMaxMasterSuperstepWaitMsecs(30 * 1000);
       conf.setEventWaitMsecs(3 * 1000);
+      conf.setEdgeInputFormatClass(IgaEdgeInputFormat.class);
       conf.setGraphPartitionerFactoryClass(IgaPartitionerFactory.class);
       VERTEX_ID_CLASS.set(conf, LongWritable.class);
       VERTEX_VALUE_CLASS.set(conf, IgaElementWritable.class);

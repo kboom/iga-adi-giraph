@@ -8,7 +8,7 @@ public class TestIgaOperationGraph {
 
   public static IgaTestGraph igaTestGraph(IgaTestGraph igaTestGraph) {
     final DirectionTree tree = igaTestGraph.getDirectionTree();
-    operationsFor(tree).forEach(o -> igaTestGraph.withVertex(o.getSrc().id(), o.getOperation(), o.getDst().id()));
+    operationsFor(tree).forEachRemaining(o -> igaTestGraph.withVertex(o.getSrc().id(), o.getOperation(), o.getDst().id()));
     return igaTestGraph;
   }
 
