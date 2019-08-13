@@ -42,7 +42,7 @@ public class InMemoryStepInputFormat extends VertexValueInputFormat<LongWritable
         elementFactory,
         new ConstantProblem(), // todo for now
         childrenOf(
-            vertexOf(tree, vertexSplit.getRoot()),
+            vertexSplit.getRoot(),
             vertexSplit.getHeight()
         )
     );

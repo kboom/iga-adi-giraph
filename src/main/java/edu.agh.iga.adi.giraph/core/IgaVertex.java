@@ -39,6 +39,14 @@ public class IgaVertex {
     throw new IllegalStateException(format("The problem tree does not have vertex %d", id));
   }
 
+  public static IgaVertex lcaOf(IgaVertex left, IgaVertex right) {
+    return null;
+  }
+
+  public static IgaVertex lowerOf(IgaVertex left, IgaVertex right) {
+    return null;
+  }
+
   private InterimVertex interimVertex(long id) {
     return new InterimVertex(tree, id);
   }
@@ -151,7 +159,7 @@ public class IgaVertex {
   public long leftDescendantOffsetAt(int height) {
     final int currentHeight = rowIndexOf();
     final int branchingHeight = tree.branchingHeight();
-    if(currentHeight + height <= branchingHeight) {
+    if (currentHeight + height <= branchingHeight) {
       return IntMath.pow(2, height) * id;
     } else {
       final long parentId = IntMath.pow(2, height - 1) * id;
@@ -163,13 +171,21 @@ public class IgaVertex {
   public long rightDescendantOffsetAt(int height) {
     final int currentHeight = rowIndexOf();
     final int branchingHeight = tree.branchingHeight();
-    if(currentHeight + height <= branchingHeight) {
+    if (currentHeight + height <= branchingHeight) {
       return IntMath.pow(2, height) * (id + 1) - 1;
     } else {
       final long parentId = IntMath.pow(2, height - 1) * (id + 1) - 1;
       final long parentOffset = parentId - tree.firstIndexOfBranchingRow();
       return tree.firstIndexOfLeafRow() + 3 * (parentOffset + 1) - 1;
     }
+  }
+
+  public int heightDifference(int rowIndexOf) {
+    return 0;
+  }
+
+  public int heightOf() {
+    return 0;
   }
 
   public enum ChildPosition {

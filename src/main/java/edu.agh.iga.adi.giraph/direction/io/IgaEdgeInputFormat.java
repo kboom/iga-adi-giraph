@@ -17,10 +17,9 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
-import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
-import static java.util.Collections.emptyList;
 
 public final class IgaEdgeInputFormat extends EdgeInputFormat<LongWritable, IgaOperationWritable> {
 
@@ -31,7 +30,13 @@ public final class IgaEdgeInputFormat extends EdgeInputFormat<LongWritable, IgaO
 
   @Override
   public List<InputSplit> getSplits(JobContext context, int minSplitCountHint) {
-    return emptyList();
+    final int problemSize = PROBLEM_SIZE.get(context.getConfiguration());
+    final DirectionTree tree = new DirectionTree(problemSize);
+    IgaTreeSplitter igaTreeSplitter = new IgaTreeSplitter(tree);
+    return igaTreeSplitter.allSplitsFor(minSplitCountHint)
+        .stream()
+        .map(s -> (InputSplit) s)
+        .collect(Collectors.toList());
   }
 
   @Override
@@ -42,7 +47,7 @@ public final class IgaEdgeInputFormat extends EdgeInputFormat<LongWritable, IgaO
     return new IgaEdgeReader(
         IgaOperationFactory.operationsFor(
             tree,
-            vertexOf(tree, vertexSplit.getRoot()),
+            vertexSplit.getRoot(),
             vertexSplit.getHeight()
         )
     );
