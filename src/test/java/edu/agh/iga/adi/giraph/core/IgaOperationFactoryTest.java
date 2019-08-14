@@ -3,6 +3,7 @@ package edu.agh.iga.adi.giraph.core;
 import edu.agh.iga.adi.giraph.test.TestOperationFactory;
 import org.junit.jupiter.api.Test;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static edu.agh.iga.adi.giraph.core.IgaOperationFactory.operationsFor;
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,8 +19,7 @@ class IgaOperationFactoryTest {
 
   @Test
   void canGenerateTopTriangle() {
-    assertThat(operationsFor(TREE_12, vertexOf(TREE_12, 1L), 1))
-        .asList()
+    assertThat(newArrayList(operationsFor(TREE_12, vertexOf(TREE_12, 1L), 1)))
         .containsExactlyInAnyOrder(
             T12OF.mergeAndEliminateRoot(2, 1),
             T12OF.mergeAndEliminateRoot(3, 1),
@@ -30,8 +30,7 @@ class IgaOperationFactoryTest {
 
   @Test
   void canGenerateBottomTriangle() {
-    assertThat(operationsFor(TREE_12, vertexOf(TREE_12, 4L), 1))
-        .asList()
+    assertThat(newArrayList(operationsFor(TREE_12, vertexOf(TREE_12, 4L), 1)))
         .containsExactlyInAnyOrder(
             T12OF.mergeAndEliminateLeaves(8, 4),
             T12OF.mergeAndEliminateLeaves(9, 4),
@@ -41,8 +40,7 @@ class IgaOperationFactoryTest {
 
   @Test
   void canGenerateGraphFor12Elements() {
-    assertThat(operationsFor(TREE_12))
-        .asList()
+    assertThat(newArrayList(operationsFor(TREE_12)))
         .containsExactlyInAnyOrder(
             T12OF.mergeAndEliminateLeaves(8, 4),
             T12OF.mergeAndEliminateLeaves(9, 4),
@@ -73,8 +71,7 @@ class IgaOperationFactoryTest {
 
   @Test
   void canGenerateGraphFor24Elements() {
-    assertThat(operationsFor(TREE_24))
-        .asList()
+    assertThat(newArrayList(operationsFor(TREE_24)))
         .containsExactlyInAnyOrder(
             T24OF.mergeAndEliminateLeaves(16, 8),
             T24OF.mergeAndEliminateLeaves(17, 8),

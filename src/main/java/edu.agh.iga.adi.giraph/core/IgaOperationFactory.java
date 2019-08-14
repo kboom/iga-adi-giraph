@@ -3,11 +3,12 @@ package edu.agh.iga.adi.giraph.core;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.core.operations.OperationFactory.operationFor;
-import static java.util.stream.LongStream.range;
+import static java.util.stream.LongStream.*;
 
 public class IgaOperationFactory {
 
@@ -16,9 +17,7 @@ public class IgaOperationFactory {
   }
 
   public static Iterator<DirectedOperation> operationsFor(DirectionTree tree, IgaVertex parent, int height) {
-    final int parentLevel = parent.rowIndexOf();
-    return range(parentLevel, parentLevel + height)
-        .flatMap(level -> range(parent.leftDescendantOffsetAt((int) level), parent.rightDescendantOffsetAt((int) level) + 1))
+    return concat(of(parent.id()), childrenOf(parent, height))
         .boxed()
         .map(i -> vertexOf(tree, i))
         .flatMap(va -> va.children().stream().flatMap(vb -> Stream.of(
@@ -28,6 +27,14 @@ public class IgaOperationFactory {
         .filter(Optional::isPresent)
         .map(Optional::get)
         .iterator();
+  }
+
+  private static LongStream childrenOf(IgaVertex parent, int height) {
+    return range(1, height)
+        .flatMap(level -> range(
+            parent.leftDescendantAt((int) level),
+            parent.rightDescendantAt((int) level) + 1)
+        );
   }
 
   public static class DirectedOperation {

@@ -71,6 +71,10 @@ public class IgaVertex {
     return id;
   }
 
+  public DirectionTree getTree() {
+    return tree;
+  }
+
   public int rowIndexOf() {
     if (is(RootVertex.class)) {
       return 1;
@@ -156,7 +160,7 @@ public class IgaVertex {
     return Pair.of(lb, ub);
   }
 
-  public long leftDescendantOffsetAt(int height) {
+  public long leftDescendantAt(int height) {
     final int currentHeight = rowIndexOf();
     final int branchingHeight = tree.branchingHeight();
     if (currentHeight + height <= branchingHeight) {
@@ -168,7 +172,7 @@ public class IgaVertex {
     }
   }
 
-  public long rightDescendantOffsetAt(int height) {
+  public long rightDescendantAt(int height) {
     final int currentHeight = rowIndexOf();
     final int branchingHeight = tree.branchingHeight();
     if (currentHeight + height <= branchingHeight) {

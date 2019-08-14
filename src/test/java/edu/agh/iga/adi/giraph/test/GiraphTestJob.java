@@ -14,6 +14,7 @@ import org.apache.giraph.worker.WorkerContext;
 import org.apache.hadoop.io.LongWritable;
 
 import java.io.IOException;
+import java.util.function.Consumer;
 
 import static edu.agh.iga.adi.giraph.test.DirManager.setDefaultDirs;
 import static edu.agh.iga.adi.giraph.test.DirManager.standardDirManager;
@@ -52,6 +53,8 @@ public class GiraphTestJob {
     private Class<? extends VertexInputFormat> vertexInputFormatClazz;
     private Class<? extends VertexOutputFormat> vertexOutputFormatClazz;
     private Class<? extends WorkerContext> workerContextClazz;
+    private Consumer<GiraphConfiguration> configurationModifier = (conf) -> {
+    };
 
     public GiraphJobBuilder workerContextClazz(Class<? extends WorkerContext> workerContextClazz) {
       this.workerContextClazz = workerContextClazz;
@@ -73,8 +76,14 @@ public class GiraphTestJob {
       return this;
     }
 
+    public GiraphJobBuilder configuration(Consumer<GiraphConfiguration> configurationModifier) {
+      this.configurationModifier = configurationModifier;
+      return this;
+    }
+
     public GiraphTestJob build() {
       GiraphConfiguration conf = createConfiguration();
+      configurationModifier.accept(conf);
       GiraphJob job = createJob(conf);
       return new GiraphTestJob(job, standardDirManager(conf));
     }

@@ -14,13 +14,14 @@ import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 
-import java.io.IOException;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.IgaConfiguration.HEIGHT_PARTITIONS;
+import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toList;
 
 public final class IgaEdgeInputFormat extends EdgeInputFormat<LongWritable, IgaOperationWritable> {
 
@@ -35,11 +36,11 @@ public final class IgaEdgeInputFormat extends EdgeInputFormat<LongWritable, IgaO
     final int problemSize = PROBLEM_SIZE.get(config);
     final DirectionTree tree = new DirectionTree(problemSize);
     final IgaTreeSplitter igaTreeSplitter = new IgaTreeSplitter(tree);
-    final int treePartitionSize = HEIGHT_PARTITIONS.get(config);
-    return igaTreeSplitter.allSplitsFor(treePartitionSize)
+    final int heightPartitionCountHint = HEIGHT_PARTITIONS.get(config);
+    return igaTreeSplitter.allSplitsFor(heightPartitionCountHint)
         .stream()
         .map(s -> (InputSplit) s)
-        .collect(Collectors.toList());
+        .collect(collectingAndThen(toList(), Collections::unmodifiableList));
   }
 
   @Override
@@ -89,17 +90,17 @@ public final class IgaEdgeInputFormat extends EdgeInputFormat<LongWritable, IgaO
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
 
     }
 
     @Override
-    public float getProgress() throws IOException, InterruptedException {
+    public float getProgress() {
       return 0;
     }
 
     @Override
-    public void initialize(InputSplit inputSplit, TaskAttemptContext context) throws IOException, InterruptedException {
+    public void initialize(InputSplit inputSplit, TaskAttemptContext context) {
 
     }
 

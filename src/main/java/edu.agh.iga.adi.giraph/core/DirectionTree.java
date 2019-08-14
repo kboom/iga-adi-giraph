@@ -14,6 +14,10 @@ public final class DirectionTree {
     this.problemSize = problemSize;
   }
 
+  public int getProblemSize() {
+    return problemSize;
+  }
+
   public int height() {
     return log2(problemSize / 3, UNNECESSARY) + 1;
   }

@@ -7,6 +7,8 @@ import edu.agh.iga.adi.giraph.test.GiraphTestJob;
 import org.apache.giraph.io.formats.InMemoryVertexOutputFormat;
 import org.junit.jupiter.api.Test;
 
+import static edu.agh.iga.adi.giraph.IgaConfiguration.HEIGHT_PARTITIONS;
+import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.test.GiraphTestJob.giraphJob;
 
 class GraphIT {
@@ -18,6 +20,10 @@ class GraphIT {
         .workerContextClazz(IgaAdiWorkerContext.class)
         .vertexInputFormatClazz(InMemoryStepInputFormat.class)
         .vertexOutputFormatClazz(InMemoryVertexOutputFormat.class)
+        .configuration(conf -> {
+          PROBLEM_SIZE.set(conf, 12);
+          HEIGHT_PARTITIONS.set(conf, 2);
+        })
         .build();
 
     job.run();

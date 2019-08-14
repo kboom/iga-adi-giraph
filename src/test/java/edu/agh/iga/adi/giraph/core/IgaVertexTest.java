@@ -92,62 +92,62 @@ class IgaVertexTest {
 
   @Test
   void firstLeftDescendantOfRootIs2() {
-    assertThat(vertexOf(TREE, 1L).leftDescendantOffsetAt(1)).isEqualTo(2);
+    assertThat(vertexOf(TREE, 1L).leftDescendantAt(1)).isEqualTo(2);
   }
 
   @Test
   void secondLeftDescendantOfRootIs4() {
-    assertThat(vertexOf(TREE, 1L).leftDescendantOffsetAt(2)).isEqualTo(4);
+    assertThat(vertexOf(TREE, 1L).leftDescendantAt(2)).isEqualTo(4);
   }
 
   @Test
   void lastLeftDescendantOfRootIs8() {
-    assertThat(vertexOf(TREE, 1L).leftDescendantOffsetAt(3)).isEqualTo(8);
+    assertThat(vertexOf(TREE, 1L).leftDescendantAt(3)).isEqualTo(8);
   }
 
   @Test
   void firstLeftDescendantOf3Is6() {
-    assertThat(vertexOf(TREE, 3L).leftDescendantOffsetAt(1)).isEqualTo(6);
+    assertThat(vertexOf(TREE, 3L).leftDescendantAt(1)).isEqualTo(6);
   }
 
   @Test
   void lastLeftDescendantOf3Is14() {
-    assertThat(vertexOf(TREE, 3L).leftDescendantOffsetAt(2)).isEqualTo(14);
+    assertThat(vertexOf(TREE, 3L).leftDescendantAt(2)).isEqualTo(14);
   }
 
   @Test
   void lastLeftDescendantOf5Is11() {
-    assertThat(vertexOf(TREE, 5L).leftDescendantOffsetAt(1)).isEqualTo(11);
+    assertThat(vertexOf(TREE, 5L).leftDescendantAt(1)).isEqualTo(11);
   }
 
   @Test
   void firstRightDescendantOfRootIs3() {
-    assertThat(vertexOf(TREE, 1L).rightDescendantOffsetAt(1)).isEqualTo(3);
+    assertThat(vertexOf(TREE, 1L).rightDescendantAt(1)).isEqualTo(3);
   }
 
   @Test
   void secondRightDescendantOfRootIs7() {
-    assertThat(vertexOf(TREE, 1L).rightDescendantOffsetAt(2)).isEqualTo(7);
+    assertThat(vertexOf(TREE, 1L).rightDescendantAt(2)).isEqualTo(7);
   }
 
   @Test
   void lastRightDescendantOfRootIs19() {
-    assertThat(vertexOf(TREE, 1L).rightDescendantOffsetAt(3)).isEqualTo(19);
+    assertThat(vertexOf(TREE, 1L).rightDescendantAt(3)).isEqualTo(19);
   }
 
   @Test
   void firstRightDescendantOf3Is7() {
-    assertThat(vertexOf(TREE, 3L).rightDescendantOffsetAt(1)).isEqualTo(7);
+    assertThat(vertexOf(TREE, 3L).rightDescendantAt(1)).isEqualTo(7);
   }
 
   @Test
   void lastRightDescendantOf3Is19() {
-    assertThat(vertexOf(TREE, 3L).rightDescendantOffsetAt(2)).isEqualTo(19);
+    assertThat(vertexOf(TREE, 3L).rightDescendantAt(2)).isEqualTo(19);
   }
 
   @Test
   void lastRightDescendantOf5Is13() {
-    assertThat(vertexOf(TREE, 5L).rightDescendantOffsetAt(1)).isEqualTo(13);
+    assertThat(vertexOf(TREE, 5L).rightDescendantAt(1)).isEqualTo(13);
   }
 
 }
