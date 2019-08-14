@@ -1,15 +1,15 @@
 package edu.agh.iga.adi.giraph.direction.io;
 
+import com.google.common.collect.ImmutableList;
 import edu.agh.iga.adi.giraph.core.DirectionTree;
-import edu.agh.iga.adi.giraph.core.IgaVertex;
 
-import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Stack;
-import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
-import static edu.agh.iga.adi.giraph.core.IgaVertex.*;
-import static java.util.stream.Collectors.toList;
+import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 final class IgaTreeSplitter {
 
@@ -19,41 +19,32 @@ final class IgaTreeSplitter {
     this.tree = tree;
   }
 
-  List<IgaInputSplit> allSplitsFor(int workers) {
-    final int problemSize = tree.size();
-    final int segments = problemSize / 3;
-    assert segments % workers == 0; // enforce even number of nodes
-    final int leafsPerThread = segments / workers;
+  List<IgaInputSplit> allSplitsFor(int heightPartitionsHint) {
+    final int treeHeight = tree.height();
+    final int heightPerSegment = min(treeHeight, max(1, treeHeight / heightPartitionsHint + 1));
 
-    final Stack<List<IgaInputSplit>> splits = new Stack<>();
-    splits.add(splitForSegment(tree.height(), segments, leafsPerThread));
-
-    int clevel = tree.height();
-    while (clevel > 0) {
-      List<IgaInputSplit> lastSplits = splits.lastElement();
-      clevel = lastSplits.get(0).getRoot().heightOf();
-      int currentSegments = (int) tree.strengthOfRow(clevel);
-      int verticesPerThread = Math.min(1, currentSegments / workers);
-      splits.add(splitForSegment(tree.height(), currentSegments, verticesPerThread));
+    ImmutableList.Builder<IgaInputSplit> builder = ImmutableList.builder();
+    int cheight = treeHeight;
+    while (cheight >= heightPerSegment) {
+      cheight -= heightPerSegment;
+      builder.addAll(inputSplitsFor(cheight, heightPerSegment));
     }
 
-    return splits.stream()
-        .flatMap(Collection::stream)
-        .collect(toList());
+    if (cheight > 0) {
+      builder.add(new IgaInputSplit(vertexOf(tree, 1L), cheight));
+    }
+
+    return builder.build();
   }
 
-  List<IgaInputSplit> splitForSegment(int level, int batches, int elementsInBatch) {
-    final long firstIndex = tree.firstIndexOfRow(level);
-    return IntStream.range(0, batches)
+  private Iterator<IgaInputSplit> inputSplitsFor(int height, int heightPerSegment) {
+    final long firstIndex = tree.firstIndexOfRow(height + 1);
+    final long lastIndex = tree.lastIndexOfRow(height + 1);
+
+    return LongStream.range(firstIndex, lastIndex + 1)
         .boxed()
-        .map(thread -> {
-          final IgaVertex left = vertexOf(tree, firstIndex + elementsInBatch * thread);
-          final IgaVertex right = vertexOf(tree, firstIndex + elementsInBatch * (thread + 1) - 1);
-          final IgaVertex lca = lcaOf(left, right);
-          final int height = lca.heightDifference(lowerOf(left, right).rowIndexOf());
-          return new IgaInputSplit(lca, height);
-        })
-        .collect(toList());
+        .map(i -> new IgaInputSplit(vertexOf(tree, i), heightPerSegment))
+        .iterator();
   }
 
 }

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
+import static edu.agh.iga.adi.giraph.IgaConfiguration.HEIGHT_PARTITIONS;
 
 public final class IgaEdgeInputFormat extends EdgeInputFormat<LongWritable, IgaOperationWritable> {
 
@@ -30,10 +31,12 @@ public final class IgaEdgeInputFormat extends EdgeInputFormat<LongWritable, IgaO
 
   @Override
   public List<InputSplit> getSplits(JobContext context, int minSplitCountHint) {
-    final int problemSize = PROBLEM_SIZE.get(context.getConfiguration());
+    final Configuration config = context.getConfiguration();
+    final int problemSize = PROBLEM_SIZE.get(config);
     final DirectionTree tree = new DirectionTree(problemSize);
-    IgaTreeSplitter igaTreeSplitter = new IgaTreeSplitter(tree);
-    return igaTreeSplitter.allSplitsFor(minSplitCountHint)
+    final IgaTreeSplitter igaTreeSplitter = new IgaTreeSplitter(tree);
+    final int treePartitionSize = HEIGHT_PARTITIONS.get(config);
+    return igaTreeSplitter.allSplitsFor(treePartitionSize)
         .stream()
         .map(s -> (InputSplit) s)
         .collect(Collectors.toList());
