@@ -2,6 +2,9 @@ package edu.agh.iga.adi.giraph.core;
 
 import java.util.Iterator;
 
+import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
+import static java.util.stream.LongStream.range;
+
 public class IgaVertexFactory {
 
   private IgaVertexFactory() {
@@ -16,7 +19,12 @@ public class IgaVertexFactory {
    * @return vertices between the parent, left and right, including left and right
    */
   public static Iterator<IgaVertex> childrenOf(IgaVertex parent, int height) {
-    return null;
+    final int parentHeight = parent.heightOf();
+    return range(parentHeight, parentHeight + height)
+        .flatMap(h -> range(parent.leftDescendantAt((int) h), parent.rightDescendantAt((int) h)))
+        .boxed()
+        .map(id -> vertexOf(parent.getTree(), id))
+        .iterator();
   }
 
 }

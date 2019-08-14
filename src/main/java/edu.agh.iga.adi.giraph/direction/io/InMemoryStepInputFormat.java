@@ -20,9 +20,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import static edu.agh.iga.adi.giraph.IgaConfiguration.HEIGHT_PARTITIONS;
 import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
-import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.core.IgaVertexFactory.childrenOf;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toList;
 
 /**
  * A step that uses no coefficients from HDFS.
@@ -55,8 +57,15 @@ public class InMemoryStepInputFormat extends VertexValueInputFormat<LongWritable
 
   @Override
   public List<InputSplit> getSplits(JobContext context, int minSplitCountHint) {
-//    context.getConfiguration()
-    return Collections.emptyList();
+    final Configuration config = context.getConfiguration();
+    final int problemSize = PROBLEM_SIZE.get(config);
+    final DirectionTree tree = new DirectionTree(problemSize);
+    final IgaTreeSplitter igaTreeSplitter = new IgaTreeSplitter(tree);
+    final int heightPartitionCountHint = HEIGHT_PARTITIONS.get(config);
+    return igaTreeSplitter.allSplitsFor(heightPartitionCountHint)
+        .stream()
+        .map(s -> (InputSplit) s)
+        .collect(collectingAndThen(toList(), Collections::unmodifiableList));
   }
 
   public final class StaticProblemInputReader extends VertexValueReader<LongWritable, IgaElementWritable> {
