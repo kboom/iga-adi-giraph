@@ -53,6 +53,16 @@ public class MatrixBuilder {
       return new MatrixBuilder(rows, cols, values).build();
     }
 
+    public PrimitiveDenseStore withIndexedValues() {
+      double[] values = new double[rows * cols];
+      for (int r = 0; r < rows; r++) {
+        for (int c = 0; c < cols; c++) {
+          values[r * cols + c] = Double.valueOf((r + 1) + "." + (c + 1));
+        }
+      }
+      return new MatrixBuilder(rows, cols, values).build();
+    }
+
     public PrimitiveDenseStore withValues(double... values) {
       return new MatrixBuilder(rows, cols, values).build();
     }
