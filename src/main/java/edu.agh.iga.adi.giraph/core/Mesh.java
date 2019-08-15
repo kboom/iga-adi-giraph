@@ -71,7 +71,7 @@ public final class Mesh {
 
         public MeshBuilder withElements(int elements) {
             withElementsX(elements);
-            withElementsX(elements);
+            withElementsY(elements);
             return this;
         }
 

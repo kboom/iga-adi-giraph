@@ -26,6 +26,7 @@ import static edu.agh.iga.adi.giraph.IgaConfiguration.HEIGHT_PARTITIONS;
 import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.core.IgaVertexFactory.childrenOf;
 import static edu.agh.iga.adi.giraph.core.IgaVertexFactory.familyOf;
+import static edu.agh.iga.adi.giraph.core.Mesh.aMesh;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static org.apache.log4j.Logger.getLogger;
@@ -43,9 +44,8 @@ public class InMemoryStepInputFormat extends VertexValueInputFormat<LongWritable
   public VertexValueReader<LongWritable, IgaElementWritable> createVertexValueReader(InputSplit split, TaskAttemptContext context) {
     IgaInputSplit vertexSplit = (IgaInputSplit) split;
     final int size = PROBLEM_SIZE.get(getConf());
-    final DirectionTree tree = new DirectionTree(size);
-    final Mesh mesh = Mesh.aMesh().withElements(size).build();
-    final ElementFactory elementFactory = new HorizontalElementFactory(mesh, tree);
+    final Mesh mesh = aMesh().withElements(size).build();
+    final ElementFactory elementFactory = new HorizontalElementFactory(mesh);
     return new StaticProblemInputReader(
         elementFactory,
         new ConstantProblem(), // todo for now
@@ -108,7 +108,7 @@ public class InMemoryStepInputFormat extends VertexValueInputFormat<LongWritable
     public boolean nextVertex() {
       if (vertices.hasNext()) {
         currentVertex = vertices.next();
-        if(LOG.isDebugEnabled()) {
+        if (LOG.isDebugEnabled()) {
           LOG.debug("Producing vertex " + currentVertex);
         }
         return true;

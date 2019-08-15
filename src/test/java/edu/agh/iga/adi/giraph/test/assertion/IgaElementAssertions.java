@@ -5,6 +5,7 @@ import org.assertj.core.api.AbstractAssert;
 import org.ojalgo.matrix.store.PrimitiveDenseStore;
 
 import static edu.agh.iga.adi.giraph.test.assertion.MatrixAssertions.assertValues;
+import static edu.agh.iga.adi.giraph.test.assertion.MatrixAssertions.assertValuesAbout;
 
 public class IgaElementAssertions extends AbstractAssert<IgaElementAssertions, IgaElement> {
 
@@ -21,8 +22,18 @@ public class IgaElementAssertions extends AbstractAssert<IgaElementAssertions, I
     return this;
   }
 
+  public IgaElementAssertions hasMaAbout(PrimitiveDenseStore ds) {
+    assertValuesAbout(actual.ma, ds, "Matrix A");
+    return this;
+  }
+
   public IgaElementAssertions hasMb(PrimitiveDenseStore ds) {
     assertValues(actual.mb, ds, "Matrix B");
+    return this;
+  }
+
+  public IgaElementAssertions hasMbAbout(PrimitiveDenseStore ds) {
+    assertValuesAbout(actual.mb, ds, "Matrix B");
     return this;
   }
 

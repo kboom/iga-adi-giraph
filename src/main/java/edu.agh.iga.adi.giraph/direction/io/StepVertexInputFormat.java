@@ -52,7 +52,7 @@ public class StepVertexInputFormat extends TextVertexValueInputFormat<LongWritab
     final int problemSize = PROBLEM_SIZE.get(getConf());
     mesh = Mesh.aMesh().withElements(problemSize).build();
     directionTree = new DirectionTree(problemSize);
-    elementFactory = new HorizontalElementFactory(mesh, directionTree);
+    elementFactory = new HorizontalElementFactory(mesh);
   }
 
   @Override
