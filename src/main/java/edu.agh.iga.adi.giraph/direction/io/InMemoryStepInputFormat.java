@@ -2,6 +2,8 @@ package edu.agh.iga.adi.giraph.direction.io;
 
 import edu.agh.iga.adi.giraph.core.DirectionTree;
 import edu.agh.iga.adi.giraph.core.IgaVertex;
+import edu.agh.iga.adi.giraph.core.IgaVertex.RootVertex;
+import edu.agh.iga.adi.giraph.core.IgaVertexFactory;
 import edu.agh.iga.adi.giraph.core.Mesh;
 import edu.agh.iga.adi.giraph.core.factory.ElementFactory;
 import edu.agh.iga.adi.giraph.core.factory.HorizontalElementFactory;
@@ -43,11 +45,18 @@ public class InMemoryStepInputFormat extends VertexValueInputFormat<LongWritable
     return new StaticProblemInputReader(
         elementFactory,
         new ConstantProblem(), // todo for now
-        childrenOf(
-            vertexSplit.getRoot(),
-            vertexSplit.getHeight()
-        )
+        vertices(vertexSplit)
     );
+  }
+
+  private Iterator<IgaVertex> vertices(IgaInputSplit vertexSplit) {
+    final IgaVertex root = vertexSplit.getRoot();
+    final int height = vertexSplit.getHeight();
+    if (root.is(RootVertex.class)) {
+      return IgaVertexFactory.familyOf(root, height);
+    } else {
+      return childrenOf(root, height);
+    }
   }
 
   @Override

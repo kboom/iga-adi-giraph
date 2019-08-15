@@ -1,13 +1,30 @@
 package edu.agh.iga.adi.giraph.core;
 
 import java.util.Iterator;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
+import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.LongStream.range;
 
 public class IgaVertexFactory {
 
   private IgaVertexFactory() {
+  }
+
+  /**
+   * Produces all vertices that {@link #childrenOf(IgaVertex, int)} produces including the parent.
+   *
+   * @param parent included in the results
+   * @param height the height of the children included
+   * @return vertices between the parent, left and right, including top, left and right
+   */
+  public static Iterator<IgaVertex> familyOf(IgaVertex parent, int height) {
+    return Stream.concat(
+        Stream.of(parent),
+        iteratorToFiniteStream(childrenOf(parent, height))
+    ).iterator();
   }
 
   /**
@@ -24,6 +41,10 @@ public class IgaVertexFactory {
         .boxed()
         .map(id -> vertexOf(parent.getTree(), id))
         .iterator();
+  }
+
+  private static <T> Stream<T> iteratorToFiniteStream(final Iterator<T> iterator) {
+    return StreamSupport.stream(spliteratorUnknownSize(iterator, 0), false);
   }
 
 }
