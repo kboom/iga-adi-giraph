@@ -3,7 +3,6 @@ package edu.agh.iga.adi.giraph.direction.io;
 import edu.agh.iga.adi.giraph.core.DirectionTree;
 import edu.agh.iga.adi.giraph.core.IgaVertex;
 import edu.agh.iga.adi.giraph.core.IgaVertex.RootVertex;
-import edu.agh.iga.adi.giraph.core.IgaVertexFactory;
 import edu.agh.iga.adi.giraph.core.Mesh;
 import edu.agh.iga.adi.giraph.core.factory.ElementFactory;
 import edu.agh.iga.adi.giraph.core.factory.HorizontalElementFactory;
@@ -17,6 +16,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
+import org.apache.log4j.Logger;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -25,8 +25,10 @@ import java.util.List;
 import static edu.agh.iga.adi.giraph.IgaConfiguration.HEIGHT_PARTITIONS;
 import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.core.IgaVertexFactory.childrenOf;
+import static edu.agh.iga.adi.giraph.core.IgaVertexFactory.familyOf;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
+import static org.apache.log4j.Logger.getLogger;
 
 /**
  * A step that uses no coefficients from HDFS.
@@ -34,6 +36,8 @@ import static java.util.stream.Collectors.toList;
  * Real problems tend to need a series of values which correspond to a bitmap surface which needs to be projected onto BSpline basis.
  */
 public class InMemoryStepInputFormat extends VertexValueInputFormat<LongWritable, IgaElementWritable> {
+
+  private static final Logger LOG = getLogger(InMemoryStepInputFormat.class);
 
   @Override
   public VertexValueReader<LongWritable, IgaElementWritable> createVertexValueReader(InputSplit split, TaskAttemptContext context) {
@@ -53,7 +57,7 @@ public class InMemoryStepInputFormat extends VertexValueInputFormat<LongWritable
     final IgaVertex root = vertexSplit.getRoot();
     final int height = vertexSplit.getHeight();
     if (root.is(RootVertex.class)) {
-      return IgaVertexFactory.familyOf(root, height);
+      return familyOf(root, height);
     } else {
       return childrenOf(root, height);
     }
@@ -104,6 +108,9 @@ public class InMemoryStepInputFormat extends VertexValueInputFormat<LongWritable
     public boolean nextVertex() {
       if (vertices.hasNext()) {
         currentVertex = vertices.next();
+        if(LOG.isDebugEnabled()) {
+          LOG.debug("Producing vertex " + currentVertex);
+        }
         return true;
       } else {
         return false;

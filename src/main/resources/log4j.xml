@@ -29,7 +29,7 @@
     </appender>
 
     <logger name="edu.agh.iga.adi.giraph" additivity="false">
-        <level value="debug" />
+        <level value="all" />
         <appender-ref ref="app.file" />
     </logger>
 

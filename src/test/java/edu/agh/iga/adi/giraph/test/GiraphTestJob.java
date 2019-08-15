@@ -18,6 +18,7 @@ import java.util.function.Consumer;
 
 import static edu.agh.iga.adi.giraph.test.DirManager.setDefaultDirs;
 import static edu.agh.iga.adi.giraph.test.DirManager.standardDirManager;
+import static java.lang.Integer.MAX_VALUE;
 import static org.apache.giraph.conf.GiraphConstants.*;
 
 public class GiraphTestJob {
@@ -113,6 +114,7 @@ public class GiraphTestJob {
       EDGE_VALUE_CLASS.set(conf, IgaOperationWritable.class);
       OUTGOING_MESSAGE_VALUE_CLASS.set(conf, IgaMessageWritable.class);
       ZOOKEEPER_SERVERLIST_POLL_MSECS.set(conf, 500);
+      MAX_NUMBER_OF_SUPERSTEPS.set(conf, MAX_VALUE);
       SPLIT_MASTER_WORKER.set(conf, false);
       LOCAL_TEST_MODE.set(conf, true);
       conf.set(MAX_WORKERS, "1");

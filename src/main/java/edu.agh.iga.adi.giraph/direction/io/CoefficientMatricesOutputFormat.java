@@ -22,9 +22,9 @@ public final class CoefficientMatricesOutputFormat extends TextVertexOutputForma
   protected class IdWithValueVertexWriter extends TextVertexWriterToEachLine {
 
     @Override
-    protected Text convertVertexToLine(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) throws IOException {
+    protected Text convertVertexToLine(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
       return new Text(
-          vertex.getId().get() + " " + join(vertex.getValue().getElement().mx.data, ",")
+          vertex.getId().get() + " " + join(vertex.getValue().getElement().mx.data, ',')
       );
     }
 

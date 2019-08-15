@@ -13,6 +13,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
+import org.apache.log4j.Logger;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -22,8 +23,11 @@ import static edu.agh.iga.adi.giraph.IgaConfiguration.HEIGHT_PARTITIONS;
 import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
+import static org.apache.log4j.Logger.getLogger;
 
 public final class IgaEdgeInputFormat extends EdgeInputFormat<LongWritable, IgaOperationWritable> {
+
+  private static final Logger LOG = getLogger(IgaEdgeInputFormat.class);
 
   @Override
   public void checkInputSpecs(Configuration conf) {
@@ -70,6 +74,9 @@ public final class IgaEdgeInputFormat extends EdgeInputFormat<LongWritable, IgaO
     public boolean nextEdge() {
       if (operations.hasNext()) {
         currentOperation = operations.next();
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Producing operation " + currentOperation);
+        }
         return true;
       } else {
         return false;
