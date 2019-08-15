@@ -17,6 +17,9 @@ import org.apache.hadoop.io.LongWritable;
 
 import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
+import static edu.agh.iga.adi.giraph.direction.computation.ComputationLogger.computationLog;
+import static edu.agh.iga.adi.giraph.direction.computation.ComputationLogger.logPhase;
+import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationPhase.MERGE_AND_ELIMINATE_LEAVES;
 
 /**
  * Kicks off the cascade of operations at the leaf vertices.
@@ -26,6 +29,11 @@ public final class InitialComputation
     extends BasicComputation<LongWritable, IgaElementWritable, IgaOperationWritable, IgaMessageWritable> {
 
   private DirectionTree directionTree;
+
+  @Override
+  public void preSuperstep() {
+    logPhase(MERGE_AND_ELIMINATE_LEAVES);
+  }
 
   @Override
   public void compute(
@@ -42,6 +50,8 @@ public final class InitialComputation
       });
     }
     vertex.voteToHalt();
+
+    computationLog(vertex.getValue().getElement());
   }
 
   @Override

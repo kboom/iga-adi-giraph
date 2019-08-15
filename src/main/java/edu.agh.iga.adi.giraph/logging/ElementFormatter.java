@@ -4,9 +4,13 @@ import edu.agh.iga.adi.giraph.core.IgaElement;
 import org.ojalgo.netio.ASCII;
 import org.ojalgo.structure.Access2D;
 
+import java.text.DecimalFormat;
+
 public class ElementFormatter {
 
   private static final String LINE_SEPARATOR = System.lineSeparator();
+
+  private static final DecimalFormat SIMPLIED_FORMAT = new DecimalFormat("#.###");
 
   public static String formatElement(IgaElement element) {
     return glueElements(
@@ -43,7 +47,7 @@ public class ElementFormatter {
     String tmpElementString;
     for (int j = 0; j < tmpColDim; j++) {
       for (int i = 0; i < tmpRowDim; i++) {
-        tmpElementString = String.valueOf(matrix.get(i, j));
+        tmpElementString = SIMPLIED_FORMAT.format(matrix.get(i, j));
         tmpWidth = Math.max(tmpWidth, tmpElementString.length());
         tmpElements[i][j] = tmpElementString;
       }
