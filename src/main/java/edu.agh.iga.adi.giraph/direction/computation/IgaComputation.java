@@ -22,6 +22,7 @@ import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.logging.ElementFormatter.formatElement;
 import static java.lang.String.format;
+import static java.lang.System.lineSeparator;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.StreamSupport.stream;
 
@@ -81,8 +82,7 @@ public final class IgaComputation extends BasicComputation<LongWritable, IgaElem
   private void consume(IgaElement element, IgaMessage msg) {
     msg.getOperation().consumeMessage(element, msg, directionTree);
     if (LOG.isDebugEnabled()) {
-      LOG.debug(format("------------------------ ELEMENT %s ------------------------", element.id));
-      LOG.debug(formatElement(element));
+      LOG.debug(format("%s------------------------ ELEMENT %s ------------------------ %s", lineSeparator(), element.id, formatElement(element)));
     }
   }
 

@@ -9,14 +9,13 @@ public class ElementFormatter {
   private static final String LINE_SEPARATOR = System.lineSeparator();
 
   public static String formatElement(IgaElement element) {
-    StringBuilder sb = new StringBuilder();
-    sb.append("--- A ---" + LINE_SEPARATOR);
-    sb.append(formatMatrix(element.ma));
-    sb.append("--- B ---" + LINE_SEPARATOR);
-    sb.append(formatMatrix(element.mb));
-    sb.append("--- X ---" + LINE_SEPARATOR);
-    sb.append(formatMatrix(element.mx));
-    return sb.toString();
+    return LINE_SEPARATOR +
+        "--- A ---" + LINE_SEPARATOR +
+        formatMatrix(element.ma) +
+        "--- B ---" + LINE_SEPARATOR +
+        formatMatrix(element.mb) +
+        "--- X ---" + LINE_SEPARATOR +
+        formatMatrix(element.mx);
   }
 
   private static String formatMatrix(Access2D<?> matrix) {
