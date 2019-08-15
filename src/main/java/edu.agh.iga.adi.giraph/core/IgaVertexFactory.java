@@ -19,9 +19,8 @@ public class IgaVertexFactory {
    * @return vertices between the parent, left and right, including left and right
    */
   public static Iterator<IgaVertex> childrenOf(IgaVertex parent, int height) {
-    final int parentHeight = parent.heightOf();
-    return range(parentHeight, parentHeight + height)
-        .flatMap(h -> range(parent.leftDescendantAt((int) h), parent.rightDescendantAt((int) h)))
+    return range(1, height + 1)
+        .flatMap(h -> range(parent.leftDescendantAt((int) h), parent.rightDescendantAt((int) h) + 1))
         .boxed()
         .map(id -> vertexOf(parent.getTree(), id))
         .iterator();

@@ -40,7 +40,7 @@ public final class IgaElementWritable implements WritableComparable {
     PrimitiveDenseStore mb = PrimitiveDenseStore.FACTORY.makeZero(ROWS_BOUND_TO_NODE, dofs);
     mb.fillMatching(dataInputAccessStore(dataInput, ROWS_BOUND_TO_NODE * dofs));
     PrimitiveDenseStore mx = PrimitiveDenseStore.FACTORY.makeZero(ROWS_BOUND_TO_NODE, dofs);
-    mx.fillMatching(dataInputAccessStore(dataInput, ROWS_BOUND_TO_NODE * dofs));
+    mx.fillMatching(dataInputAccessStore(dataInput, ROWS_BOUND_TO_NODE * dofs)); // todo this won't work if we shrink the size of the matrix created (like we did)
     igaElement = igaElement(srcId, ma, mb, mx);
   }
 

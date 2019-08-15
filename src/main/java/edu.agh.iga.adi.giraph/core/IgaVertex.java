@@ -184,14 +184,6 @@ public class IgaVertex {
     }
   }
 
-  public int heightDifference(int rowIndexOf) {
-    return 0;
-  }
-
-  public int heightOf() {
-    return 0;
-  }
-
   public enum ChildPosition {
     LEFT,
     MIDDLE,

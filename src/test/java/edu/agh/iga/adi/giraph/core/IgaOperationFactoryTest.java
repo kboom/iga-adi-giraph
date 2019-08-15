@@ -6,13 +6,12 @@ import org.junit.jupiter.api.Test;
 import static com.google.common.collect.Lists.newArrayList;
 import static edu.agh.iga.adi.giraph.core.IgaOperationFactory.operationsFor;
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
+import static edu.agh.iga.adi.giraph.test.Problems.TREE_12;
+import static edu.agh.iga.adi.giraph.test.Problems.TREE_24;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 class IgaOperationFactoryTest {
-
-  private static final DirectionTree TREE_12 = new DirectionTree(12);
-  private static final DirectionTree TREE_24 = new DirectionTree(24);
 
   private static final TestOperationFactory T12OF = new TestOperationFactory(TREE_12);
   private static final TestOperationFactory T24OF = new TestOperationFactory(TREE_24);

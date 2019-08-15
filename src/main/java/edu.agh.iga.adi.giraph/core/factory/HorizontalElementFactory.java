@@ -11,6 +11,8 @@ import org.ojalgo.structure.Access2D;
 
 import static edu.agh.iga.adi.giraph.core.GaussPoints.GAUSS_POINTS;
 import static edu.agh.iga.adi.giraph.core.GaussPoints.GAUSS_POINT_COUNT;
+import static edu.agh.iga.adi.giraph.core.IgaConstants.COLS_BOUND_TO_NODE;
+import static edu.agh.iga.adi.giraph.core.IgaConstants.ROWS_BOUND_TO_NODE;
 import static edu.agh.iga.adi.giraph.core.IgaElement.igaElement;
 import static edu.agh.iga.adi.giraph.core.factory.ExplicitMethodCoefficients.COEFFICIENTS;
 import static org.ojalgo.function.constant.PrimitiveMath.ADD;
@@ -32,16 +34,18 @@ public final class HorizontalElementFactory implements ElementFactory {
 
   @Override
   public IgaElement createElement(Problem problem, IgaVertex vertex) {
+    PrimitiveDenseStore ma = FACTORY.makeZero(ROWS_BOUND_TO_NODE, COLS_BOUND_TO_NODE);
+    ma.fillMatching(COEFFICIENTS);
     return igaElement(
         vertex.id(),
-        FACTORY.copy(COEFFICIENTS),
+        ma,
         FACTORY.copy(rhs(problem, vertex)),
-        FACTORY.copy(COEFFICIENTS)
+        FACTORY.makeZero(ROWS_BOUND_TO_NODE, mesh.getDofsX())
     );
   }
 
   private Access2D<Double> rhs(Problem problem, IgaVertex vertex) {
-    PrimitiveDenseStore ds = FACTORY.makeZero(3, mesh.getDofsX());
+    PrimitiveDenseStore ds = FACTORY.makeZero(ROWS_BOUND_TO_NODE, mesh.getDofsX());
     for (int i = 1; i <= mesh.getDofsY(); i++) {
       fillRightHandSide(ds, problem, b3, vertex, 1, i);
       fillRightHandSide(ds, problem, b2, vertex, 2, i);
