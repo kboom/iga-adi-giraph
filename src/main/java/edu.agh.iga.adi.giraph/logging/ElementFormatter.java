@@ -9,13 +9,28 @@ public class ElementFormatter {
   private static final String LINE_SEPARATOR = System.lineSeparator();
 
   public static String formatElement(IgaElement element) {
-    return LINE_SEPARATOR +
-        "--- A ---" + LINE_SEPARATOR +
-        formatMatrix(element.ma) +
-        "--- B ---" + LINE_SEPARATOR +
-        formatMatrix(element.mb) +
-        "--- X ---" + LINE_SEPARATOR +
-        formatMatrix(element.mx);
+    return glueElements(
+        formatMatrix(element.ma),
+        formatMatrix(element.mx),
+        formatMatrix(element.mb)
+    );
+  }
+
+  private static String glueElements(String ma, String mb, String mx) {
+    String[] mar = ma.split(LINE_SEPARATOR);
+    String[] mbr = mb.split(LINE_SEPARATOR);
+    String[] mxr = mx.split(LINE_SEPARATOR);
+
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < mar.length; i++) {
+      sb.append(mar[i]);
+      sb.append(" | ");
+      sb.append(mxr[i]);
+      sb.append(" | ");
+      sb.append(mbr[i]);
+      sb.append(LINE_SEPARATOR);
+    }
+    return sb.toString();
   }
 
   private static String formatMatrix(Access2D<?> matrix) {

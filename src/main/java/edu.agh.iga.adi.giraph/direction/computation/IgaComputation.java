@@ -20,9 +20,9 @@ import java.util.stream.Stream;
 
 import static edu.agh.iga.adi.giraph.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
-import static edu.agh.iga.adi.giraph.logging.ElementFormatter.formatElement;
+import static edu.agh.iga.adi.giraph.direction.computation.ComputationLogger.computationLog;
+import static edu.agh.iga.adi.giraph.direction.computation.ComputationLogger.logPhase;
 import static java.lang.String.format;
-import static java.lang.System.lineSeparator;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.StreamSupport.stream;
 
@@ -39,6 +39,7 @@ public final class IgaComputation extends BasicComputation<LongWritable, IgaElem
   public void preSuperstep() {
     IntWritable phaseWritable = getAggregatedValue(PHASE);
     phase = IgaComputationPhase.getPhase(phaseWritable.get());
+    logPhase(phase);
     if (LOG.isDebugEnabled()) {
       LOG.debug(format("================ SUPERSTEP (%d) %s ================", getSuperstep() - 1, phase));
     }
@@ -51,6 +52,8 @@ public final class IgaComputation extends BasicComputation<LongWritable, IgaElem
   ) {
     send(vertex, update(vertex, messages));
     vertex.voteToHalt();
+
+    computationLog(vertex.getValue().getElement());
   }
 
   private IgaElement update(
@@ -81,9 +84,6 @@ public final class IgaComputation extends BasicComputation<LongWritable, IgaElem
   @SuppressWarnings("unchecked")
   private void consume(IgaElement element, IgaMessage msg) {
     msg.getOperation().consumeMessage(element, msg, directionTree);
-    if (LOG.isDebugEnabled()) {
-      LOG.debug(format("%s------------------------ ELEMENT %s ------------------------ %s", lineSeparator(), element.id, formatElement(element)));
-    }
   }
 
   private void send(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex, IgaElement element) {
