@@ -57,6 +57,11 @@ public final class IgaTestGraph {
     return this;
   }
 
+  public IgaTestGraph withVertexElements(Iterable<IgaElement> elements) {
+    elements.forEach(this::withVertexElement);
+    return this;
+  }
+
   private Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> withVertex(
       long srcId, IgaElement srcElement, IgaOperation operation, long dstId
   ) {
