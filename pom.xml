@@ -17,6 +17,7 @@
 
     <modules>
         <module>modules/commons</module>
+        <module>modules/core</module>
         <module>modules/direction</module>
         <module>modules/transposition</module>
         <module>modules/solver</module>
@@ -28,6 +29,12 @@
             <dependency>
                 <groupId>edu.agh.giraph</groupId>
                 <artifactId>commons</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>edu.agh.giraph</groupId>
+                <artifactId>core</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
