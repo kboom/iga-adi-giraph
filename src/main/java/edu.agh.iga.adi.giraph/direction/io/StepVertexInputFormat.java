@@ -86,7 +86,7 @@ public class StepVertexInputFormat extends TextVertexValueInputFormat<LongWritab
       final int dofsX = mesh.getDofsX();
 
       MatrixStore<Double> sol = PrimitiveDenseStore.FACTORY.builder()
-          .makeWrapper(new DoubleArrayAccess(3, dofsX, 1, line))
+          .makeWrapper(new RowMajorArray(3, dofsX, 1, line))
           .get();
 
       CoefficientSolution coefficientSolution = new CoefficientSolution(mesh, sol);

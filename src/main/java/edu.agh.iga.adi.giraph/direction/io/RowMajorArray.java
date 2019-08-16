@@ -2,14 +2,14 @@ package edu.agh.iga.adi.giraph.direction.io;
 
 import org.ojalgo.structure.Access2D;
 
-public final class DoubleArrayAccess implements Access2D<Double> {
+public final class RowMajorArray implements Access2D<Double> {
 
   private final int rows;
   private final int cols;
   private final int offset;
   private final double[] values;
 
-  public DoubleArrayAccess(int rows, int cols, int offset, double[] values) {
+  public RowMajorArray(int rows, int cols, int offset, double[] values) {
     this.rows = rows;
     this.cols = cols;
     this.offset = offset;

@@ -15,9 +15,8 @@ import org.apache.hadoop.io.LongWritable;
 
 import java.io.IOException;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
-import static edu.agh.iga.adi.giraph.test.DirManager.setDefaultDirs;
-import static edu.agh.iga.adi.giraph.test.DirManager.standardDirManager;
 import static java.lang.Integer.MAX_VALUE;
 import static org.apache.giraph.conf.GiraphConstants.*;
 
@@ -29,10 +28,6 @@ public class GiraphTestJob {
   private GiraphTestJob(GiraphJob job, DirManager dirManager) {
     this.job = job;
     this.dirManager = dirManager;
-  }
-
-  public GiraphConfiguration getConfiguration() {
-    return new GiraphConfiguration(job.getConfiguration());
   }
 
   public boolean run() {
@@ -54,6 +49,7 @@ public class GiraphTestJob {
     private Class<? extends VertexInputFormat> vertexInputFormatClazz;
     private Class<? extends VertexOutputFormat> vertexOutputFormatClazz;
     private Class<? extends WorkerContext> workerContextClazz;
+    private Function<GiraphConfiguration, DirManager> dirManagerFunction = DirManager::standardDirManager;
     private Consumer<GiraphConfiguration> configurationModifier = (conf) -> {
     };
 
@@ -77,6 +73,11 @@ public class GiraphTestJob {
       return this;
     }
 
+    public GiraphJobBuilder dirManager(Function<GiraphConfiguration, DirManager> fn) {
+      this.dirManagerFunction = fn;
+      return this;
+    }
+
     public GiraphJobBuilder configuration(Consumer<GiraphConfiguration> configurationModifier) {
       this.configurationModifier = configurationModifier;
       return this;
@@ -86,7 +87,7 @@ public class GiraphTestJob {
       GiraphConfiguration conf = createConfiguration();
       configurationModifier.accept(conf);
       GiraphJob job = createJob(conf);
-      return new GiraphTestJob(job, standardDirManager(conf));
+      return new GiraphTestJob(job, dirManagerFunction.apply(conf));
     }
 
     private GiraphJob createJob(GiraphConfiguration conf) {
@@ -118,7 +119,6 @@ public class GiraphTestJob {
       SPLIT_MASTER_WORKER.set(conf, false);
       LOCAL_TEST_MODE.set(conf, true);
       conf.set(MAX_WORKERS, "1");
-      setDefaultDirs(conf);
       return conf;
     }
 
