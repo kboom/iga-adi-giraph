@@ -1,8 +1,8 @@
 package edu.agh.iga.adi.giraph.core.factory;
 
-import edu.agh.iga.adi.giraph.core.GaussPoints;
 import edu.agh.iga.adi.giraph.core.IgaElement;
 import edu.agh.iga.adi.giraph.core.IgaVertex;
+import edu.agh.iga.adi.giraph.core.IgaVertex.LeafVertex;
 import edu.agh.iga.adi.giraph.core.Mesh;
 import edu.agh.iga.adi.giraph.core.problem.Problem;
 import edu.agh.iga.adi.giraph.core.splines.BSpline1;
@@ -10,7 +10,6 @@ import edu.agh.iga.adi.giraph.core.splines.BSpline2;
 import edu.agh.iga.adi.giraph.core.splines.BSpline3;
 import edu.agh.iga.adi.giraph.core.splines.Spline;
 import org.ojalgo.matrix.store.PrimitiveDenseStore;
-import org.ojalgo.structure.Access2D;
 
 import static edu.agh.iga.adi.giraph.core.GaussPoints.*;
 import static edu.agh.iga.adi.giraph.core.IgaConstants.COLS_BOUND_TO_NODE;
@@ -34,14 +33,30 @@ public final class HorizontalElementFactory implements ElementFactory {
 
   @Override
   public IgaElement createElement(Problem problem, IgaVertex vertex) {
-    PrimitiveDenseStore ma = FACTORY.makeZero(ROWS_BOUND_TO_NODE, COLS_BOUND_TO_NODE);
+    if (vertex.is(LeafVertex.class)) {
+      return leafElement(problem, vertex);
+    } else {
+      return emptyElement(vertex);
+    }
+  }
+
+  private IgaElement leafElement(Problem problem, IgaVertex vertex) {
+    final PrimitiveDenseStore ma = FACTORY.makeZero(ROWS_BOUND_TO_NODE, COLS_BOUND_TO_NODE);
+    final PrimitiveDenseStore mx = FACTORY.makeZero(ROWS_BOUND_TO_NODE, mesh.getDofsX());
     ma.regionByLimits(3, 3).fillMatching(COEFFICIENTS);
     return igaElement(
         vertex.id(),
         ma,
         rhs(problem, vertex),
-        FACTORY.makeZero(ROWS_BOUND_TO_NODE, mesh.getDofsX())
+        mx
     );
+  }
+
+  private IgaElement emptyElement(IgaVertex vertex) {
+    final PrimitiveDenseStore ma = FACTORY.makeZero(ROWS_BOUND_TO_NODE, COLS_BOUND_TO_NODE);
+    final PrimitiveDenseStore mb = FACTORY.makeZero(ROWS_BOUND_TO_NODE, mesh.getDofsX());
+    final PrimitiveDenseStore mx = FACTORY.makeZero(ROWS_BOUND_TO_NODE, mesh.getDofsX());
+    return igaElement(vertex.id(), ma, mb, mx);
   }
 
   private PrimitiveDenseStore rhs(Problem problem, IgaVertex vertex) {
