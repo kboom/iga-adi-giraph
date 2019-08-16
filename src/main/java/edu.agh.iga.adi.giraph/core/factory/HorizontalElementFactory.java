@@ -78,15 +78,15 @@ public final class HorizontalElementFactory implements ElementFactory {
         final double gl = GAUSS_POINTS[l];
         final double sk = spline.getValue(GAUSS_POINTS[k]);
 
-        if (i > 2) {
-          double y = (gl + (i - 3)) * mesh.getDy();
+        if (i > 1) {
+          double y = (gl + (i - 2)) * mesh.getDy();
           ds.modifyOne(r, i, ADD.by(wk * sk * wl * b1.getValue(gl) * problem.valueAt(x, y)));
         }
-        if (i > 1 && (i - 2) < mesh.getElementsY()) {
+        if (i > 0 && (i - 1) < mesh.getElementsY()) {
           double y = (gl + (i - 2)) * mesh.getDy();
           ds.modifyOne(r, i, ADD.by(wk * sk * wl * b2.getValue(gl) * problem.valueAt(x, y)));
         }
-        if ((i - 1) < mesh.getElementsY()) {
+        if (i < mesh.getElementsY()) {
           double y = (gl + (i - 1)) * mesh.getDy();
           ds.modifyOne(r, i, ADD.by(wk * sk * wl * b3.getValue(gl) * problem.valueAt(x, y)));
         }
