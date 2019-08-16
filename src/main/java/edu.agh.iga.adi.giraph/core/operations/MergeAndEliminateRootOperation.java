@@ -5,6 +5,7 @@ import org.ojalgo.matrix.store.TransformableRegion;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateRootOperation.MergeAndEliminateRootMessage;
+import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.partialBackwardsSubstitution;
 import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.partialForwardElimination;
 import static org.ojalgo.function.constant.PrimitiveMath.ADD;
 
@@ -77,6 +78,7 @@ public final class MergeAndEliminateRootOperation implements IgaOperation<MergeA
   @Override
   public void process(IgaElement element, DirectionTree tree) {
     partialForwardElimination(element, 6, 6);
+    partialBackwardsSubstitution(element, 6, 6);
   }
 
   public static class MergeAndEliminateRootMessage extends IgaMessage {
