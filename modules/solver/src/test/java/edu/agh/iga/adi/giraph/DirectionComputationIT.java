@@ -42,7 +42,7 @@ class DirectionComputationIT {
 
     // then
     assertThatCoefficients(coefficientsDir)
-        .areEqualToResource("DirectionIT/one.mat");
+        .areEqualToResource("src/test/resources/DirectionIT/one.mat");
   }
 
 }
