@@ -21,7 +21,7 @@
         <module>modules/core</module>
         <module>modules/direction</module>
         <module>modules/transposition</module>
-        <module>modules/solver</module>
+        <module>solver</module>
     </modules>
 
     <dependencyManagement>
