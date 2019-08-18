@@ -27,6 +27,12 @@
             <groupId>org.ojalgo</groupId>
             <artifactId>ojalgo</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>edu.agh.giraph</groupId>
+            <artifactId>test-util</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>
