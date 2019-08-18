@@ -17,6 +17,16 @@
             <groupId>edu.agh.giraph</groupId>
             <artifactId>commons</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.ojalgo</groupId>
+            <artifactId>ojalgo</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>edu.agh.giraph</groupId>
+            <artifactId>test-util</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

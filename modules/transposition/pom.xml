@@ -17,6 +17,16 @@
             <groupId>edu.agh.giraph</groupId>
             <artifactId>commons</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.ojalgo</groupId>
+            <artifactId>ojalgo</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

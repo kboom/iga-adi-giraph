@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd" >
+<log4j:configuration debug="false">
+
+    <appender name="default.console" class="org.apache.log4j.ConsoleAppender">
+        <param name="target" value="System.out" />
+        <param name="threshold" value="debug" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c{1}] - %m%n" />
+        </layout>
+    </appender>
+
+    <appender name="default.file" class="org.apache.log4j.FileAppender">
+        <param name="file" value="log.log" />
+        <param name="append" value="false" />
+        <param name="threshold" value="debug" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c{1}] - %m%n" />
+        </layout>
+    </appender>
+
+    <appender name="app.file" class="org.apache.log4j.FileAppender">
+        <param name="file" value="app.log" />
+        <param name="append" value="false" />
+        <param name="threshold" value="debug" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c{1}] - %m%n" />
+        </layout>
+    </appender>
+
+    <appender name="mat.file" class="org.apache.log4j.FileAppender">
+        <param name="file" value="mat.log" />
+        <param name="append" value="false" />
+        <param name="threshold" value="debug" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%m%n" />
+        </layout>
+    </appender>
+
+    <logger name="edu.agh.iga.adi.giraph" additivity="false">
+        <level value="all" />
+        <appender-ref ref="app.file" />
+    </logger>
+
+    <logger name="edu.agh.iga.adi.giraph.direction.computation.ComputationLogger" additivity="false">
+        <level value="all" />
+        <appender-ref ref="mat.file" />
+    </logger>
+
+    <root>
+        <priority value="info" />
+        <appender-ref ref="default.console" />
+        <appender-ref ref="default.file" />
+    </root>
+
+</log4j:configuration>

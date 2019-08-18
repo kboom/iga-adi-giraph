@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>solver</artifactId>
+    <artifactId>test-util</artifactId>
     <packaging>jar</packaging>
 
     <parent>
@@ -13,62 +13,35 @@
     </parent>
 
     <dependencies>
-
         <dependency>
             <groupId>edu.agh.giraph</groupId>
             <artifactId>commons</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>edu.agh.giraph</groupId>
-            <artifactId>direction</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>edu.agh.giraph</groupId>
-            <artifactId>transposition</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>edu.agh.giraph</groupId>
-            <artifactId>test-util</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.giraph</groupId>
-            <artifactId>giraph-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.ojalgo</groupId>
-            <artifactId>ojalgo</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
+            <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 </project>
