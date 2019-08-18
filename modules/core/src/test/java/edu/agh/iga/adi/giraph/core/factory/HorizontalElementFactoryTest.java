@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.core.test.Problems.LINEAR_PROBLEM;
-import static edu.agh.iga.adi.giraph.test.assertion.IgaElementAssertions.assertThatElement;
+import static edu.agh.iga.adi.giraph.core.test.assertion.IgaElementAssertions.assertThatElement;
 import static edu.agh.iga.adi.giraph.test.util.MatrixBuilder.matrixOfSize;
 
 class HorizontalElementFactoryTest {

@@ -1,4 +1,4 @@
-package edu.agh.iga.adi.giraph.test;
+package edu.agh.iga.adi.giraph.direction.test;
 
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;

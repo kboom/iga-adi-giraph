@@ -1,7 +1,7 @@
 package edu.agh.iga.adi.giraph.core;
 
 import edu.agh.iga.adi.giraph.core.test.Problems;
-import edu.agh.iga.adi.giraph.test.TestOperationFactory;
+import edu.agh.iga.adi.giraph.core.test.TestOperationFactory;
 import org.junit.jupiter.api.Test;
 
 import static com.google.common.collect.Lists.newArrayList;

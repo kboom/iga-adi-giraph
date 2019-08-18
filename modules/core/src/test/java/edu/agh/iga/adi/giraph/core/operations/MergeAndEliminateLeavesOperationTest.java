@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateLeavesOperation.MERGE_AND_ELIMINATE_LEAVES_OPERATION;
 import static edu.agh.iga.adi.giraph.core.test.IgaElementBuilder.elementFor;
-import static edu.agh.iga.adi.giraph.test.assertion.IgaElementAssertions.assertThatElement;
+import static edu.agh.iga.adi.giraph.core.test.assertion.IgaElementAssertions.assertThatElement;
 import static edu.agh.iga.adi.giraph.test.util.MatrixBuilder.matrixOfSize;
 import static edu.agh.iga.adi.giraph.test.util.assertion.TransformableRegionAssertions.assertThatRegion;
 import static org.assertj.core.api.Assertions.assertThat;

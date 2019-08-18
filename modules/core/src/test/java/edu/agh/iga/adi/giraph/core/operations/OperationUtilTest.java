@@ -9,7 +9,7 @@ import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.partialBackwa
 import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.partialForwardElimination;
 import static edu.agh.iga.adi.giraph.core.test.IgaElementBuilder.elementFor;
 import static edu.agh.iga.adi.giraph.core.test.SmallProblem.MESH;
-import static edu.agh.iga.adi.giraph.test.assertion.IgaElementAssertions.assertThatElement;
+import static edu.agh.iga.adi.giraph.core.test.assertion.IgaElementAssertions.assertThatElement;
 
 class OperationUtilTest {
 

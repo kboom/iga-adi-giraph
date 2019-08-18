@@ -12,9 +12,9 @@ import java.util.Set;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.direction.ComputationTestRunner.whenComputation;
-import static edu.agh.iga.adi.giraph.test.Problems.MESH_12;
-import static edu.agh.iga.adi.giraph.test.Problems.TREE_12;
-import static edu.agh.iga.adi.giraph.test.TestIgaOperationGraph.igaTestGraph;
+import static edu.agh.iga.adi.giraph.direction.test.Problems.MESH_12;
+import static edu.agh.iga.adi.giraph.direction.test.Problems.TREE_12;
+import static edu.agh.iga.adi.giraph.direction.test.TestIgaOperationGraph.igaTestGraph;
 import static edu.agh.iga.adi.giraph.test.util.MatrixBuilder.matrixOfSize;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.LongStream.range;

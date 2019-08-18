@@ -1,4 +1,4 @@
-package edu.agh.iga.adi.giraph.test.assertion;
+package edu.agh.iga.adi.giraph.core.test.assertion;
 
 import edu.agh.iga.adi.giraph.core.IgaElement;
 import edu.agh.iga.adi.giraph.test.util.assertion.MatrixAssertions;

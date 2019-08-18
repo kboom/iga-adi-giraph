@@ -1,4 +1,4 @@
-package edu.agh.iga.adi.giraph.test;
+package edu.agh.iga.adi.giraph.direction.test;
 
 import edu.agh.iga.adi.giraph.direction.IgaPartitionerFactory;
 import edu.agh.iga.adi.giraph.direction.io.IgaEdgeInputFormat;

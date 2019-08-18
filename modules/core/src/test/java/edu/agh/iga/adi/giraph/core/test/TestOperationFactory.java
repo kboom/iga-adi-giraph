@@ -1,4 +1,4 @@
-package edu.agh.iga.adi.giraph.test;
+package edu.agh.iga.adi.giraph.core.test;
 
 import edu.agh.iga.adi.giraph.core.DirectionTree;
 import edu.agh.iga.adi.giraph.core.IgaOperationFactory.DirectedOperation;

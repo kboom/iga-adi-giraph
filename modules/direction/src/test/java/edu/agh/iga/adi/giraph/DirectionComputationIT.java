@@ -4,7 +4,7 @@ import edu.agh.iga.adi.giraph.direction.DirectionComputation;
 import edu.agh.iga.adi.giraph.direction.IgaAdiWorkerContext;
 import edu.agh.iga.adi.giraph.direction.io.CoefficientMatricesOutputFormat;
 import edu.agh.iga.adi.giraph.direction.io.InMemoryStepInputFormat;
-import edu.agh.iga.adi.giraph.test.GiraphTestJob;
+import edu.agh.iga.adi.giraph.direction.test.GiraphTestJob;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -13,8 +13,8 @@ import java.nio.file.Path;
 import static edu.agh.iga.adi.giraph.core.IgaConstants.ROWS_BOUND_TO_NODE;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.HEIGHT_PARTITIONS;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
-import static edu.agh.iga.adi.giraph.test.DirManager.aDirManager;
-import static edu.agh.iga.adi.giraph.test.GiraphTestJob.giraphJob;
+import static edu.agh.iga.adi.giraph.direction.test.DirManager.aDirManager;
+import static edu.agh.iga.adi.giraph.direction.test.GiraphTestJob.giraphJob;
 import static edu.agh.iga.adi.giraph.test.util.assertion.CoefficientsAssertions.assertThatCoefficients;
 
 class DirectionComputationIT {
