@@ -3,7 +3,6 @@ package edu.agh.iga.adi.giraph.initialisation.problem
 import breeze.linalg.{DenseMatrix, DenseVector}
 import edu.agh.iga.adi.giraph.core.Mesh
 import edu.agh.iga.adi.giraph.initialisation.problem.Spline.{Spline1T, Spline2T, Spline3T}
-import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.slf4j.LoggerFactory
 
@@ -25,7 +24,6 @@ object SplineSurface {
       .map(_._2.toArray)
       .collect()
 
-    // todo column major!
     DenseMatrix.create(arr2d.length, arr2d(0).length, arr2d.reduce(_ ++ _))
   }
 
@@ -36,7 +34,6 @@ object SplineSurface {
 
 
   def print(s: SplineSurface): Unit = {
-//    Log.info(f"2D B-Spline Coefficients ${s.m.numRows()}x${s.m.numCols()}")
     Log.info(s"\n${asString(s)}")
   }
 
@@ -51,37 +48,6 @@ object SplineSurface {
     val span = Math.min(3, 1 + Math.min(coefficientRow, elements - 1 - coefficientRow))
 
     if (coefficientRow < elements / 2) all.take(span) else all.takeRight(span)
-  }
-
-  def surface(p: SplineSurface)(implicit sc: SparkContext): IndexedRowMatrix = {
-    implicit val mesh: Mesh = p.mesh
-
-    val coefficientsBySolutionRows = p.m
-      .flatMap(row => {
-        val rid = row._1.toInt
-        valueRowsDependentOn(rid)
-          .map { element =>
-            (element, (rid - element, row._2))
-          }
-      })
-      .groupBy(_._1.toLong)
-      .mapValues(_.map(_._2))
-
-    val surface = sc.parallelize(0 until mesh.getElementsY)
-      .map(id => (id.toLong, id))
-      .join(coefficientsBySolutionRows)
-      .map { case (y, coefficients) =>
-        val rows = coefficients._2.toMap
-        val cols = 0 until mesh.getElementsX
-        // todo this should be done
-        // val row = Vectors.dense(cols.map(projectedValue((i, j) => rows(i)(j), _, y)).toArray)
-        // for now do
-        val row = Vectors.dense(0d)
-
-        IndexedRow(y, row)
-      }
-
-    new IndexedRowMatrix(surface)
   }
 
   def projectedValue(c: CoefficientExtractor, y: Double, x: Double)(implicit mesh: Mesh): Double = {
