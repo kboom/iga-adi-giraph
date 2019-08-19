@@ -77,11 +77,13 @@
     </dependencies>
 
     <build>
+        <sourceDirectory>src/main/scala</sourceDirectory>
+        <testSourceDirectory>src/test/scala</testSourceDirectory>
         <plugins>
             <plugin>
-                <groupId>org.scala-tools</groupId>
-                <artifactId>maven-scala-plugin</artifactId>
-                <version>2.15.2</version>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>4.1.1</version>
                 <executions>
                     <execution>
                         <goals>
@@ -90,6 +92,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <scalaVersion>${scala.version}</scalaVersion>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.scalatest</groupId>

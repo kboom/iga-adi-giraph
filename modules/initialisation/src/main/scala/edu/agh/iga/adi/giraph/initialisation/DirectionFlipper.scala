@@ -14,7 +14,7 @@ object DirectionFlipper {
       .map(
         _.setAppName("IGA ADI Pregel Solver")
           .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-          .set("spark.kryo.registrator", "edu.agh.kboom.iga.adi.graph.serialization.IgaAdiKryoRegistrator")
+          .set("spark.kryo.registrator", "edu.agh.iga.adi.giraph.initialisation.spark.serialization.IgaAdiKryoRegistrator")
           .set("spark.kryo.registrationRequired", "true")
           .set("spark.kryo.unsafe", "true")
           .set("spark.cleaner.referenceTracking.blocking", "false")

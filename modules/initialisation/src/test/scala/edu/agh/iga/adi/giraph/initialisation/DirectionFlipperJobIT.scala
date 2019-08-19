@@ -1,6 +1,8 @@
 package edu.agh.iga.adi.giraph.initialisation
 
-import java.nio.file.{Files, Paths}
+import java.lang.ClassLoader.getSystemResource
+import java.nio.file.Files.createTempDirectory
+import java.nio.file.Paths
 
 import edu.agh.iga.adi.giraph.core.Mesh
 import edu.agh.iga.adi.giraph.core.Mesh.aMesh
@@ -15,10 +17,10 @@ class DirectionFlipperJobIT extends AbstractIT {
   }
 
   "running direction flipper" when {
-    val out = Files.createTempDirectory("test")
+    val out = createTempDirectory("test")
 
     "coefficients were ones" should {
-      val in = Paths.get(getClass.getResource("ones/coefficients.in").toURI)
+      val in = Paths.get(getSystemResource("ones/coefficients.in").toURI)
 
       "gives proper result" in new SolverContext(12) {
         df.flip(in, out)
