@@ -14,7 +14,7 @@ sealed case class IgaContext(mesh: Mesh, problem: Problem, direction: SolverDire
 
   def xTree(): DirectionTree = new DirectionTree(mesh.getElementsX)
 
-  def yTree(): DirectionTree = new DirectionTree()(mesh.getElementsY)
+  def yTree(): DirectionTree = new DirectionTree(mesh.getElementsY)
 
   def tree(): DirectionTree = direction match {
     case HORIZONTAL => xTree()

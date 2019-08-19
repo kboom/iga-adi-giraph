@@ -13,7 +13,7 @@ import org.apache.hadoop.mapred.TextOutputFormat
 import org.apache.spark.SparkContext
 
 object NoProblem extends Problem {
-  override def valueAt(c: CoefficientExtractor, x: Double, y: Double): Double = throw IllegalStateException
+  override def valueAt(c: CoefficientExtractor, x: Double, y: Double): Double = throw new IllegalStateException("Should not be called")
 }
 
 case class DirectionFlipperJob(mesh: Mesh) {

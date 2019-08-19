@@ -6,9 +6,7 @@ import breeze.linalg.DenseMatrix
 import edu.agh.iga.adi.giraph.initialisation.ElementCoefficients
 import org.apache.hadoop.io.Writable
 
-class ElementCoefficientsWritable(var c: ElementCoefficients) extends Writable[ElementCoefficients] {
-
-  this () {}
+class ElementCoefficientsWritable(var c: ElementCoefficients = null) extends Writable {
 
   override def write(dataOutput: DataOutput): Unit = {
     val m = c.m

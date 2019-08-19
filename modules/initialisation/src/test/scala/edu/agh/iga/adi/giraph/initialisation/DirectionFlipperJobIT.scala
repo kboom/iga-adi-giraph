@@ -5,6 +5,8 @@ import java.nio.file.{Files, Paths}
 import edu.agh.iga.adi.giraph.core.Mesh
 import edu.agh.iga.adi.giraph.core.Mesh.aMesh
 
+import scala.io.Source
+
 class DirectionFlipperJobIT extends AbstractIT {
 
   class SolverContext(problemSize: Int) {
@@ -12,16 +14,17 @@ class DirectionFlipperJobIT extends AbstractIT {
     val df = DirectionFlipperJob(mesh)
   }
 
-
   "running direction flipper" when {
     val out = Files.createTempDirectory("test")
 
     "coefficients were ones" should {
-      val in = Paths.get(getClass.getResource("file.xml").toURI)
+      val in = Paths.get(getClass.getResource("ones/coefficients.in").toURI)
 
-      "give proper result" in new SolverContext(12) {
+      "gives proper result" in new SolverContext(12) {
         df.flip(in, out)
-
+        val fileStream = getClass.getResourceAsStream("ones/coefficients.out")
+        val lines = Source.fromInputStream(fileStream).getLines
+        lines shouldBe "sfsf"
       }
 
     }
