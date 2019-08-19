@@ -13,6 +13,8 @@
         <java.version>1.8</java.version>
         <junit.jupiter.version>5.5.1</junit.jupiter.version>
         <assertj.version>3.13.0</assertj.version>
+        <scala.version>2.11.8</scala.version>
+        <spark.version>2.4.3</spark.version>
     </properties>
 
     <modules>
@@ -20,7 +22,7 @@
         <module>modules/test-util</module>
         <module>modules/core</module>
         <module>modules/direction</module>
-        <module>modules/transposition</module>
+        <module>modules/initialisation</module>
         <module>solver</module>
     </modules>
 
@@ -58,6 +60,12 @@
             </dependency>
 
             <dependency>
+                <groupId>org.scala-lang</groupId>
+                <artifactId>scala-library</artifactId>
+                <version>${scala.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>edu.agh.giraph</groupId>
                 <artifactId>test-util</artifactId>
                 <version>${project.version}</version>
@@ -86,6 +94,30 @@
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-core</artifactId>
                 <version>1.2.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-core_2.12</artifactId>
+                <version>${spark.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-streaming_2.12</artifactId>
+                <version>${spark.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.scalanlp</groupId>
+                <artifactId>breeze_2.13</artifactId>
+                <version>1.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.scalanlp</groupId>
+                <artifactId>breeze-natives_2.13</artifactId>
+                <version>1.0</version>
             </dependency>
 
             <dependency>
@@ -119,6 +151,13 @@
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
                 <version>${assertj.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.scalatest</groupId>
+                <artifactId>scalatest_2.11</artifactId>
+                <version>2.2.5</version>
                 <scope>test</scope>
             </dependency>
 

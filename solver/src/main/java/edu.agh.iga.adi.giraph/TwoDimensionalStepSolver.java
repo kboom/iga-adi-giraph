@@ -5,7 +5,7 @@ import org.apache.hadoop.fs.Path;
 
 import static edu.agh.iga.adi.giraph.direction.DirectionComputationLauncher.computationConfig;
 import static edu.agh.iga.adi.giraph.direction.DirectionComputationLauncher.solveDirection;
-import static edu.agh.iga.adi.giraph.transposition.TransposeJob.transpose;
+import static edu.agh.iga.adi.giraph.initialisation.TransposeJob.transpose;
 
 final class TwoDimensionalStepSolver {
 
