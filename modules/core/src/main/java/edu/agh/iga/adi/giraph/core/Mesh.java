@@ -1,6 +1,8 @@
 package edu.agh.iga.adi.giraph.core;
 
-public final class Mesh {
+import java.io.Serializable;
+
+public final class Mesh implements Serializable {
 
     private double resolutionX;
 

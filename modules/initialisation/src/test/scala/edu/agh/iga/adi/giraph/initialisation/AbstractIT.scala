@@ -13,7 +13,7 @@ trait SparkSession extends SuiteMixin with BeforeAndAfterAll { this: TestSuite =
     .config("spark.ui.enabled", "false")
     .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
     .config("spark.kryo.registrator", "edu.agh.iga.adi.giraph.initialisation.spark.serialization.IgaAdiKryoRegistrator")
-    .config("spark.kryo.registrationRequired", "true")
+//    .config("spark.kryo.registrationRequired", "true")
     .config("spark.kryo.unsafe", "true")
     .getOrCreate()
 

@@ -61,12 +61,12 @@
 
         <dependency>
             <groupId>org.scalanlp</groupId>
-            <artifactId>breeze_2.12</artifactId>
+            <artifactId>breeze_2.11</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.scalanlp</groupId>
-            <artifactId>breeze-natives_2.12</artifactId>
+            <artifactId>breeze-natives_2.11</artifactId>
         </dependency>
 
         <dependency>
