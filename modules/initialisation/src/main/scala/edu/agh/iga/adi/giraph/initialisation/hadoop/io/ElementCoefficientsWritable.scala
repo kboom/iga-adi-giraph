@@ -27,6 +27,23 @@ class ElementCoefficientsWritable(var c: ElementCoefficients = null) extends Wri
     c = ElementCoefficients(DenseMatrix.create(rows, cols, data))
   }
 
+  // if row-major
+//  override def toString: String = {
+//    val rows = c.m.rows
+//    val cols = c.m.cols
+//    val data = c.m.data
+//
+//    val sb = new StringBuilder()
+//    for(r <- 0 until rows) {
+//      for(c <- 0 until cols) {
+//        sb.append(data(rows * c + r))
+//        sb.append(",")
+//      }
+//    }
+//
+//    sb.toString().stripSuffix(",")
+//  }
+
   override def toString: String = c.m.data.mkString(",")
 
 }

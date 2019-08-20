@@ -21,16 +21,17 @@ case class DirectionFlipperJob(mesh: Mesh) {
   def flip(in: Path, out: Path)(implicit sc: SparkContext): Unit = {
     val surface = SplineSurface(transpose(coefficientRows(in, sc)), mesh)
     val init = new VerticalInitializer(surface)
-    init.leafData(IgaContext(mesh, NoProblem, VERTICAL))
+    val output = init.leafData(IgaContext(mesh, NoProblem, VERTICAL))
       .mapPartitions(_.map {
         case (i, c) => (new LongWritable(i), new ElementCoefficientsWritable(c))
       })
-      .saveAsHadoopFile(
-        out.toString,
-        classOf[LongWritable],
-        classOf[ElementCoefficientsWritable],
-        classOf[TextOutputFormat[LongWritable, ElementCoefficientsWritable]]
-      )
+
+    output.saveAsHadoopFile(
+      out.toString,
+      classOf[LongWritable],
+      classOf[ElementCoefficientsWritable],
+      classOf[TextOutputFormat[LongWritable, ElementCoefficientsWritable]]
+    )
   }
 
   private def coefficientRows(in: Path, sc: SparkContext) = {
