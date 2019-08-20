@@ -27,4 +27,6 @@ class ElementCoefficientsWritable(var c: ElementCoefficients = null) extends Wri
     c = ElementCoefficients(DenseMatrix.create(rows, cols, data))
   }
 
+  override def toString: String = c.m.data.mkString(",")
+
 }
