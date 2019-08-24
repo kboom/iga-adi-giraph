@@ -1,42 +1,13 @@
 package edu.agh.iga.adi.giraph.core.operations;
 
 import edu.agh.iga.adi.giraph.core.*;
-import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.matrix.store.TransformableRegion;
 
 import static edu.agh.iga.adi.giraph.core.operations.BackwardsSubstituteRootOperation.BackwardsSubstituteRootMessage;
-import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.*;
+import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.partialBackwardsSubstitution;
+import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.swapDofs;
 import static org.ojalgo.function.constant.PrimitiveMath.ADD;
 
-/*
-case object BackwardsSubstituteRoot extends Production
-  with BaseProduction[BackwardsSubstituteRootMessage] {
-
-  override def emit(src: IgaElement, dst: IgaElement)(implicit ctx: IgaTaskContext): BackwardsSubstituteRootMessage = {
-    (Vertex.childPositionOf(dst.v)(ctx.tree): @switch) match {
-      case LEFT_CHILD => BackwardsSubstituteRootMessage(
-        MatrixFactory.ofDim(src.mX) {
-          _ (2 to -1, ::) += src.mX(0 until 4, ::)
-        }
-      )
-      case RIGHT_CHILD => BackwardsSubstituteRootMessage(
-        MatrixFactory.ofDim(src.mX) {
-          _ (2 to -1, ::) += src.mX(2 until 6, ::)
-        }
-      )
-    }
-  }
-
-  override def consume(dst: IgaElement, msg: BackwardsSubstituteRootMessage)(implicit ctx: IgaTaskContext): Unit = {
-    dst.mX += msg.cx
-
-    partialBackwardsSubstitution(2, 6)(dst)
-    swapDofs(0, 2, 6)(dst)
-    swapDofs(1, 3, 6)(dst)
-  }
-
-}
- */
 public final class BackwardsSubstituteRootOperation implements IgaOperation<BackwardsSubstituteRootMessage> {
 
   public static final BackwardsSubstituteRootOperation BACKWARDS_SUBSTITUTE_ROOT_OPERATION

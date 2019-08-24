@@ -1,7 +1,6 @@
 package edu.agh.iga.adi.giraph.core.operations;
 
 import edu.agh.iga.adi.giraph.core.*;
-import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.matrix.store.TransformableRegion;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
@@ -10,44 +9,6 @@ import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.partialBackwa
 import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.partialForwardElimination;
 import static org.ojalgo.function.constant.PrimitiveMath.ADD;
 
-/*
-case object MergeAndEliminateRoot extends Production
-  with BaseProduction[MergeAndEliminateRootMessage]
-  with MergingProduction[MergeAndEliminateRootMessage] {
-
-  override def emit(src: IgaElement, dst: IgaElement)(implicit ctx: IgaTaskContext): MergeAndEliminateRootMessage = (childPositionOf(src.v)(ctx.tree): @switch) match {
-    case LEFT_CHILD => MergeAndEliminateRootMessage(
-      MatrixFactory.ofDim(src.mA) {
-        _ (0 until 4, 0 until 4) += src.mA(2 until 6, 2 until 6)
-      },
-      MatrixFactory.ofDim(src.mB) {
-        _ (0 until 4, ::) += src.mB(2 until 6, ::)
-      }
-    )
-    case RIGHT_CHILD => MergeAndEliminateRootMessage(
-      MatrixFactory.ofDim(src.mA) {
-        _ (2 until 6, 2 until 6) += src.mA(2 until 6, 2 until 6)
-      },
-      MatrixFactory.ofDim(src.mB) {
-        _ (2 until 6, ::) += src.mB(2 until 6, ::)
-      }
-    )
-  }
-
-  override def merge(a: MergeAndEliminateRootMessage, b: MergeAndEliminateRootMessage): MergeAndEliminateRootMessage = MergeAndEliminateRootMessage(
-    a.ca += b.ca,
-    a.cb += b.cb
-  )
-
-  override def consume(dst: IgaElement, msg: MergeAndEliminateRootMessage)(implicit ctx: IgaTaskContext): Unit = {
-    dst.mA += msg.ca
-    dst.mB += msg.cb
-
-    partialForwardElimination(6, 6)(dst)
-    partialBackwardsSubstitution(6, 6)(dst)
-  }
-}
- */
 public final class MergeAndEliminateRootOperation implements IgaOperation<MergeAndEliminateRootMessage> {
 
   public static final MergeAndEliminateRootOperation MERGE_AND_ELIMINATE_ROOT_OPERATION

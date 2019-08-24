@@ -1,7 +1,6 @@
 package edu.agh.iga.adi.giraph.core.operations;
 
 import edu.agh.iga.adi.giraph.core.*;
-import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.matrix.store.TransformableRegion;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
@@ -10,37 +9,6 @@ import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.partialForwar
 import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.swapDofs;
 import static org.ojalgo.function.constant.PrimitiveMath.ADD;
 
-/**
- * Merges 3 leaf elements and eliminates 2 fully assembled rows at their parent.
- */
-/*
-
-case LEFT_CHILD => MergeAndEliminateLeafMessage(
-      ofDim(src.mA) {
-        _ (0 until 3, 0 until 3) += src.mA(0 until 3, 0 until 3)
-      },
-      ofDim(src.mB) {
-        _ (0 until 3, ::) += src.mB(0 until 3, ::)
-      }
-    )
-    case MIDDLE_CHILD => MergeAndEliminateLeafMessage(
-      ofDim(src.mA) {
-        _ (1 until 4, 1 until 4) += src.mA(0 until 3, 0 until 3)
-      },
-      ofDim(src.mB) {
-        _ (1 until 4, ::) += src.mB(0 until 3, ::)
-      }
-    )
-    case RIGHT_CHILD => MergeAndEliminateLeafMessage(
-      ofDim(src.mA) {
-        _ (2 until 5, 2 until 5) += src.mA(0 until 3, 0 until 3)
-      },
-      ofDim(src.mB) {
-        _ (2 until 5, ::) += src.mB(0 until 3, ::)
-      }
-    )
-
- */
 public final class MergeAndEliminateLeavesOperation implements IgaOperation<MergeAndEliminateLeavesMessage> {
 
   public static final MergeAndEliminateLeavesOperation MERGE_AND_ELIMINATE_LEAVES_OPERATION
