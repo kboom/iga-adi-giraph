@@ -49,7 +49,7 @@
 
             <dependency>
                 <groupId>edu.agh.giraph</groupId>
-                <artifactId>transposition</artifactId>
+                <artifactId>initialisation</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -130,6 +130,19 @@
                 <groupId>org.ojalgo</groupId>
                 <artifactId>ojalgo</artifactId>
                 <version>47.2.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.beust</groupId>
+                <artifactId>jcommander</artifactId>
+                <version>1.78</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.8</version>
+                <scope>provided</scope>
             </dependency>
 
             <dependency>

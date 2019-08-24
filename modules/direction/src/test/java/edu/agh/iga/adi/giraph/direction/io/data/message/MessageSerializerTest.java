@@ -1,5 +1,6 @@
 package edu.agh.iga.adi.giraph.direction.io.data.message;
 
+import com.google.common.io.ByteArrayDataOutput;
 import edu.agh.iga.adi.giraph.core.IgaMessage;
 import org.junit.jupiter.api.Test;
 
@@ -22,13 +23,12 @@ abstract class MessageSerializerTest<T extends IgaMessage> {
   @Test
   void canSerializeAndDeserialize() throws IOException {
     // given
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    ByteArrayDataOutput dataOutput = newDataOutput();
     T wroteMessage = createMessage();
 
     // when
-    messageSerializer.writeMessage(newDataOutput(baos), wroteMessage);
-    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-    T readMessage = messageSerializer.readMessage(newDataInput(bais));
+    messageSerializer.writeMessage(dataOutput, wroteMessage);
+    T readMessage = messageSerializer.readMessage(newDataInput(dataOutput.toByteArray()));
 
     // then
     assertThat(readMessage).isEqualToComparingFieldByField(wroteMessage);

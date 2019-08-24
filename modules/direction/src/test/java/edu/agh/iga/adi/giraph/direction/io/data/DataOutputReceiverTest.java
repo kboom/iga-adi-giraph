@@ -1,13 +1,10 @@
 package edu.agh.iga.adi.giraph.direction.io.data;
 
+import com.google.common.io.ByteArrayDataOutput;
 import org.junit.jupiter.api.Test;
-import org.ojalgo.matrix.store.MatrixStore;
 import org.ojalgo.matrix.store.PrimitiveDenseStore;
 import org.ojalgo.netio.BasicLogger;
 import org.ojalgo.structure.Access2D;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 
 import static com.google.common.io.ByteStreams.newDataInput;
 import static com.google.common.io.ByteStreams.newDataOutput;
@@ -25,12 +22,11 @@ class DataOutputReceiverTest {
     ds.add(1, 0, 3);
     ds.add(1, 1, 4);
 
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ds.asCollectable1D().supplyTo(receiveInto(newDataOutput(baos)));
-    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+    ByteArrayDataOutput dataOutput = newDataOutput();
+    ds.asCollectable1D().supplyTo(receiveInto(dataOutput));
 
     PrimitiveDenseStore out = PrimitiveDenseStore.FACTORY.makeZero(2, 2);
-    out.fillMatching(dataInputAccessStore(newDataInput(bais), 4));
+    out.fillMatching(dataInputAccessStore(newDataInput(dataOutput.toByteArray()), 4));
     assertThat(out.data).containsExactly(1, 3, 2, 4);
 
     BasicLogger.debug("Arr", out);
@@ -59,11 +55,6 @@ class DataOutputReceiverTest {
         return 0;
       }
     });
-  }
-
-  @Test
-  void somethingElse2() {
-    MatrixStore.Factory<Double> out = PrimitiveDenseStore.FACTORY.builder();
   }
 
 }
