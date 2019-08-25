@@ -38,7 +38,7 @@ public final class MergeAndEliminateRootOperation implements IgaOperation<MergeA
   }
 
   @Override
-  public void process(IgaElement element, DirectionTree tree) {
+  public void postConsume(IgaElement element, DirectionTree tree) {
     partialForwardElimination(element, 6, 6);
     partialBackwardsSubstitution(element, 6, 6);
   }

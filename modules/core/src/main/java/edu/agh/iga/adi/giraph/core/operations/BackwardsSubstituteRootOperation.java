@@ -37,7 +37,7 @@ public final class BackwardsSubstituteRootOperation implements IgaOperation<Back
   }
 
   @Override
-  public void process(IgaElement element, DirectionTree tree) {
+  public void postConsume(IgaElement element, DirectionTree tree) {
     partialBackwardsSubstitution(element, 2, 6);
     swapDofs(element, 0, 2, 6);
     swapDofs(element, 1, 3, 6);

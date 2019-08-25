@@ -40,7 +40,7 @@ public final class BackwardsSubstituteInterimOperation implements IgaOperation<B
   }
 
   @Override
-  public void process(IgaElement element, DirectionTree tree) {
+  public void postConsume(IgaElement element, DirectionTree tree) {
     final IgaVertex vertex = vertexOf(tree, element.id);
     // todo is this really necessary? These two branches are the same!
     if (vertex.is(BranchVertex.class)) {

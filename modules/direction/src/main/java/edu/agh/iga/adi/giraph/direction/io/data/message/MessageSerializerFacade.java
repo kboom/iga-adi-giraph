@@ -11,6 +11,7 @@ import edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateBranchOperation.M
 import edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateInterimOperation.MergeAndEliminateInterimMessage;
 import edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateLeavesOperation.MergeAndEliminateLeavesMessage;
 import edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateRootOperation.MergeAndEliminateRootMessage;
+import edu.agh.iga.adi.giraph.core.operations.transposition.TranspositionIgaOperation.TranspositionIgaMessage;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -24,6 +25,7 @@ import static edu.agh.iga.adi.giraph.direction.io.data.message.MergeAndEliminate
 import static edu.agh.iga.adi.giraph.direction.io.data.message.MergeAndEliminateInterimMessageSerializer.MERGE_AND_ELIMINATE_INTERIM_MESSAGE_SERIALIZER;
 import static edu.agh.iga.adi.giraph.direction.io.data.message.MergeAndEliminateLeavesMessageSerializer.MERGE_AND_ELIMINATE_LEAVES_MESSAGE_SERIALIZER;
 import static edu.agh.iga.adi.giraph.direction.io.data.message.MergeAndEliminateRootMessageSerializer.MERGE_AND_ELIMINATE_ROOT_MESSAGE_SERIALIZER;
+import static edu.agh.iga.adi.giraph.direction.io.data.message.TranspositionMessageSerializer.TRANSPOSITION_MESSAGE_SERIALIZER;
 
 public final class MessageSerializerFacade {
 
@@ -35,6 +37,7 @@ public final class MessageSerializerFacade {
       .put(MergeAndEliminateInterimMessage.class, MERGE_AND_ELIMINATE_INTERIM_MESSAGE_SERIALIZER)
       .put(MergeAndEliminateLeavesMessage.class, MERGE_AND_ELIMINATE_LEAVES_MESSAGE_SERIALIZER)
       .put(MergeAndEliminateRootMessage.class, MERGE_AND_ELIMINATE_ROOT_MESSAGE_SERIALIZER)
+      .put(TranspositionIgaMessage.class, TRANSPOSITION_MESSAGE_SERIALIZER)
       .build();
 
   private static final BiMap<Class<?>, Integer> MESSAGE_TYPE_MAPPING = ImmutableBiMap.<Class<?>, Integer>builder()
@@ -45,6 +48,7 @@ public final class MessageSerializerFacade {
       .put(MergeAndEliminateInterimMessage.class, 5)
       .put(MergeAndEliminateLeavesMessage.class, 6)
       .put(MergeAndEliminateRootMessage.class, 7)
+      .put(TranspositionIgaMessage.class, 8)
       .build();
 
   @SuppressWarnings("unchecked")

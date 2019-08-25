@@ -117,6 +117,10 @@ public class IgaVertex {
     return id - tree.firstIndexOfRow(rowIndexOf());
   }
 
+  public boolean isLeading() {
+    return offsetLeft() == 0;
+  }
+
   public Optional<? extends IgaVertex> leftChildOf() {
     if (is(RootVertex.class)) {
       return Optional.of(interimVertex(2));

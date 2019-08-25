@@ -1,6 +1,6 @@
 package edu.agh.iga.adi.giraph;
 
-import edu.agh.iga.adi.giraph.direction.DirectionComputation;
+import edu.agh.iga.adi.giraph.direction.StepComputation;
 import edu.agh.iga.adi.giraph.direction.IgaAdiWorkerContext;
 import edu.agh.iga.adi.giraph.direction.io.CoefficientMatricesOutputFormat;
 import edu.agh.iga.adi.giraph.direction.io.InMemoryStepInputFormat;
@@ -23,7 +23,7 @@ class DirectionComputationIT {
   void canRun(@TempDir Path coefficientsDir) {
     // given
     GiraphTestJob job = giraphJob()
-        .computationClazz(DirectionComputation.class)
+        .computationClazz(StepComputation.class)
         .workerContextClazz(IgaAdiWorkerContext.class)
         .vertexInputFormatClazz(InMemoryStepInputFormat.class)
         .vertexOutputFormatClazz(CoefficientMatricesOutputFormat.class)

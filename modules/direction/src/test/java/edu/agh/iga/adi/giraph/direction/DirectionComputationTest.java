@@ -32,7 +32,7 @@ class DirectionComputationTest {
 
   @Test
   void canSolveOneFor12() {
-    whenComputation(DirectionComputation.class, InitialComputation.class)
+    whenComputation(StepComputation.class, InitialComputation.class)
         .ofProblemSize(12)
         .isRunForGraph(graph -> igaTestGraph(graph).withVertexElements(elementsFor((x, y) -> 1, TREE_12, MESH_12)))
         .thenAssertThatGraph(assertions ->

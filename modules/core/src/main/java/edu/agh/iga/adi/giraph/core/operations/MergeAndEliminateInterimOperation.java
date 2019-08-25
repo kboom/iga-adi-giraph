@@ -39,7 +39,7 @@ public final class MergeAndEliminateInterimOperation implements IgaOperation<Mer
   }
 
   @Override
-  public void process(IgaElement element, DirectionTree tree) {
+  public void postConsume(IgaElement element, DirectionTree tree) {
     swapDofs(element, 0, 2, 6);
     swapDofs(element, 1, 3, 6);
     partialForwardElimination(element, 2, 6);

@@ -3,7 +3,6 @@ package edu.agh.iga.adi.giraph.core;
 import org.ojalgo.matrix.store.PrimitiveDenseStore;
 
 import static edu.agh.iga.adi.giraph.core.IgaConstants.ROWS_BOUND_TO_NODE;
-import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
 public class IgaElement {
 

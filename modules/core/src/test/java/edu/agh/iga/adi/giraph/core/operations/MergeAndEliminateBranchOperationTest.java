@@ -2,11 +2,11 @@ package edu.agh.iga.adi.giraph.core.operations;
 
 import edu.agh.iga.adi.giraph.core.IgaElement;
 import edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateBranchOperation.MergeAndEliminateBranchMessage;
-import edu.agh.iga.adi.giraph.core.test.IgaElementBuilder;
 import edu.agh.iga.adi.giraph.core.test.SmallProblem;
 import org.junit.jupiter.api.Test;
 
 import static edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateBranchOperation.MERGE_AND_ELIMINATE_BRANCH_OPERATION;
+import static edu.agh.iga.adi.giraph.core.test.IgaElementBuilder.elementFor;
 import static edu.agh.iga.adi.giraph.core.test.SmallProblem.BRANCH;
 import static edu.agh.iga.adi.giraph.core.test.assertion.IgaElementAssertions.assertThatElement;
 import static edu.agh.iga.adi.giraph.test.util.MatrixBuilder.matrixOfSize;
@@ -17,7 +17,7 @@ class MergeAndEliminateBranchOperationTest {
 
   @Test
   void messageContainsSourceId() {
-    assertThat(messageSentFrom(IgaElementBuilder.elementFor(SmallProblem.LEAF, SmallProblem.MESH).build()))
+    assertThat(messageSentFrom(elementFor(SmallProblem.LEAF, SmallProblem.MESH).build()))
         .extracting(MergeAndEliminateBranchMessage::getSrcId)
         .isEqualTo(SmallProblem.LEAF_ID);
   }
@@ -25,7 +25,7 @@ class MergeAndEliminateBranchOperationTest {
   @Test
   void messageContainsFragmentOfCoefficientMatrix() {
     assertThatRegion(messageSentFrom(
-        IgaElementBuilder.elementFor(BRANCH, SmallProblem.MESH)
+        elementFor(BRANCH, SmallProblem.MESH)
             .withSpecificMatrixA(
                 matrixOfSize(6, 6).withValues(
                     11, 12, 13, 14, 15, 16,
@@ -49,7 +49,7 @@ class MergeAndEliminateBranchOperationTest {
 
   @Test
   void canConsumeMessageFromLeftBranch() {
-    IgaElement element = IgaElementBuilder.elementFor(SmallProblem.INTERIM, SmallProblem.MESH)
+    IgaElement element = elementFor(SmallProblem.INTERIM, SmallProblem.MESH)
         .withMatrixA(matrixOfSize(6, 6).withValue(1000))
         .withMatrixB(matrixOfSize(6, 14).withValue(1000))
         .build();
@@ -95,7 +95,7 @@ class MergeAndEliminateBranchOperationTest {
 
   @Test
   void canConsumeMessageFromRightBranch() {
-    IgaElement element = IgaElementBuilder.elementFor(SmallProblem.INTERIM, SmallProblem.MESH)
+    IgaElement element = elementFor(SmallProblem.INTERIM, SmallProblem.MESH)
         .withMatrixA(matrixOfSize(6, 6).withValue(1000))
         .withMatrixB(matrixOfSize(6, 14).withValue(1000))
         .build();
@@ -141,7 +141,7 @@ class MergeAndEliminateBranchOperationTest {
 
   @Test
   void canProcess() {
-    IgaElement element = IgaElementBuilder.elementFor(SmallProblem.INTERIM, SmallProblem.MESH)
+    IgaElement element = elementFor(SmallProblem.INTERIM, SmallProblem.MESH)
         .withMatrixA(
             matrixOfSize(6, 6).withValues(
                 1, 1, 1, 1, 1, -1,
@@ -217,7 +217,7 @@ class MergeAndEliminateBranchOperationTest {
   }
 
   private IgaElement elementAfterProcessing(IgaElement element) {
-    MERGE_AND_ELIMINATE_BRANCH_OPERATION.process(element, SmallProblem.DIRECTION_TREE);
+    MERGE_AND_ELIMINATE_BRANCH_OPERATION.postConsume(element, SmallProblem.DIRECTION_TREE);
     return element;
   }
 

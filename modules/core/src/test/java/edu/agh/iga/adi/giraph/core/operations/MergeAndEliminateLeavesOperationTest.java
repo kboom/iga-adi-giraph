@@ -255,7 +255,7 @@ class MergeAndEliminateLeavesOperationTest {
   }
 
   private IgaElement elementAfterProcessing(IgaElement element) {
-    MERGE_AND_ELIMINATE_LEAVES_OPERATION.process(element, SmallProblem.DIRECTION_TREE);
+    MERGE_AND_ELIMINATE_LEAVES_OPERATION.postConsume(element, SmallProblem.DIRECTION_TREE);
     return element;
   }
 

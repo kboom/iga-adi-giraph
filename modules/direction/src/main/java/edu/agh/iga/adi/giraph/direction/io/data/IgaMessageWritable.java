@@ -1,6 +1,7 @@
 package edu.agh.iga.adi.giraph.direction.io.data;
 
 import edu.agh.iga.adi.giraph.core.IgaMessage;
+import edu.agh.iga.adi.giraph.core.operations.transposition.TranspositionIgaOperation;
 import edu.agh.iga.adi.giraph.direction.io.data.message.MessageSerializerFacade;
 import org.apache.hadoop.io.WritableComparable;
 
@@ -40,6 +41,10 @@ public class IgaMessageWritable implements WritableComparable {
   @SuppressWarnings("unused")
   public IgaMessageWritable() {
 
+  }
+
+  public <T extends IgaMessage> T getMessage() {
+    return (T) igaMessage;
   }
 
 }

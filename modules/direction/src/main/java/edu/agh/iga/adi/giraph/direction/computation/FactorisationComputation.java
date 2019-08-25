@@ -6,6 +6,7 @@ import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import org.apache.giraph.bsp.CentralizedServiceWorker;
 import org.apache.giraph.comm.WorkerClientRequestProcessor;
+import org.apache.giraph.edge.Edge;
 import org.apache.giraph.graph.BasicComputation;
 import org.apache.giraph.graph.GraphState;
 import org.apache.giraph.graph.Vertex;
@@ -14,31 +15,32 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
+import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_START;
 import static edu.agh.iga.adi.giraph.direction.computation.ComputationLogger.computationLog;
 import static edu.agh.iga.adi.giraph.direction.computation.ComputationLogger.logPhase;
+import static edu.agh.iga.adi.giraph.direction.computation.ComputationResolver.computationForStep;
+import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationPhase.phaseFor;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.StreamSupport.stream;
 
-public final class IgaComputation extends BasicComputation<LongWritable, IgaElementWritable, IgaOperationWritable, IgaMessageWritable> {
+public final class FactorisationComputation extends BasicComputation<LongWritable, IgaElementWritable, IgaOperationWritable, IgaMessageWritable> {
 
-  private static final Logger LOG = Logger.getLogger(IgaComputation.class);
-
-  public static final String PHASE = "iga.direction.phase";
+  private static final Logger LOG = Logger.getLogger(FactorisationComputation.class);
 
   private DirectionTree directionTree;
   private IgaComputationPhase phase;
 
   @Override
   public void preSuperstep() {
-    IntWritable phaseWritable = getAggregatedValue(PHASE);
-    phase = IgaComputationPhase.getPhase(phaseWritable.get());
+    IntWritable computationStart = getAggregatedValue(COMPUTATION_START);
+    phase = phaseFor(directionTree, (int) getSuperstep() - computationStart.get());
     logPhase(phase);
     if (LOG.isDebugEnabled()) {
       LOG.debug(format("================ SUPERSTEP (%d) %s ================", getSuperstep() - 1, phase));
@@ -50,8 +52,18 @@ public final class IgaComputation extends BasicComputation<LongWritable, IgaElem
       Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex,
       Iterable<IgaMessageWritable> messages
   ) {
+    if (phase == null) {
+      vertex.voteToHalt();
+      return;
+    }
+
     send(vertex, update(vertex, messages));
-    vertex.voteToHalt();
+
+    if (computationForStep(directionTree, getSuperstep() + 1) == FactorisationComputation.class) {
+      vertex.voteToHalt();
+    } else {
+      vertex.wakeUp(); // this effectively keeps the algorithm running so that the next computation can happen
+    }
 
     computationLog(vertex.getValue().getElement());
   }
@@ -69,7 +81,7 @@ public final class IgaComputation extends BasicComputation<LongWritable, IgaElem
     }
     IgaElement element = elementOf(vertex);
     messagesOf(messages).forEach(msg -> consume(element, msg));
-    operationOf(messages).ifPresent(operation -> operation.process(element, directionTree));
+    operationOf(messages).ifPresent(operation -> operation.postConsume(element, directionTree));
 
     vertex.setValue(vertex.getValue().withValue(element));
     return element;
@@ -98,14 +110,14 @@ public final class IgaComputation extends BasicComputation<LongWritable, IgaElem
         if (LOG.isDebugEnabled()) {
           LOG.debug(format("Sending message to %d %s", dstId, igaOperation));
         }
-        try {
-          removeEdgesRequest(vertex.getId(), dstIdWritable);
-        } catch (IOException e) {
-          LOG.error("Could not remove edge", e);
-          throw new IllegalStateException("Could not remove edge");
-        }
       }
     });
+
+    // todo fix this ugly bit
+    Iterator<Edge<LongWritable, IgaOperationWritable>> it = vertex.getEdges().iterator();
+    if (it.hasNext()) {
+      it.next().getValue().getIgaOperation().postSend(element, directionTree);
+    }
   }
 
   private static IgaElement elementOf(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
