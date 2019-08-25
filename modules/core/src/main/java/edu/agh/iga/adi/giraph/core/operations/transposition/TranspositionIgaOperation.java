@@ -1,8 +1,8 @@
 package edu.agh.iga.adi.giraph.core.operations.transposition;
 
 import edu.agh.iga.adi.giraph.core.*;
+import lombok.Getter;
 import lombok.val;
-import org.ojalgo.matrix.store.PrimitiveDenseStore;
 import org.ojalgo.matrix.store.TransformableRegion;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
@@ -58,6 +58,7 @@ public final class TranspositionIgaOperation implements IgaOperation<Transpositi
 
   public static class TranspositionIgaMessage extends IgaMessage {
 
+    @Getter
     public final TransformableRegion<Double> mxp;
 
     public TranspositionIgaMessage(long srcId, TransformableRegion<Double> mxp) {
