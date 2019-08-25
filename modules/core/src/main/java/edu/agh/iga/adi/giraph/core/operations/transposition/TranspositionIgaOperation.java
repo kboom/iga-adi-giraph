@@ -7,6 +7,8 @@ import org.ojalgo.matrix.store.TransformableRegion;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.core.operations.transposition.TranspositionIgaOperation.TranspositionIgaMessage;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 import static org.ojalgo.function.constant.PrimitiveMath.MULTIPLY;
 
 public final class TranspositionIgaOperation implements IgaOperation<TranspositionIgaMessage> {
@@ -35,7 +37,7 @@ public final class TranspositionIgaOperation implements IgaOperation<Transpositi
     val pp = new PartitionProvider(dst, (int) mxp.countRows());
     val targetBlock = element.mb
         .regionByRows(0, 1, 2)
-        .regionByOffsets(0, mo)
+        .regionByOffsets(0, min(1, mo) * 5 + (max(1, mo) - 1) * 3)
         .regionByLimits(3, mo + (int) mxp.countRows());
 
     targetBlock.fillMatching(pp, MULTIPLY, mxp.regionByTransposing());

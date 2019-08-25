@@ -41,6 +41,12 @@ final class PartitionProvider implements Access2D<Double> {
     return 3;
   }
 
+  /**
+   * todo predetermine this rather than computing each time
+   * @param v
+   * @param localRow
+   * @return
+   */
   private static double partitionFor(IgaVertex v, int localRow) {
     val tree = v.getTree();
     val firstIdx = tree.firstIndexOfLeafRow();
