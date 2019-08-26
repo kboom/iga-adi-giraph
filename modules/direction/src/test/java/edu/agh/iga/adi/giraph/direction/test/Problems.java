@@ -14,6 +14,7 @@ public class Problems {
   }
 
   public static final Mesh MESH_12 = aMesh().withElements(12).build();
+  public static final Mesh MESH_24 = aMesh().withElements(24).build();
 
   public static final DirectionTree TREE_12 = new DirectionTree(12);
   public static final DirectionTree TREE_24 = new DirectionTree(24);
