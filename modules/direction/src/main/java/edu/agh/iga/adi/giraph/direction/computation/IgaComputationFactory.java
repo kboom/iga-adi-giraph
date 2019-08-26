@@ -8,10 +8,13 @@ import org.apache.giraph.graph.Computation;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Writable;
 
-public final class IgaComputationFactory extends DefaultComputationFactory<LongWritable, IgaElementWritable, IgaOperationWritable> {
+public final class IgaComputationFactory
+    extends DefaultComputationFactory<LongWritable, IgaElementWritable, IgaOperationWritable> {
 
   @Override
-  public Computation<LongWritable, IgaElementWritable, IgaOperationWritable, Writable, Writable> createComputation(ImmutableClassesGiraphConfiguration<LongWritable, IgaElementWritable, IgaOperationWritable> conf) {
+  public Computation<LongWritable, IgaElementWritable, IgaOperationWritable, Writable, Writable> createComputation(
+      ImmutableClassesGiraphConfiguration<LongWritable, IgaElementWritable, IgaOperationWritable> conf
+  ) {
     return super.createComputation(conf);
   }
 

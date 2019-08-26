@@ -1,15 +1,15 @@
-package edu.agh.iga.adi.giraph.direction.computation;
+package edu.agh.iga.adi.giraph.direction.computation.transposition;
 
 import edu.agh.iga.adi.giraph.core.DirectionTree;
 import edu.agh.iga.adi.giraph.core.IgaElement;
 import edu.agh.iga.adi.giraph.core.IgaVertex;
+import edu.agh.iga.adi.giraph.direction.computation.IgaComputation;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import lombok.val;
 import org.apache.giraph.bsp.CentralizedServiceWorker;
 import org.apache.giraph.comm.WorkerClientRequestProcessor;
-import org.apache.giraph.graph.BasicComputation;
 import org.apache.giraph.graph.GraphState;
 import org.apache.giraph.graph.Vertex;
 import org.apache.giraph.worker.WorkerGlobalCommUsage;
@@ -21,9 +21,9 @@ import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.core.operations.transposition.TranspositionIgaOperation.TRANSPOSITION_IGA_OPERATION;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_START;
-import static edu.agh.iga.adi.giraph.direction.computation.TranspositionComputation.TranspositionPhase.phaseFor;
+import static edu.agh.iga.adi.giraph.direction.computation.transposition.TranspositionComputation.TranspositionPhase.phaseFor;
 
-public class TranspositionComputation extends BasicComputation<LongWritable, IgaElementWritable, IgaOperationWritable, IgaMessageWritable> {
+public class TranspositionComputation extends IgaComputation {
 
   private static final Logger LOG = Logger.getLogger(TranspositionComputation.class);
 

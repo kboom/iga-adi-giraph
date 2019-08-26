@@ -5,7 +5,7 @@ import edu.agh.iga.adi.giraph.core.IgaElement;
 import edu.agh.iga.adi.giraph.core.Mesh;
 import edu.agh.iga.adi.giraph.core.factory.HorizontalElementFactory;
 import edu.agh.iga.adi.giraph.core.problem.Problem;
-import edu.agh.iga.adi.giraph.direction.computation.InitialComputation;
+import edu.agh.iga.adi.giraph.direction.computation.initialisation.InitialComputation;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;

@@ -1,13 +1,13 @@
-package edu.agh.iga.adi.giraph.direction.computation;
+package edu.agh.iga.adi.giraph.direction.computation.factorization;
 
 import edu.agh.iga.adi.giraph.core.*;
+import edu.agh.iga.adi.giraph.direction.computation.IgaComputation;
+import edu.agh.iga.adi.giraph.direction.computation.IgaComputationPhase;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import org.apache.giraph.bsp.CentralizedServiceWorker;
 import org.apache.giraph.comm.WorkerClientRequestProcessor;
-import org.apache.giraph.edge.Edge;
-import org.apache.giraph.graph.BasicComputation;
 import org.apache.giraph.graph.GraphState;
 import org.apache.giraph.graph.Vertex;
 import org.apache.giraph.worker.WorkerGlobalCommUsage;
@@ -15,7 +15,6 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.log4j.Logger;
 
-import java.util.Iterator;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -30,7 +29,7 @@ import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.StreamSupport.stream;
 
-public final class FactorisationComputation extends BasicComputation<LongWritable, IgaElementWritable, IgaOperationWritable, IgaMessageWritable> {
+public final class FactorisationComputation extends IgaComputation {
 
   private static final Logger LOG = Logger.getLogger(FactorisationComputation.class);
 
@@ -112,12 +111,6 @@ public final class FactorisationComputation extends BasicComputation<LongWritabl
         }
       }
     });
-
-    // todo fix this ugly bit
-    Iterator<Edge<LongWritable, IgaOperationWritable>> it = vertex.getEdges().iterator();
-    if (it.hasNext()) {
-      it.next().getValue().getIgaOperation().postSend(element, directionTree);
-    }
   }
 
   private static IgaElement elementOf(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
