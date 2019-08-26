@@ -19,14 +19,14 @@ import static edu.agh.iga.adi.giraph.test.util.MatrixBuilder.matrixOfSize;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.LongStream.range;
 
-class DirectionComputationTest {
+class StepComputationTest {
 
   private static double[] SOLUTION_1D_12_ONE = new double[] {
-      0.167, 0.833, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.833, 0.167,
-      0.167, 0.833, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.833, 0.167,
-      0.167, 0.833, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.833, 0.167,
-      0.167, 0.833, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.833, 0.167,
-      0.167, 0.833, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.833, 0.167,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
   };
 

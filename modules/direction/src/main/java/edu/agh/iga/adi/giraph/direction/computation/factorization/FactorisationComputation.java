@@ -8,6 +8,7 @@ import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import org.apache.giraph.bsp.CentralizedServiceWorker;
 import org.apache.giraph.comm.WorkerClientRequestProcessor;
+import org.apache.giraph.edge.Edge;
 import org.apache.giraph.graph.GraphState;
 import org.apache.giraph.graph.Vertex;
 import org.apache.giraph.worker.WorkerGlobalCommUsage;
@@ -56,6 +57,7 @@ public final class FactorisationComputation extends IgaComputation {
       return;
     }
 
+    operationOf(messages).ifPresent(operation -> operation.preConsume(vertex.getValue().getElement(), directionTree));
     send(vertex, update(vertex, messages));
 
     if (computationForStep(directionTree, getSuperstep() + 1) == FactorisationComputation.class) {

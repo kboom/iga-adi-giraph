@@ -24,6 +24,11 @@ public final class MergeAndEliminateBranchOperation implements IgaOperation<Merg
   }
 
   @Override
+  public IgaElement preConsume(IgaElement element, DirectionTree tree) {
+    return element.clean();
+  }
+
+  @Override
   public void consumeMessage(IgaElement element, MergeAndEliminateBranchMessage message, DirectionTree tree) {
     switch (vertexOf(tree, message.getSrcId()).childPosition()) {
       case LEFT:

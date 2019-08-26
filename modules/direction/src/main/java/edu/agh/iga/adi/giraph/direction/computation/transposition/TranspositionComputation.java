@@ -44,13 +44,12 @@ public class TranspositionComputation extends IgaComputation {
     switch (phase) {
       case SEND:
         send(vertex);
+        vertex.voteToHalt();
         break;
       case RECEIVE:
         receive(vertex, message);
         break;
     }
-
-    vertex.voteToHalt();
   }
 
   private void send(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {

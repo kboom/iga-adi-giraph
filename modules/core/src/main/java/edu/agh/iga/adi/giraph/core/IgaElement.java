@@ -44,4 +44,11 @@ public class IgaElement {
     return new IgaElement(id, ma, mb, mx);
   }
 
+  public IgaElement clean() {
+    ma.reset();
+    mb.reset();
+    mx.reset();
+    return this;
+  }
+
 }

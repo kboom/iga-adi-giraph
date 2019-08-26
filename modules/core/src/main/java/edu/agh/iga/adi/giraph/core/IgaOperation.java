@@ -24,20 +24,29 @@ public interface IgaOperation<M extends IgaMessage> {
   void consumeMessage(IgaElement element, M message, DirectionTree tree);
 
   /**
-   * After all data is sent
+   * After all messages are sent we get an opportunity to free up some memory.
+   * By default returns the element without modifications.
    *
    * @param element
    * @param tree
    */
-  default void postSend(IgaElement element, DirectionTree tree) {
-    // for now just reset the matrix, then remove the elements to free up the memory
-    element.ma.reset();
-    element.mb.reset();
-    element.mx.reset();
+  default IgaElement postSend(IgaElement element, DirectionTree tree) {
+    return element;
   }
 
   /**
-   * After all messages are consumed, the processing can take place
+   * Runs before any message gets consumed.
+   * By default returns the element with no modification.
+   *
+   * @param element
+   * @param tree
+   */
+  default IgaElement preConsume(IgaElement element, DirectionTree tree) {
+    return element;
+  }
+
+  /**
+   * After all messages are consumed, some additional processing can take place.
    *
    * @param element
    * @param tree

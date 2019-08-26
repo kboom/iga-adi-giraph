@@ -17,7 +17,7 @@ import static edu.agh.iga.adi.giraph.direction.test.DirManager.aDirManager;
 import static edu.agh.iga.adi.giraph.direction.test.GiraphTestJob.giraphJob;
 import static edu.agh.iga.adi.giraph.test.util.assertion.CoefficientsAssertions.assertThatCoefficients;
 
-class DirectionComputationIT {
+class StepComputationIT {
 
   @Test
   void canRun(@TempDir Path coefficientsDir) {

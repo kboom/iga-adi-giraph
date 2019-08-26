@@ -25,6 +25,11 @@ public final class MergeAndEliminateInterimOperation implements IgaOperation<Mer
   }
 
   @Override
+  public IgaElement preConsume(IgaElement element, DirectionTree tree) {
+    return element.clean();
+  }
+
+  @Override
   public void consumeMessage(IgaElement element, MergeAndEliminateInterimMessage message, DirectionTree tree) {
     switch (vertexOf(tree, message.getSrcId()).childPosition()) {
       case LEFT:

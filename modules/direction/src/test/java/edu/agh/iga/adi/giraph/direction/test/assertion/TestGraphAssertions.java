@@ -8,9 +8,8 @@ import org.apache.hadoop.io.LongWritable;
 import org.assertj.core.api.AbstractAssert;
 import org.ojalgo.matrix.store.PrimitiveDenseStore;
 
-import java.util.stream.LongStream;
-
 import static edu.agh.iga.adi.giraph.test.util.assertion.MatrixUtil.weakMatrix;
+import static java.util.stream.LongStream.rangeClosed;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public final class TestGraphAssertions extends AbstractAssert<TestGraphAssertions, TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable>> {
@@ -30,7 +29,7 @@ public final class TestGraphAssertions extends AbstractAssert<TestGraphAssertion
   }
 
   public TestGraphAssertions allBranchElementsHaveUnknowns(DirectionTree tree, PrimitiveDenseStore ds, int precision) {
-    LongStream.rangeClosed(tree.firstIndexOfBranchingRow(), tree.lastIndexOfBranchingRow())
+    rangeClosed(tree.firstIndexOfBranchingRow(), tree.lastIndexOfBranchingRow())
         .forEachOrdered(l -> assertThat(weakMatrix(actual.getVertex(new LongWritable(l)).getValue().getElement().mx, precision)).isEqualTo(ds));
     return this;
   }

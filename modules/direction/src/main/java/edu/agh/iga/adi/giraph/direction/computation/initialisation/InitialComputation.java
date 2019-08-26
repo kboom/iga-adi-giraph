@@ -42,6 +42,7 @@ public final class InitialComputation extends IgaComputation {
   ) {
     val igaVertex = vertexOf(directionTree, vertex.getId().get());
     val edges = vertex.getEdges();
+
     if (igaVertex.is(LeafVertex.class)) {
       val element = vertex.getValue().getElement();
       edges.forEach(edge -> {
@@ -53,11 +54,11 @@ public final class InitialComputation extends IgaComputation {
 
       computationLog(vertex.getValue().getElement());
 
-      stream(edges.spliterator(), false)
-          .map(Edge::getValue)
-          .map(IgaOperationWritable::getIgaOperation)
-          .distinct()
-          .forEach(operation -> operation.postSend(element, directionTree));
+//      stream(edges.spliterator(), false)
+//          .map(Edge::getValue)
+//          .map(IgaOperationWritable::getIgaOperation)
+//          .distinct()
+//          .forEach(operation -> operation.postSend(element, directionTree));
     }
 
     vertex.voteToHalt();

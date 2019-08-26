@@ -42,6 +42,11 @@ public final class MergeAndEliminateLeavesOperation implements IgaOperation<Merg
   }
 
   @Override
+  public IgaElement preConsume(IgaElement element, DirectionTree tree) {
+    return element.clean();
+  }
+
+  @Override
   public void postConsume(IgaElement element, DirectionTree tree) {
     swapDofs(element, 0, 2, 5);
     swapDofs(element, 1, 2, 5);
