@@ -157,8 +157,9 @@ public class IgaVertex {
     return id < tree.firstIndexOfBranchingRow();
   }
 
+  @Deprecated // todo just return left or right
   public Pair<Double, Double> segmentOf() {
-    long share = tree.size() / strengthOf();
+    long share = tree.strengthOfLeaves() / strengthOf();
     double lb = share * offsetLeft();
     double ub = share * (offsetLeft() + 1);
     return Pair.of(lb, ub);

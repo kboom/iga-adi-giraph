@@ -9,6 +9,7 @@ import edu.agh.iga.adi.giraph.core.splines.BSpline1;
 import edu.agh.iga.adi.giraph.core.splines.BSpline2;
 import edu.agh.iga.adi.giraph.core.splines.BSpline3;
 import edu.agh.iga.adi.giraph.core.splines.Spline;
+import lombok.val;
 import org.ojalgo.matrix.store.PrimitiveDenseStore;
 
 import static edu.agh.iga.adi.giraph.core.GaussPoints.*;
@@ -68,25 +69,56 @@ public final class HorizontalElementFactory implements ElementFactory {
     return ds;
   }
 
+  /*
+
+  private void initializeRightHandSides(Vertex node) {
+        for (int i = 1; i <= node.mesh.getDofsY(); i++) {
+            fillRightHandSide(node, spline3, 1, i);
+            fillRightHandSide(node, spline2, 2, i);
+            fillRightHandSide(node, spline1, 3, i);
+        }
+    }
+
+    private void fillRightHandSide(Vertex node, Spline spline, int r, int i) {
+        for (int k = 1; k <= GaussPoints.GAUSS_POINT_COUNT; k++) {
+            double x = GaussPoints.GAUSS_POINTS[k] * node.mesh.getDx() + node.beginning;
+            for (int l = 1; l <= GaussPoints.GAUSS_POINT_COUNT; l++) {
+                if (i > 2) {
+                    double y = (GaussPoints.GAUSS_POINTS[l] + (i - 3)) * node.mesh.getDy();
+                    node.m_b[r][i] += GaussPoints.GAUSS_POINT_WEIGHTS[k] * spline.getValue(GaussPoints.GAUSS_POINTS[k]) * GaussPoints.GAUSS_POINT_WEIGHTS[l] * spline1.getValue(GaussPoints.GAUSS_POINTS[l]) * problem.getValue(x, y);
+                }
+                if (i > 1 && (i - 2) < node.mesh.getElementsY()) {
+                    double y = (GaussPoints.GAUSS_POINTS[l] + (i - 2)) * node.mesh.getDy();
+                    node.m_b[r][i] += GaussPoints.GAUSS_POINT_WEIGHTS[k] * spline.getValue(GaussPoints.GAUSS_POINTS[k]) * GaussPoints.GAUSS_POINT_WEIGHTS[l] * spline2.getValue(GaussPoints.GAUSS_POINTS[l]) * problem.getValue(x, y);
+                }
+                if ((i - 1) < node.mesh.getElementsY()) {
+                    double y = (GaussPoints.GAUSS_POINTS[l] + (i - 1)) * node.mesh.getDy();
+                    node.m_b[r][i] += GaussPoints.GAUSS_POINT_WEIGHTS[k] * spline.getValue(GaussPoints.GAUSS_POINTS[k]) * GaussPoints.GAUSS_POINT_WEIGHTS[l] * spline3.getValue(GaussPoints.GAUSS_POINTS[l]) * problem.getValue(x, y);
+                }
+            }
+        }
+    }
+
+   */
   private void fillRightHandSide(PrimitiveDenseStore ds, Problem problem, Spline spline, IgaVertex vertex, int r, int i) {
-    for (int k = 1; k <= GAUSS_POINT_COUNT; k++) {
-      final double x = GAUSS_POINTS[k] * mesh.getDx() + vertex.segmentOf().getLeft();
-      for (int l = 1; l <= GAUSS_POINT_COUNT; l++) {
-        final double wk = GAUSS_POINT_WEIGHTS[k];
-        final double wl = GAUSS_POINT_WEIGHTS[l];
-        final double gl = GAUSS_POINTS[l];
-        final double sk = spline.getValue(GAUSS_POINTS[k]);
+    for (int k = 0; k < GAUSS_POINT_COUNT; k++) {
+      val x = GAUSS_POINTS[k] * mesh.getDx() + vertex.segmentOf().getLeft();
+      for (int l = 0; l < GAUSS_POINT_COUNT; l++) {
+        val wk = GAUSS_POINT_WEIGHTS[k];
+        val wl = GAUSS_POINT_WEIGHTS[l];
+        val gl = GAUSS_POINTS[l];
+        val sk = spline.getValue(GAUSS_POINTS[k]);
 
         if (i > 1) {
-          double y = (gl + (i - 2)) * mesh.getDy();
+          val y = (gl + (i - 2)) * mesh.getDy();
           ds.modifyOne(r, i, ADD.by(wk * sk * wl * b1.getValue(gl) * problem.valueAt(x, y)));
         }
         if (i > 0 && (i - 1) < mesh.getElementsY()) {
-          double y = (gl + (i - 2)) * mesh.getDy();
+          val y = (gl + (i - 1)) * mesh.getDy();
           ds.modifyOne(r, i, ADD.by(wk * sk * wl * b2.getValue(gl) * problem.valueAt(x, y)));
         }
         if (i < mesh.getElementsY()) {
-          double y = (gl + (i - 1)) * mesh.getDy();
+          val y = (gl + i) * mesh.getDy();
           ds.modifyOne(r, i, ADD.by(wk * sk * wl * b3.getValue(gl) * problem.valueAt(x, y)));
         }
       }

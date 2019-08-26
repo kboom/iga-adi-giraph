@@ -23,14 +23,14 @@ public final class TestGraphAssertions extends AbstractAssert<TestGraphAssertion
   }
 
 
-  public TestGraphAssertions hasElementWithUnknowns(long l, PrimitiveDenseStore ds) {
-    assertThat(actual.getVertex(new LongWritable(l)).getValue().getElement().mx).isEqualTo(ds);
+  public TestGraphAssertions hasElementWithUnknowns(long l, PrimitiveDenseStore ds, int precision) {
+    assertThat(weakMatrix(actual.getVertex(new LongWritable(l)).getValue().getElement().mx, precision)).isEqualTo(ds);
     return this;
   }
 
   public TestGraphAssertions allBranchElementsHaveUnknowns(DirectionTree tree, PrimitiveDenseStore ds, int precision) {
     rangeClosed(tree.firstIndexOfBranchingRow(), tree.lastIndexOfBranchingRow())
-        .forEachOrdered(l -> assertThat(weakMatrix(actual.getVertex(new LongWritable(l)).getValue().getElement().mx, precision)).isEqualTo(ds));
+        .forEachOrdered(l -> hasElementWithUnknowns(l, ds, precision));
     return this;
   }
 
