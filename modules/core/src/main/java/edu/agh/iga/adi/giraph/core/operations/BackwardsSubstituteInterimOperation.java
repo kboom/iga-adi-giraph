@@ -1,10 +1,8 @@
 package edu.agh.iga.adi.giraph.core.operations;
 
 import edu.agh.iga.adi.giraph.core.*;
-import edu.agh.iga.adi.giraph.core.IgaVertex.BranchVertex;
 import org.ojalgo.matrix.store.TransformableRegion;
 
-import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.core.operations.BackwardsSubstituteInterimOperation.BackwardsSubstituteInterimMessage;
 import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.partialBackwardsSubstitution;
 import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.swapDofs;
@@ -41,17 +39,9 @@ public final class BackwardsSubstituteInterimOperation implements IgaOperation<B
 
   @Override
   public void postConsume(IgaElement element, DirectionTree tree) {
-    final IgaVertex vertex = vertexOf(tree, element.id);
-    // todo is this really necessary? These two branches are the same!
-    if (vertex.is(BranchVertex.class)) {
-      partialBackwardsSubstitution(element, 2, 6);
-      swapDofs(element, 0, 2, 6);
-      swapDofs(element, 1, 3, 6);
-    } else {
-      partialBackwardsSubstitution(element, 2, 6);
-      swapDofs(element, 0, 2, 6);
-      swapDofs(element, 1, 3, 6);
-    }
+    partialBackwardsSubstitution(element, 2, 6);
+    swapDofs(element, 0, 2, 6);
+    swapDofs(element, 1, 3, 6);
   }
 
   public static class BackwardsSubstituteInterimMessage extends IgaMessage {
