@@ -199,6 +199,34 @@ class StepComputationTest {
         );
   }
 
+  @Test
+  void canSolveLinearFor24() {
+    whenComputation(StepComputation.class, InitialComputation.class)
+        .ofProblemSize(PROBLEM_24_SIZE)
+        .isRunForGraph(graph -> igaTestGraph(graph).withVertexElements(elementsFor(Double::sum, TREE_24, MESH_24)))
+        .thenAssertThatGraph(assertions ->
+            assertions.leavesHaveChecksums(
+                TREE_24,
+                new double[] {1650.0, 2040.0, 2430.0, 2820.0, 3210.0, 3600.0, 3990.0, 4380.0},
+                3
+            )
+        );
+  }
+
+  @Test
+  void canSolveLinearFor48() {
+    whenComputation(StepComputation.class, InitialComputation.class)
+        .ofProblemSize(PROBLEM_48_SIZE)
+        .isRunForGraph(graph -> igaTestGraph(graph).withVertexElements(elementsFor(Double::sum, TREE_48, MESH_48)))
+        .thenAssertThatGraph(assertions ->
+            assertions.leavesHaveChecksums(
+                TREE_48,
+                new double[] {6150.0, 6900.0, 7650.0, 8400.0, 9150.0, 9900.0, 10650.0, 11400.0, 12150.0, 12900.0, 13650.0, 14400.0, 15150.0, 15900.0, 16650.0, 17400.0},
+                3
+            )
+        );
+  }
+
   private Set<IgaElement> elementsFor(Problem problem, DirectionTree tree, Mesh mesh) {
     HorizontalElementFactory ef = new HorizontalElementFactory(mesh);
     return rangeClosed(1, tree.lastIndexOfLeafRow())
