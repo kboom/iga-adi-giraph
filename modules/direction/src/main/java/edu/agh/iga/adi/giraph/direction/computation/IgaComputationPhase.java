@@ -1,26 +1,22 @@
 package edu.agh.iga.adi.giraph.direction.computation;
 
 import edu.agh.iga.adi.giraph.core.DirectionTree;
-import edu.agh.iga.adi.giraph.core.IgaOperation;
-import edu.agh.iga.adi.giraph.core.operations.*;
 
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationDirection.DOWN;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationDirection.UP;
 
 public enum IgaComputationPhase {
-  MERGE_AND_ELIMINATE_LEAVES(MergeAndEliminateLeavesOperation.class, UP),
-  MERGE_AND_ELIMINATE_BRANCH(MergeAndEliminateBranchOperation.class, UP),
-  MERGE_AND_ELIMINATE_INTERIM(MergeAndEliminateInterimOperation.class, UP),
-  MERGE_AND_ELIMINATE_ROOT(MergeAndEliminateRootOperation.class, DOWN),
-  BACKWARDS_SUBSTITUTE_ROOT(BackwardsSubstituteRootOperation.class, DOWN),
-  BACKWARDS_SUBSTITUTE_INTERIM(BackwardsSubstituteInterimOperation.class, DOWN),
-  BACKWARDS_SUBSTITUTE_BRANCH(BackwardsSubstituteBranchOperation.class, DOWN);
+  MERGE_AND_ELIMINATE_LEAVES(UP),
+  MERGE_AND_ELIMINATE_BRANCH(UP),
+  MERGE_AND_ELIMINATE_INTERIM(UP),
+  MERGE_AND_ELIMINATE_ROOT(DOWN),
+  BACKWARDS_SUBSTITUTE_ROOT(DOWN),
+  BACKWARDS_SUBSTITUTE_INTERIM(DOWN),
+  BACKWARDS_SUBSTITUTE_BRANCH(DOWN);
 
-  private final Class<? extends IgaOperation> operationClazz;
   private final IgaComputationDirection direction;
 
-  IgaComputationPhase(Class<? extends IgaOperation> operationClazz, IgaComputationDirection direction) {
-    this.operationClazz = operationClazz;
+  IgaComputationPhase(IgaComputationDirection direction) {
     this.direction = direction;
   }
 
@@ -48,10 +44,6 @@ public enum IgaComputationPhase {
       return BACKWARDS_SUBSTITUTE_INTERIM;
     }
     return null;
-  }
-
-  public static IgaComputationPhase getPhase(int phaseInt) {
-    return values()[phaseInt];
   }
 
   public boolean matchesDirection(long src, long dst) {
