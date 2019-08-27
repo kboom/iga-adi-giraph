@@ -13,8 +13,7 @@ import lombok.val;
 import org.ojalgo.matrix.store.PrimitiveDenseStore;
 
 import static edu.agh.iga.adi.giraph.core.GaussPoints.*;
-import static edu.agh.iga.adi.giraph.core.IgaConstants.COLS_BOUND_TO_NODE;
-import static edu.agh.iga.adi.giraph.core.IgaConstants.ROWS_BOUND_TO_NODE;
+import static edu.agh.iga.adi.giraph.core.IgaConstants.*;
 import static edu.agh.iga.adi.giraph.core.IgaElement.igaElement;
 import static edu.agh.iga.adi.giraph.core.factory.ExplicitMethodCoefficients.COEFFICIENTS;
 import static org.ojalgo.function.constant.PrimitiveMath.ADD;
@@ -41,9 +40,9 @@ public final class HorizontalElementFactory implements ElementFactory {
   }
 
   private IgaElement leafElement(Problem problem, IgaVertex vertex) {
-    final PrimitiveDenseStore ma = PrimitiveDenseStore.FACTORY.makeZero(ROWS_BOUND_TO_NODE, COLS_BOUND_TO_NODE);
-    final PrimitiveDenseStore mx = PrimitiveDenseStore.FACTORY.makeZero(ROWS_BOUND_TO_NODE, mesh.getDofsX());
-    ma.regionByLimits(3, 3).fillMatching(COEFFICIENTS);
+    final PrimitiveDenseStore ma = PrimitiveDenseStore.FACTORY.makeZero(LEAF_SIZE, LEAF_SIZE);
+    final PrimitiveDenseStore mx = PrimitiveDenseStore.FACTORY.makeZero(LEAF_SIZE, mesh.getDofsX());
+    COEFFICIENTS.supplyTo(ma);
     return igaElement(
         vertex.id(),
         ma,
@@ -60,7 +59,7 @@ public final class HorizontalElementFactory implements ElementFactory {
   }
 
   private PrimitiveDenseStore rhs(Problem problem, IgaVertex vertex) {
-    PrimitiveDenseStore ds = PrimitiveDenseStore.FACTORY.makeZero(ROWS_BOUND_TO_NODE, mesh.getDofsX());
+    PrimitiveDenseStore ds = PrimitiveDenseStore.FACTORY.makeZero(LEAF_SIZE, mesh.getDofsX());
     for (int i = 0; i < mesh.getDofsY(); i++) {
       fillRightHandSide(ds, problem, b3, vertex, 0, i);
       fillRightHandSide(ds, problem, b2, vertex, 1, i);
