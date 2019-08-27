@@ -24,12 +24,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>edu.agh.giraph</groupId>
             <artifactId>test-util</artifactId>
         </dependency>
