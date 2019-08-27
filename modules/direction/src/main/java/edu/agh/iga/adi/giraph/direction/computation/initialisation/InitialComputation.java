@@ -10,9 +10,9 @@ import org.apache.giraph.graph.Vertex;
 import org.apache.hadoop.io.LongWritable;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
-import static edu.agh.iga.adi.giraph.direction.computation.ComputationLogger.computationLog;
-import static edu.agh.iga.adi.giraph.direction.computation.ComputationLogger.logPhase;
-import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationPhase.MERGE_AND_ELIMINATE_LEAVES;
+import static edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger.computationLog;
+import static edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger.logPhase;
+import static edu.agh.iga.adi.giraph.direction.computation.factorization.IgaComputationPhase.MERGE_AND_ELIMINATE_LEAVES;
 
 /**
  * Kicks off the cascade of operations at the leaf vertices.

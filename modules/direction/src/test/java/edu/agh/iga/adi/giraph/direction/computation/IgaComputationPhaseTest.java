@@ -3,7 +3,7 @@ package edu.agh.iga.adi.giraph.direction.computation;
 import edu.agh.iga.adi.giraph.core.DirectionTree;
 import org.junit.jupiter.api.Test;
 
-import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationPhase.*;
+import static edu.agh.iga.adi.giraph.direction.computation.factorization.IgaComputationPhase.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 

@@ -5,7 +5,6 @@ import edu.agh.iga.adi.giraph.core.IgaMessage;
 import edu.agh.iga.adi.giraph.core.IgaOperation;
 import edu.agh.iga.adi.giraph.core.IgaVertex;
 import edu.agh.iga.adi.giraph.direction.computation.IgaComputation;
-import edu.agh.iga.adi.giraph.direction.computation.IgaComputationPhase;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
@@ -16,10 +15,10 @@ import org.apache.log4j.Logger;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_START;
-import static edu.agh.iga.adi.giraph.direction.computation.ComputationLogger.computationLog;
-import static edu.agh.iga.adi.giraph.direction.computation.ComputationLogger.logPhase;
 import static edu.agh.iga.adi.giraph.direction.computation.ComputationResolver.computationForStep;
-import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationPhase.phaseFor;
+import static edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger.computationLog;
+import static edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger.logPhase;
+import static edu.agh.iga.adi.giraph.direction.computation.factorization.IgaComputationPhase.phaseFor;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 

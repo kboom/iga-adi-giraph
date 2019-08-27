@@ -1,9 +1,9 @@
-package edu.agh.iga.adi.giraph.direction.computation;
+package edu.agh.iga.adi.giraph.direction.computation.factorization;
 
 import edu.agh.iga.adi.giraph.core.DirectionTree;
 
-import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationDirection.DOWN;
-import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationDirection.UP;
+import static edu.agh.iga.adi.giraph.direction.computation.factorization.IgaComputationDirection.DOWN;
+import static edu.agh.iga.adi.giraph.direction.computation.factorization.IgaComputationDirection.UP;
 
 public enum IgaComputationPhase {
   MERGE_AND_ELIMINATE_LEAVES(UP),

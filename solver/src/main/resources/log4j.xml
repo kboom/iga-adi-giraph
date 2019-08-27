@@ -42,7 +42,7 @@
         <appender-ref ref="app.file" />
     </logger>
 
-    <logger name="edu.agh.iga.adi.giraph.direction.computation.ComputationLogger" additivity="false">
+    <logger name="edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger" additivity="false">
         <level value="all" />
         <appender-ref ref="mat.file" />
     </logger>
