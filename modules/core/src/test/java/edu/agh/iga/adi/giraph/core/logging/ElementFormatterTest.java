@@ -38,7 +38,7 @@ class ElementFormatterTest {
         .withMatrixX(null)
         .build();
 
-    assertThat(formatElement(element)).isEqualTo(" |  | \n");
+    assertThat(formatElement(element)).isEqualTo("");
   }
 
   @Test

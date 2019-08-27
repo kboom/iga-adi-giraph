@@ -26,6 +26,7 @@ public class IgaElement {
     this.mx = mx;
   }
 
+  @Deprecated // todo used only in tests
   public static IgaElement igaElement(long id, int elements) {
     return new IgaElement(
         id,
