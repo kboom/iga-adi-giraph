@@ -69,37 +69,6 @@ public final class HorizontalElementFactory implements ElementFactory {
     return ds;
   }
 
-  /*
-
-  private void initializeRightHandSides(Vertex node) {
-        for (int i = 1; i <= node.mesh.getDofsY(); i++) {
-            fillRightHandSide(node, spline3, 1, i);
-            fillRightHandSide(node, spline2, 2, i);
-            fillRightHandSide(node, spline1, 3, i);
-        }
-    }
-
-    private void fillRightHandSide(Vertex node, Spline spline, int r, int i) {
-        for (int k = 1; k <= GaussPoints.GAUSS_POINT_COUNT; k++) {
-            double x = GaussPoints.GAUSS_POINTS[k] * node.mesh.getDx() + node.beginning;
-            for (int l = 1; l <= GaussPoints.GAUSS_POINT_COUNT; l++) {
-                if (i > 2) {
-                    double y = (GaussPoints.GAUSS_POINTS[l] + (i - 3)) * node.mesh.getDy();
-                    node.m_b[r][i] += GaussPoints.GAUSS_POINT_WEIGHTS[k] * spline.getValue(GaussPoints.GAUSS_POINTS[k]) * GaussPoints.GAUSS_POINT_WEIGHTS[l] * spline1.getValue(GaussPoints.GAUSS_POINTS[l]) * problem.getValue(x, y);
-                }
-                if (i > 1 && (i - 2) < node.mesh.getElementsY()) {
-                    double y = (GaussPoints.GAUSS_POINTS[l] + (i - 2)) * node.mesh.getDy();
-                    node.m_b[r][i] += GaussPoints.GAUSS_POINT_WEIGHTS[k] * spline.getValue(GaussPoints.GAUSS_POINTS[k]) * GaussPoints.GAUSS_POINT_WEIGHTS[l] * spline2.getValue(GaussPoints.GAUSS_POINTS[l]) * problem.getValue(x, y);
-                }
-                if ((i - 1) < node.mesh.getElementsY()) {
-                    double y = (GaussPoints.GAUSS_POINTS[l] + (i - 1)) * node.mesh.getDy();
-                    node.m_b[r][i] += GaussPoints.GAUSS_POINT_WEIGHTS[k] * spline.getValue(GaussPoints.GAUSS_POINTS[k]) * GaussPoints.GAUSS_POINT_WEIGHTS[l] * spline3.getValue(GaussPoints.GAUSS_POINTS[l]) * problem.getValue(x, y);
-                }
-            }
-        }
-    }
-
-   */
   private void fillRightHandSide(PrimitiveDenseStore ds, Problem problem, Spline spline, IgaVertex vertex, int r, int i) {
     for (int k = 0; k < GAUSS_POINT_COUNT; k++) {
       val x = GAUSS_POINTS[k] * mesh.getDx() + vertex.segmentOf().getLeft();
