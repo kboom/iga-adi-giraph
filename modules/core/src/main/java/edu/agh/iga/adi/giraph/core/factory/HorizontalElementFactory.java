@@ -41,13 +41,13 @@ public final class HorizontalElementFactory implements ElementFactory {
 
   private IgaElement leafElement(Problem problem, IgaVertex vertex) {
     final PrimitiveDenseStore ma = PrimitiveDenseStore.FACTORY.makeZero(LEAF_SIZE, LEAF_SIZE);
-    final PrimitiveDenseStore mx = PrimitiveDenseStore.FACTORY.makeZero(LEAF_SIZE, mesh.getDofsX());
+//    final PrimitiveDenseStore mx = PrimitiveDenseStore.FACTORY.makeZero(LEAF_SIZE, mesh.getDofsX());
     COEFFICIENTS.supplyTo(ma);
     return igaElement(
         vertex.id(),
         ma,
         rhs(problem, vertex),
-        mx
+        null
     );
   }
 

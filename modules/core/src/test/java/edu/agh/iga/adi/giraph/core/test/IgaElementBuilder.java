@@ -49,16 +49,11 @@ public class IgaElementBuilder {
   }
 
   public IgaElement build() {
-    IgaElement e = igaElement(vertex.id(), mesh.getDofsX());
-    if (ma != null) {
-      e.ma.accept(ma);
-    }
-    if (mb != null) {
-      e.mb.accept(mb);
-    }
-    if (mx != null) {
-      e.mx.accept(mx);
-    }
-    return e;
+    return igaElement(
+        vertex.id(),
+        ma,
+        mb,
+        mx
+    );
   }
 }
