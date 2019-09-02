@@ -1,22 +1,13 @@
 package edu.agh.iga.adi.giraph.direction;
 
-import edu.agh.iga.adi.giraph.core.DirectionTree;
-import edu.agh.iga.adi.giraph.core.IgaElement;
-import edu.agh.iga.adi.giraph.core.Mesh;
-import edu.agh.iga.adi.giraph.core.factory.HorizontalElementFactory;
-import edu.agh.iga.adi.giraph.core.problem.Problem;
 import edu.agh.iga.adi.giraph.direction.computation.initialisation.InitialComputation;
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
-
-import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.direction.ComputationTestRunner.whenComputation;
 import static edu.agh.iga.adi.giraph.direction.test.Problems.*;
+import static edu.agh.iga.adi.giraph.direction.test.TestElementFactory.elementsFor;
 import static edu.agh.iga.adi.giraph.direction.test.TestIgaOperationGraph.igaTestGraph;
 import static edu.agh.iga.adi.giraph.test.util.MatrixBuilder.matrixOfSize;
-import static java.util.stream.Collectors.toSet;
-import static java.util.stream.LongStream.rangeClosed;
 
 class StepComputationTest {
 
@@ -225,14 +216,6 @@ class StepComputationTest {
                 3
             )
         );
-  }
-
-  private Set<IgaElement> elementsFor(Problem problem, DirectionTree tree, Mesh mesh) {
-    HorizontalElementFactory ef = new HorizontalElementFactory(mesh);
-    return rangeClosed(1, tree.lastIndexOfLeafRow())
-        .boxed()
-        .map(id -> ef.createElement(problem, vertexOf(tree, id)))
-        .collect(toSet());
   }
 
 }
