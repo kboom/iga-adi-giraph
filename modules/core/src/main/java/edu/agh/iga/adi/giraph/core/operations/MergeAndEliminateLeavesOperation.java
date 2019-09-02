@@ -42,7 +42,7 @@ public final class MergeAndEliminateLeavesOperation implements IgaOperation<Merg
   }
 
   @Override
-  public IgaElement preConsume(IgaElement element, DirectionTree tree) {
+  public IgaElement preConsume(IgaVertex vertex, IgaContext ctx, IgaElement element) {
     return element.clean();
   }
 

@@ -24,7 +24,7 @@ public final class MergeAndEliminateRootOperation implements IgaOperation<MergeA
   }
 
   @Override
-  public IgaElement preConsume(IgaElement element, DirectionTree tree) {
+  public IgaElement preConsume(IgaVertex vertex, IgaContext ctx, IgaElement element) {
     return element.clean();
   }
 

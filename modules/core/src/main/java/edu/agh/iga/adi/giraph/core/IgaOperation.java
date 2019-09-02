@@ -37,11 +37,11 @@ public interface IgaOperation<M extends IgaMessage> {
   /**
    * Runs before any message gets consumed.
    * By default returns the element with no modification.
-   *
-   * @param element
-   * @param tree
+   *  @param vertex
+   * @param ctx
+   * @param element can be null
    */
-  default IgaElement preConsume(IgaElement element, DirectionTree tree) {
+  default IgaElement preConsume(IgaVertex vertex, IgaContext ctx, IgaElement element) {
     return element;
   }
 

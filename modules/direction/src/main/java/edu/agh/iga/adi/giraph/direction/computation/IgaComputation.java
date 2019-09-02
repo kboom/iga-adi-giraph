@@ -1,13 +1,12 @@
 package edu.agh.iga.adi.giraph.direction.computation;
 
-import edu.agh.iga.adi.giraph.core.DirectionTree;
-import edu.agh.iga.adi.giraph.core.IgaElement;
-import edu.agh.iga.adi.giraph.core.IgaMessage;
-import edu.agh.iga.adi.giraph.core.IgaOperation;
+import edu.agh.iga.adi.giraph.core.*;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import lombok.Getter;
+import lombok.experimental.Delegate;
+import lombok.val;
 import org.apache.giraph.bsp.CentralizedServiceWorker;
 import org.apache.giraph.comm.WorkerClientRequestProcessor;
 import org.apache.giraph.graph.BasicComputation;
@@ -19,13 +18,15 @@ import org.apache.hadoop.io.LongWritable;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static edu.agh.iga.adi.giraph.core.Mesh.aMesh;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
 import static java.util.stream.StreamSupport.stream;
 
 public abstract class IgaComputation extends BasicComputation<LongWritable, IgaElementWritable, IgaOperationWritable, IgaMessageWritable> {
 
   @Getter
-  private DirectionTree directionTree;
+  @Delegate
+  private IgaContext igaContext;
 
   @Override
   public void initialize(
@@ -35,13 +36,28 @@ public abstract class IgaComputation extends BasicComputation<LongWritable, IgaE
       WorkerGlobalCommUsage workerGlobalCommUsage
   ) {
     super.initialize(graphState, workerClientRequestProcessor, serviceWorker, workerGlobalCommUsage);
-    directionTree = new DirectionTree(PROBLEM_SIZE.get(getConf()));
+    val elementCount = PROBLEM_SIZE.get(getConf());
+    val directionTree = new DirectionTree(elementCount);
+    val mesh = aMesh().withElements(elementCount).build();
+
+    igaContext = IgaContext.builder()
+        .tree(directionTree)
+        .mesh(mesh)
+        .build();
   }
 
   protected Optional<IgaOperation> operationOf(Iterable<IgaMessageWritable> messages) {
     return messagesOf(messages)
         .map(IgaMessage::getOperation)
         .findFirst();
+  }
+
+  protected IgaVertex vertexOf(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
+    return vertexOf(vertex.getId().get());
+  }
+
+  protected IgaVertex vertexOf(long vertexId) {
+    return IgaVertex.vertexOf(getTree(), vertexId);
   }
 
   protected static IgaElement elementOf(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {

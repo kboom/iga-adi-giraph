@@ -9,7 +9,6 @@ import lombok.val;
 import org.apache.giraph.graph.Vertex;
 import org.apache.hadoop.io.LongWritable;
 
-import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger.computationLog;
 import static edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger.logPhase;
 import static edu.agh.iga.adi.giraph.direction.computation.factorization.IgaComputationPhase.MERGE_AND_ELIMINATE_LEAVES;
@@ -30,14 +29,14 @@ public final class InitialComputation extends IgaComputation {
       Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex,
       Iterable<IgaMessageWritable> messages
   ) {
-    val igaVertex = vertexOf(getDirectionTree(), vertex.getId().get());
+    val igaVertex = vertexOf(vertex);
     val edges = vertex.getEdges();
 
     if (igaVertex.is(LeafVertex.class)) {
       val element = vertex.getValue().getElement();
       edges.forEach(edge -> {
         val dstId = edge.getTargetVertexId();
-        val dstVertex = vertexOf(getDirectionTree(), dstId.get());
+        val dstVertex = vertexOf(dstId.get());
         val igaOperation = edge.getValue().getIgaOperation();
         sendMessage(dstId, new IgaMessageWritable(igaOperation.sendMessage(dstVertex, element)));
       });
