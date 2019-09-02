@@ -2,6 +2,7 @@ package edu.agh.iga.adi.giraph.core.factory;
 
 import edu.agh.iga.adi.giraph.core.IgaElement;
 import edu.agh.iga.adi.giraph.core.IgaVertex;
+import edu.agh.iga.adi.giraph.core.IgaVertex.BranchVertex;
 import edu.agh.iga.adi.giraph.core.IgaVertex.LeafVertex;
 import edu.agh.iga.adi.giraph.core.Mesh;
 import edu.agh.iga.adi.giraph.core.problem.Problem;
@@ -13,11 +14,11 @@ import lombok.val;
 import org.ojalgo.matrix.store.PrimitiveDenseStore;
 
 import static edu.agh.iga.adi.giraph.core.GaussPoints.*;
-import static edu.agh.iga.adi.giraph.core.IgaConstants.COLS_BOUND_TO_NODE;
-import static edu.agh.iga.adi.giraph.core.IgaConstants.ROWS_BOUND_TO_NODE;
+import static edu.agh.iga.adi.giraph.core.IgaConstants.*;
 import static edu.agh.iga.adi.giraph.core.IgaElement.igaElement;
 import static edu.agh.iga.adi.giraph.core.factory.ExplicitMethodCoefficients.COEFFICIENTS;
 import static org.ojalgo.function.constant.PrimitiveMath.ADD;
+import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
 public final class HorizontalElementFactory implements ElementFactory {
 
@@ -35,20 +36,28 @@ public final class HorizontalElementFactory implements ElementFactory {
   public IgaElement createElement(Problem problem, IgaVertex vertex) {
     if (vertex.is(LeafVertex.class)) {
       return leafElement(problem, vertex);
-    } else {
-      return emptyElement(vertex);
     }
+    if (vertex.is(BranchVertex.class)) {
+      return branchElement(vertex);
+    }
+    return emptyElement(vertex);
+  }
+
+  private IgaElement branchElement(IgaVertex vertex) {
+    val ma = FACTORY.makeZero(5, 5);
+    val mb = FACTORY.makeZero(5, mesh.getDofsX());
+    val mx = FACTORY.makeZero(5, mesh.getDofsX());
+    return igaElement(vertex.id(), ma, mb, mx);
   }
 
   private IgaElement leafElement(Problem problem, IgaVertex vertex) {
-    final PrimitiveDenseStore ma = PrimitiveDenseStore.FACTORY.makeZero(ROWS_BOUND_TO_NODE, COLS_BOUND_TO_NODE);
-    final PrimitiveDenseStore mx = PrimitiveDenseStore.FACTORY.makeZero(ROWS_BOUND_TO_NODE, mesh.getDofsX());
-    ma.regionByLimits(3, 3).fillMatching(COEFFICIENTS);
+    val ma = PrimitiveDenseStore.FACTORY.makeZero(LEAF_SIZE, LEAF_SIZE);
+    COEFFICIENTS.supplyTo(ma);
     return igaElement(
         vertex.id(),
         ma,
         rhs(problem, vertex),
-        mx
+        null
     );
   }
 
@@ -60,7 +69,7 @@ public final class HorizontalElementFactory implements ElementFactory {
   }
 
   private PrimitiveDenseStore rhs(Problem problem, IgaVertex vertex) {
-    PrimitiveDenseStore ds = PrimitiveDenseStore.FACTORY.makeZero(ROWS_BOUND_TO_NODE, mesh.getDofsX());
+    PrimitiveDenseStore ds = PrimitiveDenseStore.FACTORY.makeZero(LEAF_SIZE, mesh.getDofsX());
     for (int i = 0; i < mesh.getDofsY(); i++) {
       fillRightHandSide(ds, problem, b3, vertex, 0, i);
       fillRightHandSide(ds, problem, b2, vertex, 1, i);
@@ -69,37 +78,6 @@ public final class HorizontalElementFactory implements ElementFactory {
     return ds;
   }
 
-  /*
-
-  private void initializeRightHandSides(Vertex node) {
-        for (int i = 1; i <= node.mesh.getDofsY(); i++) {
-            fillRightHandSide(node, spline3, 1, i);
-            fillRightHandSide(node, spline2, 2, i);
-            fillRightHandSide(node, spline1, 3, i);
-        }
-    }
-
-    private void fillRightHandSide(Vertex node, Spline spline, int r, int i) {
-        for (int k = 1; k <= GaussPoints.GAUSS_POINT_COUNT; k++) {
-            double x = GaussPoints.GAUSS_POINTS[k] * node.mesh.getDx() + node.beginning;
-            for (int l = 1; l <= GaussPoints.GAUSS_POINT_COUNT; l++) {
-                if (i > 2) {
-                    double y = (GaussPoints.GAUSS_POINTS[l] + (i - 3)) * node.mesh.getDy();
-                    node.m_b[r][i] += GaussPoints.GAUSS_POINT_WEIGHTS[k] * spline.getValue(GaussPoints.GAUSS_POINTS[k]) * GaussPoints.GAUSS_POINT_WEIGHTS[l] * spline1.getValue(GaussPoints.GAUSS_POINTS[l]) * problem.getValue(x, y);
-                }
-                if (i > 1 && (i - 2) < node.mesh.getElementsY()) {
-                    double y = (GaussPoints.GAUSS_POINTS[l] + (i - 2)) * node.mesh.getDy();
-                    node.m_b[r][i] += GaussPoints.GAUSS_POINT_WEIGHTS[k] * spline.getValue(GaussPoints.GAUSS_POINTS[k]) * GaussPoints.GAUSS_POINT_WEIGHTS[l] * spline2.getValue(GaussPoints.GAUSS_POINTS[l]) * problem.getValue(x, y);
-                }
-                if ((i - 1) < node.mesh.getElementsY()) {
-                    double y = (GaussPoints.GAUSS_POINTS[l] + (i - 1)) * node.mesh.getDy();
-                    node.m_b[r][i] += GaussPoints.GAUSS_POINT_WEIGHTS[k] * spline.getValue(GaussPoints.GAUSS_POINTS[k]) * GaussPoints.GAUSS_POINT_WEIGHTS[l] * spline3.getValue(GaussPoints.GAUSS_POINTS[l]) * problem.getValue(x, y);
-                }
-            }
-        }
-    }
-
-   */
   private void fillRightHandSide(PrimitiveDenseStore ds, Problem problem, Spline spline, IgaVertex vertex, int r, int i) {
     for (int k = 0; k < GAUSS_POINT_COUNT; k++) {
       val x = GAUSS_POINTS[k] * mesh.getDx() + vertex.segmentOf().getLeft();

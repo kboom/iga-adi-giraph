@@ -18,13 +18,13 @@ public final class MergeAndEliminateBranchOperation implements IgaOperation<Merg
   public MergeAndEliminateBranchMessage sendMessage(IgaVertex dstId, IgaElement element) {
     return new MergeAndEliminateBranchMessage(
         element.id,
-        element.ma.regionByLimits(5, 5).regionByOffsets(1, 1),
+        element.ma.regionByOffsets(1, 1),
         element.mb.regionByRows(1, 2, 3, 4)
     );
   }
 
   @Override
-  public IgaElement preConsume(IgaElement element, DirectionTree tree) {
+  public IgaElement preConsume(IgaVertex vertex, IgaContext ctx, IgaElement element) {
     return element.clean();
   }
 

@@ -6,32 +6,38 @@ import org.ojalgo.structure.Access2D;
 
 import java.text.DecimalFormat;
 
+import static java.lang.Math.max;
+import static java.util.Optional.ofNullable;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
 public class ElementFormatter {
 
   private static final String LINE_SEPARATOR = System.lineSeparator();
 
   private static final DecimalFormat SIMPLIED_FORMAT = new DecimalFormat("#.###");
+  private static final String[] EMPTY_ARRAY = new String[0];
+  private static final String MISSING_VALUE_ROW = "x";
 
   public static String formatElement(IgaElement element) {
     return glueElements(
-        formatMatrix(element.ma),
-        formatMatrix(element.mx),
-        formatMatrix(element.mb)
+        ofNullable(element.ma).map(ElementFormatter::formatMatrix).orElse(""),
+        ofNullable(element.mx).map(ElementFormatter::formatMatrix).orElse(""),
+        ofNullable(element.mb).map(ElementFormatter::formatMatrix).orElse("")
     );
   }
 
   private static String glueElements(String ma, String mb, String mx) {
-    String[] mar = ma.split(LINE_SEPARATOR);
-    String[] mbr = mb.split(LINE_SEPARATOR);
-    String[] mxr = mx.split(LINE_SEPARATOR);
+    String[] mar = isNotEmpty(ma) ? ma.split(LINE_SEPARATOR) : EMPTY_ARRAY;
+    String[] mbr = isNotEmpty(mb) ? mb.split(LINE_SEPARATOR) : EMPTY_ARRAY;
+    String[] mxr = isNotEmpty(mx) ? mx.split(LINE_SEPARATOR) : EMPTY_ARRAY;
 
     StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < mar.length; i++) {
-      sb.append(mar[i]);
+    for (int i = 0; i < max(mbr.length, max(mxr.length, mar.length)); i++) {
+      sb.append(mar.length > i ? mar[i] : MISSING_VALUE_ROW);
       sb.append(" | ");
-      sb.append(mxr[i]);
+      sb.append(mxr.length > i ? mxr[i] : MISSING_VALUE_ROW);
       sb.append(" | ");
-      sb.append(mbr[i]);
+      sb.append(mbr.length > i ? mbr[i] : MISSING_VALUE_ROW);
       sb.append(LINE_SEPARATOR);
     }
     return sb.toString();
@@ -48,7 +54,7 @@ public class ElementFormatter {
     for (int j = 0; j < tmpColDim; j++) {
       for (int i = 0; i < tmpRowDim; i++) {
         tmpElementString = SIMPLIED_FORMAT.format(matrix.get(i, j));
-        tmpWidth = Math.max(tmpWidth, tmpElementString.length());
+        tmpWidth = max(tmpWidth, tmpElementString.length());
         tmpElements[i][j] = tmpElementString;
       }
     }

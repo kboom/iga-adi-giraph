@@ -21,13 +21,10 @@ class HorizontalElementFactoryTest {
     // then
     assertThatElement(element)
         .hasMaAbout(
-            matrixOfSize(6, 6).withValues(
-                0.05, 0.108333, 0.008333, 0, 0, 0,
-                0.108333, 0.45, 0.108333, 0, 0, 0,
-                0.008333, 0.108333, 0.05, 0, 0, 0,
-                0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0
+            matrixOfSize(3).withValues(
+                0.05, 0.108333, 0.008333,
+                0.108333, 0.45, 0.108333,
+                0.008333, 0.108333, 0.05
             )
         );
 //        .hasMbAbout(

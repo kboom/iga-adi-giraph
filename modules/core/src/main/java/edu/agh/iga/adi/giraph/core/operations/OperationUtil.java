@@ -62,25 +62,26 @@ final class OperationUtil {
 
    */
   static void partialForwardElimination(IgaElement e, int elim, int size) {
+    final int rows = (int) e.mx.countRows();
     final int nrhs = (int) e.mx.countColumns();
     final double[] ma = e.ma.data; // column-major
     final double[] mb = e.mb.data; // column-major
 
     for (int irow = 0; irow < elim; irow++) {
-      double diag = ma[irow * ROWS + irow];
+      double diag = ma[irow * rows + irow];
       for (int icol = irow; icol < size; icol++) {
-        ma[ROWS * icol + irow] /= diag;
+        ma[rows * icol + irow] /= diag;
       }
       for (int irhs = 0; irhs < nrhs; irhs++) {
-        mb[irow + irhs * ROWS] /= diag; // ?
+        mb[irow + irhs * rows] /= diag; // ?
       }
       for (int isub = irow + 1; isub < size; isub++) {
-        double mult = ma[irow * ROWS + isub];
+        double mult = ma[irow * rows + isub];
         for (int icol = irow; icol < size; icol++) {
-          ma[icol * ROWS + isub] -= ma[icol * ROWS + irow] * mult;
+          ma[icol * rows + isub] -= ma[icol * rows + irow] * mult;
         }
         for (int irhs = 0; irhs < nrhs; irhs++) {
-          mb[irhs * ROWS + isub] -= mb[irhs * ROWS + irow] * mult;
+          mb[irhs * rows + isub] -= mb[irhs * rows + irow] * mult;
         }
       }
     }

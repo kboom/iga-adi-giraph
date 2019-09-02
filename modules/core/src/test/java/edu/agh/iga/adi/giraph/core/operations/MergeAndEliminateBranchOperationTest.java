@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateBranchOperation.MERGE_AND_ELIMINATE_BRANCH_OPERATION;
 import static edu.agh.iga.adi.giraph.core.test.IgaElementBuilder.elementFor;
-import static edu.agh.iga.adi.giraph.core.test.SmallProblem.BRANCH;
+import static edu.agh.iga.adi.giraph.core.test.SmallProblem.*;
 import static edu.agh.iga.adi.giraph.core.test.assertion.IgaElementAssertions.assertThatElement;
 import static edu.agh.iga.adi.giraph.test.util.MatrixBuilder.matrixOfSize;
 import static edu.agh.iga.adi.giraph.test.util.assertion.TransformableRegionAssertions.assertThatRegion;
@@ -17,23 +17,22 @@ class MergeAndEliminateBranchOperationTest {
 
   @Test
   void messageContainsSourceId() {
-    assertThat(messageSentFrom(elementFor(SmallProblem.LEAF, SmallProblem.MESH).build()))
+    assertThat(messageSentFrom(elementFor(LEAF, MESH).build()))
         .extracting(MergeAndEliminateBranchMessage::getSrcId)
-        .isEqualTo(SmallProblem.LEAF_ID);
+        .isEqualTo(LEAF_ID);
   }
 
   @Test
   void messageContainsFragmentOfCoefficientMatrix() {
     assertThatRegion(messageSentFrom(
-        elementFor(BRANCH, SmallProblem.MESH)
+        elementFor(BRANCH, MESH)
             .withSpecificMatrixA(
-                matrixOfSize(6, 6).withValues(
-                    11, 12, 13, 14, 15, 16,
-                    21, 22, 23, 24, 25, 26,
-                    31, 32, 33, 34, 35, 36,
-                    41, 42, 43, 44, 45, 46,
-                    51, 52, 53, 54, 55, 56,
-                    61, 62, 63, 64, 65, 66
+                matrixOfSize(5, 5).withValues(
+                    11, 12, 13, 14, 15,
+                    21, 22, 23, 24, 25,
+                    31, 32, 33, 34, 35,
+                    41, 42, 43, 44, 45,
+                    51, 52, 53, 54, 55
                 ))
     ).getMa())
         .isOfSize(4, 4)
@@ -49,7 +48,7 @@ class MergeAndEliminateBranchOperationTest {
 
   @Test
   void canConsumeMessageFromLeftBranch() {
-    IgaElement element = elementFor(SmallProblem.INTERIM, SmallProblem.MESH)
+    IgaElement element = elementFor(SmallProblem.INTERIM, MESH)
         .withMatrixA(matrixOfSize(6, 6).withValue(1000))
         .withMatrixB(matrixOfSize(6, 14).withValue(1000))
         .build();
@@ -72,22 +71,20 @@ class MergeAndEliminateBranchOperationTest {
 
     assertThatElement(elementAfterConsuming(element, msg))
         .hasMa(
-            matrixOfSize(6, 6).withValues(
-                1022, 1023, 1024, 1025, 1000, 1000,
-                1032, 1033, 1034, 1035, 1000, 1000,
-                1042, 1043, 1044, 1045, 1000, 1000,
-                1052, 1053, 1054, 1055, 1000, 1000,
-                1000, 1000, 1000, 1000, 1000, 1000,
-                1000, 1000, 1000, 1000, 1000, 1000
+            matrixOfSize(5, 5).withValues(
+                1022, 1023, 1024, 1025, 1000,
+                1032, 1033, 1034, 1035, 1000,
+                1042, 1043, 1044, 1045, 1000,
+                1052, 1053, 1054, 1055, 1000,
+                1000, 1000, 1000, 1000, 1000
             )
         )
         .hasMb(
-            matrixOfSize(6, 14).withValues(
+            matrixOfSize(5, 14).withValues(
                 1001.01, 1001.02, 1001.03, 1001.04, 1001.05, 1001.06, 1001.07, 1001.08, 1001.09, 1001.10, 1001.11, 1001.12, 1001.13, 1001.14,
                 1002.01, 1002.02, 1002.03, 1002.04, 1002.05, 1002.06, 1002.07, 1002.08, 1002.09, 1002.10, 1002.11, 1002.12, 1002.13, 1002.14,
                 1003.01, 1003.02, 1003.03, 1003.04, 1003.05, 1003.06, 1003.07, 1003.08, 1003.09, 1003.10, 1003.11, 1003.12, 1003.13, 1003.14,
                 1004.01, 1004.02, 1004.03, 1004.04, 1004.05, 1004.06, 1004.07, 1004.08, 1004.09, 1004.10, 1004.11, 1004.12, 1004.13, 1004.14,
-                1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00,
                 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00
             )
         );
@@ -95,7 +92,7 @@ class MergeAndEliminateBranchOperationTest {
 
   @Test
   void canConsumeMessageFromRightBranch() {
-    IgaElement element = elementFor(SmallProblem.INTERIM, SmallProblem.MESH)
+    IgaElement element = elementFor(SmallProblem.INTERIM, MESH)
         .withMatrixA(matrixOfSize(6, 6).withValue(1000))
         .withMatrixB(matrixOfSize(6, 14).withValue(1000))
         .build();
@@ -118,30 +115,28 @@ class MergeAndEliminateBranchOperationTest {
 
     assertThatElement(elementAfterConsuming(element, msg))
         .hasMa(
-            matrixOfSize(6, 6).withValues(
-                1000, 1000, 1000, 1000, 1000, 1000,
-                1000, 1000, 1000, 1000, 1000, 1000,
-                1000, 1000, 1022, 1023, 1024, 1025,
-                1000, 1000, 1032, 1033, 1034, 1035,
-                1000, 1000, 1042, 1043, 1044, 1045,
-                1000, 1000, 1052, 1053, 1054, 1055
+            matrixOfSize(5, 5).withValues(
+                1000, 1000, 1000, 1000, 1000,
+                1000, 1000, 1000, 1000, 1000,
+                1000, 1000, 1022, 1023, 1024,
+                1000, 1000, 1032, 1033, 1034,
+                1000, 1000, 1042, 1043, 1044
             )
         )
         .hasMb(
-            matrixOfSize(6, 14).withValues(
+            matrixOfSize(5, 14).withValues(
                 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00,
                 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00, 1000.00,
                 1001.01, 1001.02, 1001.03, 1001.04, 1001.05, 1001.06, 1001.07, 1001.08, 1001.09, 1001.10, 1001.11, 1001.12, 1001.13, 1001.14,
                 1002.01, 1002.02, 1002.03, 1002.04, 1002.05, 1002.06, 1002.07, 1002.08, 1002.09, 1002.10, 1002.11, 1002.12, 1002.13, 1002.14,
-                1003.01, 1003.02, 1003.03, 1003.04, 1003.05, 1003.06, 1003.07, 1003.08, 1003.09, 1003.10, 1003.11, 1003.12, 1003.13, 1003.14,
-                1004.01, 1004.02, 1004.03, 1004.04, 1004.05, 1004.06, 1004.07, 1004.08, 1004.09, 1004.10, 1004.11, 1004.12, 1004.13, 1004.14
+                1003.01, 1003.02, 1003.03, 1003.04, 1003.05, 1003.06, 1003.07, 1003.08, 1003.09, 1003.10, 1003.11, 1003.12, 1003.13, 1003.14
             )
         );
   }
 
   @Test
   void canProcess() {
-    IgaElement element = elementFor(SmallProblem.INTERIM, SmallProblem.MESH)
+    IgaElement element = elementFor(SmallProblem.INTERIM, MESH)
         .withMatrixA(
             matrixOfSize(6, 6).withValues(
                 1, 1, 1, 1, 1, -1,
@@ -208,16 +203,16 @@ class MergeAndEliminateBranchOperationTest {
   }
 
   private MergeAndEliminateBranchMessage messageSentFrom(IgaElement element) {
-    return MERGE_AND_ELIMINATE_BRANCH_OPERATION.sendMessage(SmallProblem.LEFT_BRANCH, element);
+    return MERGE_AND_ELIMINATE_BRANCH_OPERATION.sendMessage(LEFT_BRANCH, element);
   }
 
   private IgaElement elementAfterConsuming(IgaElement element, MergeAndEliminateBranchMessage msg) {
-    MERGE_AND_ELIMINATE_BRANCH_OPERATION.consumeMessage(element, msg, SmallProblem.DIRECTION_TREE);
+    MERGE_AND_ELIMINATE_BRANCH_OPERATION.consumeMessage(element, msg, DIRECTION_TREE);
     return element;
   }
 
   private IgaElement elementAfterProcessing(IgaElement element) {
-    MERGE_AND_ELIMINATE_BRANCH_OPERATION.postConsume(element, SmallProblem.DIRECTION_TREE);
+    MERGE_AND_ELIMINATE_BRANCH_OPERATION.postConsume(element, DIRECTION_TREE);
     return element;
   }
 

@@ -5,11 +5,15 @@ import lombok.Getter;
 import lombok.val;
 import org.ojalgo.matrix.store.TransformableRegion;
 
+import static edu.agh.iga.adi.giraph.core.IgaConstants.LEAF_SIZE;
+import static edu.agh.iga.adi.giraph.core.IgaElement.igaElement;
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
+import static edu.agh.iga.adi.giraph.core.factory.ExplicitMethodCoefficients.COEFFICIENTS;
 import static edu.agh.iga.adi.giraph.core.operations.transposition.TranspositionIgaOperation.TranspositionIgaMessage;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static org.ojalgo.function.constant.PrimitiveMath.MULTIPLY;
+import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
 public final class TranspositionIgaOperation implements IgaOperation<TranspositionIgaMessage> {
 
@@ -28,6 +32,18 @@ public final class TranspositionIgaOperation implements IgaOperation<Transpositi
   }
 
   @Override
+  public IgaElement preConsume(IgaVertex vertex, IgaContext ctx, IgaElement element) {
+    val ma = FACTORY.makeZero(LEAF_SIZE, LEAF_SIZE);
+    COEFFICIENTS.supplyTo(ma);
+    return igaElement(
+        vertex.id(),
+        ma,
+        FACTORY.makeZero(LEAF_SIZE, ctx.getMesh().getDofsY()),
+        null
+    );
+  }
+
+  @Override
   public void consumeMessage(IgaElement element, TranspositionIgaMessage message, DirectionTree tree) {
     val srcId = (int) message.getSrcId();
     val mxp = message.mxp;
@@ -41,15 +57,6 @@ public final class TranspositionIgaOperation implements IgaOperation<Transpositi
         .regionByLimits(3, mo + (int) mxp.countRows());
 
     targetBlock.fillMatching(pp, MULTIPLY, mxp.regionByTransposing());
-
-//    targetBlock.fillByMultiplying(pp, mxp.regionByTransposing());
-
-    // ((PrimitiveDenseStore) mxp).premultiply(pp).supplyTo(targetBlock);
-  }
-
-  @Override
-  public void postConsume(IgaElement element, DirectionTree tree) {
-
   }
 
   private boolean isLeading(IgaVertex dst, IgaElement element) {

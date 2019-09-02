@@ -25,7 +25,7 @@ public final class MergeAndEliminateInterimOperation implements IgaOperation<Mer
   }
 
   @Override
-  public IgaElement preConsume(IgaElement element, DirectionTree tree) {
+  public IgaElement preConsume(IgaVertex vertex, IgaContext ctx, IgaElement element) {
     return element.clean();
   }
 

@@ -1,4 +1,4 @@
-package edu.agh.iga.adi.giraph.direction.computation;
+package edu.agh.iga.adi.giraph.direction.computation.factorization;
 
 import edu.agh.iga.adi.giraph.core.IgaElement;
 import org.apache.log4j.Logger;
@@ -6,9 +6,9 @@ import org.apache.log4j.Logger;
 import static edu.agh.iga.adi.giraph.core.logging.ElementFormatter.formatElement;
 import static java.lang.String.format;
 
-public final class ComputationLogger {
+public final class FactorizationLogger {
 
-  private static final Logger LOG = Logger.getLogger(ComputationLogger.class);
+  private static final Logger LOG = Logger.getLogger(FactorizationLogger.class);
   private static final String SEPARATOR = " ===================================== ";
 
   public static void logPhase(IgaComputationPhase phase) {

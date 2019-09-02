@@ -5,7 +5,9 @@ import edu.agh.iga.adi.giraph.core.IgaVertex;
 import edu.agh.iga.adi.giraph.core.Mesh;
 import org.ojalgo.matrix.store.PrimitiveDenseStore;
 
+import static edu.agh.iga.adi.giraph.core.IgaConstants.ROWS_BOUND_TO_NODE;
 import static edu.agh.iga.adi.giraph.core.IgaElement.igaElement;
+import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
 public class IgaElementBuilder {
 
@@ -19,6 +21,9 @@ public class IgaElementBuilder {
   private IgaElementBuilder(IgaVertex vertex, Mesh mesh) {
     this.vertex = vertex;
     this.mesh = mesh;
+    ma = FACTORY.makeZero(ROWS_BOUND_TO_NODE, ROWS_BOUND_TO_NODE);
+    mb = FACTORY.makeZero(ROWS_BOUND_TO_NODE, mesh.getDofsX());
+    mx = FACTORY.makeZero(ROWS_BOUND_TO_NODE, mesh.getDofsX());
   }
 
   public static IgaElementBuilder elementFor(IgaVertex vertex, Mesh mesh) {
@@ -49,16 +54,11 @@ public class IgaElementBuilder {
   }
 
   public IgaElement build() {
-    IgaElement e = igaElement(vertex.id(), mesh.getDofsX());
-    if (ma != null) {
-      e.ma.accept(ma);
-    }
-    if (mb != null) {
-      e.mb.accept(mb);
-    }
-    if (mx != null) {
-      e.mx.accept(mx);
-    }
-    return e;
+    return igaElement(
+        vertex.id(),
+        ma,
+        mb,
+        mx
+    );
   }
 }

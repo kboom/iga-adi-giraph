@@ -1,22 +1,13 @@
 package edu.agh.iga.adi.giraph.direction;
 
-import edu.agh.iga.adi.giraph.core.DirectionTree;
-import edu.agh.iga.adi.giraph.core.IgaElement;
-import edu.agh.iga.adi.giraph.core.Mesh;
-import edu.agh.iga.adi.giraph.core.factory.HorizontalElementFactory;
-import edu.agh.iga.adi.giraph.core.problem.Problem;
 import edu.agh.iga.adi.giraph.direction.computation.initialisation.InitialComputation;
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
-
-import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.direction.ComputationTestRunner.whenComputation;
 import static edu.agh.iga.adi.giraph.direction.test.Problems.*;
+import static edu.agh.iga.adi.giraph.direction.test.TestElementFactory.elementsFor;
 import static edu.agh.iga.adi.giraph.direction.test.TestIgaOperationGraph.igaTestGraph;
 import static edu.agh.iga.adi.giraph.test.util.MatrixBuilder.matrixOfSize;
-import static java.util.stream.Collectors.toSet;
-import static java.util.stream.LongStream.rangeClosed;
 
 class StepComputationTest {
 
@@ -28,13 +19,12 @@ class StepComputationTest {
         .thenAssertThatGraph(assertions ->
             assertions.allBranchElementsHaveUnknowns(
                 TREE_12,
-                matrixOfSize(6, 14).withValues(
+                matrixOfSize(5, 14).withValues(
                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
                 ),
                 3
             )
@@ -49,13 +39,12 @@ class StepComputationTest {
         .thenAssertThatGraph(assertions ->
             assertions.allBranchElementsHaveUnknowns(
                 TREE_24,
-                matrixOfSize(6, 26).withValues(
+                matrixOfSize(5, 26).withValues(
                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
                 ),
                 3
             )
@@ -70,13 +59,12 @@ class StepComputationTest {
         .thenAssertThatGraph(assertions ->
             assertions.allBranchElementsHaveUnknowns(
                 TREE_12,
-                matrixOfSize(6, 14).withValues(
+                matrixOfSize(5, 14).withValues(
                     -0.5, 0.5, 1.5, 2.5, 3.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5,
                     -0.5, 0.5, 1.5, 2.5, 3.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5,
                     -0.5, 0.5, 1.5, 2.5, 3.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5,
                     -0.5, 0.5, 1.5, 2.5, 3.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5,
-                    -0.5, 0.5, 1.5, 2.5, 3.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                    -0.5, 0.5, 1.5, 2.5, 3.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5
                 ),
                 3
             )
@@ -92,49 +80,45 @@ class StepComputationTest {
             assertions
                 .hasElementWithUnknowns(
                     4L,
-                    matrixOfSize(6, 14).withValues(
+                    matrixOfSize(5, 14).withValues(
                         -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5,
                         0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
                         1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5,
                         2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5,
-                        3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5,
-                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5
                     ),
                     3
                 )
                 .hasElementWithUnknowns(
                     5L,
-                    matrixOfSize(6, 14).withValues(
+                    matrixOfSize(5, 14).withValues(
                         2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5,
                         3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5,
                         4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5,
                         5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5,
-                        6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5,
-                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5
                     ),
                     3
                 )
                 .hasElementWithUnknowns(
                     6L,
-                    matrixOfSize(6, 14).withValues(
+                    matrixOfSize(5, 14).withValues(
                         5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5,
                         6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5,
                         7.5, 7.5, 7.5, 7.5, 7.5, 7.5, 7.5, 7.5, 7.5, 7.5, 7.5, 7.5, 7.5, 7.5,
                         8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5,
-                        9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5,
-                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5
                     ),
                     3
                 )
                 .hasElementWithUnknowns(
                     7L,
-                    matrixOfSize(6, 14).withValues(
+                    matrixOfSize(5, 14).withValues(
                         8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5,
                         9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5,
                         10.5, 10.5, 10.5, 10.5, 10.5, 10.5, 10.5, 10.5, 10.5, 10.5, 10.5, 10.5, 10.5, 10.5,
                         11.5, 11.5, 11.5, 11.5, 11.5, 11.5, 11.5, 11.5, 11.5, 11.5, 11.5, 11.5, 11.5, 11.5,
-                        12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5,
-                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5
                     ),
                     3
                 )
@@ -150,49 +134,45 @@ class StepComputationTest {
             assertions
                 .hasElementWithUnknowns(
                     4L,
-                    matrixOfSize(6, 14).withValues(
+                    matrixOfSize(5, 14).withValues(
                         -1, 0, 1, 2, 3, 3, 4, 5, 6, 7, 8, 9, 10, 11,
                         -0, 1, 2, 3, 4, 4, 5, 6, 7, 8, 9, 10, 11, 12,
                         1, 2, 3, 4, 5, 5, 6, 7, 8, 9, 10, 11, 12, 13,
                         2, 3, 4, 5, 6, 6, 7, 8, 9, 10, 11, 12, 13, 14,
-                        3, 4, 5, 6, 7, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        3, 4, 5, 6, 7, 7, 8, 9, 10, 11, 12, 13, 14, 15
                     ),
                     3
                 )
                 .hasElementWithUnknowns(
                     5L,
-                    matrixOfSize(6, 14).withValues(
+                    matrixOfSize(5, 14).withValues(
                         2, 3, 4, 5, 6, 6, 7, 8, 9, 10, 11, 12, 13, 14,
                         3, 4, 5, 6, 7, 7, 8, 9, 10, 11, 12, 13, 14, 15,
                         4, 5, 6, 7, 8, 8, 9, 10, 11, 12, 13, 14, 15, 16,
                         5, 6, 7, 8, 9, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-                        6, 7, 8, 9, 10, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        6, 7, 8, 9, 10, 10, 11, 12, 13, 14, 15, 16, 17, 18
                     ),
                     3
                 )
                 .hasElementWithUnknowns(
                     6L,
-                    matrixOfSize(6, 14).withValues(
+                    matrixOfSize(5, 14).withValues(
                         5, 6, 7, 8, 9, 9, 10, 11, 12, 13, 14, 15, 16, 17,
                         6, 7, 8, 9, 10, 10, 11, 12, 13, 14, 15, 16, 17, 18,
                         7, 8, 9, 10, 11, 11, 12, 13, 14, 15, 16, 17, 18, 19,
                         8, 9, 10, 11, 12, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-                        9, 10, 11, 12, 13, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        9, 10, 11, 12, 13, 13, 14, 15, 16, 17, 18, 19, 20, 21
                     ),
                     3
                 )
                 .hasElementWithUnknowns(
                     7L,
-                    matrixOfSize(6, 14).withValues(
+                    matrixOfSize(5, 14).withValues(
                         8, 9, 10, 11, 12, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                         9, 10, 11, 12, 13, 13, 14, 15, 16, 17, 18, 19, 20, 21,
                         10, 11, 12, 13, 14, 14, 15, 16, 17, 18, 19, 20, 21, 22,
                         11, 12, 13, 14, 15, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-                        12, 13, 14, 15, 16, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        12, 13, 14, 15, 16, 16, 17, 18, 19, 20, 21, 22, 23, 24
                     ),
                     3
                 )
@@ -225,14 +205,6 @@ class StepComputationTest {
                 3
             )
         );
-  }
-
-  private Set<IgaElement> elementsFor(Problem problem, DirectionTree tree, Mesh mesh) {
-    HorizontalElementFactory ef = new HorizontalElementFactory(mesh);
-    return rangeClosed(1, tree.lastIndexOfLeafRow())
-        .boxed()
-        .map(id -> ef.createElement(problem, vertexOf(tree, id)))
-        .collect(toSet());
   }
 
 }

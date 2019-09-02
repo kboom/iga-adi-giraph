@@ -1,7 +1,6 @@
 package edu.agh.iga.adi.giraph.direction.io.data;
 
 import edu.agh.iga.adi.giraph.core.IgaMessage;
-import edu.agh.iga.adi.giraph.core.operations.transposition.TranspositionIgaOperation;
 import edu.agh.iga.adi.giraph.direction.io.data.message.MessageSerializerFacade;
 import org.apache.hadoop.io.WritableComparable;
 

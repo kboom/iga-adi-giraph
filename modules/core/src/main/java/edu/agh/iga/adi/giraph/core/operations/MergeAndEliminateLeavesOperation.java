@@ -18,8 +18,8 @@ public final class MergeAndEliminateLeavesOperation implements IgaOperation<Merg
   public MergeAndEliminateLeavesMessage sendMessage(IgaVertex dst, IgaElement element) {
     return new MergeAndEliminateLeavesMessage(
         element.id,
-        element.ma.regionByLimits(3, 3), // todo is this really inclusive/inclusive?
-        element.mb.regionByRows(0, 1, 2) // todo is this really inclusive/inclusive?
+        element.ma,
+        element.mb
     );
   }
 
@@ -42,7 +42,7 @@ public final class MergeAndEliminateLeavesOperation implements IgaOperation<Merg
   }
 
   @Override
-  public IgaElement preConsume(IgaElement element, DirectionTree tree) {
+  public IgaElement preConsume(IgaVertex vertex, IgaContext ctx, IgaElement element) {
     return element.clean();
   }
 
