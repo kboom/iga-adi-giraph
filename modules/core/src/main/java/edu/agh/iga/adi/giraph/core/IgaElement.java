@@ -46,9 +46,15 @@ public class IgaElement {
   }
 
   public IgaElement clean() {
-    ma.reset();
-    mb.reset();
-    mx.reset();
+    if (ma != null) {
+      ma.reset();
+    }
+    if (mb != null) {
+      mb.reset();
+    }
+    if (mx != null) {
+      mx.reset();
+    }
     return this;
   }
 

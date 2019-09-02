@@ -47,7 +47,7 @@ public final class FactorisationComputation extends IgaComputation {
     }
 
 
-    operationOf(messages).ifPresent(operation -> operation.preConsume(vertexOf(vertex), getIgaContext(), vertex.getValue().getElement()));
+    operationOf(messages).ifPresent(operation -> vertex.getValue().withValue(operation.preConsume(vertexOf(vertex), getIgaContext(), vertex.getValue().getElement())));
     send(vertex, update(vertex, messages));
 
     if (computationForStep(getTree(), getSuperstep() + 1) == FactorisationComputation.class) {

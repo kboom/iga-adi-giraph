@@ -60,7 +60,10 @@ public class TranspositionComputation extends IgaComputation {
   }
 
   private void receive(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex, Iterable<IgaMessageWritable> message) {
-    TRANSPOSITION_IGA_OPERATION.preConsume(vertexOf(vertex), getIgaContext(), elementOf(vertex));
+    vertex.setValue(
+        vertex.getValue()
+            .withValue(TRANSPOSITION_IGA_OPERATION.preConsume(vertexOf(vertex), getIgaContext(), elementOf(vertex)))
+    );
     message.forEach(msg -> TRANSPOSITION_IGA_OPERATION.consumeMessage(vertex.getValue().getElement(), msg.getMessage(), getTree()));
   }
 

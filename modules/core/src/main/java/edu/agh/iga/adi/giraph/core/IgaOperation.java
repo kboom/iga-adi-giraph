@@ -36,7 +36,7 @@ public interface IgaOperation<M extends IgaMessage> {
 
   /**
    * Runs before any message gets consumed.
-   * By default returns the element with no modification.
+   * By default returns unmodified element.
    *  @param vertex
    * @param ctx
    * @param element can be null

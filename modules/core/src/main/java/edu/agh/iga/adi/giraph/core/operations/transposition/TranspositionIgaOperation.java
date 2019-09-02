@@ -38,7 +38,7 @@ public final class TranspositionIgaOperation implements IgaOperation<Transpositi
     return igaElement(
         vertex.id(),
         ma,
-        FACTORY.makeZero(LEAF_SIZE, ctx.getMesh().getDofsX()),
+        FACTORY.makeZero(LEAF_SIZE, ctx.getMesh().getDofsY()),
         null
     );
   }

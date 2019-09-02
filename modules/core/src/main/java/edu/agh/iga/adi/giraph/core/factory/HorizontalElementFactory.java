@@ -2,6 +2,7 @@ package edu.agh.iga.adi.giraph.core.factory;
 
 import edu.agh.iga.adi.giraph.core.IgaElement;
 import edu.agh.iga.adi.giraph.core.IgaVertex;
+import edu.agh.iga.adi.giraph.core.IgaVertex.BranchVertex;
 import edu.agh.iga.adi.giraph.core.IgaVertex.LeafVertex;
 import edu.agh.iga.adi.giraph.core.Mesh;
 import edu.agh.iga.adi.giraph.core.problem.Problem;
@@ -17,6 +18,7 @@ import static edu.agh.iga.adi.giraph.core.IgaConstants.*;
 import static edu.agh.iga.adi.giraph.core.IgaElement.igaElement;
 import static edu.agh.iga.adi.giraph.core.factory.ExplicitMethodCoefficients.COEFFICIENTS;
 import static org.ojalgo.function.constant.PrimitiveMath.ADD;
+import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
 public final class HorizontalElementFactory implements ElementFactory {
 
@@ -34,13 +36,22 @@ public final class HorizontalElementFactory implements ElementFactory {
   public IgaElement createElement(Problem problem, IgaVertex vertex) {
     if (vertex.is(LeafVertex.class)) {
       return leafElement(problem, vertex);
-    } else {
-      return emptyElement(vertex);
     }
+    if (vertex.is(BranchVertex.class)) {
+      return branchElement(vertex);
+    }
+    return emptyElement(vertex);
+  }
+
+  private IgaElement branchElement(IgaVertex vertex) {
+    val ma = FACTORY.makeZero(5, 5);
+    val mb = FACTORY.makeZero(5, mesh.getDofsX());
+    val mx = FACTORY.makeZero(5, mesh.getDofsX());
+    return igaElement(vertex.id(), ma, mb, mx);
   }
 
   private IgaElement leafElement(Problem problem, IgaVertex vertex) {
-    final PrimitiveDenseStore ma = PrimitiveDenseStore.FACTORY.makeZero(LEAF_SIZE, LEAF_SIZE);
+    val ma = PrimitiveDenseStore.FACTORY.makeZero(LEAF_SIZE, LEAF_SIZE);
     COEFFICIENTS.supplyTo(ma);
     return igaElement(
         vertex.id(),

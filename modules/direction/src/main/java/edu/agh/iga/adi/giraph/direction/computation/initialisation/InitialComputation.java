@@ -14,8 +14,7 @@ import static edu.agh.iga.adi.giraph.direction.computation.factorization.Factori
 import static edu.agh.iga.adi.giraph.direction.computation.factorization.IgaComputationPhase.MERGE_AND_ELIMINATE_LEAVES;
 
 /**
- * Kicks off the cascade of operations at the leaf vertices.
- * All vertices are voted to halt so that only the messages wake them up.
+ * Kicks off the operations for a single time step.
  */
 public final class InitialComputation extends IgaComputation {
 
@@ -33,7 +32,8 @@ public final class InitialComputation extends IgaComputation {
     val edges = vertex.getEdges();
 
     if (igaVertex.is(LeafVertex.class)) {
-      val element = vertex.getValue().getElement();
+      IgaElementWritable value = vertex.getValue();
+      val element = value.getElement();
       edges.forEach(edge -> {
         val dstId = edge.getTargetVertexId();
         val dstVertex = vertexOf(dstId.get());
@@ -41,13 +41,8 @@ public final class InitialComputation extends IgaComputation {
         sendMessage(dstId, new IgaMessageWritable(igaOperation.sendMessage(dstVertex, element)));
       });
 
-      computationLog(vertex.getValue().getElement());
-
-//      stream(edges.spliterator(), false)
-//          .map(Edge::getValue)
-//          .map(IgaOperationWritable::getIgaOperation)
-//          .distinct()
-//          .forEach(operation -> operation.postSend(element, directionTree));
+      computationLog(element);
+      operationOf(vertex).ifPresent(operation -> value.withValue(operation.postSend(element, getTree())));
     }
 
     vertex.voteToHalt();

@@ -9,6 +9,7 @@ import lombok.experimental.Delegate;
 import lombok.val;
 import org.apache.giraph.bsp.CentralizedServiceWorker;
 import org.apache.giraph.comm.WorkerClientRequestProcessor;
+import org.apache.giraph.edge.Edge;
 import org.apache.giraph.graph.BasicComputation;
 import org.apache.giraph.graph.GraphState;
 import org.apache.giraph.graph.Vertex;
@@ -50,6 +51,14 @@ public abstract class IgaComputation extends BasicComputation<LongWritable, IgaE
     return messagesOf(messages)
         .map(IgaMessage::getOperation)
         .findFirst();
+  }
+
+  protected Optional<IgaOperation> operationOf(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
+    return stream(vertex.getEdges().spliterator(), false)
+        .map(Edge::getValue)
+        .map(IgaOperationWritable::getIgaOperation)
+        .distinct()
+        .findAny();
   }
 
   protected IgaVertex vertexOf(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
