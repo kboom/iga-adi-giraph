@@ -1,9 +1,9 @@
 package edu.agh.iga.adi.giraph;
 
-import edu.agh.iga.adi.giraph.direction.StepComputation;
 import edu.agh.iga.adi.giraph.direction.IgaWorkerContext;
-import edu.agh.iga.adi.giraph.direction.io.CoefficientMatricesOutputFormat;
-import edu.agh.iga.adi.giraph.direction.io.InMemoryStepInputFormat;
+import edu.agh.iga.adi.giraph.direction.StepComputation;
+import edu.agh.iga.adi.giraph.direction.io.StepVertexInputFormat;
+import edu.agh.iga.adi.giraph.direction.io.StepVertexOutputFormat;
 import edu.agh.iga.adi.giraph.direction.test.GiraphTestJob;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -15,21 +15,35 @@ import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.HEIGHT_PARTITION
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.direction.test.DirManager.aDirManager;
 import static edu.agh.iga.adi.giraph.direction.test.GiraphTestJob.giraphJob;
+import static edu.agh.iga.adi.giraph.direction.test.ProblemLoader.ProblemLoaderConfig.problemLoaderConfig;
+import static edu.agh.iga.adi.giraph.direction.test.ProblemLoader.loadProblem;
 import static edu.agh.iga.adi.giraph.test.util.assertion.CoefficientsAssertions.assertThatCoefficients;
 
 class StepComputationIT {
 
   @Test
-  void canRun(@TempDir Path coefficientsDir) {
+  void canRun(
+      @TempDir Path input,
+      @TempDir Path output
+  ) {
+    loadProblem(
+        problemLoaderConfig()
+            .resource("StepComputationIT/one.mat")
+            .shards(2)
+            .targetPath(input)
+            .build()
+    );
+
     // given
     GiraphTestJob job = giraphJob()
         .computationClazz(StepComputation.class)
         .workerContextClazz(IgaWorkerContext.class)
-        .vertexInputFormatClazz(InMemoryStepInputFormat.class)
-        .vertexOutputFormatClazz(CoefficientMatricesOutputFormat.class)
+        .vertexInputFormatClazz(StepVertexInputFormat.class)
+        .vertexOutputFormatClazz(StepVertexOutputFormat.class)
         .dirManager(conf ->
             aDirManager(conf)
-                .withCoefficientsOutputDir(coefficientsDir.toString())
+                .withCoefficientsInputDir(input.toString())
+                .withCoefficientsOutputDir(output.toString())
                 .build()
         )
         .configuration(conf -> {
@@ -42,8 +56,8 @@ class StepComputationIT {
     job.run();
 
     // then
-    assertThatCoefficients(coefficientsDir)
-        .areEqualToResource("DirectionIT/one.mat", ROWS_BOUND_TO_NODE);
+    assertThatCoefficients(output)
+        .areEqualToResource("StepComputationIT/one.mat", ROWS_BOUND_TO_NODE);
   }
 
 }
