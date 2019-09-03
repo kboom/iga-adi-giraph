@@ -1,7 +1,7 @@
 package edu.agh.iga.adi.giraph;
 
 import edu.agh.iga.adi.giraph.direction.StepComputation;
-import edu.agh.iga.adi.giraph.direction.IgaAdiWorkerContext;
+import edu.agh.iga.adi.giraph.direction.IgaWorkerContext;
 import edu.agh.iga.adi.giraph.direction.io.CoefficientMatricesOutputFormat;
 import edu.agh.iga.adi.giraph.direction.io.InMemoryStepInputFormat;
 import edu.agh.iga.adi.giraph.direction.test.GiraphTestJob;
@@ -24,7 +24,7 @@ class StepComputationIT {
     // given
     GiraphTestJob job = giraphJob()
         .computationClazz(StepComputation.class)
-        .workerContextClazz(IgaAdiWorkerContext.class)
+        .workerContextClazz(IgaWorkerContext.class)
         .vertexInputFormatClazz(InMemoryStepInputFormat.class)
         .vertexOutputFormatClazz(CoefficientMatricesOutputFormat.class)
         .dirManager(conf ->

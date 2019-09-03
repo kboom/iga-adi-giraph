@@ -1,14 +1,18 @@
 package edu.agh.iga.adi.giraph.direction;
 
 import edu.agh.iga.adi.giraph.core.DirectionTree;
+import lombok.val;
 import org.apache.giraph.aggregators.IntOverwriteAggregator;
 import org.apache.giraph.graph.Computation;
 import org.apache.giraph.master.DefaultMasterCompute;
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_START;
 import static edu.agh.iga.adi.giraph.direction.computation.ComputationResolver.computationForStep;
+import static edu.agh.iga.adi.giraph.direction.logging.TimeLogger.logTime;
+import static edu.agh.iga.adi.giraph.direction.logging.TimeLogger.timeReducer;
 
 /**
  * Computes one full time step of the Alternating Directions Solver.
@@ -23,11 +27,14 @@ public class StepComputation extends DefaultMasterCompute {
   public void initialize() throws IllegalAccessException, InstantiationException {
     int problemSize = PROBLEM_SIZE.get(getConf());
     tree = new DirectionTree(problemSize);
-    registerPersistentAggregator(COMPUTATION_START, IntOverwriteAggregator.class);
+    registerAggregator(COMPUTATION_START, IntOverwriteAggregator.class);
   }
 
   @Override
   public final void compute() {
+    if (getSuperstep() > 0) {
+      logTimers();
+    }
     Class<? extends Computation> nextComputation = computationForStep(tree, getSuperstep());
     if (nextComputation != null) {
       setComputation(nextComputation);
@@ -40,6 +47,16 @@ public class StepComputation extends DefaultMasterCompute {
       currentComputation = nextComputation;
     } else {
       haltComputation();
+    }
+  }
+
+  private void logTimers() {
+    val workers = getWorkerInfoList();
+    for (int w = 0; w < workers.size(); w++) {
+      final LongWritable reduced = getReduced(timeReducer(w));
+      if (reduced != null) {
+        logTime(w, getSuperstep() - 1, reduced.get());
+      }
     }
   }
 
