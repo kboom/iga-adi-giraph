@@ -13,10 +13,9 @@ import java.nio.file.Path;
 import static edu.agh.iga.adi.giraph.core.IgaConstants.ROWS_BOUND_TO_NODE;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.HEIGHT_PARTITIONS;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
-import static edu.agh.iga.adi.giraph.direction.test.DirManager.aDirManager;
 import static edu.agh.iga.adi.giraph.direction.test.GiraphTestJob.giraphJob;
-import static edu.agh.iga.adi.giraph.direction.test.ProblemLoader.ProblemLoaderConfig.problemLoaderConfig;
 import static edu.agh.iga.adi.giraph.direction.test.ProblemLoader.loadProblem;
+import static edu.agh.iga.adi.giraph.direction.test.ProblemLoader.problemLoaderConfig;
 import static edu.agh.iga.adi.giraph.test.util.assertion.CoefficientsAssertions.assertThatCoefficients;
 
 class StepComputationIT {
@@ -40,12 +39,8 @@ class StepComputationIT {
         .workerContextClazz(IgaWorkerContext.class)
         .vertexInputFormatClazz(StepVertexInputFormat.class)
         .vertexOutputFormatClazz(StepVertexOutputFormat.class)
-        .dirManager(conf ->
-            aDirManager(conf)
-                .withCoefficientsInputDir(input.toString())
-                .withCoefficientsOutputDir(output.toString())
-                .build()
-        )
+        .coefficientsInputDir(input)
+        .coefficientsOutputDir(output)
         .configuration(conf -> {
           PROBLEM_SIZE.set(conf, 12);
           HEIGHT_PARTITIONS.set(conf, 2);
