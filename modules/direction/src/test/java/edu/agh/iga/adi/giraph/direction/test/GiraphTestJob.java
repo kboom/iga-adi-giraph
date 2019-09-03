@@ -5,6 +5,7 @@ import edu.agh.iga.adi.giraph.direction.io.IgaEdgeInputFormat;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
+import edu.agh.iga.adi.giraph.direction.logging.IgaTimeMasterObserver;
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.io.VertexInputFormat;
 import org.apache.giraph.io.VertexOutputFormat;
