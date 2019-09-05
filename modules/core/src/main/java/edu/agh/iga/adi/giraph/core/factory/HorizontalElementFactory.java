@@ -12,6 +12,7 @@ import edu.agh.iga.adi.giraph.core.splines.BSpline3;
 import edu.agh.iga.adi.giraph.core.splines.Spline;
 import lombok.val;
 import org.ojalgo.matrix.store.PrimitiveDenseStore;
+import org.ojalgo.structure.Access2D;
 
 import static edu.agh.iga.adi.giraph.core.GaussPoints.*;
 import static edu.agh.iga.adi.giraph.core.IgaConstants.*;
@@ -41,6 +42,13 @@ public final class HorizontalElementFactory implements ElementFactory {
       return branchElement(vertex);
     }
     return emptyElement(vertex);
+  }
+
+  @Override
+  public IgaElement createBranchElement(IgaVertex vertex, Access2D<Double> coefficients) {
+    val element = branchElement(vertex);
+    element.mx.fillMatching(coefficients); // todo not sure if this works
+    return element;
   }
 
   private IgaElement branchElement(IgaVertex vertex) {
