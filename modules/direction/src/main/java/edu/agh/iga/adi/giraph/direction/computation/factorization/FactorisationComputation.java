@@ -2,6 +2,7 @@ package edu.agh.iga.adi.giraph.direction.computation.factorization;
 
 import edu.agh.iga.adi.giraph.core.IgaElement;
 import edu.agh.iga.adi.giraph.core.IgaMessage;
+import edu.agh.iga.adi.giraph.direction.computation.ComputationResolver;
 import edu.agh.iga.adi.giraph.direction.computation.IgaComputation;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
@@ -12,8 +13,9 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.log4j.Logger;
 
+import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.COMPUTATION_TYPE;
 import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_START;
-import static edu.agh.iga.adi.giraph.direction.computation.ComputationResolver.computationForStep;
+import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.computationResolverFor;
 import static edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger.computationLog;
 import static edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger.logPhase;
 import static edu.agh.iga.adi.giraph.direction.computation.factorization.IgaComputationPhase.phaseFor;
@@ -25,11 +27,13 @@ public final class FactorisationComputation extends IgaComputation {
   private static final Logger LOG = Logger.getLogger(FactorisationComputation.class);
 
   private IgaComputationPhase phase;
+  private ComputationResolver computationResolver;
 
   @Override
   public void preSuperstep() {
     IntWritable computationStart = getAggregatedValue(COMPUTATION_START);
     phase = phaseFor(getTree(), (int) getSuperstep() - computationStart.get());
+    computationResolver = computationResolverFor(COMPUTATION_TYPE.get(getConf()));
     logPhase(phase);
     if (LOG.isDebugEnabled()) {
       LOG.debug(format("================ SUPERSTEP (%d) %s ================", getSuperstep() - 1, phase));
@@ -50,7 +54,7 @@ public final class FactorisationComputation extends IgaComputation {
     operationOf(messages).ifPresent(operation -> vertex.getValue().withValue(operation.preConsume(vertexOf(vertex), getIgaContext(), vertex.getValue().getElement())));
     send(vertex, update(vertex, messages));
 
-    if (computationForStep(getTree(), getSuperstep() + 1) == FactorisationComputation.class) {
+    if (computationResolver.computationFor(getTree(), getSuperstep() + 1) == FactorisationComputation.class) {
       vertex.voteToHalt();
     } else {
       vertex.wakeUp(); // this effectively keeps the algorithm running so that the next computation can happen
