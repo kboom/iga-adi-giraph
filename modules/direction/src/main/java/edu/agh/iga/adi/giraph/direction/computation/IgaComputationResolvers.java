@@ -13,7 +13,7 @@ import java.util.function.BiFunction;
 import static java.util.Arrays.stream;
 
 public enum IgaComputationResolvers implements ComputationResolver {
-  COEFFICIENTS_PROBLEM("COEFFICIENTS", (tree, step) -> {
+  COEFFICIENTS_PROBLEM("coefficients", (tree, step) -> {
     if (step == 0) {
       return InitialisationComputation.class;
     }
@@ -34,7 +34,7 @@ public enum IgaComputationResolvers implements ComputationResolver {
     }
     return null;
   }),
-  SURFACE_PROBLEM("SURFACE", (tree, step) -> {
+  SURFACE_PROBLEM("surface", (tree, step) -> {
     if (step == 0) {
       return InitialComputation.class;
     }

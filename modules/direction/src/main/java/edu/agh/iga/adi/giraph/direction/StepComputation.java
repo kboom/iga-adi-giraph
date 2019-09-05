@@ -9,7 +9,7 @@ import org.apache.giraph.master.DefaultMasterCompute;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 
-import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.COMPUTATION_TYPE;
+import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.INITIALISATION_TYPE;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_START;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.computationResolverFor;
@@ -30,7 +30,7 @@ public class StepComputation extends DefaultMasterCompute {
   public void initialize() throws IllegalAccessException, InstantiationException {
     int problemSize = PROBLEM_SIZE.get(getConf());
     tree = new DirectionTree(problemSize);
-    computationResolver = computationResolverFor(COMPUTATION_TYPE.get(getConf()));
+    computationResolver = computationResolverFor(INITIALISATION_TYPE.get(getConf()));
     registerAggregator(COMPUTATION_START, IntOverwriteAggregator.class);
   }
 
