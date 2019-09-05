@@ -1,11 +1,9 @@
-package edu.agh.iga.adi.giraph.core.operations.transposition;
+package edu.agh.iga.adi.giraph.core.operations.setup;
 
 import edu.agh.iga.adi.giraph.core.IgaVertex;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.ojalgo.structure.Access2D;
-
-import static java.lang.Long.MAX_VALUE;
 
 @RequiredArgsConstructor
 final class PartitionProvider implements Access2D<Double> {

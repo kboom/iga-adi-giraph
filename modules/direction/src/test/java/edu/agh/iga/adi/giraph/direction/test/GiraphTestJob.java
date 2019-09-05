@@ -129,7 +129,7 @@ public class GiraphTestJob {
       conf.setVertexOutputFormatClass(vertexOutputFormatClazz);
       conf.setWorkerContextClass(workerContextClazz);
       conf.setLocalTestMode(true);
-//      conf.setMaxNumberOfSupersteps(3);
+      //conf.setDoOutputDuringComputation(true);
       conf.setMaxMasterSuperstepWaitMsecs(30 * 1000);
       conf.setEventWaitMsecs(3 * 1000);
       conf.setEdgeInputFormatClass(IgaEdgeInputFormat.class);

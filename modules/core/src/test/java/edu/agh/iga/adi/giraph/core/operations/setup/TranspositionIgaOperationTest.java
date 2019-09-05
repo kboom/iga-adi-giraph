@@ -1,12 +1,12 @@
-package edu.agh.iga.adi.giraph.core.operations.transposition;
+package edu.agh.iga.adi.giraph.core.operations.setup;
 
 import edu.agh.iga.adi.giraph.core.IgaElement;
 import edu.agh.iga.adi.giraph.core.IgaVertex;
-import edu.agh.iga.adi.giraph.core.operations.transposition.TranspositionIgaOperation.TranspositionIgaMessage;
+import edu.agh.iga.adi.giraph.core.operations.setup.TranspositionIgaOperation.TranspositionIgaMessage;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
-import static edu.agh.iga.adi.giraph.core.operations.transposition.TranspositionIgaOperation.TRANSPOSITION_IGA_OPERATION;
+import static edu.agh.iga.adi.giraph.core.operations.setup.TranspositionIgaOperation.TRANSPOSITION_IGA_OPERATION;
 import static edu.agh.iga.adi.giraph.core.test.IgaElementBuilder.elementFor;
 import static edu.agh.iga.adi.giraph.core.test.SmallProblem.MESH;
 import static edu.agh.iga.adi.giraph.core.test.Tree12.*;

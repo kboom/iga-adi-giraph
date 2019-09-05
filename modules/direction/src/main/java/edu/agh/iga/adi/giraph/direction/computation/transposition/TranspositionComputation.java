@@ -14,6 +14,10 @@ import static edu.agh.iga.adi.giraph.core.operations.transposition.Transposition
 import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_START;
 import static edu.agh.iga.adi.giraph.direction.computation.transposition.TranspositionComputation.TranspositionPhase.phaseFor;
 
+/**
+ * Computation that happens in between the directions.
+ * The leaves send their columns to appropriate leaves which effectively does the transposition of the coefficients.
+ */
 public class TranspositionComputation extends IgaComputation {
 
   private static final Logger LOG = Logger.getLogger(TranspositionComputation.class);

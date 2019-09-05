@@ -1,4 +1,4 @@
-package edu.agh.iga.adi.giraph.core.operations.transposition;
+package edu.agh.iga.adi.giraph.core.operations.setup;
 
 import edu.agh.iga.adi.giraph.core.*;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import static edu.agh.iga.adi.giraph.core.IgaConstants.LEAF_SIZE;
 import static edu.agh.iga.adi.giraph.core.IgaElement.igaElement;
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.core.factory.ExplicitMethodCoefficients.COEFFICIENTS;
-import static edu.agh.iga.adi.giraph.core.operations.transposition.TranspositionIgaOperation.TranspositionIgaMessage;
+import static edu.agh.iga.adi.giraph.core.operations.setup.TranspositionIgaOperation.*;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static org.ojalgo.function.constant.PrimitiveMath.MULTIPLY;

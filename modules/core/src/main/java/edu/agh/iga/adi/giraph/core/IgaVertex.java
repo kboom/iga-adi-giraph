@@ -117,8 +117,16 @@ public class IgaVertex {
     return id - tree.firstIndexOfRow(rowIndexOf());
   }
 
+  public long offsetRight() {
+    return tree.lastIndexOfRow(rowIndexOf()) - id;
+  }
+
   public boolean isLeading() {
     return offsetLeft() == 0;
+  }
+
+  public boolean isTrailing() {
+    return offsetRight() == 0;
   }
 
   public Optional<? extends IgaVertex> leftChildOf() {
