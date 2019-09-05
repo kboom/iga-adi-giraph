@@ -1,5 +1,7 @@
 package edu.agh.iga.adi.giraph.direction.computation.initialisation;
 
+import edu.agh.iga.adi.giraph.core.IgaVertex;
+import edu.agh.iga.adi.giraph.core.IgaVertex.BranchVertex;
 import edu.agh.iga.adi.giraph.core.factory.HorizontalElementFactory;
 import edu.agh.iga.adi.giraph.core.problem.ProblemFactory;
 import edu.agh.iga.adi.giraph.core.setup.Initialisation;
@@ -60,14 +62,16 @@ public class InitialisationComputation extends IgaComputation {
 
   private void doSend(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
     val igaVertex = vertexOf(vertex);
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Running transposition on " + igaVertex);
+    if (igaVertex.is(BranchVertex.class)) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Sending coefficients from " + igaVertex);
+      }
+      initialisation.sendMessages(igaVertex, elementOf(vertex))
+          .forEach(msg -> sendMessage(
+              new LongWritable(msg.getDstId()),
+              new IgaMessageWritable(msg)
+          ));
     }
-    initialisation.sendMessages(igaVertex, elementOf(vertex))
-        .forEach(msg -> sendMessage(
-            new LongWritable(msg.getDstId()),
-            new IgaMessageWritable(msg)
-        ));
   }
 
   private void receive(

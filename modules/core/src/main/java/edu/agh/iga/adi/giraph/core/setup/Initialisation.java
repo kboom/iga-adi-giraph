@@ -63,7 +63,7 @@ public class Initialisation {
     private final TransformableRegion<Double> mxp;
     private final long dstId;
 
-    InitialisationIgaMessage(long srcId, long dstId, TransformableRegion<Double> mxp) {
+    public InitialisationIgaMessage(long srcId, long dstId, TransformableRegion<Double> mxp) {
       super(srcId, null);
       this.mxp = mxp;
       this.dstId = dstId;

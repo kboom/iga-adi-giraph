@@ -12,6 +12,7 @@ import edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateInterimOperation.
 import edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateLeavesOperation.MergeAndEliminateLeavesMessage;
 import edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateRootOperation.MergeAndEliminateRootMessage;
 import edu.agh.iga.adi.giraph.core.operations.setup.TranspositionIgaOperation.TranspositionIgaMessage;
+import edu.agh.iga.adi.giraph.core.setup.Initialisation.InitialisationIgaMessage;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -21,6 +22,7 @@ import java.util.Map;
 import static edu.agh.iga.adi.giraph.direction.io.data.message.BackwardsSubstituteBranchMessageSerializer.BACKWARDS_SUBSTITUTE_BRANCH_MESSAGE_SERIALIZER;
 import static edu.agh.iga.adi.giraph.direction.io.data.message.BackwardsSubstituteInterimMessageSerializer.BACKWARDS_SUBSTITUTE_INTERIM_MESSAGE_SERIALIZER;
 import static edu.agh.iga.adi.giraph.direction.io.data.message.BackwardsSubstituteRootMessageSerializer.BACKWARDS_SUBSTITUTE_ROOT_MESSAGE_SERIALIZER;
+import static edu.agh.iga.adi.giraph.direction.io.data.message.InitialisationMessageSerializer.INITIALISATION_MESSAGE_SERIALIZER;
 import static edu.agh.iga.adi.giraph.direction.io.data.message.MergeAndEliminateBranchMessageSerializer.MERGE_AND_ELIMINATE_BRANCH_MESSAGE_SERIALIZER;
 import static edu.agh.iga.adi.giraph.direction.io.data.message.MergeAndEliminateInterimMessageSerializer.MERGE_AND_ELIMINATE_INTERIM_MESSAGE_SERIALIZER;
 import static edu.agh.iga.adi.giraph.direction.io.data.message.MergeAndEliminateLeavesMessageSerializer.MERGE_AND_ELIMINATE_LEAVES_MESSAGE_SERIALIZER;
@@ -38,6 +40,7 @@ public final class MessageSerializerFacade {
       .put(MergeAndEliminateLeavesMessage.class, MERGE_AND_ELIMINATE_LEAVES_MESSAGE_SERIALIZER)
       .put(MergeAndEliminateRootMessage.class, MERGE_AND_ELIMINATE_ROOT_MESSAGE_SERIALIZER)
       .put(TranspositionIgaMessage.class, TRANSPOSITION_MESSAGE_SERIALIZER)
+      .put(InitialisationIgaMessage.class, INITIALISATION_MESSAGE_SERIALIZER)
       .build();
 
   private static final BiMap<Class<?>, Integer> MESSAGE_TYPE_MAPPING = ImmutableBiMap.<Class<?>, Integer>builder()
@@ -49,6 +52,7 @@ public final class MessageSerializerFacade {
       .put(MergeAndEliminateLeavesMessage.class, 6)
       .put(MergeAndEliminateRootMessage.class, 7)
       .put(TranspositionIgaMessage.class, 8)
+      .put(InitialisationIgaMessage.class, 9)
       .build();
 
   @SuppressWarnings("unchecked")
