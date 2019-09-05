@@ -14,22 +14,22 @@ import static java.util.Arrays.stream;
 
 public enum IgaComputationResolvers implements ComputationResolver {
   COEFFICIENTS_PROBLEM("coefficients", (tree, step) -> {
-    if (step == 0) {
+    if (step < 2) {
       return InitialisationComputation.class;
     }
-    if (step == 1) {
+    if (step == 2) {
       return InitialComputation.class;
     }
-    if (step < 2 * tree.height() + 1) {
+    if (step < 2 * tree.height() + 2) {
       return FactorisationComputation.class;
     }
-    if (step <= 2 * tree.height() + 2) {
+    if (step <= 2 * tree.height() + 3) {
       return TranspositionComputation.class;
     }
-    if (step == 2 * tree.height() + 3) {
+    if (step == 2 * tree.height() + 4) {
       return InitialComputation.class;
     }
-    if (step < 4 * tree.height() + 4) {
+    if (step < 4 * tree.height() + 5) {
       return FactorisationComputation.class;
     }
     return null;

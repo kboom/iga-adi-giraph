@@ -71,7 +71,7 @@ public class Initialisation {
 
     @Override
     public int compareTo(InitialisationIgaMessage o) {
-      return 0;
+      return (int) (getSrcId() - o.getSrcId());
     }
   }
 

@@ -1,6 +1,5 @@
 package edu.agh.iga.adi.giraph.direction.computation.initialisation;
 
-import edu.agh.iga.adi.giraph.core.IgaVertex;
 import edu.agh.iga.adi.giraph.core.IgaVertex.BranchVertex;
 import edu.agh.iga.adi.giraph.core.factory.HorizontalElementFactory;
 import edu.agh.iga.adi.giraph.core.problem.ProblemFactory;
