@@ -15,6 +15,8 @@ import static edu.agh.iga.adi.giraph.direction.computation.factorization.IgaComp
 
 /**
  * Kicks off the operations for a single time step.
+ * This computation is introduced to separate {@link edu.agh.iga.adi.giraph.direction.computation.factorization.FactorisationComputation}
+ * from the actual operations it has to perform.
  */
 public final class InitialComputation extends IgaComputation {
 

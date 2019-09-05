@@ -5,6 +5,8 @@ import edu.agh.iga.adi.giraph.direction.StepComputation;
 import edu.agh.iga.adi.giraph.direction.io.StepVertexInputFormat;
 import edu.agh.iga.adi.giraph.direction.io.StepVertexOutputFormat;
 import edu.agh.iga.adi.giraph.direction.test.GiraphTestJob;
+import lombok.SneakyThrows;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -17,19 +19,23 @@ import static edu.agh.iga.adi.giraph.direction.test.GiraphTestJob.giraphJob;
 import static edu.agh.iga.adi.giraph.direction.test.ProblemLoader.loadProblem;
 import static edu.agh.iga.adi.giraph.direction.test.ProblemLoader.problemLoaderConfig;
 import static edu.agh.iga.adi.giraph.test.util.assertion.CoefficientsAssertions.assertThatCoefficients;
+import static java.nio.file.Files.createDirectory;
 
 class StepComputationIT {
 
   @Test
-  void canRun(
-      @TempDir Path input,
-      @TempDir Path output
-  ) {
+  @SneakyThrows
+  void canRun(@TempDir Path dir) {
+    val inputDir = dir.resolve("input");
+    val outputDir = dir.resolve("output");
+
+    createDirectory(inputDir);
+
     loadProblem(
         problemLoaderConfig()
             .resource("StepComputationIT/one.mat")
             .shards(2)
-            .targetPath(input)
+            .targetPath(inputDir)
             .build()
     );
 
@@ -39,8 +45,8 @@ class StepComputationIT {
         .workerContextClazz(IgaWorkerContext.class)
         .vertexInputFormatClazz(StepVertexInputFormat.class)
         .vertexOutputFormatClazz(StepVertexOutputFormat.class)
-        .coefficientsInputDir(input)
-        .coefficientsOutputDir(output)
+        .coefficientsInputDir(inputDir)
+        .coefficientsOutputDir(outputDir)
         .configuration(conf -> {
           PROBLEM_SIZE.set(conf, 12);
           HEIGHT_PARTITIONS.set(conf, 2);
@@ -51,7 +57,7 @@ class StepComputationIT {
     job.run();
 
     // then
-    assertThatCoefficients(output)
+    assertThatCoefficients(outputDir)
         .areEqualToResource("StepComputationIT/one.mat", ROWS_BOUND_TO_NODE);
   }
 

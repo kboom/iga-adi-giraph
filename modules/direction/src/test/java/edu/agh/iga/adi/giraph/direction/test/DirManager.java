@@ -3,7 +3,6 @@ package edu.agh.iga.adi.giraph.direction.test;
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.hadoop.fs.Path;
 
-import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.COEFFICIENTS_OUTPUT;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.ZK_DIR;
 import static java.lang.System.getProperty;
 import static org.apache.giraph.conf.GiraphConstants.*;
@@ -25,12 +24,10 @@ public final class DirManager {
     Path zookeeperDir = new Path(config.get(ZOOKEEPER_DIR));
     Path zkManagerDir = new Path(ZOOKEEPER_MANAGER_DIRECTORY.get(config));
     Path checkPointDir = new Path(CHECKPOINT_DIRECTORY.get(config));
-    Path coefficientsOutputDir = new Path(COEFFICIENTS_OUTPUT.get(config));
 
     deleteDir(config, zookeeperDir);
     deleteDir(config, zkManagerDir);
     deleteDir(config, checkPointDir);
-    deleteDir(config, coefficientsOutputDir);
   }
 
   private void deleteDir(GiraphConfiguration conf, Path dir) {

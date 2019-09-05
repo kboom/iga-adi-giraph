@@ -3,6 +3,7 @@ package edu.agh.iga.adi.giraph.direction.test;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.val;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static edu.agh.iga.adi.giraph.direction.test.ProblemLoader.ProblemLoaderConfig.*;
+import static edu.agh.iga.adi.giraph.direction.test.ProblemLoader.ProblemLoaderConfig.*; // do not remove this
 import static java.nio.file.Files.readAllLines;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.groupingBy;
@@ -29,16 +30,23 @@ public class ProblemLoader {
 
   @SneakyThrows
   public static Set<Path> loadProblem(ProblemLoaderConfig cfg) {
-    return coefficientsByShard(cfg)
-        .entrySet()
-        .stream()
-        .map(entry -> writeCoefficients(cfg, entry.getKey(), entry.getValue()))
+    val coefficientsByShard = coefficientsByShard(cfg);
+    coefficientsByShard
+        .forEach((key, value) -> writeCoefficients(cfg, key, value));
+
+    return pathsOfShards(coefficientsByShard);
+  }
+
+  private static Set<Path> pathsOfShards(Map<Integer, List<String>> coefficientsByShard) {
+    return coefficientsByShard.keySet().stream()
+        .map(i -> "part" + i)
+        .map(Paths::get)
         .collect(collectingAndThen(Collectors.toSet(), Collections::unmodifiableSet));
   }
 
   @SneakyThrows
-  private static Path writeCoefficients(ProblemLoaderConfig cfg, int part, List<String> coefficients) {
-    return Files.write(cfg.targetPath.resolve("part-" + part), coefficients);
+  private static void writeCoefficients(ProblemLoaderConfig cfg, int part, List<String> coefficients) {
+    Files.write(cfg.targetPath.resolve("part-" + part), coefficients);
   }
 
   private static Map<Integer, List<String>> coefficientsByShard(ProblemLoaderConfig cfg) throws IOException {
