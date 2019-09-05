@@ -13,8 +13,8 @@ import org.junit.jupiter.api.io.TempDir;
 import java.nio.file.Path;
 
 import static edu.agh.iga.adi.giraph.core.IgaConstants.ROWS_BOUND_TO_NODE;
-import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.HEIGHT_PARTITIONS;
-import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
+import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.*;
+import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.COEFFICIENTS_PROBLEM;
 import static edu.agh.iga.adi.giraph.direction.test.GiraphTestJob.giraphJob;
 import static edu.agh.iga.adi.giraph.direction.test.ProblemLoader.loadProblem;
 import static edu.agh.iga.adi.giraph.direction.test.ProblemLoader.problemLoaderConfig;
@@ -50,6 +50,7 @@ class StepComputationIT {
         .configuration(conf -> {
           PROBLEM_SIZE.set(conf, 12);
           HEIGHT_PARTITIONS.set(conf, 2);
+          INITIALISATION_TYPE.set(conf, COEFFICIENTS_PROBLEM.getType());
         })
         .build();
 

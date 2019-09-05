@@ -13,7 +13,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.log4j.Logger;
 
-import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.COMPUTATION_TYPE;
+import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.INITIALISATION_TYPE;
 import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_START;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.computationResolverFor;
 import static edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger.computationLog;
@@ -33,7 +33,7 @@ public final class FactorisationComputation extends IgaComputation {
   public void preSuperstep() {
     IntWritable computationStart = getAggregatedValue(COMPUTATION_START);
     phase = phaseFor(getTree(), (int) getSuperstep() - computationStart.get());
-    computationResolver = computationResolverFor(COMPUTATION_TYPE.get(getConf()));
+    computationResolver = computationResolverFor(INITIALISATION_TYPE.get(getConf()));
     logPhase(phase);
     if (LOG.isDebugEnabled()) {
       LOG.debug(format("================ SUPERSTEP (%d) %s ================", getSuperstep() - 1, phase));
