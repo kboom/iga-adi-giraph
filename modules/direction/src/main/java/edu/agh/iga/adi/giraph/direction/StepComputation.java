@@ -1,6 +1,7 @@
 package edu.agh.iga.adi.giraph.direction;
 
 import edu.agh.iga.adi.giraph.core.DirectionTree;
+import edu.agh.iga.adi.giraph.direction.computation.ComputationResolver;
 import lombok.val;
 import org.apache.giraph.aggregators.IntOverwriteAggregator;
 import org.apache.giraph.graph.Computation;
@@ -8,9 +9,10 @@ import org.apache.giraph.master.DefaultMasterCompute;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 
+import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.COMPUTATION_TYPE;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_START;
-import static edu.agh.iga.adi.giraph.direction.computation.ComputationResolver.computationForStep;
+import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.computationResolverFor;
 import static edu.agh.iga.adi.giraph.direction.logging.TimeLogger.logTime;
 import static edu.agh.iga.adi.giraph.direction.logging.TimeLogger.timeReducer;
 
@@ -19,6 +21,7 @@ import static edu.agh.iga.adi.giraph.direction.logging.TimeLogger.timeReducer;
  */
 public class StepComputation extends DefaultMasterCompute {
 
+  private ComputationResolver computationResolver;
   private DirectionTree tree;
   private int currentComputationStart;
   private Class<? extends Computation> currentComputation;
@@ -27,6 +30,7 @@ public class StepComputation extends DefaultMasterCompute {
   public void initialize() throws IllegalAccessException, InstantiationException {
     int problemSize = PROBLEM_SIZE.get(getConf());
     tree = new DirectionTree(problemSize);
+    computationResolver = computationResolverFor(COMPUTATION_TYPE.get(getConf()));
     registerAggregator(COMPUTATION_START, IntOverwriteAggregator.class);
   }
 
@@ -35,7 +39,7 @@ public class StepComputation extends DefaultMasterCompute {
     if (getSuperstep() > 0) {
       logTimers();
     }
-    Class<? extends Computation> nextComputation = computationForStep(tree, getSuperstep());
+    Class<? extends Computation> nextComputation = computationResolver.computationFor(tree, getSuperstep());
     if (nextComputation != null) {
       setComputation(nextComputation);
       if (currentComputation != nextComputation) {
