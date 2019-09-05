@@ -15,7 +15,15 @@ import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
 import static org.apache.commons.lang3.StringUtils.join;
 
 /**
- * Dumps the branches unknowns (solutions)
+ * Extracts the solution from the solver. The solution is the large matrix of coefficients for our BSpline basis functions.
+ * <p>
+ * The files contain coefficients for all branch vertices in the following format:
+ * <pre>
+ *   [branch vertexId A] [coefficients for 1]
+ *   [branch vertexId B] [coefficients for 2]
+ * </pre>
+ * <p>
+ * The files produced can be used directly for the next steps simulations using {@link StepVertexInputFormat}.
  */
 public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable, IgaElementWritable, IgaOperationWritable> {
 

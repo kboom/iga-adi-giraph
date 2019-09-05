@@ -2,14 +2,10 @@ package edu.agh.iga.adi.giraph.direction.io;
 
 import edu.agh.iga.adi.giraph.commons.RowMajorArray;
 import edu.agh.iga.adi.giraph.core.DirectionTree;
-import edu.agh.iga.adi.giraph.core.IgaElement;
 import edu.agh.iga.adi.giraph.core.IgaVertex;
 import edu.agh.iga.adi.giraph.core.Mesh;
 import edu.agh.iga.adi.giraph.core.factory.ElementFactory;
 import edu.agh.iga.adi.giraph.core.factory.HorizontalElementFactory;
-import edu.agh.iga.adi.giraph.core.setup.CoefficientSolution;
-import edu.agh.iga.adi.giraph.core.problem.phenomena.HeatTransferPhenomena;
-import edu.agh.iga.adi.giraph.core.problem.Problem;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import org.apache.giraph.io.formats.TextVertexValueInputFormat;
@@ -18,7 +14,6 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.ojalgo.matrix.store.MatrixStore;
-import org.ojalgo.matrix.store.PrimitiveDenseStore;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
@@ -26,18 +21,19 @@ import java.util.stream.Stream;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
-
-/*
-TextVertexInputFormat
-IntIntTextVertexValueInputFormat
- */
+import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
 /**
- * The vertex input format is:
+ * The initializer that works with {@link edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers#COEFFICIENTS_PROBLEM}
+ * <p>
+ * Expect vertex input format:
  * <pre>
- *   [vertexId 1] [coefficients for 1]
- *   [vertexId 2] [coefficients for 2]
+ *   [branch vertexId A] [coefficients for 1]
+ *   [branch vertexId B] [coefficients for 2]
  * </pre>
+ * <p>
+ * The ordering of vertices is not important but vertex file splits should match the partitioning scheme so
+ * data doesn't have to be transferred over the network.
  */
 public class StepVertexInputFormat extends TextVertexValueInputFormat<LongWritable, IgaElementWritable, IgaOperationWritable> {
 
@@ -78,17 +74,17 @@ public class StepVertexInputFormat extends TextVertexValueInputFormat<LongWritab
 
     @Override
     protected IgaElementWritable getValue(final double[] line) {
-      IgaVertex igaVertex = vertexOf(directionTree, (long) line[0]); // todo Direction tree is null
-      final int dofsX = mesh.getDofsX();
+      return new IgaElementWritable(elementFactory.createBranchElement(vertex(line[0]), asMatrix(line)));
+    }
 
-      MatrixStore<Double> sol = PrimitiveDenseStore.FACTORY.builder()
-          .makeWrapper(new RowMajorArray(3, dofsX, 1, line))
+    private IgaVertex vertex(double v) {
+      return vertexOf(directionTree, (long) v);
+    }
+
+    private MatrixStore<Double> asMatrix(double[] line) {
+      return FACTORY.builder()
+          .makeWrapper(new RowMajorArray(3, mesh.getDofsX(), 1, line))
           .get();
-
-      CoefficientSolution coefficientSolution = new CoefficientSolution(mesh, sol);
-      Problem problem = new HeatTransferPhenomena(coefficientSolution);
-      IgaElement igaElement = elementFactory.createElement(problem, igaVertex);
-      return new IgaElementWritable(igaElement);
     }
 
   }
