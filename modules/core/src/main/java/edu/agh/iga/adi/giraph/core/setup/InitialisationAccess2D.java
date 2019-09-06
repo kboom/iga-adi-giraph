@@ -20,9 +20,6 @@ class InitialisationAccess2D implements Access2D<Double> {
     if (row < leftRows) {
       return left.get(row, col);
     } else {
-      if (row - leftRows > 0) {
-        System.out.println("here!");
-      }
       return right.get(row - leftRows, col);
     }
   }
