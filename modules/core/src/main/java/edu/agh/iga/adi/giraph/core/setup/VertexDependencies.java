@@ -11,8 +11,6 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor(access = PRIVATE)
 class VertexDependencies {
 
-  private static final int COEFFICIENT_SKEW = 2;
-
   private static final int[] NONE = {};
   private static final int[] INTERIM_FIRST = {0};
   private static final int[] INTERIM_LEFT = {0, 1};
@@ -28,10 +26,10 @@ class VertexDependencies {
     }
     if (vertex.isTrailing()) {
       long lastLeaf = vertex.getTree().lastIndexOfLeafRow();
-      return LongStream.of(lastLeaf - 1, lastLeaf);
+      return LongStream.rangeClosed(lastLeaf - 2, lastLeaf);
     }
     // other branch vertices rely on their children and their closest cousins
-    return LongStream.rangeClosed(vertex.leftDescendantAt(1) - 1, vertex.rightDescendantAt(1) + 1);
+    return LongStream.rangeClosed(vertex.leftDescendantAt(1), vertex.rightDescendantAt(1) + 2);
   }
 
   static int[] coefficientsFor(IgaVertex src, long dst) {
@@ -73,28 +71,28 @@ class VertexDependencies {
       return INTERIM_LEFT;
     }
     if (offsetRight == 2) {
-      return INTERIM_LEFT;
+      return INTERIM_FIRST;
     }
     return NONE;
   }
 
   private static int[] interimCoefficients(IgaVertex src, long dst) {
-    long left = src.leftDescendantAt(1) + COEFFICIENT_SKEW;
-    long right = src.rightDescendantAt(1) + COEFFICIENT_SKEW;
-    if (dst < left) {
+    long left = src.leftDescendantAt(1);
+    long right = src.rightDescendantAt(1) + 2;
+    if (dst == left) {
       return INTERIM_FIRST;
     }
-    if (dst > right) {
+    if (dst == right) {
       return INTERIM_LAST;
     }
     if (dst == left + 1) {
-      return INTERIM_ALL;
-    }
-    if (dst == left) {
       return INTERIM_LEFT;
     }
-    if (dst == right) {
+    if (dst == right - 1) {
       return INTERIM_RIGHT;
+    }
+    if (dst == (left + right) / 2) {
+      return INTERIM_ALL;
     }
     return NONE;
   }
