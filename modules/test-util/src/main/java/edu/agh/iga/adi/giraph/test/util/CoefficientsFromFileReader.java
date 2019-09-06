@@ -14,6 +14,7 @@ import java.util.function.BinaryOperator;
 import java.util.stream.Stream;
 
 import static java.lang.Long.parseLong;
+import static java.lang.Math.round;
 import static java.nio.file.Files.list;
 import static java.nio.file.Files.readAllLines;
 import static java.util.Arrays.stream;
@@ -31,17 +32,18 @@ public class CoefficientsFromFileReader {
   }
 
   public static SortedMap<Long, PrimitiveDenseStore> coefficientsOfFile(Path file, int rows) {
-    return coefficientsOf(Stream.of(file), rows);
+    return coefficientsOf(Stream.of(file), rows, 3);
   }
 
-  public static SortedMap<Long, PrimitiveDenseStore> coefficientsOfDir(Path dir, int rows) throws IOException {
+  public static SortedMap<Long, PrimitiveDenseStore> coefficientsOfDir(Path dir, int rows, int prec) throws IOException {
     return coefficientsOf(
         list(dir).filter(p -> p.getFileName().toString().startsWith("part")),
-        rows
+        rows,
+        prec
     );
   }
 
-  private static SortedMap<Long, PrimitiveDenseStore> coefficientsOf(Stream<Path> paths, int rows) {
+  private static SortedMap<Long, PrimitiveDenseStore> coefficientsOf(Stream<Path> paths, int rows, int prec) {
     return paths
         .map(CoefficientsFromFileReader::readCoefficientLines)
         .flatMap(List::stream)
@@ -54,6 +56,7 @@ public class CoefficientsFromFileReader {
           int dofs = coefficientCount / rows;
           double[] data = stream(values)
               .mapToDouble(Double::parseDouble)
+              .map(v -> (double) round(v * prec) / prec)
               .toArray();
           ColumnMajorArray dataAccess = new ColumnMajorArray(rows, dofs, 0, data);
           return Pair.of(id, PrimitiveDenseStore.FACTORY.copy(dataAccess));
