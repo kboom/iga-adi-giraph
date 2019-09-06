@@ -47,7 +47,11 @@ public final class HorizontalElementFactory implements ElementFactory {
   @Override
   public IgaElement createBranchElement(IgaVertex vertex, Access2D<Double> coefficients) {
     val element = branchElement(vertex);
-    element.mx.fillMatching(coefficients); // todo not sure if this works
+    if (vertex.isLeading()) {
+      element.mx.fillMatching(coefficients);
+    } else {
+      element.mx.regionByRows(0, 1, 2).fillMatching(coefficients);
+    }
     return element;
   }
 
