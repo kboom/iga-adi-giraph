@@ -8,6 +8,7 @@ import edu.agh.iga.adi.giraph.core.factory.ElementFactory;
 import edu.agh.iga.adi.giraph.core.factory.HorizontalElementFactory;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
+import lombok.val;
 import org.apache.giraph.io.formats.TextVertexValueInputFormat;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -74,16 +75,17 @@ public class StepVertexInputFormat extends TextVertexValueInputFormat<LongWritab
 
     @Override
     protected IgaElementWritable getValue(final double[] line) {
-      return new IgaElementWritable(elementFactory.createBranchElement(vertex(line[0]), asMatrix(line)));
+      val vertex = vertex(line[0]);
+      return new IgaElementWritable(elementFactory.createBranchElement(vertex, asMatrix(vertex, line)));
     }
 
     private IgaVertex vertex(double v) {
       return vertexOf(directionTree, (long) v);
     }
 
-    private MatrixStore<Double> asMatrix(double[] line) {
+    private MatrixStore<Double> asMatrix(IgaVertex vertex, double[] line) {
       return FACTORY.builder()
-          .makeWrapper(new RowMajorArray(3, mesh.getDofsX(), 1, line))
+          .makeWrapper(new RowMajorArray(vertex.isLeading() ? 5 : 3, mesh.getDofsX(), 1, line)) // todo should be column major?
           .get();
     }
 
