@@ -53,6 +53,10 @@ public class IgaElementBuilder {
     return this;
   }
 
+  public IgaElement withSpecificMatrixX(PrimitiveDenseStore ma) {
+    return withMatrixX(ma).build();
+  }
+
   public IgaElement build() {
     return igaElement(
         vertex.id(),

@@ -2,6 +2,7 @@ package edu.agh.iga.adi.giraph.core.test;
 
 import edu.agh.iga.adi.giraph.core.DirectionTree;
 import edu.agh.iga.adi.giraph.core.IgaVertex;
+import edu.agh.iga.adi.giraph.core.Mesh;
 import lombok.NoArgsConstructor;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
@@ -11,6 +12,7 @@ import static lombok.AccessLevel.PRIVATE;
 public class Tree12 {
 
   public static final DirectionTree DIRECTION_TREE = new DirectionTree(12);
+  public static final Mesh MESH = Mesh.aMesh().withElements(12).build();
 
   public static final long INTERIM_2_ID = 2L;
   public static IgaVertex INTERIM_2 = vertexOf(DIRECTION_TREE, INTERIM_2_ID);

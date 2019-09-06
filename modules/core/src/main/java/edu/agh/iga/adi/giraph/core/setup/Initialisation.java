@@ -9,6 +9,7 @@ import edu.agh.iga.adi.giraph.core.problem.PartialSolution;
 import edu.agh.iga.adi.giraph.core.problem.ProblemFactory;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.val;
 import org.ojalgo.matrix.store.TransformableRegion;
 
@@ -58,6 +59,7 @@ public class Initialisation {
   }
 
   @Getter
+  @ToString
   public static class InitialisationIgaMessage extends IgaMessage implements Comparable<InitialisationIgaMessage> {
 
     private final TransformableRegion<Double> mxp;
