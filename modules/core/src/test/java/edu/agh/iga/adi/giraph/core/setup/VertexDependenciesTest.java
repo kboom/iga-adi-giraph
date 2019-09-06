@@ -16,12 +16,12 @@ class VertexDependenciesTest {
 
   @Test
   void middleBranch() {
-    assertThat(verticesDependingOn(BRANCH_5)).containsExactlyInAnyOrder(10L, 11L, 12L, 13L, 14L);
+    assertThat(verticesDependingOn(BRANCH_5)).containsExactlyInAnyOrder(11L, 12L, 13L, 14L, 15L);
   }
 
   @Test
   void trailingBranch() {
-    assertThat(verticesDependingOn(BRANCH_7)).containsExactlyInAnyOrder(18L, 19L);
+    assertThat(verticesDependingOn(BRANCH_7)).containsExactlyInAnyOrder(17L, 18L, 19L);
   }
 
   @Test
@@ -51,27 +51,27 @@ class VertexDependenciesTest {
 
   @Test
   void b5CoefficientsForL12() {
-    assertThat(coefficientsFor(BRANCH_5, LEAF_12_ID)).containsExactly(0);
+    assertThat(coefficientsFor(BRANCH_5, LEAF_12_ID)).containsExactly(0, 1);
   }
 
   @Test
   void b5CoefficientsForL13() {
-    assertThat(coefficientsFor(BRANCH_5, LEAF_13_ID)).containsExactly(0, 1);
+    assertThat(coefficientsFor(BRANCH_5, LEAF_13_ID)).containsExactly(0, 1, 2);
   }
 
   @Test
   void b5CoefficientsForL14() {
-    assertThat(coefficientsFor(BRANCH_5, LEAF_14_ID)).containsExactly(0, 1, 2);
+    assertThat(coefficientsFor(BRANCH_5, LEAF_14_ID)).containsExactly(1, 2);
   }
 
   @Test
   void b5CoefficientsForL15() {
-    assertThat(coefficientsFor(BRANCH_5, LEAF_15_ID)).containsExactly(1, 2);
+    assertThat(coefficientsFor(BRANCH_5, LEAF_15_ID)).containsExactly(2);
   }
 
   @Test
   void b5CoefficientsForL16() {
-    assertThat(coefficientsFor(BRANCH_5, LEAF_16_ID)).containsExactly(2);
+    assertThat(coefficientsFor(BRANCH_5, LEAF_16_ID)).isEmpty();
   }
 
 }
