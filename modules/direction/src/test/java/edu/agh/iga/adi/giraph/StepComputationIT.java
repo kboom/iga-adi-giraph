@@ -23,6 +23,8 @@ import static java.nio.file.Files.createDirectory;
 
 class StepComputationIT {
 
+  private static final String ONE_MAT = "StepComputationIT/identity.mat";
+
   @Test
   @SneakyThrows
   void canRun(@TempDir Path dir) {
@@ -33,7 +35,7 @@ class StepComputationIT {
 
     loadProblem(
         problemLoaderConfig()
-            .resource("StepComputationIT/one.mat")
+            .resource("StepComputationIT/identity.mat")
             .shards(2)
             .targetPath(inputDir)
             .build()
@@ -59,7 +61,7 @@ class StepComputationIT {
 
     // then
     assertThatCoefficients(outputDir)
-        .areEqualToResource("StepComputationIT/one.mat", ROWS_BOUND_TO_NODE);
+        .areEqualToResource(ONE_MAT, ROWS_BOUND_TO_NODE);
   }
 
 }

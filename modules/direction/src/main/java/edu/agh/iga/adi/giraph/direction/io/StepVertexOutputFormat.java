@@ -1,14 +1,17 @@
 package edu.agh.iga.adi.giraph.direction.io;
 
 import edu.agh.iga.adi.giraph.core.DirectionTree;
+import edu.agh.iga.adi.giraph.core.IgaVertex;
 import edu.agh.iga.adi.giraph.core.IgaVertex.BranchVertex;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
+import lombok.val;
 import org.apache.giraph.graph.Vertex;
 import org.apache.giraph.io.formats.TextVertexOutputFormat;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
+import org.ojalgo.matrix.store.PrimitiveDenseStore;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
@@ -47,10 +50,32 @@ public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable,
 
     @Override
     protected Text convertVertexToLine(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
-      if (vertexOf(directionTree, vertex.getId().get()).is(BranchVertex.class)) {
-        return new Text(
-            vertex.getId().get() + " " + join(vertex.getValue().getElement().mx.data, DELIMITER)
-        );
+      val vid = vertex.getId().get();
+      val v = vertexOf(directionTree, vid);
+      if (v.is(BranchVertex.class)) {
+        val mx = vertex.getValue().getElement().mx;
+        if(v.isLeading()) {
+          // we want to store all 5
+          return new Text(
+              vid + " " + join(mx.data, DELIMITER)
+          );
+        } else {
+          val cols = (int) mx.countColumns();
+          val rows = (int) mx.countRows();
+          // we want to store only 3 last ones
+          StringBuilder sb = new StringBuilder(cols * 3 + 1);
+          val data = mx.data;
+          for(int r = 2; r < 5; r++) {
+            for(int c = 0; c < cols; c++) {
+              sb.append(data[c * rows + r]);
+              sb.append(",");
+            }
+          }
+
+          return new Text(
+              vid + " " + sb.deleteCharAt(sb.length() - 1).toString()
+          );
+        }
       } else {
         return EMPTY_LINE;
       }

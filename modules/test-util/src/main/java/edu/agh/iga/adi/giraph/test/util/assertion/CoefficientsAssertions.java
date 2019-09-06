@@ -15,6 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public final class CoefficientsAssertions extends AbstractAssert<CoefficientsAssertions, Path> {
 
+  private static final int STANDARD_PRECISION = 3;
+
   private CoefficientsAssertions(Path path) {
     super(path, CoefficientsAssertions.class);
   }
@@ -32,7 +34,7 @@ public final class CoefficientsAssertions extends AbstractAssert<CoefficientsAss
   }
 
   private CoefficientsAssertions assertCoefficients(String resource, int rows) throws IOException {
-    SortedMap<Long, PrimitiveDenseStore> actualCoefficients = coefficientsOfDir(actual, rows);
+    SortedMap<Long, PrimitiveDenseStore> actualCoefficients = coefficientsOfDir(actual, rows, STANDARD_PRECISION);
     SortedMap<Long, PrimitiveDenseStore> expectedCoefficients = coefficientsOfFile(pathOfResource(resource), rows);
 
     assertThat(actualCoefficients).containsExactlyEntriesOf(expectedCoefficients);
