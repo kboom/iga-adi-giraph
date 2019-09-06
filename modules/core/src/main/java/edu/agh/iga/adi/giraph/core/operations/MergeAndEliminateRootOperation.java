@@ -1,13 +1,18 @@
 package edu.agh.iga.adi.giraph.core.operations;
 
 import edu.agh.iga.adi.giraph.core.*;
+import lombok.val;
 import org.ojalgo.matrix.store.TransformableRegion;
 
+import static edu.agh.iga.adi.giraph.core.IgaConstants.COLS_BOUND_TO_NODE;
+import static edu.agh.iga.adi.giraph.core.IgaConstants.ROWS_BOUND_TO_NODE;
+import static edu.agh.iga.adi.giraph.core.IgaElement.igaElement;
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateRootOperation.MergeAndEliminateRootMessage;
 import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.partialBackwardsSubstitution;
 import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.partialForwardElimination;
 import static org.ojalgo.function.constant.PrimitiveMath.ADD;
+import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
 public final class MergeAndEliminateRootOperation implements IgaOperation<MergeAndEliminateRootMessage> {
 
@@ -25,7 +30,10 @@ public final class MergeAndEliminateRootOperation implements IgaOperation<MergeA
 
   @Override
   public IgaElement preConsume(IgaVertex vertex, IgaContext ctx, IgaElement element) {
-    return element.clean();
+    val ma = FACTORY.makeZero(ROWS_BOUND_TO_NODE, COLS_BOUND_TO_NODE);
+    val mb = FACTORY.makeZero(ROWS_BOUND_TO_NODE, ctx.getMesh().getDofsX());
+    val mx = FACTORY.makeZero(ROWS_BOUND_TO_NODE, ctx.getMesh().getDofsX());
+    return igaElement(vertex.id(), ma, mb, mx);
   }
 
   @Override
