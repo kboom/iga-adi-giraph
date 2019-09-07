@@ -1,10 +1,5 @@
 package edu.agh.iga.adi.giraph.direction.test;
 
-import edu.agh.iga.adi.giraph.direction.IgaPartitionerFactory;
-import edu.agh.iga.adi.giraph.direction.io.IgaEdgeInputFormat;
-import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
-import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
-import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import lombok.SneakyThrows;
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.io.VertexInputFormat;
@@ -12,15 +7,14 @@ import org.apache.giraph.io.VertexOutputFormat;
 import org.apache.giraph.job.GiraphJob;
 import org.apache.giraph.master.MasterCompute;
 import org.apache.giraph.worker.WorkerContext;
-import org.apache.hadoop.io.LongWritable;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.COEFFICIENTS_INPUT;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.COEFFICIENTS_OUTPUT;
+import static edu.agh.iga.adi.giraph.direction.IgaGiraphJobFactory.igaJob;
 import static java.lang.Integer.MAX_VALUE;
 import static java.util.Optional.ofNullable;
 import static org.apache.giraph.conf.GiraphConstants.*;
@@ -115,31 +109,17 @@ public class GiraphTestJob {
     }
 
     private GiraphJob createJob(GiraphConfiguration conf) {
-      try {
-        return new GiraphJob(conf, "test");
-      } catch (IOException e) {
-        throw new IllegalStateException(e);
-      }
+      return igaJob(conf);
     }
 
     private GiraphConfiguration createConfiguration() {
       GiraphConfiguration conf = new GiraphConfiguration();
-      conf.setMasterComputeClass(computationClazz);
-      conf.setVertexInputFormatClass(vertexInputFormatClazz);
-      conf.setVertexOutputFormatClass(vertexOutputFormatClazz);
-      conf.setWorkerContextClass(workerContextClazz);
       conf.setLocalTestMode(true);
       //conf.setDoOutputDuringComputation(true);
       conf.setMaxMasterSuperstepWaitMsecs(30 * 1000);
       conf.setEventWaitMsecs(3 * 1000);
-      conf.setEdgeInputFormatClass(IgaEdgeInputFormat.class);
-      conf.setGraphPartitionerFactoryClass(IgaPartitionerFactory.class);
       ofNullable(inputDir).ifPresent(dir -> COEFFICIENTS_INPUT.set(conf, dir.toString()));
       ofNullable(outputDir).ifPresent(dir -> COEFFICIENTS_OUTPUT.set(conf, dir.toString()));
-      VERTEX_ID_CLASS.set(conf, LongWritable.class);
-      VERTEX_VALUE_CLASS.set(conf, IgaElementWritable.class);
-      EDGE_VALUE_CLASS.set(conf, IgaOperationWritable.class);
-      OUTGOING_MESSAGE_VALUE_CLASS.set(conf, IgaMessageWritable.class);
       ZOOKEEPER_SERVERLIST_POLL_MSECS.set(conf, 500);
       MAX_NUMBER_OF_SUPERSTEPS.set(conf, MAX_VALUE);
       SPLIT_MASTER_WORKER.set(conf, false);
