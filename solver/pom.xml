@@ -104,6 +104,7 @@
                                 <argument>-Dgiraph.maxWorkers=1</argument>
                                 <argument>-Dgiraph.SplitMasterWorker=false</argument>
                                 <argument>-Dgiraph.localTestMode=true</argument>
+                                <argument>-Diga.initialisation.type=coefficients</argument>
                                 <argument>-Dgiraph.vertex.input.dir=${examples.dir}/identity/input</argument>
                                 <argument>-Dmapred.output.dir=${examples.dir}/identity/output</argument>
                             </arguments>
