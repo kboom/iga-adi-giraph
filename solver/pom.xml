@@ -26,11 +26,6 @@
 
         <dependency>
             <groupId>edu.agh.giraph</groupId>
-            <artifactId>initialisation</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>edu.agh.giraph</groupId>
             <artifactId>test-util</artifactId>
         </dependency>
 
@@ -104,10 +99,11 @@
                                 <argument>-classpath</argument>
                                 <classpath/>
                                 <argument>edu.agh.iga.adi.giraph.IgaSolverTool</argument>
+                                <argument>-Diga.problem.size=12</argument>
                                 <argument>-Dgiraph.minWorkers=1</argument>
                                 <argument>-Dgiraph.maxWorkers=1</argument>
-                                <argument>-giraph.SplitMasterWorker=false</argument>
-                                <argument>-giraph.localTestMode=true</argument>
+                                <argument>-Dgiraph.SplitMasterWorker=false</argument>
+                                <argument>-Dgiraph.localTestMode=true</argument>
                                 <argument>-Dgiraph.vertex.input.dir=${examples.dir}/identity/input</argument>
                                 <argument>-Dmapred.output.dir=${examples.dir}/identity/output</argument>
                             </arguments>
