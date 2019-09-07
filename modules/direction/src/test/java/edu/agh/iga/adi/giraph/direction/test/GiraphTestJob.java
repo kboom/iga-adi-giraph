@@ -87,7 +87,7 @@ public class GiraphTestJob {
     private GiraphConfiguration createConfiguration() {
       GiraphConfiguration conf = new GiraphConfiguration();
       conf.setLocalTestMode(true);
-      //conf.setDoOutputDuringComputation(true);
+//      conf.setDoOutputDuringComputation(true);
       conf.setMaxMasterSuperstepWaitMsecs(30 * 1000);
       conf.setEventWaitMsecs(3 * 1000);
       ofNullable(inputDir).ifPresent(dir -> COEFFICIENTS_INPUT.set(conf, dir.toString()));
