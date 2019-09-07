@@ -36,7 +36,6 @@ public class IgaGiraphJobFactory {
     EDGE_VALUE_CLASS.set(conf, IgaOperationWritable.class);
     OUTGOING_MESSAGE_VALUE_CLASS.set(conf, IgaMessageWritable.class);
     MAX_NUMBER_OF_SUPERSTEPS.set(conf, MAX_VALUE);
-    SPLIT_MASTER_WORKER.set(conf, false);
     return conf;
   }
 
