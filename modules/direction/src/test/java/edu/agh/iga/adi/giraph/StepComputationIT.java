@@ -43,10 +43,6 @@ class StepComputationIT {
 
     // given
     GiraphTestJob job = giraphJob()
-        .computationClazz(StepComputation.class)
-        .workerContextClazz(IgaWorkerContext.class)
-        .vertexInputFormatClazz(StepVertexInputFormat.class)
-        .vertexOutputFormatClazz(StepVertexOutputFormat.class)
         .coefficientsInputDir(inputDir)
         .coefficientsOutputDir(outputDir)
         .configuration(conf -> {
