@@ -230,37 +230,6 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.22.0</version>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
-                <executions>
-                    <execution>
-                        <id>identity</id>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>
-                                <argument>-Dgiraph.vertex.input.dir=${examples.dir}/identity/input</argument>
-                                <argument>-Dmapred.output.dir=${examples.dir}/identity/output</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <mainClass>edu.agh.iga.adi.giraph.IgaSolverTool</mainClass>
-                    <executable>java</executable>
-                    <arguments>
-                        <argument>-classpath</argument>
-                        <classpath/>
-                        <argument>-Dgiraph.minWorkers=1</argument>
-                        <argument>-Dgiraph.maxWorkers=1</argument>
-                        <argument>-giraph.SplitMasterWorker=false</argument>
-                        <argument>-giraph.localTestMode=true</argument>
-                    </arguments>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 </project>
