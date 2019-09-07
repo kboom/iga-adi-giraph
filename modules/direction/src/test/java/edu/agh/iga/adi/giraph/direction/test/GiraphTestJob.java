@@ -2,11 +2,7 @@ package edu.agh.iga.adi.giraph.direction.test;
 
 import lombok.SneakyThrows;
 import org.apache.giraph.conf.GiraphConfiguration;
-import org.apache.giraph.io.VertexInputFormat;
-import org.apache.giraph.io.VertexOutputFormat;
 import org.apache.giraph.job.GiraphJob;
-import org.apache.giraph.master.MasterCompute;
-import org.apache.giraph.worker.WorkerContext;
 
 import java.nio.file.Path;
 import java.util.function.Consumer;
@@ -45,35 +41,11 @@ public class GiraphTestJob {
 
   public static class GiraphJobBuilder {
 
-    private Class<? extends MasterCompute> computationClazz;
-    private Class<? extends VertexInputFormat> vertexInputFormatClazz;
-    private Class<? extends VertexOutputFormat> vertexOutputFormatClazz;
-    private Class<? extends WorkerContext> workerContextClazz;
     private Path inputDir;
     private Path outputDir;
     private Function<GiraphConfiguration, DirManager> dirManagerFunction = DirManager::standardDirManager;
     private Consumer<GiraphConfiguration> configurationModifier = (conf) -> {
     };
-
-    public GiraphJobBuilder workerContextClazz(Class<? extends WorkerContext> workerContextClazz) {
-      this.workerContextClazz = workerContextClazz;
-      return this;
-    }
-
-    public GiraphJobBuilder computationClazz(Class<? extends MasterCompute> computationClazz) {
-      this.computationClazz = computationClazz;
-      return this;
-    }
-
-    public GiraphJobBuilder vertexInputFormatClazz(Class<? extends VertexInputFormat> vertexInputFormatClazz) {
-      this.vertexInputFormatClazz = vertexInputFormatClazz;
-      return this;
-    }
-
-    public GiraphJobBuilder vertexOutputFormatClazz(Class<? extends VertexOutputFormat> vertexOutputFormatClazz) {
-      this.vertexOutputFormatClazz = vertexOutputFormatClazz;
-      return this;
-    }
 
     public GiraphJobBuilder coefficientsInputDir(Path inputDir) {
       this.inputDir = inputDir;
