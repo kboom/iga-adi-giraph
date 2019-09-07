@@ -36,6 +36,9 @@ public class IgaGiraphJobFactory {
     return doCreateJob(injectSolverConfiguration(configuration));
   }
 
+  /*
+   * https://giraph.apache.org/options.html
+   */
   private static GiraphConfiguration injectSolverConfiguration(GiraphConfiguration conf) {
     conf.setMasterComputeClass(StepComputation.class);
     conf.setWorkerContextClass(IgaWorkerContext.class);
@@ -48,6 +51,7 @@ public class IgaGiraphJobFactory {
     EDGE_VALUE_CLASS.set(conf, IgaOperationWritable.class);
     OUTGOING_MESSAGE_VALUE_CLASS.set(conf, IgaMessageWritable.class);
     MAX_NUMBER_OF_SUPERSTEPS.set(conf, MAX_VALUE);
+    IS_PURE_YARN_JOB.set(conf, true);
     return conf;
   }
 
