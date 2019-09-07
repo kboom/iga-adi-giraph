@@ -1,6 +1,26 @@
 # IGA-ADI Giraph Solver
 [![Build Status](https://travis-ci.com/kboom/iga-adi-giraph.svg?token=wBhPe1ndPxyFXb6jUk8s&branch=master)](https://travis-ci.com/kboom/iga-adi-giraph)
 
+## Running the solver
+
+This repository contains a number of complete simulations with the input and output values stored under `examples` directory.
+
+### Prerequisites
+
+You have to have JDK 11 installed.
+
+### Running from maven
+
+You can run any of the available examples using the maven command
+```
+mvn exec:exec@[YOUR SIMULATION]
+```
+where `[YOUR SIMULATION]` has to be replaced with one of
+
+| Simulation | Value |
+|------------|-------|
+| Identity | identity |
+
 
 ## Configuration parameters
 
