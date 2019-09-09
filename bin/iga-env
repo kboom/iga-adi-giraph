@@ -1,5 +1,5 @@
 # This is the runner for the solver.
-# Use run it like this ./iga-env.sh
+# Use run it like this ./iga-env
 
 #!/usr/bin/env bash
 
