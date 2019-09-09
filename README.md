@@ -9,6 +9,12 @@ This repository contains a number of complete simulations with the input and out
 
 You have to have JDK 11 installed.
 
+### Snapshot of Giraph
+
+Download the latest Giraph and run the following command from the repository root directory:
+
+` mvn -pl giraph-core -Phadoop_yarn -Dhadoop.version=2.9.2 -fae -DskipTests -Dcheckstyle.skip  clean install`
+
 ### Running from maven
 
 You can run any of the available examples using the maven command
@@ -33,6 +39,7 @@ where `[YOUR SIMULATION]` has to be replaced with one of
 
 ## Links
 
+* [Hadoop mini clusters](https://github.com/sakserv/hadoop-mini-clusters)
 * [Giraph on Docker](https://github.com/uwsampa/giraph-docker)
 * [Hadoop Matrix Transposition](https://github.com/o19s/Hadoopadoop/blob/master/matrixtranspose/MatrixTranspose.java)
 * [ojAlgo examples](https://www.ojalgo.org/code-examples/)

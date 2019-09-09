@@ -7,6 +7,9 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import static edu.agh.iga.adi.giraph.direction.IgaGiraphJobFactory.igaJob;
 
 public class IgaSolverTool implements Tool {
@@ -21,8 +24,11 @@ public class IgaSolverTool implements Tool {
 
   @Override
   public int run(String[] strings) {
-    LOG.info("Running computations");
-    val job = igaJob(giraphConfiguration());
+    GiraphConfiguration conf = giraphConfiguration();
+    val job = igaJob(conf);
+    setConf(conf);
+    LOG.info("Running computations " + Stream.of(strings).collect(Collectors.joining(System.lineSeparator())));
+
     try {
       job.run(true);
       return 0;

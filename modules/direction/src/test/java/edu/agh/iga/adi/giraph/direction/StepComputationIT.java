@@ -1,8 +1,10 @@
-package edu.agh.iga.adi.giraph;
+package edu.agh.iga.adi.giraph.direction;
 
 import edu.agh.iga.adi.giraph.direction.test.GiraphTestJob;
 import lombok.SneakyThrows;
 import lombok.val;
+import org.apache.hadoop.yarn.server.MiniYARNCluster;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -15,12 +17,21 @@ import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolve
 import static edu.agh.iga.adi.giraph.direction.test.GiraphTestJob.giraphJob;
 import static edu.agh.iga.adi.giraph.direction.test.ProblemLoader.loadProblem;
 import static edu.agh.iga.adi.giraph.direction.test.ProblemLoader.problemLoaderConfig;
+import static edu.agh.iga.adi.giraph.direction.test.YarnTestClusterFactory.localYarnCluster;
 import static edu.agh.iga.adi.giraph.test.util.assertion.CoefficientsAssertions.assertThatCoefficients;
 import static java.nio.file.Files.createDirectory;
 
 class StepComputationIT {
 
   private static final String IDENTITY_MAT = "StepComputationIT/identity.mat";
+
+  private static final MiniYARNCluster YARN_CLUSTER = localYarnCluster();
+
+  @AfterEach
+  @SneakyThrows
+  void stop() {
+    YARN_CLUSTER.stop();
+  }
 
   @Test
   @SneakyThrows
@@ -36,6 +47,9 @@ class StepComputationIT {
           INITIALISATION_TYPE.set(conf, SURFACE_PROBLEM.getType());
         })
         .build();
+
+    YARN_CLUSTER.init(job.getConfig());
+    YARN_CLUSTER.start();
 
     // when
     job.run();

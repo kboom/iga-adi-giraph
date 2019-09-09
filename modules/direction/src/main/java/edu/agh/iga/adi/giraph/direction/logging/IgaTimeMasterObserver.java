@@ -2,6 +2,10 @@ package edu.agh.iga.adi.giraph.direction.logging;
 
 import org.apache.giraph.conf.ImmutableClassesGiraphConfiguration;
 import org.apache.giraph.master.MasterObserver;
+import org.apache.giraph.metrics.AggregatedMetrics;
+import org.apache.giraph.partition.PartitionStats;
+
+import java.util.List;
 
 import static edu.agh.iga.adi.giraph.direction.logging.TimeLogger.logStepTime;
 import static edu.agh.iga.adi.giraph.direction.logging.TimeLogger.logTotalTime;
@@ -35,6 +39,11 @@ public class IgaTimeMasterObserver implements MasterObserver {
   @Override
   public void postSuperstep(long superstep) {
     logStepTime(superstep, currentTimeMillis() - stepStartedAt);
+  }
+
+  @Override
+  public void superstepMetricsUpdate(long superstep, AggregatedMetrics aggregatedMetrics, List<PartitionStats> partitionStatsList) {
+
   }
 
   @Override

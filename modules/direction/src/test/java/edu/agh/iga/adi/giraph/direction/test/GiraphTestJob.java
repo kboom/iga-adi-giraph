@@ -1,9 +1,12 @@
 package edu.agh.iga.adi.giraph.direction.test;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.giraph.conf.GiraphConfiguration;
-import org.apache.giraph.job.GiraphJob;
+import org.apache.giraph.yarn.GiraphYarnClient;
+import org.apache.hadoop.yarn.conf.YarnConfiguration;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -12,17 +15,22 @@ import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.COEFFICIENTS_INP
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.COEFFICIENTS_OUTPUT;
 import static edu.agh.iga.adi.giraph.direction.IgaGiraphJobFactory.igaJob;
 import static java.lang.Integer.MAX_VALUE;
+import static java.lang.System.getProperty;
 import static java.util.Optional.ofNullable;
 import static org.apache.giraph.conf.GiraphConstants.*;
 import static org.apache.giraph.io.formats.GiraphFileInputFormat.addVertexInputPath;
+import static org.apache.hadoop.yarn.conf.YarnConfiguration.YARN_MINICLUSTER_FIXED_PORTS;
 
+@Getter
 public class GiraphTestJob {
 
-  private final GiraphJob job;
+  private final GiraphYarnClient job;
+  private final GiraphConfiguration config;
   private final DirManager dirManager;
 
-  private GiraphTestJob(GiraphJob job, DirManager dirManager) {
+  private GiraphTestJob(GiraphYarnClient job, GiraphConfiguration config, DirManager dirManager) {
     this.job = job;
+    this.config = config;
     this.dirManager = dirManager;
   }
 
@@ -70,9 +78,9 @@ public class GiraphTestJob {
     public GiraphTestJob build() {
       GiraphConfiguration conf = createConfiguration();
       configurationModifier.accept(conf);
-      GiraphJob job = createJob(conf);
+      GiraphYarnClient job = createJob(conf);
       setInputPath(conf);
-      return new GiraphTestJob(job, dirManagerFunction.apply(conf));
+      return new GiraphTestJob(job, conf, dirManagerFunction.apply(conf));
     }
 
     @SneakyThrows
@@ -80,23 +88,29 @@ public class GiraphTestJob {
       addVertexInputPath(conf, new org.apache.hadoop.fs.Path(COEFFICIENTS_INPUT.get(conf)));
     }
 
-    private GiraphJob createJob(GiraphConfiguration conf) {
+    private GiraphYarnClient createJob(GiraphConfiguration conf) {
       return igaJob(conf);
     }
 
     private GiraphConfiguration createConfiguration() {
       GiraphConfiguration conf = new GiraphConfiguration();
       conf.setLocalTestMode(true);
-//      conf.setDoOutputDuringComputation(true);
       conf.setMaxMasterSuperstepWaitMsecs(30 * 1000);
       conf.setEventWaitMsecs(3 * 1000);
+      conf.setYarnTaskHeapMb(256);
+      conf.setNumComputeThreads(1);
+      conf.setMaxTaskAttempts(1);
+      conf.setNumInputSplitsThreads(1);
+      conf.setYarnLibJars(getProperty("java.class.path").replaceAll(":", ",")); // no need
       ofNullable(inputDir).ifPresent(dir -> COEFFICIENTS_INPUT.set(conf, dir.toString()));
       ofNullable(outputDir).ifPresent(dir -> COEFFICIENTS_OUTPUT.set(conf, dir.toString()));
       ZOOKEEPER_SERVERLIST_POLL_MSECS.set(conf, 500);
       MAX_NUMBER_OF_SUPERSTEPS.set(conf, MAX_VALUE);
       SPLIT_MASTER_WORKER.set(conf, false);
-      LOCAL_TEST_MODE.set(conf, true);
+      LOCAL_TEST_MODE.set(conf, false); // yarn doesn't allow to use it
+      conf.set(MIN_WORKERS, "1");
       conf.set(MAX_WORKERS, "1");
+      conf.setBoolean(YARN_MINICLUSTER_FIXED_PORTS, true);
       return conf;
     }
 

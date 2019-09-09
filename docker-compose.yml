@@ -25,6 +25,8 @@ services:
   resourcemanager:
     image: bde2020/hadoop-resourcemanager:2.0.0-hadoop2.7.4-java8
     container_name: resourcemanager
+    ports:
+      - 8088:8088
     environment:
       SERVICE_PRECONDITION: "namenode:50070 datanode:50075"
     env_file:
@@ -43,6 +45,8 @@ services:
     container_name: historyserver
     environment:
       SERVICE_PRECONDITION: "namenode:50070 datanode:50075 resourcemanager:8088"
+    ports:
+      - 8188:8188
     volumes:
       - hadoop_historyserver:/hadoop/yarn/timeline
     env_file:
