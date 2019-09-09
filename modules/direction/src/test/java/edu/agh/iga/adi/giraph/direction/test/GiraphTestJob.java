@@ -4,9 +4,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.yarn.GiraphYarnClient;
-import org.apache.hadoop.yarn.conf.YarnConfiguration;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -94,8 +92,7 @@ public class GiraphTestJob {
 
     private GiraphConfiguration createConfiguration() {
       GiraphConfiguration conf = new GiraphConfiguration();
-      conf.setLocalTestMode(true);
-      conf.setMaxMasterSuperstepWaitMsecs(30 * 1000);
+      conf.setMaxMasterSuperstepWaitMsecs(1000);
       conf.setEventWaitMsecs(3 * 1000);
       conf.setYarnTaskHeapMb(256);
       conf.setNumComputeThreads(1);
