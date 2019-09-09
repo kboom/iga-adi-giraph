@@ -6,4 +6,4 @@ fi
 
 ENV_DIR="$( cd -P "$( dirname "${BASH_SOURCE:-0}" )" && pwd )"
 source ${ENV_DIR}/iga-env
-exec "yarn" --config $HADOOP_CONF_DIR jar $JAR $CLASS $HADOOP_PROPERTIES -libjars $GIRAPH_JARS  "$@"
+exec "yarn" --config $HADOOP_CONF_DIR jar $IGA_JAR $CLASS $HADOOP_PROPERTIES -libjars $GIRAPH_JARS  "$@"

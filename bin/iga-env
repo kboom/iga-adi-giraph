@@ -23,49 +23,18 @@ else
   CLASSPATH=${IGA_JAR}
 fi
 
+# add configuration to CLASSPATH
 CLASSPATH=${CLASSPATH}:${IGA_HOME}/conf
 CLASS=org.apache.giraph.GiraphRunner
 
 # so that filenames w/ spaces are handled correctly in loops below
 IFS=
-
-# add release dependencies to CLASSPATH
-if [[ -d "$IGA_HOME/lib" ]]; then
-	for f in ${$IGA_HOME}/lib/*.jar; do
-	  CLASSPATH=${CLASSPATH}:${f}
-	done
-
-	for f in ${IGA_HOME}/giraph-core*.jar ; do
-	  if [[ -e "$f" ]]; then
-	    JAR=${f}
-           CLASSPATH=${CLASSPATH}:$f
-	    break
-	  fi
-	done
-else
-	echo "No lib directory, assuming dev environment"
-	if [[ ! -d "$IGA_HOME/solver/target" ]]; then
-		echo "No target directory. Build before proceeding."
-		exit 1
-	fi
-
-	CLASSPATH2=`mvn dependency:build-classpath | grep -v "[INFO]"`
-	CLASSPATH=${CLASSPATH}:${CLASSPATH2}
-
-	for f in ${IGA_HOME}/solver/target/*.jar; do
-	  if [[ -e "$f" ]]; then
-	    JAR=${f}
-	    break
-	  fi
-	done
-fi
+# add release dependencies to CLASSPATH, as it is a fat jar we do not need to add Giraph or any other dependency seperately
+for f in ${$IGA_HOME}/dist/*.jar; do
+  CLASSPATH=${CLASSPATH}:${f}
+done
 # restore ordinary behaviour
 unset IFS
-
-if [[ "$JAR" = "" ]] ; then
-  echo "Can't find Giraph jar."
-  exit 1
-fi
 
 if [[ "$HADOOP_CONF_DIR" = "" ]] ; then
   HADOOP_CONF_DIR=${HADOOP_HOME}/conf
@@ -75,5 +44,5 @@ else
 fi
 
 # Giraph's jars to add to distributed cache via -libjar, which are csv rather than :sv
-GIRAPH_JARS=`echo ${JAR}:${CLASSPATH}|sed s/:/,/g`
+GIRAPH_JARS=`echo ${CLASSPATH}|sed s/:/,/g`
 export HADOOP_CLASSPATH=${HADOOP_CLASSPATH}:${CLASSPATH}
