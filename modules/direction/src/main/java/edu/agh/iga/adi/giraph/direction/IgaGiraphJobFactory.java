@@ -36,7 +36,8 @@ public class IgaGiraphJobFactory {
   );
 
   public static GiraphYarnClient igaJob(GiraphConfiguration configuration) {
-    return doCreateJob(injectSolverConfiguration(configuration));
+    GiraphYarnClient job = doCreateJob(injectSolverConfiguration(configuration));
+    return job;
   }
 
   /*
