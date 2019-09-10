@@ -3,6 +3,7 @@ package edu.agh.iga.adi.giraph.direction;
 import edu.agh.iga.adi.giraph.direction.test.GiraphTestJob;
 import lombok.SneakyThrows;
 import lombok.val;
+import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.hadoop.yarn.server.MiniYARNCluster;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,7 @@ import static java.nio.file.Files.createDirectory;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.substringAfterLast;
 import static org.apache.commons.lang3.StringUtils.substringBeforeLast;
+import static org.apache.hadoop.yarn.conf.YarnConfiguration.YARN_APPLICATION_CLASSPATH;
 
 class StepComputationIT {
 
@@ -55,8 +57,7 @@ class StepComputationIT {
         })
         .build();
 
-    YARN_CLUSTER.init(job.getConfig());
-    YARN_CLUSTER.start();
+    startYarn();
 
     // when
     withEnvironmentVariables()
@@ -66,6 +67,17 @@ class StepComputationIT {
     // then
     assertThatCoefficients(outputDir)
         .areEqualToResource(IDENTITY_MAT, ROWS_BOUND_TO_NODE);
+  }
+
+  private void startYarn() {
+    YARN_CLUSTER.init(yarnConfiguration());
+    YARN_CLUSTER.start();
+  }
+
+  private YarnConfiguration yarnConfiguration() {
+    val yc = new YarnConfiguration();
+    yc.set(YARN_APPLICATION_CLASSPATH, resolveClasspath());
+    return yc;
   }
 
   private static String jarNames() {
