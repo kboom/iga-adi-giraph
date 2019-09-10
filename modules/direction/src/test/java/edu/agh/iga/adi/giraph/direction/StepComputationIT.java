@@ -3,6 +3,7 @@ package edu.agh.iga.adi.giraph.direction;
 import edu.agh.iga.adi.giraph.direction.test.GiraphTestJob;
 import lombok.SneakyThrows;
 import lombok.val;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.hadoop.yarn.server.MiniYARNCluster;
 import org.junit.jupiter.api.AfterEach;
@@ -27,7 +28,7 @@ import static java.nio.file.Files.createDirectory;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.substringAfterLast;
 import static org.apache.commons.lang3.StringUtils.substringBeforeLast;
-import static org.apache.hadoop.yarn.conf.YarnConfiguration.YARN_APPLICATION_CLASSPATH;
+import static org.apache.hadoop.yarn.conf.YarnConfiguration.*;
 
 class StepComputationIT {
 
@@ -54,10 +55,11 @@ class StepComputationIT {
           HEIGHT_PARTITIONS.set(conf, 2);
           INITIALISATION_TYPE.set(conf, SURFACE_PROBLEM.getType());
           conf.setYarnLibJars(jarNames());
+          conf.setBoolean(YARN_MINICLUSTER_FIXED_PORTS, true);
         })
         .build();
 
-    startYarn();
+    startYarn(job.getConfig());
 
     // when
     withEnvironmentVariables()
@@ -69,14 +71,19 @@ class StepComputationIT {
         .areEqualToResource(IDENTITY_MAT, ROWS_BOUND_TO_NODE);
   }
 
-  private void startYarn() {
-    YARN_CLUSTER.init(yarnConfiguration());
+  private void startYarn(Configuration base) {
+    YARN_CLUSTER.init(yarnConfiguration(base));
     YARN_CLUSTER.start();
   }
 
-  private YarnConfiguration yarnConfiguration() {
-    val yc = new YarnConfiguration();
+  private YarnConfiguration yarnConfiguration(Configuration base) {
+    val yc = new YarnConfiguration(base);
     yc.set(YARN_APPLICATION_CLASSPATH, resolveClasspath());
+    yc.setBoolean(IS_MINI_YARN_CLUSTER, true);
+    yc.setBoolean(LOG_AGGREGATION_ENABLED, true);
+    yc.set(NM_REMOTE_APP_LOG_DIR, "/Users/kbhit/Sources/Personal/iga-adi-giraph/logs");
+    yc.setInt(RM_SCHEDULER_MINIMUM_ALLOCATION_MB, 128);
+    yc.set("yarn.log.dir",  "/Users/kbhit/Sources/Personal/iga-adi-giraph/logs");
     return yc;
   }
 

@@ -75,8 +75,8 @@ public class GiraphTestJob {
 
     public GiraphTestJob build() {
       GiraphConfiguration conf = createConfiguration();
-      configurationModifier.accept(conf);
       GiraphYarnClient job = createJob(conf);
+      configurationModifier.accept(conf);
       setInputPath(conf);
       return new GiraphTestJob(job, conf, dirManagerFunction.apply(conf));
     }
