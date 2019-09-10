@@ -2,6 +2,7 @@ package edu.agh.iga.adi.giraph;
 
 import lombok.val;
 import org.apache.giraph.conf.GiraphConfiguration;
+import org.apache.giraph.job.GiraphConfigurationValidator;
 import org.apache.giraph.yarn.GiraphYarnClient;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
@@ -27,19 +28,22 @@ public class IgaSolverTool extends Configured implements Tool {
   @Override
   public int run(String[] strings) {
     val conf = injectSolverConfiguration(new GiraphConfiguration(getConf()));
+    populateCustomConfiguration(conf, strings);
+    printConfiguration(conf);
+    validateConfiguration(conf);
+    return runJob(conf);
+  }
 
+  private void populateCustomConfiguration(GiraphConfiguration conf, String[] strings) {
     Stream.of(strings).filter(s -> s.contains("=")).forEach(s -> {
       String[] tokens = s.split("=");
       String key = tokens[0];
       String value = tokens[1];
-      LOG.info("Setting " + key + " to " + value);
       conf.set(key, value);
     });
+  }
 
-    stream(conf.spliterator(), false)
-        .map(e -> e.getKey() + ":" + e.getValue())
-        .forEach(LOG::info);
-
+  private int runJob(GiraphConfiguration conf) {
     try {
       val job = new GiraphYarnClient(conf, IgaSolverTool.class.getName());
       return job.run(true) ? 1 : -1;
@@ -47,6 +51,18 @@ public class IgaSolverTool extends Configured implements Tool {
       LOG.error("Could not run computations", e);
       return -1;
     }
+  }
+
+  private void printConfiguration(GiraphConfiguration conf) {
+    stream(conf.spliterator(), false)
+        .map(e -> e.getKey() + ":" + e.getValue())
+        .forEach(LOG::info);
+  }
+
+  private void validateConfiguration(GiraphConfiguration conf) {
+    @SuppressWarnings("rawtypes")
+    GiraphConfigurationValidator<?, ?, ?, ?, ?> gtv = new GiraphConfigurationValidator(conf);
+    gtv.validateConfiguration();
   }
 
 }

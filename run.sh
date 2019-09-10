@@ -33,6 +33,10 @@ java \
 cp /opt/iga/dist/solver-1.0-SNAPSHOT.jar $HADOOP_HOME/share/hadoop/yarn/lib/
 yarn jar /opt/iga/dist/solver-1.0-SNAPSHOT.jar edu.agh.iga.adi.giraph.IgaSolverTool
 
+# THIS IS HOW GIRAPH BINARIES RUN
+[root@18199ed9fa07 bin]# ./giraph -Dgiraph.logLevel=verbose -Dgiraph.dupa.something=yxx solver-1.0-SNAPSHOT.jar
+No HADOOP_CONF_DIR set, using /hadoop/conf
+/hadoop/bin/hadoop --config /hadoop/conf jar /opt/iga/giraph-core.jar org.apache.giraph.GiraphRunner -Dgiraph.dupa.something=yxx -Dgiraph.logLevel=verbose -libjars /opt/iga/giraph-core.jar,solver-1.0-SNAPSHOT.jar,/opt/iga/conf,/opt/iga/lib/giraph-core.jar,/opt/iga/giraph-core.jar
 
 
 
