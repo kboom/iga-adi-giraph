@@ -19,15 +19,6 @@
         </layout>
     </appender>
 
-    <appender name="app.file" class="org.apache.log4j.FileAppender">
-        <param name="file" value="app.log" />
-        <param name="append" value="false" />
-        <param name="threshold" value="debug" />
-        <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c{1}] - %m%n" />
-        </layout>
-    </appender>
-
     <appender name="mat.file" class="org.apache.log4j.FileAppender">
         <param name="file" value="mat.log" />
         <param name="append" value="false" />
@@ -45,11 +36,6 @@
             <param name="ConversionPattern" value="%m%n" />
         </layout>
     </appender>
-
-    <logger name="edu.agh.iga.adi.giraph" additivity="false">
-        <level value="all" />
-        <appender-ref ref="app.file" />
-    </logger>
 
     <logger name="edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger" additivity="false">
         <level value="all" />

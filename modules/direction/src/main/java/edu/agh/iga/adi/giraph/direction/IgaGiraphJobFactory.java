@@ -14,6 +14,7 @@ import org.apache.giraph.io.VertexInputFormat;
 import org.apache.giraph.yarn.GiraphYarnClient;
 import org.apache.hadoop.io.LongWritable;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Map;
@@ -23,7 +24,6 @@ import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolve
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.SURFACE_PROBLEM;
 import static java.lang.Integer.MAX_VALUE;
 import static java.lang.System.currentTimeMillis;
-import static java.lang.System.getProperty;
 import static lombok.AccessLevel.PRIVATE;
 import static org.apache.giraph.conf.GiraphConstants.*;
 
@@ -50,7 +50,8 @@ public class IgaGiraphJobFactory {
     conf.setVertexInputFormatClass(inputFormatsByInitType.get(INITIALISATION_TYPE.get(conf)));
     conf.setVertexOutputFormatClass(StepVertexOutputFormat.class);
     conf.setGraphPartitionerFactoryClass(IgaPartitionerFactory.class);
-    conf.setYarnLibJars(getProperty("java.class.path").replaceAll(":", ","));
+//    conf.setYarnTaskHeapMb(128);
+    conf.setYarnLibJars(yarnLibsFromClasspath());// is required for the workers (won't work without it) - might get around it somehow too (not sure how)
     VERTEX_ID_CLASS.set(conf, LongWritable.class);
     VERTEX_VALUE_CLASS.set(conf, IgaElementWritable.class);
     EDGE_VALUE_CLASS.set(conf, IgaOperationWritable.class);
@@ -58,6 +59,18 @@ public class IgaGiraphJobFactory {
     MAX_NUMBER_OF_SUPERSTEPS.set(conf, MAX_VALUE);
     IS_PURE_YARN_JOB.set(conf, true);
     return conf;
+  }
+
+  private static String yarnLibsFromClasspath() {
+    return new File(IgaGiraphJobFactory.class.getProtectionDomain()
+        .getCodeSource()
+        .getLocation()
+        .getPath())
+        .getName();
+
+//    return Stream.of(getProperty("java.class.path").split(":"))
+//        .map(f -> substringAfterLast(f, "/"))
+//        .collect(joining(","));
   }
 
   private static GiraphYarnClient doCreateJob(GiraphConfiguration conf) {
