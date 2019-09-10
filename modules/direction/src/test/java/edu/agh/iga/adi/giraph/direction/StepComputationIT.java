@@ -24,6 +24,7 @@ import static edu.agh.iga.adi.giraph.test.util.assertion.CoefficientsAssertions.
 import static java.lang.System.getProperty;
 import static java.nio.file.Files.createDirectory;
 import static java.util.stream.Collectors.joining;
+import static org.apache.commons.lang3.StringUtils.substringAfterLast;
 import static org.apache.commons.lang3.StringUtils.substringBeforeLast;
 
 class StepComputationIT {
@@ -50,6 +51,7 @@ class StepComputationIT {
           PROBLEM_SIZE.set(conf, 12);
           HEIGHT_PARTITIONS.set(conf, 2);
           INITIALISATION_TYPE.set(conf, SURFACE_PROBLEM.getType());
+          conf.setYarnLibJars(jarNames());
         })
         .build();
 
@@ -64,6 +66,12 @@ class StepComputationIT {
     // then
     assertThatCoefficients(outputDir)
         .areEqualToResource(IDENTITY_MAT, ROWS_BOUND_TO_NODE);
+  }
+
+  private static String jarNames() {
+    return Stream.of(getProperty("java.class.path").split(":"))
+        .map(f -> substringAfterLast(f, "/"))
+        .collect(joining(","));
   }
 
   private String resolveClasspath() {

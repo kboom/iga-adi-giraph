@@ -51,7 +51,7 @@ public class IgaGiraphJobFactory {
     conf.setVertexOutputFormatClass(StepVertexOutputFormat.class);
     conf.setGraphPartitionerFactoryClass(IgaPartitionerFactory.class);
 //    conf.setYarnTaskHeapMb(128);
-    conf.setYarnLibJars(yarnLibsFromClasspath());// is required for the workers (won't work without it) - might get around it somehow too (not sure how)
+    conf.setYarnLibJars(currentJar());// is required for the workers (won't work without it) - might get around it somehow too (not sure how)
     VERTEX_ID_CLASS.set(conf, LongWritable.class);
     VERTEX_VALUE_CLASS.set(conf, IgaElementWritable.class);
     EDGE_VALUE_CLASS.set(conf, IgaOperationWritable.class);
@@ -61,16 +61,12 @@ public class IgaGiraphJobFactory {
     return conf;
   }
 
-  private static String yarnLibsFromClasspath() {
+  private static String currentJar() {
     return new File(IgaGiraphJobFactory.class.getProtectionDomain()
         .getCodeSource()
         .getLocation()
         .getPath())
         .getName();
-
-//    return Stream.of(getProperty("java.class.path").split(":"))
-//        .map(f -> substringAfterLast(f, "/"))
-//        .collect(joining(","));
   }
 
   private static GiraphYarnClient doCreateJob(GiraphConfiguration conf) {
