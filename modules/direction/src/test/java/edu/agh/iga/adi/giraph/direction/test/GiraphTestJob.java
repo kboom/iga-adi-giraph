@@ -98,7 +98,6 @@ public class GiraphTestJob {
       conf.setNumComputeThreads(1);
       conf.setMaxTaskAttempts(1);
       conf.setNumInputSplitsThreads(1);
-      conf.setYarnLibJars(getProperty("java.class.path").replaceAll(":", ",")); // no need
       ofNullable(inputDir).ifPresent(dir -> COEFFICIENTS_INPUT.set(conf, dir.toString()));
       ofNullable(outputDir).ifPresent(dir -> COEFFICIENTS_OUTPUT.set(conf, dir.toString()));
       ZOOKEEPER_SERVERLIST_POLL_MSECS.set(conf, 500);

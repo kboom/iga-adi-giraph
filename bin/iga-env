@@ -5,6 +5,7 @@
 
 THIS_DIR=`dirname "$THIS"`
 IGA_HOME=`cd "$THIS_DIR/.." ; pwd`
+IGA_LIBS=`cd "$IGA_HOME/dist/" ; pwd`
 
 # Hadoop properties
 HADOOP_PROPERTIES=
@@ -13,32 +14,31 @@ while [[ $1 ]] && [[ ${1:0:2} == "-D" ]] ; do
     shift
 done
 
-# Application fat-jar from the distribution
-IGA_JAR=`cd "$IGA_HOME/dist/" ; pwd`
-shift
-
-if [[ ! -e "$IGA_JAR" ]]; then
-  echo "No iga jar found at $IGA_JAR. You might need to issue 'mvn clean package' first"
-else
-  CLASSPATH=${IGA_JAR}
-fi
-
 # add configuration to CLASSPATH
 CLASSPATH=${CLASSPATH}:${IGA_HOME}/conf
-CLASS=org.apache.giraph.GiraphRunner
+CLASS=edu.agh.iga.adi.giraph.IgaSolverTool
 
 # so that filenames w/ spaces are handled correctly in loops below
 IFS=
 # add release dependencies to CLASSPATH, as it is a fat jar we do not need to add Giraph or any other dependency seperately
-for f in ${$IGA_HOME}/dist/*.jar; do
+for f in ${IGA_LIBS}/*.jar; do
   CLASSPATH=${CLASSPATH}:${f}
+  if [[ -e "$f" ]]; then
+	JAR=${f}
+	break
+  fi
 done
 # restore ordinary behaviour
 unset IFS
 
+if [[ "$JAR" = "" ]] ; then
+  echo "Can't find Giraph jar. Did you package the project?"
+  exit 1
+fi
+
 if [[ "$HADOOP_CONF_DIR" = "" ]] ; then
-  HADOOP_CONF_DIR=${HADOOP_HOME}/conf
-  echo "No HADOOP_CONF_DIR set, using $HADOOP_HOME/conf "
+  HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop
+  echo "No HADOOP_CONF_DIR set, using $HADOOP_HOME/etc/hadoop"
 else
   echo "HADOOP_CONF_DIR=$HADOOP_CONF_DIR"
 fi
