@@ -37,9 +37,14 @@ where `[YOUR SIMULATION]` has to be replaced with one of
 
 [Reference](https://giraph.apache.org/options.html)
 
+## Solved issues
+
+[Missing filesystem](https://exceptionshub.com/hadoop-no-filesystem-for-scheme-file.html)
+
 ## Links
 
 * [Hadoop mini clusters](https://github.com/sakserv/hadoop-mini-clusters)
+* [YARN property list](https://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-common/yarn-default.xml)
 * [Giraph on Docker](https://github.com/uwsampa/giraph-docker)
 * [Hadoop Matrix Transposition](https://github.com/o19s/Hadoopadoop/blob/master/matrixtranspose/MatrixTranspose.java)
 * [ojAlgo examples](https://www.ojalgo.org/code-examples/)
