@@ -33,7 +33,7 @@ class StepComputationIT {
         .configuration(conf -> {
           PROBLEM_SIZE.set(conf, 12);
           HEIGHT_PARTITIONS.set(conf, 2);
-          INITIALISATION_TYPE.set(conf, SURFACE_PROBLEM.getType());
+          FIRST_INITIALISATION_TYPE.set(conf, SURFACE_PROBLEM.getType());
         })
         .build();
 
@@ -68,7 +68,7 @@ class StepComputationIT {
         .configuration(conf -> {
           PROBLEM_SIZE.set(conf, 12);
           HEIGHT_PARTITIONS.set(conf, 2);
-          INITIALISATION_TYPE.set(conf, COEFFICIENTS_PROBLEM.getType());
+          FIRST_INITIALISATION_TYPE.set(conf, COEFFICIENTS_PROBLEM.getType());
         })
         .build();
 

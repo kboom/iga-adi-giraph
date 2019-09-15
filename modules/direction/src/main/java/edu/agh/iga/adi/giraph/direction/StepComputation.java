@@ -14,6 +14,7 @@ import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.*;
 import static edu.agh.iga.adi.giraph.direction.IgaCounter.LOCAL_SUPERSTEP;
 import static edu.agh.iga.adi.giraph.direction.IgaCounter.STEP_COUNTER;
 import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_START;
+import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.COEFFICIENTS_PROBLEM;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.computationResolverFor;
 import static edu.agh.iga.adi.giraph.direction.logging.TimeLogger.logTime;
 import static edu.agh.iga.adi.giraph.direction.logging.TimeLogger.timeReducer;
@@ -23,7 +24,6 @@ import static edu.agh.iga.adi.giraph.direction.logging.TimeLogger.timeReducer;
  */
 public class StepComputation extends DefaultMasterCompute {
 
-  private ComputationResolver computationResolver;
   private DirectionTree tree;
   private int currentComputationStart;
   private Class<? extends Computation> currentComputation;
@@ -37,7 +37,6 @@ public class StepComputation extends DefaultMasterCompute {
     stepCount = STEP_COUNT.get(getConf());
     int problemSize = PROBLEM_SIZE.get(getConf());
     tree = new DirectionTree(problemSize);
-    computationResolver = computationResolverFor(INITIALISATION_TYPE.get(getConf()));
     registerAggregator(COMPUTATION_START, IntOverwriteAggregator.class);
 
     // so that the first increment is 0
@@ -50,7 +49,7 @@ public class StepComputation extends DefaultMasterCompute {
     if (getSuperstep() > 0) {
       logTimers();
     }
-    Class<? extends Computation> nextComputation = computationResolver.computationFor(tree, getSuperstep());
+    Class<? extends Computation> nextComputation = currentComputationResolver().computationFor(tree, getSuperstep());
     if (nextComputation != null) {
       localSuperStep.increment(1);
       setComputation(nextComputation);
@@ -68,6 +67,20 @@ public class StepComputation extends DefaultMasterCompute {
       }
     }
     stepCounter.increment(1);
+  }
+
+  /**
+   * The first initialisation will use {@link FIRST_INITIALISATION_TYPE}
+   * and the next steps will use the {@link COEFFICIENTS_PROBLEM}.
+   *
+   * This is natural as the first step initialisation is configurable but the rest uses the internal representation
+   * of the solver which are the spline coefficients. Note that the output format might actually be different
+   * and it will not affect the computations (as we never have to read the coefficients from HDFS after initial load).
+   */
+  private ComputationResolver currentComputationResolver() {
+    return stepCounter.getValue() == 0
+        ? computationResolverFor(FIRST_INITIALISATION_TYPE.get(getConf()))
+        : COEFFICIENTS_PROBLEM;
   }
 
   private void logTimers() {

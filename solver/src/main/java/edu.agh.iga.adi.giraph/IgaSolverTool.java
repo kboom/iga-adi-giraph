@@ -7,20 +7,15 @@ import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.job.GiraphConfigurationValidator;
 import org.apache.giraph.yarn.GiraphYarnClient;
 import org.apache.hadoop.conf.Configured;
-import org.apache.hadoop.filecache.DistributedCache;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
-
-import java.net.URI;
 
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.*;
 import static edu.agh.iga.adi.giraph.direction.IgaGiraphJobFactory.injectSolverConfiguration;
 import static java.lang.System.exit;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.StreamSupport.stream;
-import static org.apache.giraph.io.formats.GiraphFileInputFormat.addVertexInputPath;
 
 public class IgaSolverTool extends Configured implements Tool {
 
@@ -70,7 +65,7 @@ public class IgaSolverTool extends Configured implements Tool {
   private void populateCustomConfiguration(GiraphConfiguration config, IgaOptions options) {
     PROBLEM_SIZE.set(config, options.getElements());
     HEIGHT_PARTITIONS.set(config, options.getHeight());
-    INITIALISATION_TYPE.set(config, options.getType());
+    FIRST_INITIALISATION_TYPE.set(config, options.getType());
     ofNullable(options.getInputDirectory()).ifPresent(i -> addInput(config, i));
     COEFFICIENTS_OUTPUT.set(config, options.getOutputDirectory());
     config.setWorkerConfiguration(options.getWorkers(), options.getWorkers(), 100);

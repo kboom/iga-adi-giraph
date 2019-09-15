@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Map;
 
-import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.INITIALISATION_TYPE;
+import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.FIRST_INITIALISATION_TYPE;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.COEFFICIENTS_PROBLEM;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.SURFACE_PROBLEM;
 import static java.lang.Integer.MAX_VALUE;
@@ -58,7 +58,7 @@ public class IgaGiraphJobFactory {
     conf.setMasterComputeClass(StepComputation.class);
     conf.setWorkerContextClass(IgaWorkerContext.class);
     conf.setEdgeInputFormatClass(IgaEdgeInputFormat.class);
-    conf.setVertexInputFormatClass(inputFormatsByInitType.get(INITIALISATION_TYPE.get(conf)));
+    conf.setVertexInputFormatClass(inputFormatsByInitType.get(FIRST_INITIALISATION_TYPE.get(conf)));
     conf.setVertexOutputFormatClass(StepVertexOutputFormat.class);
     conf.setGraphPartitionerFactoryClass(IgaPartitionerFactory.class);
     conf.setYarnLibJars(currentJar());
