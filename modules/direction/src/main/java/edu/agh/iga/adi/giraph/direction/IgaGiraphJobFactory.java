@@ -12,10 +12,9 @@ import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import lombok.NoArgsConstructor;
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.io.VertexInputFormat;
+import org.apache.giraph.job.GiraphJob;
 import org.apache.giraph.yarn.GiraphYarnClient;
 import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.yarn.conf.YarnConfiguration;
-import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,39 +28,40 @@ import static java.lang.Integer.MAX_VALUE;
 import static java.lang.System.currentTimeMillis;
 import static lombok.AccessLevel.PRIVATE;
 import static org.apache.giraph.conf.GiraphConstants.*;
-import static org.apache.hadoop.yarn.conf.YarnConfiguration.YARN_APPLICATION_CLASSPATH;
 
 @NoArgsConstructor(access = PRIVATE)
 public class IgaGiraphJobFactory {
-
-  private static final Logger LOG = Logger.getLogger(IgaGiraphJobFactory.class);
 
   private static final Map<String, Class<? extends VertexInputFormat>> inputFormatsByInitType = ImmutableMap.of(
       SURFACE_PROBLEM.getType(), InMemoryStepInputFormat.class,
       COEFFICIENTS_PROBLEM.getType(), StepVertexInputFormat.class
   );
 
-  public static GiraphYarnClient igaJob(GiraphConfiguration configuration) {
-    GiraphYarnClient job = doCreateJob(injectSolverConfiguration(configuration));
-    return job;
+  public static GiraphYarnClient igaYarnJob(GiraphConfiguration configuration) {
+    try {
+      return new GiraphYarnClient(injectSolverConfiguration(configuration), "iga-adi-" + new Timestamp(currentTimeMillis()));
+    } catch (IOException e) {
+      throw new IllegalStateException(e);
+    }
   }
 
-  /*
-   * https://giraph.apache.org/options.html
-   */
+  public static GiraphJob igaMapReduceJob(GiraphConfiguration configuration) {
+    try {
+      return new GiraphJob(injectSolverConfiguration(configuration), "iga-adi-" + new Timestamp(currentTimeMillis()));
+    } catch (IOException e) {
+      throw new IllegalStateException(e);
+    }
+  }
+
   public static GiraphConfiguration injectSolverConfiguration(GiraphConfiguration conf) {
-    conf.setComputationClass(InitialComputation.class); // this is meaningless as we drive the computations from the master compute - it is required by Giraph though.
+    conf.setComputationClass(InitialComputation.class);
     conf.setMasterComputeClass(StepComputation.class);
     conf.setWorkerContextClass(IgaWorkerContext.class);
     conf.setEdgeInputFormatClass(IgaEdgeInputFormat.class);
     conf.setVertexInputFormatClass(inputFormatsByInitType.get(INITIALISATION_TYPE.get(conf)));
     conf.setVertexOutputFormatClass(StepVertexOutputFormat.class);
     conf.setGraphPartitionerFactoryClass(IgaPartitionerFactory.class);
-
-//    conf.setYarnTaskHeapMb(128);
-    LOG.error("YARN LIBS " + currentJar());
-//    conf.set(YARN_APPLICATION_CLASSPATH, conf.get(YARN_APPLICATION_CLASSPATH) + ":/usr/lib/hadoop-yarn/lib/solver-1.0-SNAPSHOT.jar");
-    conf.setYarnLibJars(currentJar());// is required for the workers (won't work without it) - might get around it somehow too (not sure how)
+    conf.setYarnLibJars(currentJar());
     VERTEX_ID_CLASS.set(conf, LongWritable.class);
     VERTEX_VALUE_CLASS.set(conf, IgaElementWritable.class);
     EDGE_VALUE_CLASS.set(conf, IgaOperationWritable.class);
@@ -75,14 +75,6 @@ public class IgaGiraphJobFactory {
         .getCodeSource()
         .getLocation()
         .getPath()).getName();
-  }
-
-  private static GiraphYarnClient doCreateJob(GiraphConfiguration conf) {
-    try {
-      return new GiraphYarnClient(conf, "iga-adi-" + new Timestamp(currentTimeMillis()));
-    } catch (IOException e) {
-      throw new IllegalStateException(e);
-    }
   }
 
 }
