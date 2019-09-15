@@ -12,6 +12,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
+    <properties>
+        <project.libdir>${basedir}/../lib</project.libdir>
+    </properties>
+
     <dependencies>
 
         <dependency>

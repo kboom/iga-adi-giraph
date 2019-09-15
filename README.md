@@ -27,6 +27,11 @@ where `[YOUR SIMULATION]` has to be replaced with one of
 |------------|-------|
 | Identity | identity |
 
+### Running locally using docker
+
+You can find the logs under:
+`/hadoop/logs/userlogs/application`
+
 ### Running on cloud
 
 There is an [unresolved issue](https://issues.apache.org/jira/browse/GIRAPH-859) in Giraph which translates into inability to automatically

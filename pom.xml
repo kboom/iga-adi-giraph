@@ -94,6 +94,8 @@
                 <groupId>org.apache.giraph</groupId>
                 <artifactId>giraph-core</artifactId>
                 <version>1.2.0</version>
+                <scope>system</scope>
+                <systemPath>${project.libdir}/giraph-1.2.0-for-hadoop-2.9.2.jar</systemPath>
             </dependency>
 
             <dependency>
@@ -169,6 +171,30 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <profiles>
+        <profile>
+            <id>root-dir</id>
+            <activation>
+                <file>
+                    <exists>${basedir}/lib</exists>
+                </file>
+            </activation>
+            <properties>
+                <project.libdir>${basedir}/lib</project.libdir>
+            </properties>
+        </profile>
+        <profile>
+            <id>modules-dir</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <project.libdir>${basedir}/../../lib</project.libdir>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
