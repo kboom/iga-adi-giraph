@@ -55,7 +55,12 @@ class StepComputationIT {
           HEIGHT_PARTITIONS.set(conf, 2);
           INITIALISATION_TYPE.set(conf, SURFACE_PROBLEM.getType());
           conf.setYarnLibJars(jarNames());
+          conf.setBoolean(IS_MINI_YARN_CLUSTER, true);
           conf.setBoolean(YARN_MINICLUSTER_FIXED_PORTS, true);
+          conf.set(YARN_APPLICATION_CLASSPATH, resolveClasspath());
+          conf.set(NM_REMOTE_APP_LOG_DIR, "/Users/kbhit/Sources/Personal/iga-adi-giraph/logs");
+          conf.setInt(RM_SCHEDULER_MINIMUM_ALLOCATION_MB, 128);
+          conf.set("yarn.log.dir",  "/Users/kbhit/Sources/Personal/iga-adi-giraph/logs");
         })
         .build();
 
@@ -77,14 +82,7 @@ class StepComputationIT {
   }
 
   private YarnConfiguration yarnConfiguration(Configuration base) {
-    val yc = new YarnConfiguration(base);
-    yc.set(YARN_APPLICATION_CLASSPATH, resolveClasspath());
-    yc.setBoolean(IS_MINI_YARN_CLUSTER, true);
-    yc.setBoolean(LOG_AGGREGATION_ENABLED, true);
-    yc.set(NM_REMOTE_APP_LOG_DIR, "/Users/kbhit/Sources/Personal/iga-adi-giraph/logs");
-    yc.setInt(RM_SCHEDULER_MINIMUM_ALLOCATION_MB, 128);
-    yc.set("yarn.log.dir",  "/Users/kbhit/Sources/Personal/iga-adi-giraph/logs");
-    return yc;
+    return new YarnConfiguration(base);
   }
 
   private static String jarNames() {
@@ -97,9 +95,9 @@ class StepComputationIT {
     return Stream.of(getProperty("java.class.path").split(":"))
 //        .map(t -> substringAfterLast(t, "/"))
 //        .filter(t -> t.contains("giraph"))
-        .filter(t -> t.endsWith(".jar"))
-        .filter(t -> !t.contains("IntelliJ")) // maybe create full e2e test run on a fat jar instead?
-        .map(t -> substringBeforeLast(t, "/"))
+//        .filter(t -> t.endsWith(".jar"))
+//        .filter(t -> !t.contains("IntelliJ")) // maybe create full e2e test run on a fat jar instead?
+        .map(t -> t.endsWith(".jar") ? substringBeforeLast(t, "/") : t)
         .collect(joining(":"));
   }
 

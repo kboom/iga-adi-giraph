@@ -1,25 +1,33 @@
 package edu.agh.iga.adi.giraph;
 
+import com.beust.jcommander.JCommander;
+import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.job.GiraphConfigurationValidator;
 import org.apache.giraph.yarn.GiraphYarnClient;
 import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.filecache.DistributedCache;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
 
-import java.util.stream.Stream;
+import java.net.URI;
 
+import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.*;
 import static edu.agh.iga.adi.giraph.direction.IgaGiraphJobFactory.injectSolverConfiguration;
+import static java.lang.System.exit;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.StreamSupport.stream;
+import static org.apache.giraph.io.formats.GiraphFileInputFormat.addVertexInputPath;
 
 public class IgaSolverTool extends Configured implements Tool {
 
   private static final Logger LOG = Logger.getLogger(IgaSolverTool.class);
 
   public static void main(String[] args) throws Exception {
-    System.exit(ToolRunner.run(
+    exit(ToolRunner.run(
         new IgaSolverTool(),
         args
     ));
@@ -27,21 +35,66 @@ public class IgaSolverTool extends Configured implements Tool {
 
   @Override
   public int run(String[] strings) {
-    val conf = injectSolverConfiguration(new GiraphConfiguration(getConf()));
-    populateCustomConfiguration(conf, strings);
-    printConfiguration(conf);
-    validateConfiguration(conf);
-    return runJob(conf);
+    LOG.info("Hello bitches!" + strings);
+    val giraphConf = new GiraphConfiguration(getConf());
+    giraphConf.set("fs.hdfs.impl",
+        org.apache.hadoop.hdfs.DistributedFileSystem.class.getName()
+    );
+    giraphConf.set("fs.file.impl",
+        org.apache.hadoop.fs.LocalFileSystem.class.getName()
+    );
+    injectSolverConfiguration(giraphConf);
+    populateCustomConfiguration(giraphConf, processOptions(strings));
+    printConfiguration(giraphConf);
+    validateConfiguration(giraphConf);
+    return runJob(giraphConf);
   }
 
-  private void populateCustomConfiguration(GiraphConfiguration conf, String[] strings) {
-    Stream.of(strings).filter(s -> s.contains("=")).forEach(s -> {
-      String[] tokens = s.split("=");
-      String key = tokens[0];
-      String value = tokens[1];
-      conf.set(key, value);
-    });
+  private static IgaOptions processOptions(String[] strings) {
+    IgaOptions o = new IgaOptions();
+    JCommander commander = JCommander.newBuilder()
+        .addObject(o)
+        .build();
+    commander.parse(strings);
+
+    LOG.info("Parsed config" + o.toString());
+
+    if (o.isHelp()) {
+      commander.usage();
+      exit(0);
+    }
+
+    return o;
   }
+
+  private void populateCustomConfiguration(GiraphConfiguration config, IgaOptions options) {
+    PROBLEM_SIZE.set(config, options.getElements());
+    HEIGHT_PARTITIONS.set(config, options.getHeight());
+    INITIALISATION_TYPE.set(config, options.getType());
+    ofNullable(options.getInputDirectory()).ifPresent(i -> addInput(config, i));
+    COEFFICIENTS_OUTPUT.set(config, options.getOutputDirectory());
+    config.setWorkerConfiguration(options.getWorkers(), options.getWorkers(), 100);
+
+    options.getConfig()
+        .stream()
+        .map(v -> v.split("="))
+        .forEach(v -> config.set(v[0], v[1]));
+  }
+
+  @SneakyThrows
+  private void addInput(GiraphConfiguration config, String i) {
+    config.set("mapreduce.output.fileoutputformat.outputdir", i);
+//    addVertexInputPath(config, new Path(i));
+  }
+
+//  private void populateCustomConfiguration(GiraphConfiguration conf, String[] strings) {
+//    Stream.of(strings).filter(s -> s.contains("=")).forEach(s -> {
+//      String[] tokens = s.split("=");
+//      String key = tokens[0];
+//      String value = tokens[1];
+//      conf.set(key, value);
+//    });
+//  }
 
   private int runJob(GiraphConfiguration conf) {
     try {
