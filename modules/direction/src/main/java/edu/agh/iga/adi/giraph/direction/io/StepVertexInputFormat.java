@@ -42,6 +42,8 @@ public class StepVertexInputFormat extends TextVertexValueInputFormat<LongWritab
 
   @Override
   public DoubleArrayVertexValueReader createVertexValueReader(InputSplit split, TaskAttemptContext context) {
+    // This will only be executed once, at the beginning of the job.
+    // We don't read anything in steps other than the initial one as the values are already at the branches.
     return new DoubleArrayVertexValueReader();
   }
 
