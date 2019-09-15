@@ -27,7 +27,7 @@ class IgaOptions {
   private String outputDirectory;
 
   @Parameter(names = { "-e", "--elements" }, description = "The number of elements in one dimension")
-  private Integer elements = 1;
+  private Integer elements = 12;
 
   @Parameter(names = { "-h", "--height" }, description = "The height of each partition")
   private Integer height = 1;

@@ -31,7 +31,8 @@ java \
 # Don't move the jar anywhere, just do
 export HADOOP_CLASSPATH=$(pwd)/*
 yarn jar solver-1.0-SNAPSHOT.jar edu.agh.iga.adi.giraph.IgaSolverTool \
- -w 1 \
+ -w 2 \
+ -e 12 \
  -t surface \
  -o hdfs://iga-adi-m/user/kbhit/1 \
  -c giraph.yarn.task.heap.mb=2048 \
