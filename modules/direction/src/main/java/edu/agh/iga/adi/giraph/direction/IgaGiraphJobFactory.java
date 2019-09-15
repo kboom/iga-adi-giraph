@@ -62,6 +62,7 @@ public class IgaGiraphJobFactory {
     conf.setVertexOutputFormatClass(StepVertexOutputFormat.class);
     conf.setGraphPartitionerFactoryClass(IgaPartitionerFactory.class);
     conf.setYarnLibJars(currentJar());
+//    VERTEX_OUTPUT_FORMAT_SUBDIR.set(conf, "step-" + STEP.get(conf));
     VERTEX_ID_CLASS.set(conf, LongWritable.class);
     VERTEX_VALUE_CLASS.set(conf, IgaElementWritable.class);
     EDGE_VALUE_CLASS.set(conf, IgaOperationWritable.class);

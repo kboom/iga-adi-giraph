@@ -8,4 +8,6 @@ public interface PartialSolution {
 
   double valueAt(double x, double y);
 
+  double valueAt(double x, double y, SolutionTransformer transformer);
+
 }

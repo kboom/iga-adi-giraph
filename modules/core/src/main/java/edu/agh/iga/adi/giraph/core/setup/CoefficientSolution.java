@@ -2,17 +2,18 @@ package edu.agh.iga.adi.giraph.core.setup;
 
 import edu.agh.iga.adi.giraph.core.Mesh;
 import edu.agh.iga.adi.giraph.core.problem.PartialSolution;
+import edu.agh.iga.adi.giraph.core.problem.SolutionTransformer;
 import edu.agh.iga.adi.giraph.core.splines.BSpline1;
 import edu.agh.iga.adi.giraph.core.splines.BSpline2;
 import edu.agh.iga.adi.giraph.core.splines.BSpline3;
 import lombok.val;
 import org.ojalgo.structure.Access2D;
 
-public final class CoefficientSolution implements PartialSolution {
+public class CoefficientSolution implements PartialSolution {
 
-  private static final BSpline1 b1 = new BSpline1();
-  private static final BSpline2 b2 = new BSpline2();
-  private static final BSpline3 b3 = new BSpline3();
+  protected static final BSpline1 b1 = new BSpline1();
+  protected static final BSpline2 b2 = new BSpline2();
+  protected static final BSpline3 b3 = new BSpline3();
 
   private final Mesh mesh;
   private final Access2D<Double> coef;
@@ -45,6 +46,11 @@ public final class CoefficientSolution implements PartialSolution {
         coef.doubleValue(2, ielemy) * sp3x * sp1y +
         coef.doubleValue(2, ielemy + 1) * sp3x * sp2y +
         coef.doubleValue(2, ielemy + 2) * sp3x * sp3y;
+  }
+
+  @Override
+  public double valueAt(double x, double y, SolutionTransformer transformer) {
+    return transformer.valueAt(coef, x, y);
   }
 
 }
