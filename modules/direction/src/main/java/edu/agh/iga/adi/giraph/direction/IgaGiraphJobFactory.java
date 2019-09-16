@@ -62,6 +62,7 @@ public class IgaGiraphJobFactory {
     conf.setVertexOutputFormatClass(StepVertexOutputFormat.class);
     conf.setGraphPartitionerFactoryClass(IgaPartitionerFactory.class);
     conf.setYarnLibJars(currentJar());
+    conf.setDoOutputDuringComputation(true); // to support multiple steps, we're not using checkpoints, we can just restart the job where we left off from the last step (load saved coefficients)
 //    VERTEX_OUTPUT_FORMAT_SUBDIR.set(conf, "step-" + STEP.get(conf));
     VERTEX_ID_CLASS.set(conf, LongWritable.class);
     VERTEX_VALUE_CLASS.set(conf, IgaElementWritable.class);

@@ -2,20 +2,19 @@ package edu.agh.iga.adi.giraph.direction.computation.factorization;
 
 import edu.agh.iga.adi.giraph.core.IgaElement;
 import edu.agh.iga.adi.giraph.core.IgaMessage;
-import edu.agh.iga.adi.giraph.direction.computation.ComputationResolver;
 import edu.agh.iga.adi.giraph.direction.computation.IgaComputation;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import lombok.val;
 import org.apache.giraph.graph.Vertex;
+import org.apache.hadoop.io.BooleanWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.log4j.Logger;
 
-import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.FIRST_INITIALISATION_TYPE;
 import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_START;
-import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.computationResolverFor;
+import static edu.agh.iga.adi.giraph.direction.StepAggregators.LAST_COMPUTATION_FLAG;
 import static edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger.computationLog;
 import static edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger.logPhase;
 import static edu.agh.iga.adi.giraph.direction.computation.factorization.IgaComputationPhase.phaseFor;
@@ -27,13 +26,12 @@ public final class FactorisationComputation extends IgaComputation {
   private static final Logger LOG = Logger.getLogger(FactorisationComputation.class);
 
   private IgaComputationPhase phase;
-  private ComputationResolver computationResolver;
+  private boolean isLastRun;
 
   @Override
   public void preSuperstep() {
-    IntWritable computationStart = getAggregatedValue(COMPUTATION_START);
-    phase = phaseFor(getTree(), (int) getSuperstep() - computationStart.get());
-    computationResolver = computationResolverFor(FIRST_INITIALISATION_TYPE.get(getConf()));
+    loadPhase();
+    loadLastComputationFlag();
     logPhase(phase);
     if (LOG.isDebugEnabled()) {
       LOG.debug(format("================ SUPERSTEP (%d) %s ================", getSuperstep() - 1, phase));
@@ -50,14 +48,13 @@ public final class FactorisationComputation extends IgaComputation {
       return;
     }
 
-
     operationOf(messages).ifPresent(operation -> vertex.getValue().withValue(operation.preConsume(vertexOf(vertex), getIgaContext(), vertex.getValue().getElement())));
     send(vertex, update(vertex, messages));
 
-    if (computationResolver.computationFor(getTree(), getSuperstep() + 1) == FactorisationComputation.class) {
-      vertex.voteToHalt();
+    if (isLastRun) {
+      vertex.wakeUp(); // this effectively keeps the algorithm running so that the next computation can happen even if we didn't sent the messages in the last step
     } else {
-      vertex.wakeUp(); // this effectively keeps the algorithm running so that the next computation can happen
+      vertex.voteToHalt(); // we halt the vertices cause we are sending the messages which will wake the other
     }
 
     computationLog(vertex.getValue().getElement());
@@ -102,6 +99,16 @@ public final class FactorisationComputation extends IgaComputation {
         }
       }
     });
+  }
+
+  private void loadPhase() {
+    IntWritable computationStart = getAggregatedValue(COMPUTATION_START);
+    phase = phaseFor(getTree(), (int) getSuperstep() - computationStart.get());
+  }
+
+  private void loadLastComputationFlag() {
+    BooleanWritable lastComputationFlag = getAggregatedValue(LAST_COMPUTATION_FLAG);
+    isLastRun = lastComputationFlag.get();
   }
 
 }

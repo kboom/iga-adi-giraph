@@ -12,7 +12,10 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 
+import java.io.IOException;
+
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
+import static edu.agh.iga.adi.giraph.direction.Flags.INT_TRUE;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.direction.IgaCounter.ENDING_SUPER_STEP;
 import static edu.agh.iga.adi.giraph.direction.IgaCounter.STEP_COUNTER;
@@ -47,7 +50,12 @@ public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable,
       return new IdWithValueVertexWriter(directionTree);
     } else {
       setNoOutputFormat();
-      return null;
+      return new TextVertexWriter() {
+        @Override
+        public void writeVertex(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
+
+        }
+      };
     }
   }
 
@@ -67,7 +75,7 @@ public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable,
   }
 
   private boolean endingSuperStep(TaskAttemptContext ctx) {
-    return ctx.getCounter(ENDING_SUPER_STEP).getValue() == 1;
+    return ctx.getCounter(ENDING_SUPER_STEP).getValue() == INT_TRUE;
   }
 
   protected class IdWithValueVertexWriter extends TextVertexWriterToEachLine {
