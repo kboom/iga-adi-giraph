@@ -11,7 +11,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.log4j.Logger;
 
 import static edu.agh.iga.adi.giraph.core.operations.setup.TranspositionIgaOperation.TRANSPOSITION_IGA_OPERATION;
-import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_START;
+import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_ITERATION;
 import static edu.agh.iga.adi.giraph.direction.computation.transposition.TranspositionComputation.TranspositionPhase.phaseFor;
 
 /**
@@ -26,7 +26,7 @@ public class TranspositionComputation extends IgaComputation {
 
   @Override
   public void preSuperstep() {
-    IntWritable computationStart = getAggregatedValue(COMPUTATION_START);
+    IntWritable computationStart = getAggregatedValue(COMPUTATION_ITERATION);
     phase = phaseFor(computationStart.get(), (int) getSuperstep());
   }
 

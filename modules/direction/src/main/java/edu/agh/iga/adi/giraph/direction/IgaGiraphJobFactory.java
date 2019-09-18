@@ -55,7 +55,7 @@ public class IgaGiraphJobFactory {
 
   public static GiraphConfiguration injectSolverConfiguration(GiraphConfiguration conf) {
     conf.setComputationClass(InitialComputation.class);
-    conf.setMasterComputeClass(StepComputation.class);
+    conf.setMasterComputeClass(IterativeComputation.class);
     conf.setWorkerContextClass(IgaWorkerContext.class);
     conf.setEdgeInputFormatClass(IgaEdgeInputFormat.class);
     conf.setVertexInputFormatClass(inputFormatsByInitType.get(FIRST_INITIALISATION_TYPE.get(conf)));

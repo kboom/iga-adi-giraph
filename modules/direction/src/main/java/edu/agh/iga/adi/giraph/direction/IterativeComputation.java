@@ -16,7 +16,7 @@ import static edu.agh.iga.adi.giraph.direction.Flags.INT_FALSE;
 import static edu.agh.iga.adi.giraph.direction.Flags.INT_TRUE;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.*;
 import static edu.agh.iga.adi.giraph.direction.IgaCounter.*;
-import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_START;
+import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_ITERATION;
 import static edu.agh.iga.adi.giraph.direction.StepAggregators.LAST_COMPUTATION_FLAG;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.COEFFICIENTS_PROBLEM;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.computationResolverFor;
@@ -26,7 +26,7 @@ import static edu.agh.iga.adi.giraph.direction.logging.TimeLogger.timeReducer;
 /**
  * Computes one full time step of the Alternating Directions Solver.
  */
-public class StepComputation extends DefaultMasterCompute {
+public class IterativeComputation extends DefaultMasterCompute {
 
   private DirectionTree tree;
   private Class<? extends Computation> previousComputation;
@@ -34,6 +34,7 @@ public class StepComputation extends DefaultMasterCompute {
 
   private Counter stepCounter;
   private Counter localSuperStep;
+  private Counter computationIteration;
   private Counter endingSuperStep;
 
   @Override
@@ -41,11 +42,12 @@ public class StepComputation extends DefaultMasterCompute {
     stepCounter = getContext().getCounter(STEP_COUNTER);
     localSuperStep = getContext().getCounter(LOCAL_SUPERSTEP);
     endingSuperStep = getContext().getCounter(ENDING_SUPER_STEP);
+    computationIteration = getContext().getCounter(COMPUTATION_ITERATION_COUNTER);
 
     stepCount = STEP_COUNT.get(getConf());
     int problemSize = PROBLEM_SIZE.get(getConf());
     tree = new DirectionTree(problemSize);
-    registerAggregator(COMPUTATION_START, IntOverwriteAggregator.class);
+    registerAggregator(COMPUTATION_ITERATION, IntOverwriteAggregator.class);
     registerAggregator(LAST_COMPUTATION_FLAG, BooleanOverwriteAggregator.class);
 
     stepCounter.setValue(0);
@@ -62,20 +64,24 @@ public class StepComputation extends DefaultMasterCompute {
     }
 
     localSuperStep.increment(1);
-    long currentLocalSuperStep = localSuperStep.getValue();
+    long localSuperStepNo = localSuperStep.getValue();
     val computationResolver = currentComputationResolver();
-    Class<? extends Computation> currentComputation = computationResolver.computationFor(tree, currentLocalSuperStep);
+    Class<? extends Computation> currentComputation = computationResolver.computationFor(tree, localSuperStepNo);
     if (currentComputation != null) {
       setComputation(currentComputation);
       setLastComputation(false);
 
       if (previousComputation != currentComputation) {
-        setComputationStart(currentLocalSuperStep);
+        computationIteration.setValue(0);
+      } else {
+        computationIteration.increment(1);
       }
+
+      setComputationIteration(computationIteration.getValue());
 
       previousComputation = currentComputation;
 
-      Class<? extends Computation> nextComputation = computationResolver.computationFor(tree, currentLocalSuperStep + 1);
+      Class<? extends Computation> nextComputation = computationResolver.computationFor(tree, localSuperStepNo + 1);
       if (nextComputation != currentComputation) {
         setLastComputation(true);
       }
@@ -116,8 +122,8 @@ public class StepComputation extends DefaultMasterCompute {
     }
   }
 
-  private void setComputationStart(long start) {
-    setAggregatedValue(COMPUTATION_START, new IntWritable((int) start));
+  private void setComputationIteration(long iteration) {
+    setAggregatedValue(COMPUTATION_ITERATION, new IntWritable((int) iteration));
   }
 
   private void setLastComputation(boolean lastComputation) {

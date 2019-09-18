@@ -13,7 +13,7 @@ class StepComputationTest {
 
   @Test
   void canSolveOneFor12() {
-    whenComputation(StepComputation.class, InitialComputation.class)
+    whenComputation(IterativeComputation.class, InitialComputation.class)
         .ofProblemSize(PROBLEM_12_SIZE)
         .isRunForGraph(graph -> igaTestGraph(graph).withVertexElements(elementsFor((x, y) -> 1, TREE_12, MESH_12)))
         .thenAssertThatGraph(assertions ->
@@ -33,7 +33,7 @@ class StepComputationTest {
 
   @Test
   void canSolveOneFor24() {
-    whenComputation(StepComputation.class, InitialComputation.class)
+    whenComputation(IterativeComputation.class, InitialComputation.class)
         .ofProblemSize(PROBLEM_24_SIZE)
         .isRunForGraph(graph -> igaTestGraph(graph).withVertexElements(elementsFor((x, y) -> 1, TREE_24, MESH_24)))
         .thenAssertThatGraph(assertions ->
@@ -53,7 +53,7 @@ class StepComputationTest {
 
   @Test
   void canSolveXFor12() {
-    whenComputation(StepComputation.class, InitialComputation.class)
+    whenComputation(IterativeComputation.class, InitialComputation.class)
         .ofProblemSize(PROBLEM_12_SIZE)
         .isRunForGraph(graph -> igaTestGraph(graph).withVertexElements(elementsFor((x, y) -> x, TREE_12, MESH_12)))
         .thenAssertThatGraph(assertions ->
@@ -73,7 +73,7 @@ class StepComputationTest {
 
   @Test
   void canSolveYFor12() {
-    whenComputation(StepComputation.class, InitialComputation.class)
+    whenComputation(IterativeComputation.class, InitialComputation.class)
         .ofProblemSize(PROBLEM_12_SIZE)
         .isRunForGraph(graph -> igaTestGraph(graph).withVertexElements(elementsFor((x, y) -> y, TREE_12, MESH_12)))
         .thenAssertThatGraph(assertions ->
@@ -127,7 +127,7 @@ class StepComputationTest {
 
   @Test
   void canSolveSumFor12() {
-    whenComputation(StepComputation.class, InitialComputation.class)
+    whenComputation(IterativeComputation.class, InitialComputation.class)
         .ofProblemSize(PROBLEM_12_SIZE)
         .isRunForGraph(graph -> igaTestGraph(graph).withVertexElements(elementsFor(Double::sum, TREE_12, MESH_12)))
         .thenAssertThatGraph(assertions ->
@@ -181,7 +181,7 @@ class StepComputationTest {
 
   @Test
   void canSolveLinearFor24() {
-    whenComputation(StepComputation.class, InitialComputation.class)
+    whenComputation(IterativeComputation.class, InitialComputation.class)
         .ofProblemSize(PROBLEM_24_SIZE)
         .isRunForGraph(graph -> igaTestGraph(graph).withVertexElements(elementsFor(Double::sum, TREE_24, MESH_24)))
         .thenAssertThatGraph(assertions ->
@@ -195,7 +195,7 @@ class StepComputationTest {
 
   @Test
   void canSolveLinearFor48() {
-    whenComputation(StepComputation.class, InitialComputation.class)
+    whenComputation(IterativeComputation.class, InitialComputation.class)
         .ofProblemSize(PROBLEM_48_SIZE)
         .isRunForGraph(graph -> igaTestGraph(graph).withVertexElements(elementsFor(Double::sum, TREE_48, MESH_48)))
         .thenAssertThatGraph(assertions ->

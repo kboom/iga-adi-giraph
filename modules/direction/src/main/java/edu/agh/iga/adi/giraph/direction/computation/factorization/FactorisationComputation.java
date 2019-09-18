@@ -13,7 +13,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.log4j.Logger;
 
-import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_START;
+import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_ITERATION;
 import static edu.agh.iga.adi.giraph.direction.StepAggregators.LAST_COMPUTATION_FLAG;
 import static edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger.computationLog;
 import static edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger.logPhase;
@@ -102,8 +102,8 @@ public final class FactorisationComputation extends IgaComputation {
   }
 
   private void loadPhase() {
-    IntWritable computationStart = getAggregatedValue(COMPUTATION_START);
-    phase = phaseFor(getTree(), (int) getSuperstep() - computationStart.get());
+    IntWritable iteration = getAggregatedValue(COMPUTATION_ITERATION);
+    phase = phaseFor(getTree(), iteration.get());
   }
 
   private void loadLastComputationFlag() {
