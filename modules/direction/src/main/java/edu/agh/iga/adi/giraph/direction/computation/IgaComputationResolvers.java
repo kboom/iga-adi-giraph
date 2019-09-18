@@ -29,7 +29,7 @@ public enum IgaComputationResolvers implements ComputationResolver {
     if (step == 2 * tree.height() + 4) {
       return InitialComputation.class;
     }
-    if (step < 4 * tree.height() + 5) {
+    if (step < 4 * tree.height() + 4) {
       return FactorisationComputation.class;
     }
     return null;
@@ -47,7 +47,7 @@ public enum IgaComputationResolvers implements ComputationResolver {
     if (step == 2 * tree.height() + 2) {
       return InitialComputation.class;
     }
-    if (step < 4 * tree.height() + 3) {
+    if (step < 4 * tree.height() + 2) {
       return FactorisationComputation.class;
     }
     return null;

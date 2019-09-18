@@ -43,11 +43,6 @@ public final class FactorisationComputation extends IgaComputation {
       Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex,
       Iterable<IgaMessageWritable> messages
   ) {
-    if (phase == null) {
-      vertex.voteToHalt();
-      return;
-    }
-
     operationOf(messages).ifPresent(operation -> vertex.getValue().withValue(operation.preConsume(vertexOf(vertex), getIgaContext(), vertex.getValue().getElement())));
     send(vertex, update(vertex, messages));
 

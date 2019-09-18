@@ -41,7 +41,7 @@ class StepComputationIT {
     job.run();
 
     // then
-    assertThatCoefficients(outputDir)
+    assertThatCoefficients(outputDir.resolve("step-0"))
         .areEqualToResource(IDENTITY_MAT, ROWS_BOUND_TO_NODE);
   }
 
@@ -76,7 +76,7 @@ class StepComputationIT {
     job.run();
 
     // then
-    assertThatCoefficients(outputDir)
+    assertThatCoefficients(outputDir.resolve("step-0"))
         .areEqualToResource(IDENTITY_MAT, ROWS_BOUND_TO_NODE);
   }
 
