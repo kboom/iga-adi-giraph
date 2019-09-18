@@ -15,11 +15,7 @@ public final class IgaWorkerContext extends DefaultWorkerContext {
     val c = getContext().getCounter(ENDING_SUPER_STEP);
     val s = getContext().getCounter(STEP_COUNTER);
     StepVertexOutputFormat.step = (int) s.getValue();
-    if (c.getValue() == INT_TRUE) {
-      StepVertexOutputFormat.isLast = true;
-    } else {
-      StepVertexOutputFormat.isLast = false;
-    }
+    StepVertexOutputFormat.isLast = c.getValue() == INT_TRUE;
   }
 
 }
