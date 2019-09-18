@@ -26,8 +26,8 @@ public class TranspositionComputation extends IgaComputation {
 
   @Override
   public void preSuperstep() {
-    IntWritable computationStart = getAggregatedValue(COMPUTATION_ITERATION);
-    phase = phaseFor(computationStart.get(), (int) getSuperstep());
+    IntWritable iteration = getAggregatedValue(COMPUTATION_ITERATION);
+    phase = phaseFor(iteration.get());
   }
 
   @Override
@@ -76,11 +76,11 @@ public class TranspositionComputation extends IgaComputation {
     RECEIVE,
     END;
 
-    static TranspositionPhase phaseFor(int start, int current) {
-      if (start == current) {
+    static TranspositionPhase phaseFor(int current) {
+      if (current == 0) {
         return SEND;
       }
-      if (current == start + 1) {
+      if (current == 1) {
         return RECEIVE;
       }
       return END;
