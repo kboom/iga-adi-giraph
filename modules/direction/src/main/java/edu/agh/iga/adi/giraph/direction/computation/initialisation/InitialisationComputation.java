@@ -3,6 +3,9 @@ package edu.agh.iga.adi.giraph.direction.computation.initialisation;
 import edu.agh.iga.adi.giraph.core.IgaVertex.BranchVertex;
 import edu.agh.iga.adi.giraph.core.factory.HorizontalElementFactory;
 import edu.agh.iga.adi.giraph.core.problem.ProblemFactory;
+import edu.agh.iga.adi.giraph.core.problem.ProblemType;
+import edu.agh.iga.adi.giraph.core.problem.phenomena.HeatTransferPhenomena;
+import edu.agh.iga.adi.giraph.core.problem.phenomena.HeatTransferPhenomena.HeatTransferPhenomenaFactory;
 import edu.agh.iga.adi.giraph.core.setup.Initialisation;
 import edu.agh.iga.adi.giraph.core.setup.Initialisation.InitialisationIgaMessage;
 import edu.agh.iga.adi.giraph.direction.computation.IgaComputation;
@@ -17,6 +20,8 @@ import org.apache.log4j.Logger;
 
 import java.util.stream.Stream;
 
+import static edu.agh.iga.adi.giraph.core.problem.ProblemType.HEAT;
+import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_TYPE;
 import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_ITERATION;
 import static edu.agh.iga.adi.giraph.direction.computation.initialisation.InitialisationComputation.InitialisationPhase.resolvePhase;
 
@@ -37,8 +42,16 @@ public class InitialisationComputation extends IgaComputation {
     IntWritable iteration = getAggregatedValue(COMPUTATION_ITERATION);
     phase = resolvePhase(iteration.get());
     val ef = new HorizontalElementFactory(getMesh());
-    ProblemFactory pf = partialSolution -> partialSolution::valueAt; // for now don't do nothing
+    ProblemFactory pf = getProblemFactory(); // for now don't do nothing
     initialisation = new Initialisation(getIgaContext(), ef, pf);
+  }
+
+  private ProblemFactory getProblemFactory() {
+    val problemType = PROBLEM_TYPE.get(getConf());
+    if (problemType == HEAT) {
+      return new HeatTransferPhenomenaFactory();
+    }
+    return partialSolution -> partialSolution::valueAt;
   }
 
   @Override

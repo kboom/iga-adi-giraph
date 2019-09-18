@@ -92,10 +92,12 @@ public class IterativeComputation extends DefaultMasterCompute {
       }
     } else {
       stepCounter.increment(1);
+      localSuperStep.setValue(0);
+      setComputationIteration(0);
+      computationIteration.setValue(0);
       if (stepCounter.getValue() >= stepCount) {
         haltComputation();
       } else {
-        localSuperStep.setValue(0);
         previousComputation = InitialisationComputation.class;
         setComputation(InitialisationComputation.class);
       }

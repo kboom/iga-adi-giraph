@@ -1,18 +1,22 @@
 package edu.agh.iga.adi.giraph.direction;
 
+import edu.agh.iga.adi.giraph.core.problem.ProblemType;
 import edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers;
+import org.apache.giraph.conf.EnumConfOption;
 import org.apache.giraph.conf.IntConfOption;
 import org.apache.giraph.conf.StrConfOption;
 
 import java.util.stream.Stream;
 
 import static com.google.common.io.Files.createTempDir;
+import static edu.agh.iga.adi.giraph.core.problem.ProblemType.HEAT;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.SURFACE_PROBLEM;
 import static java.util.stream.Collectors.joining;
 
 public class IgaConfiguration {
 
   public static final IntConfOption PROBLEM_SIZE = new IntConfOption("iga.problem.size", 12, "The number of elements in one direction");
+  public static final EnumConfOption<ProblemType> PROBLEM_TYPE = new EnumConfOption<>("iga.problem.type", ProblemType.class, HEAT, "The type of the problem to simulate");
   public static final IntConfOption STEP_COUNT = new IntConfOption("iga.problem.steps", 1, "The number of steps to run");
   public static final IntConfOption HEIGHT_PARTITIONS = new IntConfOption("iga.tree.partition.size", 1, "The height of tree partitions");
   public static final StrConfOption FIRST_INITIALISATION_TYPE = new StrConfOption("iga.initialisation.type", SURFACE_PROBLEM.getType(), "The type of initialisation - " + resolverTypes() + " - use surface if you initialise the leaves or coefficients if you initialize the branches");
