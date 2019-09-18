@@ -2,6 +2,7 @@ package edu.agh.iga.adi.giraph.direction;
 
 import edu.agh.iga.adi.giraph.core.DirectionTree;
 import edu.agh.iga.adi.giraph.direction.computation.ComputationResolver;
+import edu.agh.iga.adi.giraph.direction.computation.initialisation.InitialisationComputation;
 import lombok.val;
 import org.apache.giraph.aggregators.BooleanOverwriteAggregator;
 import org.apache.giraph.aggregators.IntOverwriteAggregator;
@@ -86,14 +87,17 @@ public class IterativeComputation extends DefaultMasterCompute {
         setLastRunOfComputation(true);
       }
 
-      if(nextComputation == null) {
+      if (nextComputation == null) {
         endingSuperStep.setValue(INT_TRUE);
       }
     } else {
       stepCounter.increment(1);
-      localSuperStep.setValue(0);
       if (stepCounter.getValue() >= stepCount) {
         haltComputation();
+      } else {
+        localSuperStep.setValue(0);
+        previousComputation = InitialisationComputation.class;
+        setComputation(InitialisationComputation.class);
       }
     }
   }
@@ -101,7 +105,7 @@ public class IterativeComputation extends DefaultMasterCompute {
   /**
    * The first initialisation will use {@link FIRST_INITIALISATION_TYPE}
    * and the next steps will use the {@link COEFFICIENTS_PROBLEM}.
-   *
+   * <p>
    * This is natural as the first step initialisation is configurable but the rest uses the internal representation
    * of the solver which are the spline coefficients. Note that the output format might actually be different
    * and it will not affect the computations (as we never have to read the coefficients from HDFS after initial load).
