@@ -80,4 +80,32 @@ class StepComputationIT {
         .areEqualToResource(IDENTITY_MAT, ROWS_BOUND_TO_NODE);
   }
 
+  @Test
+  @SneakyThrows
+  void canRunTwoIterationsOfProjection(@TempDir Path dir) {
+    val outputDir = dir.resolve("output");
+
+    // given
+    GiraphTestJob job = giraphJob()
+        .coefficientsOutputDir(outputDir)
+        .configuration(conf -> {
+          STEP_COUNT.set(conf, 2);
+          PROBLEM_SIZE.set(conf, 12);
+          HEIGHT_PARTITIONS.set(conf, 2);
+          FIRST_INITIALISATION_TYPE.set(conf, SURFACE_PROBLEM.getType());
+        })
+        .build();
+
+    // when
+    job.run();
+
+    // then
+    assertThatCoefficients(outputDir.resolve("step-0"))
+        .as("First step coefficients match")
+        .areEqualToResource(IDENTITY_MAT, ROWS_BOUND_TO_NODE);
+    assertThatCoefficients(outputDir.resolve("step-1"))
+        .as("Second step coefficients match")
+        .areEqualToResource(IDENTITY_MAT, ROWS_BOUND_TO_NODE);
+  }
+
 }
