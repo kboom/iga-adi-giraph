@@ -12,12 +12,10 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 
+import java.io.IOException;
+
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
-import static edu.agh.iga.adi.giraph.direction.Flags.INT_TRUE;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
-import static edu.agh.iga.adi.giraph.direction.IgaCounter.ENDING_SUPER_STEP;
-import static edu.agh.iga.adi.giraph.direction.IgaCounter.STEP_COUNTER;
-import static edu.agh.iga.adi.giraph.direction.io.NoOutputFormat.NO_OUTPUT_FORMAT;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.giraph.conf.GiraphConstants.VERTEX_OUTPUT_FORMAT_SUBDIR;
 
@@ -39,54 +37,61 @@ public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable,
 
   private static final Text EMPTY_LINE = new Text();
 
+  /**
+   * Dirty hack to store vertices only at the end
+   */
+  public static boolean isLast = false;
+
+  /**
+   * Dirty hack to write to the output subdirectory which corresponds to the current step
+   */
+  public static int step = 0;
+
   @Override
-  public TextVertexWriter createVertexWriter(TaskAttemptContext context) {
-    if (endingSuperStep(context)) {
-      setRealOutputFormat(context);
-      final int problemSize = PROBLEM_SIZE.get(context.getConfiguration());
-      final DirectionTree directionTree = new DirectionTree(problemSize);
-      return new IdWithValueVertexWriter(directionTree);
-    } else {
-      setNoOutputFormat();
-      return new TextVertexWriter() {
-        @Override
-        public void writeVertex(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
+  public TextVertexWriter createVertexWriter(final TaskAttemptContext context) {
+    final int problemSize = PROBLEM_SIZE.get(context.getConfiguration());
+    final DirectionTree directionTree = new DirectionTree(problemSize);
 
-        }
-      };
-    }
-  }
-
-  private void setRealOutputFormat(TaskAttemptContext ctx) {
-    val step = ctx.getCounter(STEP_COUNTER).getValue();
     textOutputFormat =
         new GiraphTextOutputFormat() {
           @Override
           protected String getSubdir() {
-            return VERTEX_OUTPUT_FORMAT_SUBDIR.get(getConf()) + step;
+            return VERTEX_OUTPUT_FORMAT_SUBDIR.getWithDefault(getConf(), "step") + "-" + step;
           }
         };
+
+    return new IdWithValueVertexWriter(directionTree);
   }
 
-  private void setNoOutputFormat() {
-    textOutputFormat = NO_OUTPUT_FORMAT;
-  }
-
-  private boolean endingSuperStep(TaskAttemptContext ctx) {
-    return ctx.getCounter(ENDING_SUPER_STEP).getValue() == INT_TRUE;
-  }
-
-  protected class IdWithValueVertexWriter extends TextVertexWriterToEachLine {
+  protected class IdWithValueVertexWriter extends TextVertexWriter {
 
     private static final char DELIMITER = ',';
     private final DirectionTree directionTree;
+    private TaskAttemptContext context;
+    private int currentStep = StepVertexOutputFormat.step;
 
     private IdWithValueVertexWriter(DirectionTree directionTree) {
       this.directionTree = directionTree;
     }
 
     @Override
-    protected Text convertVertexToLine(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
+    public void initialize(TaskAttemptContext context) throws IOException, InterruptedException {
+      this.context = context;
+      super.initialize(context);
+    }
+
+    @Override
+    public void writeVertex(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) throws IOException, InterruptedException {
+      if (StepVertexOutputFormat.isLast) {
+        if(currentStep != StepVertexOutputFormat.step) {
+          initialize(context); // need to refresh
+          currentStep = StepVertexOutputFormat.step;
+        }
+        getRecordWriter().write(convertVertexToLine(vertex), null);
+      }
+    }
+
+    private Text convertVertexToLine(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
       val vid = vertex.getId().get();
       val v = vertexOf(directionTree, vid);
       if (v.is(BranchVertex.class)) {

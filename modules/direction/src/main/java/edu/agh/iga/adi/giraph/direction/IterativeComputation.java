@@ -69,7 +69,7 @@ public class IterativeComputation extends DefaultMasterCompute {
     Class<? extends Computation> currentComputation = computationResolver.computationFor(tree, localSuperStepNo);
     if (currentComputation != null) {
       setComputation(currentComputation);
-      setLastComputation(false);
+      setLastRunOfComputation(false);
 
       if (previousComputation != currentComputation) {
         computationIteration.setValue(0);
@@ -83,7 +83,7 @@ public class IterativeComputation extends DefaultMasterCompute {
 
       Class<? extends Computation> nextComputation = computationResolver.computationFor(tree, localSuperStepNo + 1);
       if (nextComputation != currentComputation) {
-        setLastComputation(true);
+        setLastRunOfComputation(true);
       }
 
       if(nextComputation == null) {
@@ -126,7 +126,7 @@ public class IterativeComputation extends DefaultMasterCompute {
     setAggregatedValue(COMPUTATION_ITERATION, new IntWritable((int) iteration));
   }
 
-  private void setLastComputation(boolean lastComputation) {
+  private void setLastRunOfComputation(boolean lastComputation) {
     setAggregatedValue(LAST_COMPUTATION_FLAG, new BooleanWritable(lastComputation));
   }
 
