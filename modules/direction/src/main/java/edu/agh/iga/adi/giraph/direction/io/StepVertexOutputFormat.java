@@ -81,9 +81,15 @@ public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable,
     }
 
     @Override
+    public void close(TaskAttemptContext context) throws IOException, InterruptedException {
+      super.close(context);
+    }
+
+    @Override
     public void writeVertex(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) throws IOException, InterruptedException {
       if (StepVertexOutputFormat.isLast) {
         if(currentStep != StepVertexOutputFormat.step) {
+          close(getContext());
           initialize(context); // need to refresh
           currentStep = StepVertexOutputFormat.step;
         }
