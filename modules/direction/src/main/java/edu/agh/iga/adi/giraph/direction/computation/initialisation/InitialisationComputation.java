@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 
 import java.util.stream.Stream;
 
-import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_START;
+import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_ITERATION;
 import static edu.agh.iga.adi.giraph.direction.computation.initialisation.InitialisationComputation.InitialisationPhase.phaseFor;
 
 /**
@@ -34,7 +34,7 @@ public class InitialisationComputation extends IgaComputation {
 
   @Override
   public void preSuperstep() {
-    IntWritable computationStart = getAggregatedValue(COMPUTATION_START);
+    IntWritable computationStart = getAggregatedValue(COMPUTATION_ITERATION);
     phase = phaseFor(computationStart.get(), (int) getSuperstep());
     val ef = new HorizontalElementFactory(getMesh());
     ProblemFactory pf = partialSolution -> partialSolution::valueAt; // for now don't do nothing
