@@ -11,6 +11,7 @@ import org.apache.giraph.io.formats.TextVertexOutputFormat;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
@@ -18,6 +19,7 @@ import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.giraph.conf.GiraphConstants.VERTEX_OUTPUT_FORMAT_SUBDIR;
+import static org.apache.log4j.Logger.getLogger;
 
 /**
  * Extracts the solution from the solver. The solution is the large matrix of coefficients for our BSpline basis functions.
@@ -34,6 +36,8 @@ import static org.apache.giraph.conf.GiraphConstants.VERTEX_OUTPUT_FORMAT_SUBDIR
  * that is the last super step of any given step we store the values in a subdirectory so we collect all results.
  */
 public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable, IgaElementWritable, IgaOperationWritable> {
+
+  private static final Logger LOG = getLogger(StepVertexOutputFormat.class);
 
   private static final Text EMPTY_LINE = new Text();
 
@@ -56,7 +60,9 @@ public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable,
         new GiraphTextOutputFormat() {
           @Override
           protected String getSubdir() {
-            return VERTEX_OUTPUT_FORMAT_SUBDIR.getWithDefault(getConf(), "step") + "-" + step;
+            val outputDir = VERTEX_OUTPUT_FORMAT_SUBDIR.getWithDefault(getConf(), "step") + "-" + StepVertexOutputFormat.step;
+            LOG.info("Output dir - " + outputDir);
+            return outputDir;
           }
         };
 
@@ -87,12 +93,16 @@ public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable,
 
     @Override
     public void writeVertex(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) throws IOException, InterruptedException {
+      LOG.error("ATTEMPT TO WRITE");
       if (StepVertexOutputFormat.isLast) {
-        if(currentStep != StepVertexOutputFormat.step) {
+        LOG.error("ISLAST");
+        if (currentStep != StepVertexOutputFormat.step) {
+          LOG.error("NEWSTEP");
           close(getContext());
           initialize(context); // need to refresh
           currentStep = StepVertexOutputFormat.step;
         }
+        LOG.error("WRITING");
         getRecordWriter().write(convertVertexToLine(vertex), null);
       }
     }

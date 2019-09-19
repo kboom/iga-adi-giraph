@@ -17,8 +17,7 @@ import static edu.agh.iga.adi.giraph.direction.Flags.INT_FALSE;
 import static edu.agh.iga.adi.giraph.direction.Flags.INT_TRUE;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.*;
 import static edu.agh.iga.adi.giraph.direction.IgaCounter.*;
-import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_ITERATION;
-import static edu.agh.iga.adi.giraph.direction.StepAggregators.LAST_COMPUTATION_FLAG;
+import static edu.agh.iga.adi.giraph.direction.StepAggregators.*;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.COEFFICIENTS_PROBLEM;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.computationResolverFor;
 import static edu.agh.iga.adi.giraph.direction.logging.TimeLogger.logTime;
@@ -50,15 +49,19 @@ public class IterativeComputation extends DefaultMasterCompute {
     tree = new DirectionTree(problemSize);
     registerAggregator(COMPUTATION_ITERATION, IntOverwriteAggregator.class);
     registerAggregator(LAST_COMPUTATION_FLAG, BooleanOverwriteAggregator.class);
+    registerAggregator(ENDING_SUPER_STEP_OF_STEP, BooleanOverwriteAggregator.class);
+    registerAggregator(STEP, IntOverwriteAggregator.class);
 
     stepCounter.setValue(0);
     localSuperStep.setValue(-1);
     endingSuperStep.setValue(INT_FALSE);
+    setStep(0);
   }
 
   @Override
   public final void compute() {
     endingSuperStep.setValue(INT_FALSE);
+    setEndingSuperStepOfStep(false);
 
     if (getSuperstep() > 0) {
       logTimers();
@@ -89,6 +92,7 @@ public class IterativeComputation extends DefaultMasterCompute {
 
       if (nextComputation == null) {
         endingSuperStep.setValue(INT_TRUE);
+        setEndingSuperStepOfStep(true);
       }
     } else {
       stepCounter.increment(1);
@@ -102,6 +106,7 @@ public class IterativeComputation extends DefaultMasterCompute {
         setComputation(InitialisationComputation.class);
       }
     }
+    setStep((int) stepCounter.getValue());
   }
 
   /**
@@ -134,6 +139,14 @@ public class IterativeComputation extends DefaultMasterCompute {
 
   private void setLastRunOfComputation(boolean lastComputation) {
     setAggregatedValue(LAST_COMPUTATION_FLAG, new BooleanWritable(lastComputation));
+  }
+
+  private void setEndingSuperStepOfStep(boolean endingSuperstep) {
+    setAggregatedValue(ENDING_SUPER_STEP_OF_STEP, new BooleanWritable(endingSuperstep));
+  }
+
+  private void setStep(int step) {
+    setAggregatedValue(STEP, new IntWritable(step));
   }
 
 }
