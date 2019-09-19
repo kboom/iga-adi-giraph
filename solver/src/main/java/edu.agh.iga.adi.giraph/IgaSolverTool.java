@@ -69,6 +69,7 @@ public class IgaSolverTool extends Configured implements Tool {
     ofNullable(options.getInputDirectory()).ifPresent(i -> addInput(config, i));
     COEFFICIENTS_OUTPUT.set(config, options.getOutputDirectory());
     config.setWorkerConfiguration(options.getWorkers(), options.getWorkers(), 100);
+    STEP_COUNT.set(config, options.getSteps());
 
     options.getConfig()
         .stream()
