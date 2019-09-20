@@ -203,7 +203,7 @@
                     <execution>
                         <id>install-external</id>
                         <inherited>false</inherited>
-                        <phase>clean</phase>
+                        <phase>initialize</phase>
                         <configuration>
                             <file>${project.libdir}/giraph-1.2.0-for-hadoop-2.9.2.jar</file>
                             <repositoryLayout>default</repositoryLayout>
