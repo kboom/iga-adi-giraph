@@ -7,6 +7,7 @@ import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.job.GiraphConfigurationValidator;
 import org.apache.giraph.yarn.GiraphYarnClient;
 import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
@@ -16,6 +17,7 @@ import static edu.agh.iga.adi.giraph.direction.IgaGiraphJobFactory.injectSolverC
 import static java.lang.System.exit;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.StreamSupport.stream;
+import static org.apache.giraph.io.formats.GiraphFileInputFormat.addVertexInputPath;
 
 public class IgaSolverTool extends Configured implements Tool {
 
@@ -79,8 +81,7 @@ public class IgaSolverTool extends Configured implements Tool {
 
   @SneakyThrows
   private void addInput(GiraphConfiguration config, String i) {
-    config.set("mapreduce.output.fileoutputformat.outputdir", i);
-//    addVertexInputPath(config, new Path(i));
+    addVertexInputPath(config, new Path(i));
   }
 
 //  private void populateCustomConfiguration(GiraphConfiguration conf, String[] strings) {
