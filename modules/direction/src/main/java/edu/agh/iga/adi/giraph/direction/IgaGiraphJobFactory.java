@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Map;
 
-import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.FIRST_INITIALISATION_TYPE;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.FIRST_INITIALISATION_TYPE;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.COEFFICIENTS_PROBLEM;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.SURFACE_PROBLEM;
 import static java.lang.Integer.MAX_VALUE;

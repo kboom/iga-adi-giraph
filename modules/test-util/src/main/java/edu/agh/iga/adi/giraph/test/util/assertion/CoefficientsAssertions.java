@@ -1,17 +1,18 @@
 package edu.agh.iga.adi.giraph.test.util.assertion;
 
+import lombok.val;
 import org.assertj.core.api.AbstractAssert;
 import org.ojalgo.matrix.store.PrimitiveDenseStore;
 
-import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.SortedMap;
 
 import static edu.agh.iga.adi.giraph.test.util.CoefficientsFromFileReader.coefficientsOfDir;
-import static edu.agh.iga.adi.giraph.test.util.CoefficientsFromFileReader.coefficientsOfFile;
+import static edu.agh.iga.adi.giraph.test.util.CoefficientsFromFileReader.coefficientsOfFileDefaultPrecision;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.ojalgo.function.aggregator.Aggregator.AVERAGE;
 
 public final class CoefficientsAssertions extends AbstractAssert<CoefficientsAssertions, Path> {
 
@@ -26,18 +27,27 @@ public final class CoefficientsAssertions extends AbstractAssert<CoefficientsAss
   }
 
   public CoefficientsAssertions areEqualToResource(String resource, int rows) {
-    try {
-      return assertCoefficients(resource, rows);
-    } catch (IOException e) {
-      throw new IllegalStateException("Could not read coefficients to compare from " + resource);
-    }
+    return assertCoefficients(resource, rows);
   }
 
-  private CoefficientsAssertions assertCoefficients(String resource, int rows) throws IOException {
+  private CoefficientsAssertions assertCoefficients(String resource, int rows) {
     SortedMap<Long, PrimitiveDenseStore> actualCoefficients = coefficientsOfDir(actual, rows, STANDARD_PRECISION);
-    SortedMap<Long, PrimitiveDenseStore> expectedCoefficients = coefficientsOfFile(pathOfResource(resource), rows);
+    SortedMap<Long, PrimitiveDenseStore> expectedCoefficients = coefficientsOfFileDefaultPrecision(pathOfResource(resource), rows);
 
     assertThat(actualCoefficients).containsExactlyEntriesOf(expectedCoefficients);
+    return this;
+  }
+
+  public CoefficientsAssertions checksumEquals(double expectedChecksum, int rows) {
+    SortedMap<Long, PrimitiveDenseStore> actualCoefficients = coefficientsOfDir(actual, rows);
+    val actualChecksum = actualCoefficients
+        .values()
+        .stream()
+        .mapToDouble(ds -> ds.aggregateAll(AVERAGE))
+        .sum();
+    assertThat(actualChecksum)
+        .as("Checksums should match")
+        .isEqualTo(expectedChecksum);
     return this;
   }
 
@@ -45,5 +55,4 @@ public final class CoefficientsAssertions extends AbstractAssert<CoefficientsAss
     final URL resource = ClassLoader.getSystemClassLoader().getResource(resourceName);
     return Paths.get(resource.getPath());
   }
-
 }

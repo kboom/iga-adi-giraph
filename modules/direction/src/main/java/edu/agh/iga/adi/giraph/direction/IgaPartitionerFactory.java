@@ -10,7 +10,7 @@ import org.apache.giraph.partition.SimpleLongRangePartitionerFactory;
 import org.apache.hadoop.io.LongWritable;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
-import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.PROBLEM_SIZE;
 
 /**
  * As our operations go up and down the problem tree we can greatly benefit from separating a sub-trees

@@ -19,7 +19,7 @@ import org.apache.hadoop.io.LongWritable;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.direction.test.SmallProblem.DIRECTION_TREE;
 import static edu.agh.iga.adi.giraph.direction.test.assertion.TestGraphAssertions.assertThatGraph;
 import static org.apache.giraph.conf.GiraphConstants.COMPUTATION_FACTORY_CLASS;

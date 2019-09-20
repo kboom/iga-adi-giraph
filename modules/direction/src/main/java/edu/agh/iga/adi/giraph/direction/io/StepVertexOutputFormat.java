@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
-import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.PROBLEM_SIZE;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.giraph.conf.GiraphConstants.VERTEX_OUTPUT_FORMAT_SUBDIR;
 import static org.apache.log4j.Logger.getLogger;
