@@ -3,12 +3,14 @@ package edu.agh.iga.adi.giraph.core.setup;
 import edu.agh.iga.adi.giraph.core.IgaContext;
 import edu.agh.iga.adi.giraph.core.IgaElement;
 import edu.agh.iga.adi.giraph.core.factory.HorizontalElementFactory;
+import edu.agh.iga.adi.giraph.core.problem.NoopProblemFactory;
 import edu.agh.iga.adi.giraph.core.setup.Initialisation.InitialisationIgaMessage;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
+import static edu.agh.iga.adi.giraph.core.factory.ExplicitMethodCoefficients.EXPLICIT_METHOD_COEFFICIENTS;
 import static edu.agh.iga.adi.giraph.core.test.IgaElementBuilder.elementFor;
 import static edu.agh.iga.adi.giraph.core.test.Tree12.*;
 import static edu.agh.iga.adi.giraph.test.util.MatrixBuilder.matrixOfSize;
@@ -20,12 +22,13 @@ class InitialisationTest {
   private static final IgaContext CONTEXT = IgaContext.builder()
       .mesh(MESH)
       .tree(DIRECTION_TREE)
+      .methodCoefficients(EXPLICIT_METHOD_COEFFICIENTS)
       .build();
 
   private static final Initialisation INIT = new Initialisation(
       CONTEXT,
-      new HorizontalElementFactory(MESH),
-      partialSolution -> partialSolution::valueAt
+      new HorizontalElementFactory(MESH, EXPLICIT_METHOD_COEFFICIENTS),
+      new NoopProblemFactory()
   );
 
   @Test

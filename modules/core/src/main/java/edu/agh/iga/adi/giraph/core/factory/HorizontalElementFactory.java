@@ -17,7 +17,6 @@ import org.ojalgo.structure.Access2D;
 import static edu.agh.iga.adi.giraph.core.GaussPoints.*;
 import static edu.agh.iga.adi.giraph.core.IgaConstants.*;
 import static edu.agh.iga.adi.giraph.core.IgaElement.igaElement;
-import static edu.agh.iga.adi.giraph.core.factory.ExplicitMethodCoefficients.COEFFICIENTS;
 import static org.ojalgo.function.constant.PrimitiveMath.ADD;
 import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
@@ -28,9 +27,11 @@ public final class HorizontalElementFactory implements ElementFactory {
   private static final BSpline3 b3 = new BSpline3();
 
   private final Mesh mesh;
+  private final MethodCoefficients coefficients;
 
-  public HorizontalElementFactory(Mesh mesh) {
+  public HorizontalElementFactory(Mesh mesh, MethodCoefficients coefficients) {
     this.mesh = mesh;
+    this.coefficients = coefficients;
   }
 
   @Override
@@ -64,7 +65,7 @@ public final class HorizontalElementFactory implements ElementFactory {
 
   private IgaElement leafElement(Problem problem, IgaVertex vertex) {
     val ma = PrimitiveDenseStore.FACTORY.makeZero(LEAF_SIZE, LEAF_SIZE);
-    COEFFICIENTS.supplyTo(ma);
+    coefficients.coefficients().supplyTo(ma);
     return igaElement(
         vertex.id(),
         ma,

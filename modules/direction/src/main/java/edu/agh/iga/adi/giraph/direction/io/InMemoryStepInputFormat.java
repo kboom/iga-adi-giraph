@@ -8,7 +8,9 @@ import edu.agh.iga.adi.giraph.core.factory.ElementFactory;
 import edu.agh.iga.adi.giraph.core.factory.HorizontalElementFactory;
 import edu.agh.iga.adi.giraph.core.problem.ConstantProblem;
 import edu.agh.iga.adi.giraph.core.problem.Problem;
+import edu.agh.iga.adi.giraph.core.problem.ProblemFactory;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
+import lombok.val;
 import org.apache.giraph.io.VertexValueInputFormat;
 import org.apache.giraph.io.VertexValueReader;
 import org.apache.hadoop.conf.Configuration;
@@ -27,6 +29,7 @@ import static edu.agh.iga.adi.giraph.core.IgaVertexFactory.familyOf;
 import static edu.agh.iga.adi.giraph.core.Mesh.aMesh;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.HEIGHT_PARTITIONS;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
+import static edu.agh.iga.adi.giraph.direction.computation.ProblemFactoryResolver.getProblemFactory;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static org.apache.log4j.Logger.getLogger;
@@ -43,9 +46,10 @@ public class InMemoryStepInputFormat extends VertexValueInputFormat<LongWritable
   @Override
   public VertexValueReader<LongWritable, IgaElementWritable> createVertexValueReader(InputSplit split, TaskAttemptContext context) {
     IgaInputSplit vertexSplit = (IgaInputSplit) split;
-    final int size = PROBLEM_SIZE.get(getConf());
-    final Mesh mesh = aMesh().withElements(size).build();
-    final ElementFactory elementFactory = new HorizontalElementFactory(mesh);
+    val size = PROBLEM_SIZE.get(getConf());
+    val mesh = aMesh().withElements(size).build();
+    val pf = getProblemFactory(getConf());
+    val elementFactory = new HorizontalElementFactory(mesh, pf.coefficients());
     return new StaticProblemInputReader(
         elementFactory,
         new ConstantProblem(), // todo for now

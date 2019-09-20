@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
+import static edu.agh.iga.adi.giraph.direction.computation.ProblemFactoryResolver.getProblemFactory;
 import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
 /**
@@ -59,7 +60,8 @@ public class StepVertexInputFormat extends TextVertexValueInputFormat<LongWritab
       final int problemSize = PROBLEM_SIZE.get(getConf());
       mesh = Mesh.aMesh().withElements(problemSize).build();
       directionTree = new DirectionTree(problemSize);
-      elementFactory = new HorizontalElementFactory(mesh);
+      val pf = getProblemFactory(getConf());
+      elementFactory = new HorizontalElementFactory(mesh, pf.coefficients());
     }
 
     @Override

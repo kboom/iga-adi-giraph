@@ -2,9 +2,8 @@ package edu.agh.iga.adi.giraph.direction.computation.initialisation;
 
 import edu.agh.iga.adi.giraph.core.IgaVertex.BranchVertex;
 import edu.agh.iga.adi.giraph.core.factory.HorizontalElementFactory;
+import edu.agh.iga.adi.giraph.core.problem.NoopProblemFactory;
 import edu.agh.iga.adi.giraph.core.problem.ProblemFactory;
-import edu.agh.iga.adi.giraph.core.problem.ProblemType;
-import edu.agh.iga.adi.giraph.core.problem.phenomena.HeatTransferPhenomena;
 import edu.agh.iga.adi.giraph.core.problem.phenomena.HeatTransferPhenomena.HeatTransferPhenomenaFactory;
 import edu.agh.iga.adi.giraph.core.setup.Initialisation;
 import edu.agh.iga.adi.giraph.core.setup.Initialisation.InitialisationIgaMessage;
@@ -13,6 +12,7 @@ import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import lombok.val;
+import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.graph.Vertex;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 import static edu.agh.iga.adi.giraph.core.problem.ProblemType.HEAT;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_TYPE;
 import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_ITERATION;
+import static edu.agh.iga.adi.giraph.direction.computation.ProblemFactoryResolver.getProblemFactory;
 import static edu.agh.iga.adi.giraph.direction.computation.initialisation.InitialisationComputation.InitialisationPhase.resolvePhase;
 
 /**
@@ -41,17 +42,9 @@ public class InitialisationComputation extends IgaComputation {
   public void preSuperstep() {
     IntWritable iteration = getAggregatedValue(COMPUTATION_ITERATION);
     phase = resolvePhase(iteration.get());
-    val ef = new HorizontalElementFactory(getMesh());
-    ProblemFactory pf = getProblemFactory(); // for now don't do nothing
+    ProblemFactory pf = getProblemFactory(getConf());
+    val ef = new HorizontalElementFactory(getMesh(), pf.coefficients());
     initialisation = new Initialisation(getIgaContext(), ef, pf);
-  }
-
-  private ProblemFactory getProblemFactory() {
-    val problemType = PROBLEM_TYPE.get(getConf());
-    if (problemType == HEAT) {
-      return new HeatTransferPhenomenaFactory();
-    }
-    return partialSolution -> partialSolution::valueAt;
   }
 
   @Override
