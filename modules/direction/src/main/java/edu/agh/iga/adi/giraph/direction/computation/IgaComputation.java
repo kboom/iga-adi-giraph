@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 
 import static edu.agh.iga.adi.giraph.core.Mesh.aMesh;
 import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
+import static edu.agh.iga.adi.giraph.direction.computation.ProblemFactoryResolver.getProblemFactory;
 import static java.util.stream.StreamSupport.stream;
 
 public abstract class IgaComputation extends BasicComputation<LongWritable, IgaElementWritable, IgaOperationWritable, IgaMessageWritable> {
@@ -44,6 +45,7 @@ public abstract class IgaComputation extends BasicComputation<LongWritable, IgaE
     igaContext = IgaContext.builder()
         .tree(directionTree)
         .mesh(mesh)
+        .methodCoefficients(getProblemFactory(getConf()).coefficients())
         .build();
   }
 

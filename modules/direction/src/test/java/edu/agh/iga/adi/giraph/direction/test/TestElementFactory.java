@@ -12,11 +12,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
+import static edu.agh.iga.adi.giraph.core.factory.ExplicitMethodCoefficients.EXPLICIT_METHOD_COEFFICIENTS;
+
 @NoArgsConstructor
 public class TestElementFactory {
 
   public static Set<IgaElement> elementsFor(Problem problem, DirectionTree tree, Mesh mesh) {
-    HorizontalElementFactory ef = new HorizontalElementFactory(mesh);
+    HorizontalElementFactory ef = new HorizontalElementFactory(mesh, EXPLICIT_METHOD_COEFFICIENTS);
     return LongStream.rangeClosed(1, tree.lastIndexOfLeafRow())
         .boxed()
         .map(id -> ef.createElement(problem, IgaVertex.vertexOf(tree, id)))

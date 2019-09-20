@@ -5,13 +5,14 @@ import edu.agh.iga.adi.giraph.core.test.Problems;
 import org.junit.jupiter.api.Test;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
+import static edu.agh.iga.adi.giraph.core.factory.ExplicitMethodCoefficients.EXPLICIT_METHOD_COEFFICIENTS;
 import static edu.agh.iga.adi.giraph.core.test.Problems.LINEAR_PROBLEM;
 import static edu.agh.iga.adi.giraph.core.test.assertion.IgaElementAssertions.assertThatElement;
 import static edu.agh.iga.adi.giraph.test.util.MatrixBuilder.matrixOfSize;
 
 class HorizontalElementFactoryTest {
 
-  private static final HorizontalElementFactory factory = new HorizontalElementFactory(Problems.MESH_12);
+  private static final HorizontalElementFactory factory = new HorizontalElementFactory(Problems.MESH_12, EXPLICIT_METHOD_COEFFICIENTS);
 
   @Test
   void canCreateElement() {

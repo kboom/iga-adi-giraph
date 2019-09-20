@@ -8,8 +8,7 @@ import org.ojalgo.matrix.store.TransformableRegion;
 import static edu.agh.iga.adi.giraph.core.IgaConstants.LEAF_SIZE;
 import static edu.agh.iga.adi.giraph.core.IgaElement.igaElement;
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
-import static edu.agh.iga.adi.giraph.core.factory.ExplicitMethodCoefficients.COEFFICIENTS;
-import static edu.agh.iga.adi.giraph.core.operations.setup.TranspositionIgaOperation.*;
+import static edu.agh.iga.adi.giraph.core.operations.setup.TranspositionIgaOperation.TranspositionIgaMessage;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static org.ojalgo.function.constant.PrimitiveMath.MULTIPLY;
@@ -34,7 +33,7 @@ public final class TranspositionIgaOperation implements IgaOperation<Transpositi
   @Override
   public IgaElement preConsume(IgaVertex vertex, IgaContext ctx, IgaElement element) {
     val ma = FACTORY.makeZero(LEAF_SIZE, LEAF_SIZE);
-    COEFFICIENTS.supplyTo(ma);
+    ctx.getMethodCoefficients().coefficients().supplyTo(ma);
     return igaElement(
         vertex.id(),
         ma,
