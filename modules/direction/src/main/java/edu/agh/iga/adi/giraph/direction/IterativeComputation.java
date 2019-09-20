@@ -15,7 +15,7 @@ import org.apache.hadoop.mapreduce.Counter;
 
 import static edu.agh.iga.adi.giraph.direction.Flags.INT_FALSE;
 import static edu.agh.iga.adi.giraph.direction.Flags.INT_TRUE;
-import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.*;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.*;
 import static edu.agh.iga.adi.giraph.direction.IgaCounter.*;
 import static edu.agh.iga.adi.giraph.direction.StepAggregators.*;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.COEFFICIENTS_PROBLEM;

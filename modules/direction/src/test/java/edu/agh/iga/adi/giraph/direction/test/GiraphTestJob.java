@@ -9,8 +9,8 @@ import java.nio.file.Path;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.COEFFICIENTS_INPUT;
-import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.COEFFICIENTS_OUTPUT;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.COEFFICIENTS_INPUT;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.COEFFICIENTS_OUTPUT;
 import static edu.agh.iga.adi.giraph.direction.IgaGiraphJobFactory.igaMapReduceJob;
 import static java.lang.Integer.MAX_VALUE;
 import static java.util.Optional.ofNullable;

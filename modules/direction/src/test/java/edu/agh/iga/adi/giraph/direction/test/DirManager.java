@@ -3,7 +3,7 @@ package edu.agh.iga.adi.giraph.direction.test;
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.hadoop.fs.Path;
 
-import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.ZK_DIR;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.ZK_DIR;
 import static java.lang.System.getProperty;
 import static org.apache.giraph.conf.GiraphConstants.*;
 import static org.apache.giraph.utils.FileUtils.deletePath;

@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static edu.agh.iga.adi.giraph.core.Mesh.aMesh;
-import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.direction.computation.ProblemFactoryResolver.getProblemFactory;
 import static java.util.stream.StreamSupport.stream;
 

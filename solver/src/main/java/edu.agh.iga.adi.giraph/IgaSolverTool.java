@@ -12,7 +12,7 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
 
-import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.*;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.*;
 import static edu.agh.iga.adi.giraph.direction.IgaGiraphJobFactory.injectSolverConfiguration;
 import static java.lang.System.exit;
 import static java.util.Optional.ofNullable;

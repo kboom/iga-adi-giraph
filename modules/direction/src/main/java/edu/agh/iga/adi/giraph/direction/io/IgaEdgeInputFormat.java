@@ -19,8 +19,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.HEIGHT_PARTITIONS;
-import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_SIZE;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.HEIGHT_PARTITIONS;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.PROBLEM_SIZE;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static org.apache.log4j.Logger.getLogger;

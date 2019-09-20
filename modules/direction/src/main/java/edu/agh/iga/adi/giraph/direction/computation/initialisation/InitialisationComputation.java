@@ -2,9 +2,7 @@ package edu.agh.iga.adi.giraph.direction.computation.initialisation;
 
 import edu.agh.iga.adi.giraph.core.IgaVertex.BranchVertex;
 import edu.agh.iga.adi.giraph.core.factory.HorizontalElementFactory;
-import edu.agh.iga.adi.giraph.core.problem.NoopProblemFactory;
 import edu.agh.iga.adi.giraph.core.problem.ProblemFactory;
-import edu.agh.iga.adi.giraph.core.problem.phenomena.HeatTransferPhenomena.HeatTransferPhenomenaFactory;
 import edu.agh.iga.adi.giraph.core.setup.Initialisation;
 import edu.agh.iga.adi.giraph.core.setup.Initialisation.InitialisationIgaMessage;
 import edu.agh.iga.adi.giraph.direction.computation.IgaComputation;
@@ -12,7 +10,6 @@ import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import lombok.val;
-import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.graph.Vertex;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -20,9 +17,8 @@ import org.apache.log4j.Logger;
 
 import java.util.stream.Stream;
 
-import static edu.agh.iga.adi.giraph.core.problem.ProblemType.HEAT;
-import static edu.agh.iga.adi.giraph.direction.IgaConfiguration.PROBLEM_TYPE;
 import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_ITERATION;
+import static edu.agh.iga.adi.giraph.direction.StepAggregators.STEP;
 import static edu.agh.iga.adi.giraph.direction.computation.ProblemFactoryResolver.getProblemFactory;
 import static edu.agh.iga.adi.giraph.direction.computation.initialisation.InitialisationComputation.InitialisationPhase.resolvePhase;
 
@@ -41,8 +37,9 @@ public class InitialisationComputation extends IgaComputation {
   @Override
   public void preSuperstep() {
     IntWritable iteration = getAggregatedValue(COMPUTATION_ITERATION);
+    IntWritable step = getAggregatedValue(STEP);
     phase = resolvePhase(iteration.get());
-    ProblemFactory pf = getProblemFactory(getConf());
+    ProblemFactory pf = getProblemFactory(getConf(), step.get());
     val ef = new HorizontalElementFactory(getMesh(), pf.coefficients());
     initialisation = new Initialisation(getIgaContext(), ef, pf);
   }
