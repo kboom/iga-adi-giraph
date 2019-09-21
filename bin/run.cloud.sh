@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set +xe
+
 TIMESTAMP=$(date +%s)
 HDFS_RESULTS_DIR=hdfs://iga-adi-m/user/kbhit/${TIMESTAMP}
 

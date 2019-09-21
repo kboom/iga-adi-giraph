@@ -15,7 +15,7 @@
         <param name="append" value="false" />
         <param name="threshold" value="debug" />
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c{1}] - %m%n" />
+            <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c] - %m%n" />
         </layout>
     </appender>
 
@@ -28,23 +28,9 @@
         </layout>
     </appender>
 
-    <appender name="time.file" class="org.apache.log4j.FileAppender">
-        <param name="file" value="time.log" />
-        <param name="append" value="false" />
-        <param name="threshold" value="debug" />
-        <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%m%n" />
-        </layout>
-    </appender>
-
     <logger name="edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger" additivity="false">
         <level value="all" />
         <appender-ref ref="mat.file" />
-    </logger>
-
-    <logger name="edu.agh.iga.adi.giraph.direction.logging.TimeLogger" additivity="false">
-        <level value="all" />
-        <appender-ref ref="time.file" />
     </logger>
 
     <root>
