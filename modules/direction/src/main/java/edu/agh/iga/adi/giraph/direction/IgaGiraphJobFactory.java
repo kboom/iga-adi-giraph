@@ -21,9 +21,9 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Map;
 
-import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.FIRST_INITIALISATION_TYPE;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.COEFFICIENTS_PROBLEM;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.SURFACE_PROBLEM;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.FIRST_INITIALISATION_TYPE;
 import static java.lang.Integer.MAX_VALUE;
 import static java.lang.System.currentTimeMillis;
 import static lombok.AccessLevel.PRIVATE;
@@ -64,6 +64,7 @@ public class IgaGiraphJobFactory {
     conf.setYarnLibJars(currentJar());
     conf.setDoOutputDuringComputation(true); // to support multiple steps, we're not using checkpoints, we can just restart the job where we left off from the last step (load saved coefficients)
     VERTEX_OUTPUT_FORMAT_THREAD_SAFE.set(conf, true);
+    STATIC_GRAPH.set(conf, true);
     VERTEX_ID_CLASS.set(conf, LongWritable.class);
     VERTEX_VALUE_CLASS.set(conf, IgaElementWritable.class);
     EDGE_VALUE_CLASS.set(conf, IgaOperationWritable.class);

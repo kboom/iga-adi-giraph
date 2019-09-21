@@ -6,7 +6,7 @@
         <param name="target" value="System.out" />
         <param name="threshold" value="debug" />
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c{1}] - %m%n" />
+            <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c] - %m%n" />
         </layout>
     </appender>
 
@@ -48,7 +48,7 @@
     </logger>
 
     <root>
-        <priority value="debug" />
+        <priority value="info" />
         <appender-ref ref="default.console" />
         <appender-ref ref="default.file" />
     </root>
