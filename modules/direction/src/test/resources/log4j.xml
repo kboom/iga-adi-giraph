@@ -29,12 +29,12 @@
     </appender>
 
     <logger name="edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger" additivity="false">
-        <level value="all" />
+        <level value="error" />
         <appender-ref ref="mat.file" />
     </logger>
 
     <root>
-        <priority value="info" />
+        <priority value="error" />
         <appender-ref ref="default.console" />
         <appender-ref ref="default.file" />
     </root>
