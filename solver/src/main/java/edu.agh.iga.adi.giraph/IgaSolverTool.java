@@ -5,15 +5,15 @@ import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.job.GiraphConfigurationValidator;
-import org.apache.giraph.yarn.GiraphYarnClient;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
 
-import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.*;
+import static edu.agh.iga.adi.giraph.direction.IgaGiraphJobFactory.igaYarnJob;
 import static edu.agh.iga.adi.giraph.direction.IgaGiraphJobFactory.injectSolverConfiguration;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.*;
 import static java.lang.System.exit;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.StreamSupport.stream;
@@ -84,18 +84,9 @@ public class IgaSolverTool extends Configured implements Tool {
     addVertexInputPath(config, new Path(i));
   }
 
-//  private void populateCustomConfiguration(GiraphConfiguration conf, String[] strings) {
-//    Stream.of(strings).filter(s -> s.contains("=")).forEach(s -> {
-//      String[] tokens = s.split("=");
-//      String key = tokens[0];
-//      String value = tokens[1];
-//      conf.set(key, value);
-//    });
-//  }
-
   private int runJob(GiraphConfiguration conf) {
     try {
-      val job = new GiraphYarnClient(conf, IgaSolverTool.class.getName());
+      val job = igaYarnJob(conf);
       return job.run(true) ? 1 : -1;
     } catch (Exception e) {
       LOG.error("Could not run computations", e);

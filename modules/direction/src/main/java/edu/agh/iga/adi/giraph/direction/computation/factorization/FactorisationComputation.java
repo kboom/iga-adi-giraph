@@ -34,7 +34,7 @@ public final class FactorisationComputation extends IgaComputation {
     loadLastComputationFlag();
     logPhase(phase);
     if (LOG.isDebugEnabled()) {
-      LOG.debug(format("================ SUPERSTEP (%d) %s ================", getSuperstep() - 1, phase));
+      LOG.debug(format("================ SUPER STEP (%d) %s ================", getSuperstep() - 1, phase));
     }
   }
 

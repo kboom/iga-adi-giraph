@@ -20,7 +20,7 @@
     </appender>
 
     <root>
-        <priority value="debug" />
+        <priority value="error" />
         <appender-ref ref="default.console" />
         <appender-ref ref="default.file" />
     </root>

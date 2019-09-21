@@ -10,18 +10,15 @@ import org.apache.giraph.graph.Computation;
 import org.apache.giraph.master.DefaultMasterCompute;
 import org.apache.hadoop.io.BooleanWritable;
 import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.Counter;
 
 import static edu.agh.iga.adi.giraph.direction.Flags.INT_FALSE;
 import static edu.agh.iga.adi.giraph.direction.Flags.INT_TRUE;
-import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.*;
 import static edu.agh.iga.adi.giraph.direction.IgaCounter.*;
 import static edu.agh.iga.adi.giraph.direction.StepAggregators.*;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.COEFFICIENTS_PROBLEM;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.computationResolverFor;
-import static edu.agh.iga.adi.giraph.direction.logging.TimeLogger.logTime;
-import static edu.agh.iga.adi.giraph.direction.logging.TimeLogger.timeReducer;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.*;
 
 /**
  * Computes one full time step of the Alternating Directions Solver.
@@ -62,10 +59,6 @@ public class IterativeComputation extends DefaultMasterCompute {
   public final void compute() {
     endingSuperStep.setValue(INT_FALSE);
     setEndingSuperStepOfStep(false);
-
-    if (getSuperstep() > 0) {
-      logTimers();
-    }
 
     localSuperStep.increment(1);
     long localSuperStepNo = localSuperStep.getValue();
@@ -121,16 +114,6 @@ public class IterativeComputation extends DefaultMasterCompute {
     return stepCounter.getValue() == 0
         ? computationResolverFor(FIRST_INITIALISATION_TYPE.get(getConf()))
         : COEFFICIENTS_PROBLEM;
-  }
-
-  private void logTimers() {
-    val workers = getWorkerInfoList();
-    for (int w = 0; w < workers.size(); w++) {
-      final LongWritable reduced = getReduced(timeReducer(w));
-      if (reduced != null) {
-        logTime(w, getSuperstep() - 1, reduced.get());
-      }
-    }
   }
 
   private void setComputationIteration(long iteration) {
