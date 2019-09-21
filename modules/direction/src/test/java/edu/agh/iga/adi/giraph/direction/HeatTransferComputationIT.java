@@ -27,7 +27,7 @@ class HeatTransferComputationIT {
     GiraphTestJob job = giraphJob()
         .coefficientsOutputDir(outputDir)
         .configuration(conf -> {
-          PROBLEM_SIZE.set(conf, 48);
+          PROBLEM_SIZE.set(conf, 768);
           HEIGHT_PARTITIONS.set(conf, 2);
           STEP_COUNT.set(conf, 2);
           STEP_DELTA.set(conf, 0.1f);

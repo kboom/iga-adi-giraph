@@ -61,6 +61,9 @@ public class IgaGiraphJobFactory {
     EDGE_VALUE_CLASS.set(conf, IgaOperationWritable.class);
     OUTGOING_MESSAGE_VALUE_CLASS.set(conf, IgaMessageWritable.class);
     MAX_NUMBER_OF_SUPERSTEPS.set(conf, MAX_VALUE);
+    USE_INPUT_SPLIT_LOCALITY.set(conf, true);
+    NETTY_USE_DIRECT_MEMORY.set(conf, true);
+    NETTY_USE_POOLED_ALLOCATOR.set(conf, true);
     return conf;
   }
 

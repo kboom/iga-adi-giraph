@@ -1,0 +1,112 @@
+= IGA-ADI Giraph Solver
+
+image:https://travis-ci.com/kboom/iga-adi-giraph.svg?token=wBhPe1ndPxyFXb6jUk8s&branch=master[Build Status,link=https://travis-ci.com/kboom/iga-adi-giraph]
+
+== Running the solver
+
+This repository contains a number of complete simulations with the input and output values stored under `examples` directory.
+
+=== Prerequisites
+
+You have to have JDK 11 installed.
+
+=== Snapshot of Giraph
+
+Download the latest Giraph, switch to release_1.2 branch, and run the following command from the repository root directory:
+
+`mvn -pl giraph-core -Phadoop_yarn -Dhadoop.version=2.9.2 -fae -DskipTests -Dcheckstyle.skip  clean install`
+
+=== Running from maven
+
+You can run any of the available examples using the maven command
+
+----
+mvn exec:exec@[YOUR SIMULATION]
+----
+
+where `[YOUR SIMULATION]` has to be replaced with one of
+
+|===
+|Simulation |Value 
+
+|Identity |identity 
+|===
+
+=== Running locally using docker
+
+You can find the logs under:
+`/hadoop/logs/userlogs/application`
+
+=== Running on cloud
+
+There is an https://issues.apache.org/jira/browse/GIRAPH-859[unresolved issue] in Giraph which translates into inability to automatically
+upload JARs to the workers if the user launching the computations is different than yarn (Giraph would upload the JARs to the directory belonging to the user
+launching the application but look for them in the yarn user directory so they would be missing).
+
+There are severeal possible workarounds to this:
+* just to run the application using yarn user
+* upload the jars manually before each computation.
+* apply the patch and build against this version of Giraph
+
+We use the 3rd solution here using the fork https://github.com/kboom/giraph.
+
+To build &amp; publish the JAR with the solver just run
+
+[source,bash]
+----
+cd bin
+./bin/publish.cloud.sh <your master instance number>
+----
+
+The to run
+
+[source,bash]
+----
+./run.cloud.sh # your IGA parameters
+----
+
+Or one of the defaults
+
+[source,bash]
+----
+./run.default.sh
+----
+
+== Configuration parameters
+
+|===
+|Name |Value |Meaning |Influence 
+
+|_giraph.useNettyDirectMemory_ |true |netty direct buffers |speeds up 
+|_giraph.useUnsafeSerialization_ |true |unsafe serialisation uses unsafe memory allocation |speeds up 
+|_giraph.masterPartitionCountMultiplier_ |1 |the number of partitions per worker |netural 
+|===
+
+https://giraph.apache.org/options.html[Reference]
+
+== Results
+
+|===
+|Problem |Mesh |Machine |Memory / W |Workers |Options |Time
+
+|Radial Heat
+|1536^2
+|n2-standard-2 (2P/8GB)
+|2048MB
+|4
+|-
+|196s
+
+|===
+
+== Solved issues
+
+https://exceptionshub.com/hadoop-no-filesystem-for-scheme-file.html[Missing filesystem]
+
+== Links
+
+* https://github.com/sakserv/hadoop-mini-clusters[Hadoop mini clusters]
+* https://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-common/yarn-default.xml[YARN property list]
+* https://github.com/uwsampa/giraph-docker[Giraph on Docker]
+* https://github.com/o19s/Hadoopadoop/blob/master/matrixtranspose/MatrixTranspose.java[Hadoop Matrix Transposition]
+* https://www.ojalgo.org/code-examples/[ojAlgo examples]

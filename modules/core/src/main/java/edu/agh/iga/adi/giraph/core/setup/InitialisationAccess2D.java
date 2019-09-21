@@ -18,9 +18,9 @@ class InitialisationAccess2D implements Access2D<Double> {
   @Override
   public double doubleValue(long row, long col) {
     if (row < leftRows) {
-      return left.get(row, col);
+      return left.doubleValue(row, col);
     } else {
-      return right.get(row - leftRows, col);
+      return right.doubleValue(row - leftRows, col);
     }
   }
 
