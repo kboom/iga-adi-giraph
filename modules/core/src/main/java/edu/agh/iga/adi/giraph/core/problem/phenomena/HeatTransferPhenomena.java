@@ -42,26 +42,40 @@ public final class HeatTransferPhenomena implements Problem, SolutionTransformer
     double solution = 0.0;
 
     if (!isEven()) {
-      solution += b1.getSecondDerivativeValueAt(localx) * b1.getValue(localy) * c.doubleValue(0, ielemy);
-      solution += b1.getSecondDerivativeValueAt(localx) * b2.getValue(localy) * c.doubleValue(0, ielemy + 1);
-      solution += b1.getSecondDerivativeValueAt(localx) * b3.getValue(localy) * c.doubleValue(0, ielemy + 2);
-      solution += b2.getSecondDerivativeValueAt(localx) * b1.getValue(localy) * c.doubleValue(1, ielemy);
-      solution += b2.getSecondDerivativeValueAt(localx) * b2.getValue(localy) * c.doubleValue(1, ielemy + 1);
-      solution += b2.getSecondDerivativeValueAt(localx) * b3.getValue(localy) * c.doubleValue(1, ielemy + 2);
-      solution += b3.getSecondDerivativeValueAt(localx) * b1.getValue(localy) * c.doubleValue(2, ielemy);
-      solution += b3.getSecondDerivativeValueAt(localx) * b2.getValue(localy) * c.doubleValue(2, ielemy + 1);
-      solution += b3.getSecondDerivativeValueAt(localx) * b3.getValue(localy) * c.doubleValue(2, ielemy + 2);
+      val b1dx = b1.getSecondDerivativeValueAt(localx);
+      val b1y = b1.getValue(localy);
+      val b2dx = b2.getSecondDerivativeValueAt(localx);
+      val b2y = b2.getValue(localy);
+      val b3dx = b3.getSecondDerivativeValueAt(localx);
+      val b3y = b3.getValue(localy);
+
+      solution += b1dx * b1y * c.doubleValue(0, ielemy);
+      solution += b1dx * b2y * c.doubleValue(0, ielemy + 1);
+      solution += b1dx * b3y * c.doubleValue(0, ielemy + 2);
+      solution += b2dx * b1y * c.doubleValue(1, ielemy);
+      solution += b2dx * b2y * c.doubleValue(1, ielemy + 1);
+      solution += b2dx * b3y * c.doubleValue(1, ielemy + 2);
+      solution += b3dx * b1y * c.doubleValue(2, ielemy);
+      solution += b3dx * b2y * c.doubleValue(2, ielemy + 1);
+      solution += b3dx * b3y * c.doubleValue(2, ielemy + 2);
 
     } else {
-      solution += b1.getValue(localx) * b1.getSecondDerivativeValueAt(localy) * c.doubleValue(0, ielemy);
-      solution += b1.getValue(localx) * b2.getSecondDerivativeValueAt(localy) * c.doubleValue(0, ielemy + 1);
-      solution += b1.getValue(localx) * b3.getSecondDerivativeValueAt(localy) * c.doubleValue(0, ielemy + 2);
-      solution += b2.getValue(localx) * b1.getSecondDerivativeValueAt(localy) * c.doubleValue(1, ielemy);
-      solution += b2.getValue(localx) * b2.getSecondDerivativeValueAt(localy) * c.doubleValue(1, ielemy + 1);
-      solution += b2.getValue(localx) * b3.getSecondDerivativeValueAt(localy) * c.doubleValue(1, ielemy + 2);
-      solution += b3.getValue(localx) * b1.getSecondDerivativeValueAt(localy) * c.doubleValue(2, ielemy);
-      solution += b3.getValue(localx) * b2.getSecondDerivativeValueAt(localy) * c.doubleValue(2, ielemy + 1);
-      solution += b3.getValue(localx) * b3.getSecondDerivativeValueAt(localy) * c.doubleValue(2, ielemy + 2);
+      double b1dy = b1.getSecondDerivativeValueAt(localy);
+      double b1x = b1.getValue(localx);
+      double b2dy = b2.getSecondDerivativeValueAt(localy);
+      double b2x = b2.getValue(localx);
+      double b3dy = b3.getSecondDerivativeValueAt(localy);
+      double b3x = b3.getValue(localx);
+
+      solution += b1x * b1dy * c.doubleValue(0, ielemy);
+      solution += b1x * b2dy * c.doubleValue(0, ielemy + 1);
+      solution += b1x * b3dy * c.doubleValue(0, ielemy + 2);
+      solution += b2x * b1dy * c.doubleValue(1, ielemy);
+      solution += b2x * b2dy * c.doubleValue(1, ielemy + 1);
+      solution += b2x * b3dy * c.doubleValue(1, ielemy + 2);
+      solution += b3x * b1dy * c.doubleValue(2, ielemy);
+      solution += b3x * b2dy * c.doubleValue(2, ielemy + 1);
+      solution += b3x * b3dy * c.doubleValue(2, ielemy + 2);
     }
 
     return solution;
