@@ -5,13 +5,13 @@ import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.job.GiraphConfigurationValidator;
+import org.apache.giraph.yarn.GiraphYarnClient;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
 
-import static edu.agh.iga.adi.giraph.direction.IgaGiraphJobFactory.igaYarnJob;
 import static edu.agh.iga.adi.giraph.direction.IgaGiraphJobFactory.injectSolverConfiguration;
 import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.*;
 import static java.lang.System.exit;
@@ -32,7 +32,6 @@ public class IgaSolverTool extends Configured implements Tool {
 
   @Override
   public int run(String[] strings) {
-    LOG.info("Hello bitches!" + strings);
     val giraphConf = new GiraphConfiguration(getConf());
     giraphConf.set("fs.hdfs.impl",
         org.apache.hadoop.hdfs.DistributedFileSystem.class.getName()
@@ -72,6 +71,8 @@ public class IgaSolverTool extends Configured implements Tool {
     COEFFICIENTS_OUTPUT.set(config, options.getOutputDirectory());
     config.setWorkerConfiguration(options.getWorkers(), options.getWorkers(), 100);
     STEP_COUNT.set(config, options.getSteps());
+    INITIAL_PROBLEM_TYPE.set(config, options.getInitialProblemType());
+    PROBLEM_TYPE.set(config, options.getProblemType());
 
     options.getConfig()
         .stream()
@@ -86,7 +87,7 @@ public class IgaSolverTool extends Configured implements Tool {
 
   private int runJob(GiraphConfiguration conf) {
     try {
-      val job = igaYarnJob(conf);
+      val job = new GiraphYarnClient(conf, IgaSolverTool.class.getName());
       return job.run(true) ? 1 : -1;
     } catch (Exception e) {
       LOG.error("Could not run computations", e);

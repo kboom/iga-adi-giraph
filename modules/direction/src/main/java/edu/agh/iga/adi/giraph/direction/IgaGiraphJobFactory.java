@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.io.VertexInputFormat;
 import org.apache.giraph.job.GiraphJob;
-import org.apache.giraph.yarn.GiraphYarnClient;
 import org.apache.hadoop.io.LongWritable;
 
 import java.io.File;
@@ -36,14 +35,6 @@ public class IgaGiraphJobFactory {
       SURFACE_PROBLEM.getType(), InMemoryStepInputFormat.class,
       COEFFICIENTS_PROBLEM.getType(), StepVertexInputFormat.class
   );
-
-  public static GiraphYarnClient igaYarnJob(GiraphConfiguration configuration) {
-    try {
-      return new GiraphYarnClient(injectSolverConfiguration(configuration), "iga-adi-" + new Timestamp(currentTimeMillis()));
-    } catch (IOException e) {
-      throw new IllegalStateException(e);
-    }
-  }
 
   public static GiraphJob igaMapReduceJob(GiraphConfiguration configuration) {
     try {

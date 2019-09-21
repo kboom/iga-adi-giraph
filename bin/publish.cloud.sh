@@ -9,4 +9,4 @@ IGA_DIST=$(cd "${IGA_HOME}/dist" || exit ; pwd)
 cd "${IGA_HOME}" && mvn clean package -DskipTests
 
 # Upload the JAR and these scripts
-gcloud compute scp "${IGA_DIST}"/*.jar "${BIN_DIR}"/* "${MASTER_ID}":~/
+gcloud compute scp --recurse "${IGA_DIST}"/*.jar "${BIN_DIR}"/* "${MASTER_ID}":~/
