@@ -39,3 +39,5 @@ examples/**/output
 
 !lib/*
 !env.sh
+
+logs
