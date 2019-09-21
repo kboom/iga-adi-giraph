@@ -8,3 +8,4 @@ exec ./run.cloud.sh \
 	-c giraph.yarn.task.heap.mb=2048 \
 	-c giraph.metrics.enable=true \
 	-c giraph.logLevel=debug
+
