@@ -16,7 +16,6 @@ import org.ojalgo.structure.Access2D;
 import static edu.agh.iga.adi.giraph.core.GaussPoints.*;
 import static edu.agh.iga.adi.giraph.core.IgaConstants.*;
 import static edu.agh.iga.adi.giraph.core.IgaElement.igaElement;
-import static org.ojalgo.function.constant.PrimitiveMath.ADD;
 import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
 public final class HorizontalElementFactory implements ElementFactory {
@@ -81,10 +80,13 @@ public final class HorizontalElementFactory implements ElementFactory {
   }
 
   private PrimitiveDenseStore rhs(Problem problem, IgaVertex vertex) {
+    val dx = mesh.getDx();
+    val dy = mesh.getDy();
+    val leftSegment = vertex.getLeftSegment();
     PrimitiveDenseStore ds = FACTORY.makeZero(LEAF_SIZE, mesh.getDofsX());
     for (int i = 0; i < mesh.getDofsY(); i++) {
       for (int k = 0; k < GAUSS_POINT_COUNT; k++) {
-        val x = GAUSS_POINTS[k] * mesh.getDx() + vertex.getLeftSegment();
+        val x = GAUSS_POINTS[k] * dx + leftSegment;
         for (int l = 0; l < GAUSS_POINT_COUNT; l++) {
           val wk = GAUSS_POINT_WEIGHTS[k];
           val wl = GAUSS_POINT_WEIGHTS[l];
@@ -92,25 +94,25 @@ public final class HorizontalElementFactory implements ElementFactory {
           val gk = GAUSS_POINTS[k];
 
           if (i > 1) {
-            val y = (gl + (i - 2)) * mesh.getDy();
+            val y = (gl + (i - 2)) * dy;
             val v = wk * wl * b1.getValue(gl) * problem.valueAt(x, y);
-            ds.modifyOne(0, i, ADD.by(b3.getValue(gk) * v));
-            ds.modifyOne(1, i, ADD.by(b2.getValue(gk) * v));
-            ds.modifyOne(2, i, ADD.by(b1.getValue(gk) * v));
+            ds.add(0, i, b3.getValue(gk) * v);
+            ds.add(1, i, b2.getValue(gk) * v);
+            ds.add(2, i, b1.getValue(gk) * v);
           }
           if (i > 0 && (i - 1) < mesh.getElementsY()) {
-            val y = (gl + (i - 1)) * mesh.getDy();
+            val y = (gl + (i - 1)) * dy;
             val v = wk * wl * b2.getValue(gl) * problem.valueAt(x, y);
-            ds.modifyOne(0, i, ADD.by(b3.getValue(gk) * v));
-            ds.modifyOne(1, i, ADD.by(b2.getValue(gk) * v));
-            ds.modifyOne(2, i, ADD.by(b1.getValue(gk) * v));
+            ds.add(0, i, b3.getValue(gk) * v);
+            ds.add(1, i, b2.getValue(gk) * v);
+            ds.add(2, i, b1.getValue(gk) * v);
           }
           if (i < mesh.getElementsY()) {
-            val y = (gl + i) * mesh.getDy();
+            val y = (gl + i) * dy;
             val v = wk * wl * b3.getValue(gl) * problem.valueAt(x, y);
-            ds.modifyOne(0, i, ADD.by(b3.getValue(gk) * v));
-            ds.modifyOne(1, i, ADD.by(b2.getValue(gk) * v));
-            ds.modifyOne(2, i, ADD.by(b1.getValue(gk) * v));
+            ds.add(0, i, b3.getValue(gk) * v);
+            ds.add(1, i, b2.getValue(gk) * v);
+            ds.add(2, i, b1.getValue(gk) * v);
           }
         }
       }
