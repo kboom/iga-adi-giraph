@@ -6,9 +6,9 @@ import lombok.Builder;
 @Builder
 public class RadialProblem implements Problem {
 
-  private double center;
-  private double radius;
-  private double value;
+  private final double center;
+  private final double radius;
+  private final double value;
 
   @Override
   public double valueAt(double x, double y) {
