@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import static edu.agh.iga.adi.giraph.direction.io.data.DataInputAccessStore.dataInputAccessStore;
 import static edu.agh.iga.adi.giraph.direction.io.data.DataOutputReceiver.receiveInto;
+import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
 final class InitialisationMessageSerializer implements MessageSerializer<InitialisationIgaMessage> {
 
@@ -28,7 +29,7 @@ final class InitialisationMessageSerializer implements MessageSerializer<Initial
     final long srcId = dataInput.readLong();
     final long rows = dataInput.readInt();
     final long cols = dataInput.readInt();
-    PrimitiveDenseStore x = PrimitiveDenseStore.FACTORY.makeZero(rows, cols);
+    PrimitiveDenseStore x = FACTORY.makeZero(rows, cols);
     x.fillMatching(dataInputAccessStore(dataInput, rows * cols));
     return new InitialisationIgaMessage(srcId, -1, x);
   }

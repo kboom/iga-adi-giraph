@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import static edu.agh.iga.adi.giraph.direction.io.data.DataInputAccessStore.dataInputAccessStore;
 import static edu.agh.iga.adi.giraph.direction.io.data.DataOutputReceiver.receiveInto;
+import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
 final class BackwardsSubstituteRootMessageSerializer implements MessageSerializer<BackwardsSubstituteRootMessage> {
 
@@ -28,7 +29,7 @@ final class BackwardsSubstituteRootMessageSerializer implements MessageSerialize
   public BackwardsSubstituteRootMessage readMessage(DataInput dataInput) throws IOException {
     final long srcId = dataInput.readLong();
     final long dofs = dataInput.readInt();
-    PrimitiveDenseStore ds = PrimitiveDenseStore.FACTORY.makeZero(CONTRIBUTED_ROWS, dofs);
+    PrimitiveDenseStore ds = FACTORY.makeZero(CONTRIBUTED_ROWS, dofs);
     ds.fillMatching(dataInputAccessStore(dataInput, CONTRIBUTED_ROWS * dofs));
     return new BackwardsSubstituteRootMessage(srcId, ds);
   }

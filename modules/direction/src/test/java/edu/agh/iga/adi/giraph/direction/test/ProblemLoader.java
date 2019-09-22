@@ -13,12 +13,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static edu.agh.iga.adi.giraph.direction.test.ProblemLoader.ProblemLoaderConfig.*; // do not remove this
+import static java.lang.Integer.parseInt;
 import static java.nio.file.Files.readAllLines;
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.*;
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
@@ -41,7 +40,7 @@ public class ProblemLoader {
     return coefficientsByShard.keySet().stream()
         .map(i -> "part" + i)
         .map(Paths::get)
-        .collect(collectingAndThen(Collectors.toSet(), Collections::unmodifiableSet));
+        .collect(collectingAndThen(toSet(), Collections::unmodifiableSet));
   }
 
   @SneakyThrows
@@ -52,7 +51,7 @@ public class ProblemLoader {
   private static Map<Integer, List<String>> coefficientsByShard(ProblemLoaderConfig cfg) throws IOException {
     return readAllLines(pathOfResource(cfg.resource))
         .stream()
-        .collect(groupingBy(x -> Integer.valueOf(x.split(" ")[0]) / cfg.shards));
+        .collect(groupingBy(x -> parseInt(x.split(" ")[0]) / cfg.shards));
   }
 
   @SneakyThrows
