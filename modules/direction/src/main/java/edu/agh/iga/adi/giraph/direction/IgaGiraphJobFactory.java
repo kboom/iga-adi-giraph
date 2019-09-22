@@ -54,7 +54,7 @@ public class IgaGiraphJobFactory {
     conf.setGraphPartitionerFactoryClass(IgaPartitionerFactory.class);
     conf.setYarnLibJars(currentJar());
     conf.setDoOutputDuringComputation(true); // to support multiple steps, we're not using checkpoints, we can just restart the job where we left off from the last step (load saved coefficients)
-    VERTEX_OUTPUT_FORMAT_THREAD_SAFE.set(conf, true);
+    VERTEX_OUTPUT_FORMAT_THREAD_SAFE.set(conf, false); // is not thread safe
     STATIC_GRAPH.set(conf, true);
     VERTEX_ID_CLASS.set(conf, LongWritable.class);
     VERTEX_VALUE_CLASS.set(conf, IgaElementWritable.class);
