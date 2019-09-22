@@ -38,14 +38,6 @@ public class IgaVertex {
     throw new IllegalStateException(format("The problem tree does not have vertex %d", id));
   }
 
-  public static IgaVertex lcaOf(IgaVertex left, IgaVertex right) {
-    return null;
-  }
-
-  public static IgaVertex lowerOf(IgaVertex left, IgaVertex right) {
-    return null;
-  }
-
   private InterimVertex interimVertex(long id) {
     return new InterimVertex(tree, id);
   }

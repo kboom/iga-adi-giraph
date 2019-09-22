@@ -25,6 +25,7 @@ public class IgaPartitionerFactory extends GraphPartitionerFactory<LongWritable,
 
   @Override
   public int getPartition(LongWritable id, int partitionCount, int workerCount) {
+    // todo significant pressure on memory
     IgaVertex igaVertex = vertexOf(directionTree, id.get());
     return getPartitionInRange(igaVertex.offsetLeft(), igaVertex.strengthOf(), partitionCount); // todo this might be inaccurate for certain partition sizes compared to problem sizes
   }
