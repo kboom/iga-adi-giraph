@@ -14,6 +14,8 @@ import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 
 public class IgaInputSplit extends InputSplit implements Writable {
 
+  private static final String[] EMPTY_LOCATION = new String[0];
+
   private IgaVertex root;
   private int height;
 
@@ -29,7 +31,7 @@ public class IgaInputSplit extends InputSplit implements Writable {
 
   @Override
   public String[] getLocations() {
-    return new String[0];
+    return EMPTY_LOCATION;
   }
 
   public IgaVertex getRoot() {

@@ -80,7 +80,7 @@ public class InMemoryStepInputFormat extends VertexValueInputFormat<LongWritable
         .collect(collectingAndThen(toList(), Collections::unmodifiableList));
   }
 
-  public final class StaticProblemInputReader extends VertexValueReader<LongWritable, IgaElementWritable> {
+  public static final class StaticProblemInputReader extends VertexValueReader<LongWritable, IgaElementWritable> {
 
     private final Iterator<IgaVertex> vertices;
     private final ElementFactory elementFactory;
