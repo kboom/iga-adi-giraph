@@ -79,7 +79,10 @@ Or one of the defaults
 
 |_giraph.useNettyDirectMemory_ |true |netty direct buffers |speeds up 
 |_giraph.useUnsafeSerialization_ |true |unsafe serialisation uses unsafe memory allocation |speeds up 
-|_giraph.masterPartitionCountMultiplier_ |1 |the number of partitions per worker |netural 
+|_giraph.masterPartitionCountMultiplier_ |1 |the number of partitions per worker |netural
+|_giraph.numComputeThreads_| 1|the number of threads to use per worker|the default one is better
+|_giraph.numInputThreads_| 1|the number of threads to use for input split|the default one is better
+|_giraph.numOutputThreads_| 1|the number of threads to use for output split|the default one is better
 |===
 
 https://giraph.apache.org/options.html[Reference]
