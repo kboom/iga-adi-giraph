@@ -25,10 +25,6 @@ public final class Mesh implements Serializable {
         return new MeshBuilder();
     }
 
-    public double getResolutionX() {
-        return resolutionX;
-    }
-
     public double getDx() {
         return resolutionX / elementsX;
     }
@@ -37,16 +33,8 @@ public final class Mesh implements Serializable {
         return resolutionY / elementsY;
     }
 
-    public int getElementsX() {
-        return elementsX;
-    }
-
     public int getElementsY() {
         return elementsY;
-    }
-
-    public int getSplineOrder() {
-        return splineOrder;
     }
 
     public int getDofsX() {
@@ -61,16 +49,6 @@ public final class Mesh implements Serializable {
 
         private Mesh mesh = new Mesh();
 
-        public MeshBuilder withResolution(double resolutionX) {
-            mesh.resolutionX = resolutionX;
-            return this;
-        }
-
-        public MeshBuilder withResolutionY(double resolutionY) {
-            mesh.resolutionY = resolutionY;
-            return this;
-        }
-
         public MeshBuilder withElements(int elements) {
             withElementsX(elements);
             withElementsY(elements);
@@ -84,11 +62,6 @@ public final class Mesh implements Serializable {
 
         public MeshBuilder withElementsY(int elementsY) {
             mesh.elementsY = elementsY;
-            return this;
-        }
-
-        public MeshBuilder withOrder(int order) {
-            mesh.splineOrder = order;
             return this;
         }
 

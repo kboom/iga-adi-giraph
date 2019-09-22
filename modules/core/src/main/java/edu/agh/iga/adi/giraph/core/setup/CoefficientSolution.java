@@ -11,14 +11,14 @@ import org.ojalgo.structure.Access2D;
 
 public class CoefficientSolution implements PartialSolution {
 
-  protected static final BSpline1 b1 = new BSpline1();
-  protected static final BSpline2 b2 = new BSpline2();
-  protected static final BSpline3 b3 = new BSpline3();
+  private static final BSpline1 b1 = new BSpline1();
+  private static final BSpline2 b2 = new BSpline2();
+  private static final BSpline3 b3 = new BSpline3();
 
   private final Mesh mesh;
   private final Access2D<Double> coef;
 
-  public CoefficientSolution(Mesh mesh, Access2D<Double> coefficients) {
+  CoefficientSolution(Mesh mesh, Access2D<Double> coefficients) {
     this.mesh = mesh;
     this.coef = coefficients;
   }

@@ -11,6 +11,7 @@ import static edu.agh.iga.adi.giraph.core.IgaConstants.COLS_BOUND_TO_NODE;
 import static edu.agh.iga.adi.giraph.core.IgaConstants.ROWS_BOUND_TO_NODE;
 import static edu.agh.iga.adi.giraph.direction.io.data.DataInputAccessStore.dataInputAccessStore;
 import static edu.agh.iga.adi.giraph.direction.io.data.DataOutputReceiver.receiveInto;
+import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
 final class MergeAndEliminateInterimMessageSerializer implements MessageSerializer<MergeAndEliminateInterimMessage> {
 
@@ -32,9 +33,9 @@ final class MergeAndEliminateInterimMessageSerializer implements MessageSerializ
   public MergeAndEliminateInterimMessage readMessage(DataInput dataInput) throws IOException {
     final long srcId = dataInput.readLong();
     final long dofs = dataInput.readInt();
-    PrimitiveDenseStore ma = PrimitiveDenseStore.FACTORY.makeZero(CONTRIBUTED_ROWS, CONTRIBUTED_COLS);
+    PrimitiveDenseStore ma = FACTORY.makeZero(CONTRIBUTED_ROWS, CONTRIBUTED_COLS);
     ma.fillMatching(dataInputAccessStore(dataInput, CONTRIBUTED_ROWS * CONTRIBUTED_COLS));
-    PrimitiveDenseStore mb = PrimitiveDenseStore.FACTORY.makeZero(CONTRIBUTED_ROWS, dofs);
+    PrimitiveDenseStore mb = FACTORY.makeZero(CONTRIBUTED_ROWS, dofs);
     mb.fillMatching(dataInputAccessStore(dataInput, CONTRIBUTED_ROWS * dofs));
     return new MergeAndEliminateInterimMessage(srcId, ma, mb);
   }

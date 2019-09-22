@@ -6,6 +6,7 @@ import lombok.val;
 
 import java.util.stream.LongStream;
 
+import static java.util.stream.LongStream.rangeClosed;
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
@@ -26,10 +27,10 @@ class VertexDependencies {
     }
     if (vertex.isTrailing()) {
       long lastLeaf = vertex.getTree().lastIndexOfLeafRow();
-      return LongStream.rangeClosed(lastLeaf - 2, lastLeaf);
+      return rangeClosed(lastLeaf - 2, lastLeaf);
     }
     // other branch vertices rely on their children and their closest cousins
-    return LongStream.rangeClosed(vertex.leftDescendantAt(1), vertex.rightDescendantAt(1) + 2);
+    return rangeClosed(vertex.leftDescendantAt(1), vertex.rightDescendantAt(1) + 2);
   }
 
   static int[] coefficientsFor(IgaVertex src, long dst) {

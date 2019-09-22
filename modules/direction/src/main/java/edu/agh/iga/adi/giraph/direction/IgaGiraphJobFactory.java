@@ -61,9 +61,12 @@ public class IgaGiraphJobFactory {
     EDGE_VALUE_CLASS.set(conf, IgaOperationWritable.class);
     OUTGOING_MESSAGE_VALUE_CLASS.set(conf, IgaMessageWritable.class);
     MAX_NUMBER_OF_SUPERSTEPS.set(conf, MAX_VALUE);
+    USE_SUPERSTEP_COUNTERS.set(conf, false); // todo enable this for detailed breakdown of computation times per superstep
     USE_INPUT_SPLIT_LOCALITY.set(conf, true);
     NETTY_USE_DIRECT_MEMORY.set(conf, true);
     NETTY_USE_POOLED_ALLOCATOR.set(conf, true);
+    WAIT_TASK_DONE_TIMEOUT_MS.set(conf, 0); // no need to wait
+    HDFS_FILE_CREATION_RETRIES.set(conf, 0);
     return conf;
   }
 
