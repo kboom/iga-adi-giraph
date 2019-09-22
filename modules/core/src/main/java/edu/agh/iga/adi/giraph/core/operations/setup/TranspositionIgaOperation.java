@@ -59,7 +59,7 @@ public final class TranspositionIgaOperation implements IgaOperation<Transpositi
   }
 
   private boolean isLeading(IgaVertex dst, IgaElement element) {
-    return vertexOf(dst.getTree(), element.id).offsetLeft() == 0;
+    return vertexOf(dst.getTree(), element.id).isLeading();
   }
 
   public static class TranspositionIgaMessage extends IgaMessage {
