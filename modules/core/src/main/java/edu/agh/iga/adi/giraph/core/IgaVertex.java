@@ -3,7 +3,6 @@ package edu.agh.iga.adi.giraph.core;
 import com.google.common.collect.ImmutableList;
 import com.google.common.math.IntMath;
 import com.google.common.math.LongMath;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 import java.util.Objects;
@@ -161,16 +160,9 @@ public class IgaVertex {
     }).orElse(ImmutableList.of());
   }
 
-  public boolean inRegularArea() {
-    return id < tree.firstIndexOfBranchingRow();
-  }
-
-  @Deprecated // todo just return left or right
-  public Pair<Double, Double> segmentOf() {
+  public long getLeftSegment() {
     long share = tree.strengthOfLeaves() / strengthOf();
-    double lb = share * offsetLeft();
-    double ub = share * (offsetLeft() + 1);
-    return Pair.of(lb, ub);
+    return share * offsetLeft();
   }
 
   public long leftDescendantAt(int height) {

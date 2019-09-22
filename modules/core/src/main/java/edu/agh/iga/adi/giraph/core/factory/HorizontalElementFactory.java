@@ -64,7 +64,7 @@ public final class HorizontalElementFactory implements ElementFactory {
   }
 
   private IgaElement leafElement(Problem problem, IgaVertex vertex) {
-    val ma = PrimitiveDenseStore.FACTORY.makeZero(LEAF_SIZE, LEAF_SIZE);
+    val ma = FACTORY.makeZero(LEAF_SIZE, LEAF_SIZE);
     coefficients.coefficients().supplyTo(ma);
     return igaElement(
         vertex.id(),
@@ -75,14 +75,14 @@ public final class HorizontalElementFactory implements ElementFactory {
   }
 
   private IgaElement emptyElement(IgaVertex vertex) {
-    final PrimitiveDenseStore ma = PrimitiveDenseStore.FACTORY.makeZero(ROWS_BOUND_TO_NODE, COLS_BOUND_TO_NODE);
-    final PrimitiveDenseStore mb = PrimitiveDenseStore.FACTORY.makeZero(ROWS_BOUND_TO_NODE, mesh.getDofsX());
-    final PrimitiveDenseStore mx = PrimitiveDenseStore.FACTORY.makeZero(ROWS_BOUND_TO_NODE, mesh.getDofsX());
+    final PrimitiveDenseStore ma = FACTORY.makeZero(ROWS_BOUND_TO_NODE, COLS_BOUND_TO_NODE);
+    final PrimitiveDenseStore mb = FACTORY.makeZero(ROWS_BOUND_TO_NODE, mesh.getDofsX());
+    final PrimitiveDenseStore mx = FACTORY.makeZero(ROWS_BOUND_TO_NODE, mesh.getDofsX());
     return igaElement(vertex.id(), ma, mb, mx);
   }
 
   private PrimitiveDenseStore rhs(Problem problem, IgaVertex vertex) {
-    PrimitiveDenseStore ds = PrimitiveDenseStore.FACTORY.makeZero(LEAF_SIZE, mesh.getDofsX());
+    PrimitiveDenseStore ds = FACTORY.makeZero(LEAF_SIZE, mesh.getDofsX());
     for (int i = 0; i < mesh.getDofsY(); i++) {
       fillRightHandSide(ds, problem, b3, vertex, 0, i);
       fillRightHandSide(ds, problem, b2, vertex, 1, i);
@@ -93,7 +93,7 @@ public final class HorizontalElementFactory implements ElementFactory {
 
   private void fillRightHandSide(PrimitiveDenseStore ds, Problem problem, Spline spline, IgaVertex vertex, int r, int i) {
     for (int k = 0; k < GAUSS_POINT_COUNT; k++) {
-      val x = GAUSS_POINTS[k] * mesh.getDx() + vertex.segmentOf().getLeft();
+      val x = GAUSS_POINTS[k] * mesh.getDx() + vertex.getLeftSegment();
       for (int l = 0; l < GAUSS_POINT_COUNT; l++) {
         val wk = GAUSS_POINT_WEIGHTS[k];
         val wl = GAUSS_POINT_WEIGHTS[l];
