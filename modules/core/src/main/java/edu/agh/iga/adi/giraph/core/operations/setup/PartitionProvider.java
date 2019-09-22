@@ -1,11 +1,9 @@
 package edu.agh.iga.adi.giraph.core.operations.setup;
 
 import edu.agh.iga.adi.giraph.core.IgaVertex;
-import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.ojalgo.structure.Access2D;
 
-@RequiredArgsConstructor
 final class PartitionProvider implements Access2D<Double> {
 
   private static final double[] FIRST_PARTITION = new double[] {1d, 1 / 2d, 1 / 3d};
@@ -18,6 +16,17 @@ final class PartitionProvider implements Access2D<Double> {
 
   private final IgaVertex v;
   private final int cols;
+  private final long firstIdx;
+  private final long lastIdx;
+
+  PartitionProvider(IgaVertex v, int cols) {
+    this.v = v;
+    this.cols = cols;
+    val tree = v.getTree();
+    this.firstIdx = tree.firstIndexOfLeafRow();
+    this.lastIdx = tree.lastIndexOfLeafRow();
+  }
+
 
   @Override
   public double doubleValue(long row, long col) {
@@ -39,16 +48,7 @@ final class PartitionProvider implements Access2D<Double> {
     return 3;
   }
 
-  /**
-   * todo predetermine this rather than computing each time
-   * @param v
-   * @param localRow
-   * @return
-   */
-  private static double partitionFor(IgaVertex v, int localRow) {
-    val tree = v.getTree();
-    val firstIdx = tree.firstIndexOfLeafRow();
-    val lastIdx = tree.lastIndexOfLeafRow();
+  private double partitionFor(IgaVertex v, int localRow) {
     val vid = v.id();
 
     if (vid == firstIdx) {
