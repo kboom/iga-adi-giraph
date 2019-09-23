@@ -83,6 +83,9 @@ Or one of the defaults
 |_giraph.numComputeThreads_| 1|the number of threads to use per worker|the default one is better
 |_giraph.numInputThreads_| 1|the number of threads to use for input split|the default one is better
 |_giraph.numOutputThreads_| 1|the number of threads to use for output split|the default one is better
+|_giraph.nettyRequestEncoderBufferSize_| 327680|the number of threads to use for output split|high reduction of computation times for larger problems
+|_giraph.clientReceiveBufferSize_| 327680|the number of threads to use for output split|high reduction of computation times for larger problems
+|_giraph.clientSendBufferSize_| 5242880|the number of threads to use for output split|high reduction of computation times for larger problems
 |===
 
 https://giraph.apache.org/options.html[Reference]
@@ -100,6 +103,61 @@ https://giraph.apache.org/options.html[Reference]
 |-
 |196s
 
+|Radial Heat
+|1536^2
+|c2-standard-4 (4P/16GB)
+|2600MB
+|16
+|-
+|38.9s
+
+|Radial Heat
+|384^2
+|c2-standard-4 (4P/16GB)
+|2600MB
+|16
+|10x buffers sizes
+|21.30s
+
+|Radial Heat
+|768^2
+|c2-standard-4 (4P/16GB)
+|2600MB
+|16
+|10x buffers sizes
+|26.12s
+
+|Radial Heat
+|3072^2
+|c2-standard-4 (4P/16GB)
+|2600MB
+|16
+|-
+|83.56s
+
+|Radial Heat
+|3072^2
+|c2-standard-4 (4P/16GB)
+|2600MB
+|16
+|10x buffers sizes
+|83.56s
+
+|Radial Heat
+|6144^2
+|c2-standard-4 (4P/16GB)
+|2600MB
+|16
+|-
+|82.45s
+
+|Radial Heat
+|6144^2
+|c2-standard-4 (4P/16GB)
+|2600MB
+|16
+|10x buffers sizes
+|201s
 |===
 
 == Solved issues
