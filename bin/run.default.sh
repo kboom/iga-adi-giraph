@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 exec ./run.cloud.sh \
   -s 2 \
-  -e 3072 \
+  -e 3092 \
 	-w 14 \
-	-h 2 \
+	-h 4 \
 	-t surface \
 	-p HEAT \
 	--init-problem RADIAL \
@@ -14,5 +14,4 @@ exec ./run.cloud.sh \
   -c giraph.nettyRequestEncoderBufferSize=327680 \
   -c giraph.clientReceiveBufferSize=327680 \
   -c giraph.clientSendBufferSize=5242880 \
-  -c giraph.preferIP=true \
   -c giraph.resendTimedOutRequests=false
