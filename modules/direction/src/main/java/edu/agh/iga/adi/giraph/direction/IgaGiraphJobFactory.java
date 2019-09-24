@@ -9,6 +9,7 @@ import edu.agh.iga.adi.giraph.direction.io.StepVertexOutputFormat;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
+import edu.agh.iga.adi.giraph.direction.performance.MemoryLogger;
 import lombok.NoArgsConstructor;
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.io.VertexInputFormat;
@@ -52,6 +53,7 @@ public class IgaGiraphJobFactory {
     conf.setVertexInputFormatClass(inputFormatsByInitType.get(FIRST_INITIALISATION_TYPE.get(conf)));
     conf.setVertexOutputFormatClass(StepVertexOutputFormat.class);
     conf.setGraphPartitionerFactoryClass(IgaPartitionerFactory.class);
+    conf.addWorkerObserverClass(MemoryLogger.class);
     conf.setYarnLibJars(currentJar());
     conf.setDoOutputDuringComputation(true); // to support multiple steps, we're not using checkpoints, we can just restart the job where we left off from the last step (load saved coefficients)
     VERTEX_OUTPUT_FORMAT_THREAD_SAFE.set(conf, false); // is not thread safe
