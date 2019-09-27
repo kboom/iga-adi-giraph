@@ -10,7 +10,10 @@ import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import lombok.NoArgsConstructor;
+import org.apache.giraph.comm.messages.InMemoryMessageStoreFactory;
 import org.apache.giraph.conf.GiraphConfiguration;
+import org.apache.giraph.edge.ByteArrayEdges;
+import org.apache.giraph.edge.IdAndValueArrayEdges;
 import org.apache.giraph.io.VertexInputFormat;
 import org.apache.giraph.job.GiraphJob;
 import org.apache.hadoop.io.LongWritable;
@@ -53,8 +56,33 @@ public class IgaGiraphJobFactory {
     conf.setVertexOutputFormatClass(StepVertexOutputFormat.class);
     conf.setGraphPartitionerFactoryClass(IgaPartitionerFactory.class);
     conf.setYarnLibJars(currentJar());
+
+    NETTY_CLIENT_THREADS.set(conf, conf.getMaxWorkers());
+    CLIENT_SEND_BUFFER_SIZE.set(conf, ONE_MB);
+    CLIENT_RECEIVE_BUFFER_SIZE.set(conf, ONE_MB);
+    NETTY_SERVER_THREADS.set(conf, 4 * conf.getMaxWorkers());
+    SERVER_SEND_BUFFER_SIZE.set(conf, ONE_MB);
+    SERVER_RECEIVE_BUFFER_SIZE.set(conf, ONE_MB);
+    MAX_MSG_REQUEST_SIZE.set(conf, ONE_MB);
+    REQUEST_SIZE_WARNING_THRESHOLD.set(conf, 1);
+    MAX_VERTEX_REQUEST_SIZE.set(conf, ONE_MB);
+    MAX_EDGE_REQUEST_SIZE.set(conf, ONE_MB);
+
+    // todo does it help?
+    USE_MESSAGE_SIZE_ENCODING.set(conf, true);
+    
+    // todo out edge classes with custom typeops
+    conf.setOutEdgesClass(ByteArrayEdges.class);
+//    conf.setOutEdgesClass(IdAndValueArrayEdges.class); // todo custom {@link TypeOps}
+
     conf.setDoOutputDuringComputation(true); // to support multiple steps, we're not using checkpoints, we can just restart the job where we left off from the last step (load saved coefficients)
     VERTEX_OUTPUT_FORMAT_THREAD_SAFE.set(conf, false); // is not thread safe
+
+    // todo message store
+    MESSAGE_STORE_FACTORY_CLASS.set(conf, InMemoryMessageStoreFactory.class);
+    ASYNC_MESSAGE_STORE_THREADS_COUNT.set(conf, 8);
+
+
     STATIC_GRAPH.set(conf, true);
     VERTEX_ID_CLASS.set(conf, LongWritable.class);
     VERTEX_VALUE_CLASS.set(conf, IgaElementWritable.class);
@@ -66,7 +94,7 @@ public class IgaGiraphJobFactory {
     NETTY_USE_DIRECT_MEMORY.set(conf, true);
     NETTY_USE_POOLED_ALLOCATOR.set(conf, true);
     WAIT_TASK_DONE_TIMEOUT_MS.set(conf, 0); // no need to wait
-    HDFS_FILE_CREATION_RETRIES.set(conf, 0);
+    HDFS_FILE_CREATION_RETRY_WAIT_MS.set(conf, 100);
     return conf;
   }
 
