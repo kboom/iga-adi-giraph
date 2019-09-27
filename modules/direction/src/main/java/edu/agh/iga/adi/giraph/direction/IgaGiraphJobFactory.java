@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import org.apache.giraph.comm.messages.InMemoryMessageStoreFactory;
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.edge.ByteArrayEdges;
-import org.apache.giraph.edge.IdAndValueArrayEdges;
 import org.apache.giraph.io.VertexInputFormat;
 import org.apache.giraph.job.GiraphJob;
 import org.apache.hadoop.io.LongWritable;
@@ -48,6 +47,11 @@ public class IgaGiraphJobFactory {
     }
   }
 
+  /**
+   * Based on org.apache.giraph.conf.FacebookConfiguration
+   * @param conf
+   * @return
+   */
   public static GiraphConfiguration injectSolverConfiguration(GiraphConfiguration conf) {
     conf.setComputationClass(InitialComputation.class);
     conf.setMasterComputeClass(IterativeComputation.class);
