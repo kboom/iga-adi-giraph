@@ -40,6 +40,9 @@ exec ./run.cloud.sh \
   -c giraph.nettyRequestEncoderBufferSize=327680 \
   -c giraph.clientReceiveBufferSize=327680 \
   -c giraph.clientSendBufferSize=5242880 \
+  -c giraph.resendTimedOutRequests=false \
+  -c yarn.app.mapreduce.am.command-opts="$WORKER_JVM_OPTS" \
+  -c yarn.app.mapreduce.am.resource.mb=2300 \
   -c yarn.app.mapreduce.am.command-opts="$LOGGING_JVM_OPTS $WORKER_JVM_OPTS"
 
 

@@ -9,6 +9,7 @@ import edu.agh.iga.adi.giraph.direction.io.StepVertexOutputFormat;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
+import edu.agh.iga.adi.giraph.direction.performance.MemoryLogger;
 import lombok.NoArgsConstructor;
 import org.apache.giraph.comm.messages.InMemoryMessageStoreFactory;
 import org.apache.giraph.conf.GiraphConfiguration;
@@ -55,6 +56,7 @@ public class IgaGiraphJobFactory {
     conf.setVertexInputFormatClass(inputFormatsByInitType.get(FIRST_INITIALISATION_TYPE.get(conf)));
     conf.setVertexOutputFormatClass(StepVertexOutputFormat.class);
     conf.setGraphPartitionerFactoryClass(IgaPartitionerFactory.class);
+    conf.addWorkerObserverClass(MemoryLogger.class);
     conf.setYarnLibJars(currentJar());
 
     NETTY_CLIENT_THREADS.set(conf, conf.getMaxWorkers());
