@@ -12,7 +12,6 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
 
-import static edu.agh.iga.adi.giraph.direction.IgaGiraphJobFactory.injectSolverConfiguration;
 import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.*;
 import static java.lang.System.exit;
 import static java.util.Optional.ofNullable;
@@ -39,8 +38,8 @@ public class IgaSolverTool extends Configured implements Tool {
     giraphConf.set("fs.file.impl",
         org.apache.hadoop.fs.LocalFileSystem.class.getName()
     );
-    injectSolverConfiguration(giraphConf);
     populateCustomConfiguration(giraphConf, processOptions(strings));
+    igaConfiguration(giraphConf);
     printConfiguration(giraphConf);
     validateConfiguration(giraphConf);
     return runJob(giraphConf);
@@ -73,6 +72,8 @@ public class IgaSolverTool extends Configured implements Tool {
     STEP_COUNT.set(config, options.getSteps());
     INITIAL_PROBLEM_TYPE.set(config, options.getInitialProblemType());
     PROBLEM_TYPE.set(config, options.getProblemType());
+    WORKER_CORES.set(config, options.getCores());
+    WORKER_MEMORY.set(config, options.getMemory());
 
     options.getConfig()
         .stream()

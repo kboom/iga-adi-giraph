@@ -19,11 +19,17 @@ class IgaOptions {
   @Parameter(description = "The input files if needed")
   private List<String> input = new ArrayList<>();
 
-  @Parameter(names = {"-c"}, variableArity = true, description = "config")
+  @Parameter(names = {"-config"}, variableArity = true, description = "config")
   private List<String> config = new ArrayList<>();
 
   @Parameter(names = {"-w", "--workers"}, description = "The number of workers used")
   private Integer workers = 1;
+
+  @Parameter(names = {"-c", "--cores"}, description = "The number of cores per worker used")
+  private Integer cores = 1;
+
+  @Parameter(names = {"-m", "--memory"}, description = "The amount of memory per worker in gigabytes")
+  private Integer memory = 1;
 
   @Parameter(names = {"-i", "--input"}, description = "The path to the coefficients input directory (HDFS)")
   private String inputDirectory;

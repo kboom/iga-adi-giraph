@@ -9,9 +9,7 @@ import java.nio.file.Path;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static edu.agh.iga.adi.giraph.direction.IgaGiraphJobFactory.igaMapReduceJob;
-import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.COEFFICIENTS_INPUT;
-import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.COEFFICIENTS_OUTPUT;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.*;
 import static java.lang.Integer.MAX_VALUE;
 import static java.util.Optional.ofNullable;
 import static org.apache.giraph.conf.GiraphConstants.*;
@@ -84,8 +82,9 @@ public class GiraphTestJob {
       addVertexInputPath(conf, new org.apache.hadoop.fs.Path(COEFFICIENTS_INPUT.get(conf)));
     }
 
+    @SneakyThrows
     private GiraphJob createJob(GiraphConfiguration conf) {
-      return igaMapReduceJob(conf);
+      return new GiraphJob(igaConfiguration(conf), "iga-test-job");
     }
 
     private GiraphConfiguration createConfiguration() {
