@@ -13,6 +13,7 @@ import edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateLeavesOperation.M
 import edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateRootOperation.MergeAndEliminateRootMessage;
 import edu.agh.iga.adi.giraph.core.operations.setup.TranspositionIgaOperation.TranspositionIgaMessage;
 import edu.agh.iga.adi.giraph.core.setup.Initialisation.InitialisationIgaMessage;
+import lombok.val;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -67,11 +68,17 @@ public final class MessageSerializerFacade {
     }
   }
 
-  public IgaMessage readMessage(DataInput dataInput) {
+  @SuppressWarnings("unchecked")
+  public IgaMessage readMessage(DataInput dataInput, IgaMessage message) {
     try {
-      final int messageType = dataInput.readInt();
-      final Class<?> messageClazz = MESSAGE_TYPE_MAPPING.inverse().get(messageType);
-      final MessageSerializer messageSerializer = SERIALIZER_MAP.get(messageClazz);
+      val messageType = dataInput.readInt();
+      val messageClazz = MESSAGE_TYPE_MAPPING.inverse().get(messageType);
+      val messageSerializer = SERIALIZER_MAP.get(messageClazz);
+      if (message != null) {
+        if (message.getClass().equals(messageClazz)) {
+          return messageSerializer.readMessage(message, dataInput);
+        }
+      }
       return messageSerializer.readMessage(dataInput);
     } catch (IOException e) {
       throw new IllegalStateException("Could not deserialize message");

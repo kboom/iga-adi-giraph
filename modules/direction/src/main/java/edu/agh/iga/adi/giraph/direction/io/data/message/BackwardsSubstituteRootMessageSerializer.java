@@ -1,6 +1,7 @@
 package edu.agh.iga.adi.giraph.direction.io.data.message;
 
 import edu.agh.iga.adi.giraph.core.operations.BackwardsSubstituteRootOperation.BackwardsSubstituteRootMessage;
+import lombok.val;
 import org.ojalgo.matrix.store.PrimitiveDenseStore;
 
 import java.io.DataInput;
@@ -27,11 +28,20 @@ final class BackwardsSubstituteRootMessageSerializer implements MessageSerialize
 
   @Override
   public BackwardsSubstituteRootMessage readMessage(DataInput dataInput) throws IOException {
-    final long srcId = dataInput.readLong();
-    final long dofs = dataInput.readInt();
+    val srcId = dataInput.readLong();
+    val dofs = dataInput.readInt();
     PrimitiveDenseStore ds = FACTORY.makeZero(CONTRIBUTED_ROWS, dofs);
     ds.fillMatching(dataInputAccessStore(dataInput, CONTRIBUTED_ROWS * dofs));
     return new BackwardsSubstituteRootMessage(srcId, ds);
+  }
+
+  @Override
+  public BackwardsSubstituteRootMessage readMessage(BackwardsSubstituteRootMessage message, DataInput dataInput) throws IOException {
+    val srcId = dataInput.readLong();
+    val dofs = dataInput.readInt();
+    message.mx.fillMatching(dataInputAccessStore(dataInput, CONTRIBUTED_ROWS * dofs));
+    message.reattach(srcId);
+    return message;
   }
 
 }

@@ -1,6 +1,7 @@
 package edu.agh.iga.adi.giraph.direction.io.data.message;
 
 import edu.agh.iga.adi.giraph.core.setup.Initialisation.InitialisationIgaMessage;
+import lombok.val;
 import org.ojalgo.matrix.store.PrimitiveDenseStore;
 
 import java.io.DataInput;
@@ -26,12 +27,22 @@ final class InitialisationMessageSerializer implements MessageSerializer<Initial
 
   @Override
   public InitialisationIgaMessage readMessage(DataInput dataInput) throws IOException {
-    final long srcId = dataInput.readLong();
-    final long rows = dataInput.readInt();
-    final long cols = dataInput.readInt();
-    PrimitiveDenseStore x = FACTORY.makeZero(rows, cols);
+    val srcId = dataInput.readLong();
+    val rows = dataInput.readInt();
+    val cols = dataInput.readInt();
+    val x = FACTORY.makeZero(rows, cols);
     x.fillMatching(dataInputAccessStore(dataInput, rows * cols));
     return new InitialisationIgaMessage(srcId, -1, x);
+  }
+
+  @Override
+  public InitialisationIgaMessage readMessage(InitialisationIgaMessage message, DataInput dataInput) throws IOException {
+    val srcId = dataInput.readLong();
+    val rows = dataInput.readInt();
+    val cols = dataInput.readInt();
+    message.getMxp().fillMatching(dataInputAccessStore(dataInput, rows * cols));
+    message.reattach(srcId);
+    return message;
   }
 
 }
