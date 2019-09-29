@@ -2,7 +2,6 @@ package edu.agh.iga.adi.giraph.direction.io.data.message;
 
 import edu.agh.iga.adi.giraph.core.setup.Initialisation.InitialisationIgaMessage;
 import lombok.val;
-import org.ojalgo.matrix.store.PrimitiveDenseStore;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -40,9 +39,17 @@ final class InitialisationMessageSerializer implements MessageSerializer<Initial
     val srcId = dataInput.readLong();
     val rows = dataInput.readInt();
     val cols = dataInput.readInt();
-    message.getMxp().fillMatching(dataInputAccessStore(dataInput, rows * cols));
-    message.reattach(srcId);
-    return message;
+
+    // some have 3 some have 2 - todo probably should be optimized to re-use the same rather than creating a new one...
+    if (message.getMxp().countRows() == rows) {
+      message.reattach(srcId);
+      message.getMxp().fillMatching(dataInputAccessStore(dataInput, rows * cols));
+      return message;
+    } else {
+      val x = FACTORY.makeZero(rows, cols);
+      x.fillMatching(dataInputAccessStore(dataInput, rows * cols));
+      return new InitialisationIgaMessage(srcId, -1, x);
+    }
   }
 
 }
