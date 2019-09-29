@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 exec ./run.cloud.sh \
   -s 2 \
-  -e 6144 \
-	-w 3 \
-	-h 4 \
-	-c 16 \
-	-m 12 \
+  -e 768 \
+	-w 2 \
+	-h 3 \
+	-c 2 \
+	-m 3 \
 	-t surface \
 	-p HEAT \
 	--init-problem RADIAL \

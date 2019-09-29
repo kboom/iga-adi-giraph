@@ -18,7 +18,7 @@ import static edu.agh.iga.adi.giraph.direction.test.ProblemLoader.problemLoaderC
 import static edu.agh.iga.adi.giraph.test.util.assertion.CoefficientsAssertions.assertThatCoefficients;
 import static java.nio.file.Files.createDirectory;
 
-class StepComputationIT {
+class StepComputationIntTest {
 
   private static final String IDENTITY_MAT = "StepComputationIT/identity.mat";
 
