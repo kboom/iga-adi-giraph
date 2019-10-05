@@ -24,6 +24,7 @@ import org.apache.giraph.io.VertexInputFormat;
 import org.apache.giraph.worker.MemoryObserver;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,11 +38,17 @@ import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolve
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.SURFACE_PROBLEM;
 import static edu.agh.iga.adi.giraph.direction.computation.InitialProblemType.CONSTANT;
 import static java.lang.Integer.MAX_VALUE;
+import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.stream.Collectors.joining;
 import static org.apache.giraph.conf.GiraphConstants.*;
 import static org.apache.giraph.master.BspServiceMaster.NUM_MASTER_ZK_INPUT_SPLIT_THREADS;
+import static org.apache.giraph.partition.PartitionBalancer.PARTITION_BALANCE_ALGORITHM;
+import static org.apache.giraph.partition.PartitionBalancer.STATIC_BALANCE_ALGORITHM;
+import static org.apache.log4j.Logger.getLogger;
 
 public class IgaConfiguration {
+
+  private static final Logger LOG = getLogger(IgaConfiguration.class);
 
   public static final BooleanConfOption CONFIGURE_JAVA_OPTS = new BooleanConfOption("giraph.configureJavaOpts", true, "Whether to configure java opts");
 
@@ -77,11 +84,15 @@ public class IgaConfiguration {
   );
 
   public static GiraphConfiguration igaConfiguration(GiraphConfiguration conf) {
+    LOG.info("Configuring giraph");
+
     solverOptions(conf);
     generalTuning(conf);
+    USE_MESSAGE_SIZE_ENCODING.set(conf, true); // todo not sure about this
+    convenienceSettings(conf);
 
-    WAIT_TASK_DONE_TIMEOUT_MS.set(conf, 0); // no need to wait
-    HDFS_FILE_CREATION_RETRY_WAIT_MS.set(conf, 100);
+    WAIT_TASK_DONE_TIMEOUT_MS.set(conf, (int) MINUTES.toMillis(1)); // no need to wait
+    HDFS_FILE_CREATION_RETRY_WAIT_MS.set(conf, 1000);
 
 //    USE_MESSAGE_SIZE_ENCODING.set(conf, true);
     // todo out edge classes with custom typeops
@@ -90,7 +101,21 @@ public class IgaConfiguration {
     // todo message store
 //    MESSAGE_STORE_FACTORY_CLASS.set(conf, InMemoryMessageStoreFactory.class);
 //    ASYNC_MESSAGE_STORE_THREADS_COUNT.set(conf, 8); todo would it help?
+
+    setPartitioning(conf);
     return conf;
+  }
+
+  private static void setPartitioning(GiraphConfiguration conf) {
+    // Seems that no re-balancing is required
+    conf.set(PARTITION_BALANCE_ALGORITHM, STATIC_BALANCE_ALGORITHM);
+    conf.setGraphPartitionerFactoryClass(IgaPartitionerFactory.class);
+  }
+
+  private static void convenienceSettings(GiraphConfiguration conf) {
+    MAX_MASTER_SUPERSTEP_WAIT_MSECS.set(conf, (int) MINUTES.toMillis(1));
+    NETTY_MAX_CONNECTION_FAILURES.set(conf, 10);
+    WAIT_TIME_BETWEEN_CONNECTION_RETRIES_MS.set(conf, 100);
   }
 
   private static void solverOptions(GiraphConfiguration conf) {
@@ -100,7 +125,6 @@ public class IgaConfiguration {
     conf.setEdgeInputFormatClass(IgaEdgeInputFormat.class);
     conf.setVertexInputFormatClass(inputFormatsByInitType.get(FIRST_INITIALISATION_TYPE.get(conf)));
     conf.setVertexOutputFormatClass(StepVertexOutputFormat.class);
-    conf.setGraphPartitionerFactoryClass(IgaPartitionerFactory.class);
     conf.addWorkerObserverClass(MemoryLogger.class);
     conf.setYarnLibJars(currentJar());
     STATIC_GRAPH.set(conf, true);
@@ -153,6 +177,7 @@ public class IgaConfiguration {
 
     // Synchronize full gc calls across workers
     MemoryObserver.USE_MEMORY_OBSERVER.setIfUnset(conf, true);
+    // MemoryObserver.MIN_MS_BETWEEN_FULL_GCS.setIfUnset(conf, 60 * 1000);
 
     // Increase number of partitions per compute thread
     GiraphConstants.MIN_PARTITIONS_PER_COMPUTE_THREAD.setIfUnset(conf, 3);
@@ -161,7 +186,8 @@ public class IgaConfiguration {
     GiraphConstants.PREFER_IP_ADDRESSES.setIfUnset(conf, true);
 
     // Track job progress
-//    GiraphConstants.TRACK_JOB_PROGRESS_ON_CLIENT.setIfUnset(conf, true);
+//    GiraphConstants.TRACK_JOB_PROGRESS_ON_CLIENT.setIfUnset(conf, true); // todo this might cause problems in YARN
+
     // Thread-level debugging for easier understanding
     GiraphConstants.LOG_THREAD_LAYOUT.setIfUnset(conf, true);
     // Enable tracking and printing of metrics
@@ -179,15 +205,14 @@ public class IgaConfiguration {
     NETTY_USE_DIRECT_MEMORY.set(conf, true);
 
     NETTY_CLIENT_THREADS.set(conf, conf.getMaxWorkers());
-    CLIENT_SEND_BUFFER_SIZE.set(conf, 8 * ONE_MB);
-    CLIENT_RECEIVE_BUFFER_SIZE.set(conf, 8 * ONE_MB);
-    NETTY_SERVER_THREADS.set(conf, 4 * conf.getMaxWorkers());
-    SERVER_SEND_BUFFER_SIZE.set(conf, 8 * ONE_MB);
-    SERVER_RECEIVE_BUFFER_SIZE.set(conf, 8 * ONE_MB);
-    MAX_MSG_REQUEST_SIZE.set(conf, 8 * ONE_MB);
+    CLIENT_SEND_BUFFER_SIZE.set(conf, 32 * ONE_MB);
+    CLIENT_RECEIVE_BUFFER_SIZE.set(conf, 32 * ONE_MB);
+    SERVER_SEND_BUFFER_SIZE.set(conf, 32 * ONE_MB);
+    SERVER_RECEIVE_BUFFER_SIZE.set(conf, 32 * ONE_MB);
+    MAX_MSG_REQUEST_SIZE.set(conf, 32 * ONE_MB);
     REQUEST_SIZE_WARNING_THRESHOLD.set(conf, 1);
-    MAX_VERTEX_REQUEST_SIZE.set(conf, 8 * ONE_MB);
-    MAX_EDGE_REQUEST_SIZE.set(conf, 8 * ONE_MB);
+    MAX_VERTEX_REQUEST_SIZE.set(conf, 32 * ONE_MB);
+    MAX_EDGE_REQUEST_SIZE.set(conf, 32 * ONE_MB);
   }
 
   private static String currentJar() {

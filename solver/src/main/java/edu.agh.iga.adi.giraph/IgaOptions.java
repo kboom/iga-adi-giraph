@@ -19,7 +19,7 @@ class IgaOptions {
   @Parameter(description = "The input files if needed")
   private List<String> input = new ArrayList<>();
 
-  @Parameter(names = {"-config"}, variableArity = true, description = "config")
+  @Parameter(names = {"--config"}, variableArity = true, description = "config")
   private List<String> config = new ArrayList<>();
 
   @Parameter(names = {"-w", "--workers"}, description = "The number of workers used")
