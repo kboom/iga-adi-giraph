@@ -2,10 +2,12 @@ package edu.agh.iga.adi.giraph.direction.test;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
+import lombok.val;
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.job.GiraphJob;
 
 import java.nio.file.Path;
+import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -84,7 +86,8 @@ public class GiraphTestJob {
 
     @SneakyThrows
     private GiraphJob createJob(GiraphConfiguration conf) {
-      return new GiraphJob(igaConfiguration(conf), "iga-test-job");
+      val rand = new Random();
+      return new GiraphJob(igaConfiguration(conf), "iga-test-job-" + rand.nextLong());
     }
 
     private GiraphConfiguration createConfiguration() {
@@ -97,7 +100,6 @@ public class GiraphTestJob {
       ZOOKEEPER_SERVERLIST_POLL_MSECS.set(conf, 500);
       MAX_NUMBER_OF_SUPERSTEPS.set(conf, MAX_VALUE);
       SPLIT_MASTER_WORKER.set(conf, false);
-      LOCAL_TEST_MODE.set(conf, true);
       conf.set(MAX_WORKERS, "1");
       return conf;
     }

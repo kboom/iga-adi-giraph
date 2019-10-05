@@ -114,7 +114,7 @@ class StepComputationIntTest {
     val outputDir = dir.resolve("output");
 
     // given
-    GiraphTestJob job = giraphJob()
+    val job = giraphJob()
         .coefficientsOutputDir(outputDir)
         .configuration(conf -> {
           STEP_COUNT.set(conf, 3);

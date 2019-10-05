@@ -40,6 +40,7 @@ import static edu.agh.iga.adi.giraph.direction.computation.InitialProblemType.CO
 import static java.lang.Integer.MAX_VALUE;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.stream.Collectors.joining;
+import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.giraph.conf.GiraphConstants.*;
 import static org.apache.giraph.master.BspServiceMaster.NUM_MASTER_ZK_INPUT_SPLIT_THREADS;
 import static org.apache.giraph.partition.PartitionBalancer.PARTITION_BALANCE_ALGORITHM;
@@ -196,7 +197,7 @@ public class IgaConfiguration {
     if (CONFIGURE_JAVA_OPTS.get(conf)) {
       List<String> javaOpts = getMemoryJavaOpts(conf);
       javaOpts.addAll(getGcJavaOpts(conf));
-      JAVA_JOB_OPTIONS.set(conf, StringUtils.join(javaOpts, " "));
+      JAVA_JOB_OPTIONS.set(conf, join(javaOpts, " "));
     }
 
     /**

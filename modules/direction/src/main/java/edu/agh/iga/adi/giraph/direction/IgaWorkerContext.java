@@ -11,6 +11,13 @@ import static edu.agh.iga.adi.giraph.direction.StepAggregators.STEP;
 public final class IgaWorkerContext extends DefaultWorkerContext {
 
   @Override
+  public void preApplication() throws InstantiationException, IllegalAccessException {
+    super.preApplication();
+    StepVertexOutputFormat.step = 0;
+    StepVertexOutputFormat.isLast = false;
+  }
+
+  @Override
   public void preSuperstep() {
     BooleanWritable c = getAggregatedValue(ENDING_SUPER_STEP_OF_STEP);
     IntWritable s = getAggregatedValue(STEP);
