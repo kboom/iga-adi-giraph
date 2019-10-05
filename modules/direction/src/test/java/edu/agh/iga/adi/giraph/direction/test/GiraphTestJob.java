@@ -101,6 +101,7 @@ public class GiraphTestJob {
       MAX_NUMBER_OF_SUPERSTEPS.set(conf, MAX_VALUE);
       SPLIT_MASTER_WORKER.set(conf, false);
       conf.set(MAX_WORKERS, "1");
+      ZOOKEEPER_SERVER_PORT.set(conf, 0);
       return conf;
     }
 
