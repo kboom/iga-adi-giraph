@@ -20,7 +20,7 @@ class HeatTransferComputationIntTest {
 
   @Test
   @SneakyThrows
-  void canRunProjectionProblem(@TempDir Path dir) {
+  void canRunHeatTransfer(@TempDir Path dir) {
     val outputDir = dir.resolve("output");
 
     // given
