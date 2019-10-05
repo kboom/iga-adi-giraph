@@ -2,16 +2,16 @@ package edu.agh.iga.adi.giraph.direction.test;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
+import lombok.val;
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.job.GiraphJob;
 
 import java.nio.file.Path;
+import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static edu.agh.iga.adi.giraph.direction.IgaGiraphJobFactory.igaMapReduceJob;
-import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.COEFFICIENTS_INPUT;
-import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.COEFFICIENTS_OUTPUT;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.*;
 import static java.lang.Integer.MAX_VALUE;
 import static java.util.Optional.ofNullable;
 import static org.apache.giraph.conf.GiraphConstants.*;
@@ -84,8 +84,10 @@ public class GiraphTestJob {
       addVertexInputPath(conf, new org.apache.hadoop.fs.Path(COEFFICIENTS_INPUT.get(conf)));
     }
 
+    @SneakyThrows
     private GiraphJob createJob(GiraphConfiguration conf) {
-      return igaMapReduceJob(conf);
+      val rand = new Random();
+      return new GiraphJob(igaConfiguration(conf), "iga-test-job-" + rand.nextLong());
     }
 
     private GiraphConfiguration createConfiguration() {
@@ -98,8 +100,10 @@ public class GiraphTestJob {
       ZOOKEEPER_SERVERLIST_POLL_MSECS.set(conf, 500);
       MAX_NUMBER_OF_SUPERSTEPS.set(conf, MAX_VALUE);
       SPLIT_MASTER_WORKER.set(conf, false);
-      LOCAL_TEST_MODE.set(conf, true);
+      LOG_THREAD_LAYOUT.set(conf, false);
+      METRICS_ENABLE.set(conf, false);
       conf.set(MAX_WORKERS, "1");
+      ZOOKEEPER_SERVER_PORT.set(conf, 0);
       return conf;
     }
 

@@ -158,6 +158,15 @@ https://giraph.apache.org/options.html[Reference]
 
 https://exceptionshub.com/hadoop-no-filesystem-for-scheme-file.html[Missing filesystem]
 
+== Caveats
+
+* `giraph.SplitMasterWorker` cannot be `false` for yarn jobs.
+This means there always will be an additional container next to the workers which just handle master tasks.
+When choosing memory this means that the memory requirement is not `workers * memory` but `(workers + 1) * memory + 512mb`
+as there is a 4th container that sets up other containers.
+* `giraph.zkList` has to be set to the zookeeper address - if not,
+Giraph would bring up 2 additional nodes just to handle Zookeeper which is generally slower and wastes memory.
+
 == Links
 
 * https://github.com/sakserv/hadoop-mini-clusters[Hadoop mini clusters]

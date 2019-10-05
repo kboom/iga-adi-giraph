@@ -1,7 +1,7 @@
 package edu.agh.iga.adi.giraph.direction.io.data.message;
 
 import edu.agh.iga.adi.giraph.core.setup.Initialisation.InitialisationIgaMessage;
-import org.ojalgo.matrix.store.PrimitiveDenseStore;
+import lombok.val;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -26,12 +26,30 @@ final class InitialisationMessageSerializer implements MessageSerializer<Initial
 
   @Override
   public InitialisationIgaMessage readMessage(DataInput dataInput) throws IOException {
-    final long srcId = dataInput.readLong();
-    final long rows = dataInput.readInt();
-    final long cols = dataInput.readInt();
-    PrimitiveDenseStore x = FACTORY.makeZero(rows, cols);
+    val srcId = dataInput.readLong();
+    val rows = dataInput.readInt();
+    val cols = dataInput.readInt();
+    val x = FACTORY.makeZero(rows, cols);
     x.fillMatching(dataInputAccessStore(dataInput, rows * cols));
     return new InitialisationIgaMessage(srcId, -1, x);
+  }
+
+  @Override
+  public InitialisationIgaMessage readMessage(InitialisationIgaMessage message, DataInput dataInput) throws IOException {
+    val srcId = dataInput.readLong();
+    val rows = dataInput.readInt();
+    val cols = dataInput.readInt();
+
+    // some have 3 some have 2 - todo probably should be optimized to re-use the same rather than creating a new one...
+    if (message.getMxp().countRows() == rows) {
+      message.reattach(srcId);
+      message.getMxp().fillMatching(dataInputAccessStore(dataInput, rows * cols));
+      return message;
+    } else {
+      val x = FACTORY.makeZero(rows, cols);
+      x.fillMatching(dataInputAccessStore(dataInput, rows * cols));
+      return new InitialisationIgaMessage(srcId, -1, x);
+    }
   }
 
 }

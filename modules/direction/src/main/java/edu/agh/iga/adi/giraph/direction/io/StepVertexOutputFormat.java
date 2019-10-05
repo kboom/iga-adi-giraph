@@ -11,6 +11,7 @@ import org.apache.giraph.io.formats.TextVertexOutputFormat;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
@@ -18,6 +19,7 @@ import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.PROBLEM_SIZE;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.giraph.conf.GiraphConstants.VERTEX_OUTPUT_FORMAT_SUBDIR;
+import static org.apache.log4j.Logger.getLogger;
 
 /**
  * Extracts the solution from the solver. The solution is the large matrix of coefficients for our BSpline basis functions.
@@ -35,6 +37,8 @@ import static org.apache.giraph.conf.GiraphConstants.VERTEX_OUTPUT_FORMAT_SUBDIR
  */
 public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable, IgaElementWritable, IgaOperationWritable> {
 
+  private static final Logger LOG = getLogger(StepVertexOutputFormat.class);
+
   private static final Text EMPTY_LINE = new Text();
 
   /**
@@ -51,6 +55,9 @@ public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable,
   public TextVertexWriter createVertexWriter(final TaskAttemptContext context) {
     final int problemSize = PROBLEM_SIZE.get(context.getConfiguration());
     final DirectionTree directionTree = new DirectionTree(problemSize);
+
+    StepVertexOutputFormat.step = 0;
+    StepVertexOutputFormat.isLast = false;
 
     textOutputFormat =
         new GiraphTextOutputFormat() {
@@ -89,9 +96,15 @@ public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable,
     public void writeVertex(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) throws IOException, InterruptedException {
       if (StepVertexOutputFormat.isLast) {
         if (currentStep != StepVertexOutputFormat.step) {
-          close(getContext());
-          initialize(context); // need to refresh
-          currentStep = StepVertexOutputFormat.step;
+          LOG.error("!!! Init check" + vertex.getId());
+          synchronized (IdWithValueVertexWriter.class) {
+            if (currentStep != StepVertexOutputFormat.step) {
+              LOG.error("!!! Init exec" + vertex.getId());
+              close(getContext());
+              initialize(context); // need to refresh
+              currentStep = StepVertexOutputFormat.step;
+            }
+          }
         }
         getRecordWriter().write(convertVertexToLine(vertex), null);
       }

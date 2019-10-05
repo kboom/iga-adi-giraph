@@ -12,14 +12,14 @@ public final class FactorizationLogger {
   private static final String SEPARATOR = " ===================================== ";
 
   public static void logPhase(IgaComputationPhase phase) {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug(SEPARATOR + phase + SEPARATOR);
+    if (LOG.isTraceEnabled()) {
+      LOG.trace(SEPARATOR + phase + SEPARATOR);
     }
   }
 
   public static void computationLog(IgaElement e) {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug(format("\nE%d ------------------------ \n%s", e.id, formatElement(e)));
+    if (LOG.isTraceEnabled()) {
+      LOG.trace(format("\nE%d ------------------------ \n%s", e.id, formatElement(e)));
     }
   }
 

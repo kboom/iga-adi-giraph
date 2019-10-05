@@ -1,6 +1,8 @@
 package edu.agh.iga.adi.giraph.direction.io.data.message;
 
+import edu.agh.iga.adi.giraph.core.IgaMessage;
 import edu.agh.iga.adi.giraph.core.operations.BackwardsSubstituteInterimOperation.BackwardsSubstituteInterimMessage;
+import lombok.val;
 import org.ojalgo.matrix.store.PrimitiveDenseStore;
 
 import java.io.DataInput;
@@ -27,11 +29,20 @@ final class BackwardsSubstituteInterimMessageSerializer implements MessageSerial
 
   @Override
   public BackwardsSubstituteInterimMessage readMessage(DataInput dataInput) throws IOException {
-    final long srcId = dataInput.readLong();
-    final long dofs = dataInput.readInt();
-    PrimitiveDenseStore ds = FACTORY.makeZero(CONTRIBUTED_ROWS, dofs);
+    val srcId = dataInput.readLong();
+    val dofs = dataInput.readInt();
+    val ds = FACTORY.makeZero(CONTRIBUTED_ROWS, dofs);
     ds.fillMatching(dataInputAccessStore(dataInput, CONTRIBUTED_ROWS * dofs));
     return new BackwardsSubstituteInterimMessage(srcId, ds);
+  }
+
+  @Override
+  public BackwardsSubstituteInterimMessage readMessage(BackwardsSubstituteInterimMessage message, DataInput dataInput) throws IOException {
+    val srcId = dataInput.readLong();
+    val dofs = dataInput.readInt();
+    message.reattach(srcId);
+    message.mx.fillMatching(dataInputAccessStore(dataInput, CONTRIBUTED_ROWS * dofs));
+    return  message;
   }
 
 }

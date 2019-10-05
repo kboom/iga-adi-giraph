@@ -24,7 +24,7 @@ public class IgaMessageWritable implements WritableComparable {
 
   @Override
   public void readFields(DataInput dataInput) {
-    igaMessage = MESSAGE_SERIALIZER.readMessage(dataInput);
+    igaMessage = MESSAGE_SERIALIZER.readMessage(dataInput, igaMessage);
   }
 
   @Override

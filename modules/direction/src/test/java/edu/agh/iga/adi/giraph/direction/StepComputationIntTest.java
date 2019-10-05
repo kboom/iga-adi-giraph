@@ -9,16 +9,16 @@ import org.junit.jupiter.api.io.TempDir;
 import java.nio.file.Path;
 
 import static edu.agh.iga.adi.giraph.core.IgaConstants.ROWS_BOUND_TO_NODE;
-import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.*;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.COEFFICIENTS_PROBLEM;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.SURFACE_PROBLEM;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.*;
 import static edu.agh.iga.adi.giraph.direction.test.GiraphTestJob.giraphJob;
 import static edu.agh.iga.adi.giraph.direction.test.ProblemLoader.loadProblem;
 import static edu.agh.iga.adi.giraph.direction.test.ProblemLoader.problemLoaderConfig;
 import static edu.agh.iga.adi.giraph.test.util.assertion.CoefficientsAssertions.assertThatCoefficients;
 import static java.nio.file.Files.createDirectory;
 
-class StepComputationIT {
+class StepComputationIntTest {
 
   private static final String IDENTITY_MAT = "StepComputationIT/identity.mat";
 
@@ -114,7 +114,7 @@ class StepComputationIT {
     val outputDir = dir.resolve("output");
 
     // given
-    GiraphTestJob job = giraphJob()
+    val job = giraphJob()
         .coefficientsOutputDir(outputDir)
         .configuration(conf -> {
           STEP_COUNT.set(conf, 3);
