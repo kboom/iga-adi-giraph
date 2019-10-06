@@ -42,9 +42,9 @@ class HeatTransferComputationIntTest {
 
     // then
     assertThatCoefficients(outputDir.resolve("step-0"))
-        .checksumEquals(110.8328687950064, ROWS_BOUND_TO_NODE);
+        .checksumEquals(110.79465240563042, ROWS_BOUND_TO_NODE);
     assertThatCoefficients(outputDir.resolve("step-1"))
-        .checksumEquals(110.74171475859649, ROWS_BOUND_TO_NODE);
+        .checksumEquals(110.96319649766258, ROWS_BOUND_TO_NODE);
   }
 
 }

@@ -99,7 +99,7 @@ final class TranspositionIgaOperationTest {
   @Test
   void branch5SendsProperMessageToLeaf8() {
     val element = elementFor(BRANCH_5, MESH)
-        .withMatrixX(matrixOfSize(6, 14).withIndexedValues())
+        .withMatrixX(matrixOfSize(5, 14).withIndexedValues())
         .build();
 
     assertThatMessage(messageTo(LEAF_8, element))
@@ -107,9 +107,9 @@ final class TranspositionIgaOperationTest {
         .hasMatrix(
             TranspositionIgaMessage::getMxp,
             matrixOfSize(3).withValues(
-                2.1, 2.2, 2.3,
                 3.1, 3.2, 3.3,
-                4.1, 4.2, 4.3
+                4.1, 4.2, 4.3,
+                5.1, 5.2, 5.3
             )
         );
   }
@@ -117,7 +117,7 @@ final class TranspositionIgaOperationTest {
   @Test
   void branch5SendsProperMessageToLeaf9() {
     val element = elementFor(BRANCH_5, MESH)
-        .withMatrixX(matrixOfSize(6, 14).withIndexedValues())
+        .withMatrixX(matrixOfSize(5, 14).withIndexedValues())
         .build();
 
     assertThatMessage(messageTo(LEAF_9, element))
@@ -125,9 +125,9 @@ final class TranspositionIgaOperationTest {
         .hasMatrix(
             TranspositionIgaMessage::getMxp,
             matrixOfSize(3).withValues(
-                2.2, 2.3, 2.4,
                 3.2, 3.3, 3.4,
-                4.2, 4.3, 4.4
+                4.2, 4.3, 4.4,
+                5.2, 5.3, 5.4
             )
         );
   }
@@ -135,7 +135,7 @@ final class TranspositionIgaOperationTest {
   @Test
   void branch6SendsProperMessageToLeaf8() {
     val element = elementFor(BRANCH_6, MESH)
-        .withMatrixX(matrixOfSize(6, 14).withIndexedValues())
+        .withMatrixX(matrixOfSize(5, 14).withIndexedValues())
         .build();
 
     assertThatMessage(messageTo(LEAF_8, element))
@@ -143,9 +143,9 @@ final class TranspositionIgaOperationTest {
         .hasMatrix(
             TranspositionIgaMessage::getMxp,
             matrixOfSize(3).withValues(
-                2.1, 2.2, 2.3,
                 3.1, 3.2, 3.3,
-                4.1, 4.2, 4.3
+                4.1, 4.2, 4.3,
+                5.1, 5.2, 5.3
             )
         );
   }
@@ -153,7 +153,7 @@ final class TranspositionIgaOperationTest {
   @Test
   void branch6SendsProperMessageToLeaf19() {
     val element = elementFor(BRANCH_6, MESH)
-        .withMatrixX(matrixOfSize(6, 14).withIndexedValues())
+        .withMatrixX(matrixOfSize(5, 14).withIndexedValues())
         .build();
 
     assertThatMessage(messageTo(LEAF_19, element))
@@ -161,9 +161,9 @@ final class TranspositionIgaOperationTest {
         .hasMatrix(
             TranspositionIgaMessage::getMxp,
             matrixOfSize(3).withValues(
-                2.12, 2.13, 2.14,
                 3.12, 3.13, 3.14,
-                4.12, 4.13, 4.14
+                4.12, 4.13, 4.14,
+                5.12, 5.13, 5.14
             )
         );
   }
