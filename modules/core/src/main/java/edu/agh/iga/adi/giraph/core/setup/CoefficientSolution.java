@@ -7,6 +7,8 @@ import edu.agh.iga.adi.giraph.core.splines.BSpline1;
 import edu.agh.iga.adi.giraph.core.splines.BSpline2;
 import edu.agh.iga.adi.giraph.core.splines.BSpline3;
 import lombok.val;
+import org.ojalgo.matrix.store.PrimitiveDenseStore;
+import org.ojalgo.netio.BasicLogger;
 import org.ojalgo.structure.Access2D;
 
 public class CoefficientSolution implements PartialSolution {
@@ -21,6 +23,12 @@ public class CoefficientSolution implements PartialSolution {
   CoefficientSolution(Mesh mesh, Access2D<Double> coefficients) {
     this.mesh = mesh;
     this.coef = coefficients;
+
+    int rows = (int) coefficients.countRows();
+    int cols = (int) coefficients.countColumns();
+    PrimitiveDenseStore ds = PrimitiveDenseStore.FACTORY.makeZero(rows, cols);
+    ds.fillMatching(coef);
+    BasicLogger.error(ds);
   }
 
   @Override
@@ -36,11 +44,12 @@ public class CoefficientSolution implements PartialSolution {
 
     val sp1x = b1.getValue(localx);
     val sp1y = b1.getValue(localy);
-    val sp2y = b2.getValue(localy);
     val sp2x = b2.getValue(localx);
-    val sp3y = b3.getValue(localy);
+    val sp2y = b2.getValue(localy);
     val sp3x = b3.getValue(localx);
+    val sp3y = b3.getValue(localy);
 
+    // we explicitly handle only a stripe of the solution square indexed locally so we don't care about the global x
     return coef.doubleValue(0, ielemy) * sp1x * sp1y +
         coef.doubleValue(0, ielemy + 1) * sp1x * sp2y +
         coef.doubleValue(0, ielemy + 2) * sp1x * sp3y +
