@@ -37,6 +37,11 @@ public class IgaMessageWritable implements WritableComparable {
     return igaMessage;
   }
 
+  public IgaMessageWritable withMessage(IgaMessage msg) {
+    igaMessage = msg;
+    return this;
+  }
+
   @SuppressWarnings("unused")
   public IgaMessageWritable() {
 

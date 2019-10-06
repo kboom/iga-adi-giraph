@@ -40,15 +40,17 @@ final class InitialisationMessageSerializer implements MessageSerializer<Initial
     val rows = dataInput.readInt();
     val cols = dataInput.readInt();
 
-    // some have 3 some have 2 - todo probably should be optimized to re-use the same rather than creating a new one...
-    if (message.getMxp().countRows() == rows) {
-      message.reattach(srcId);
-      message.getMxp().fillMatching(dataInputAccessStore(dataInput, rows * cols));
-      return message;
-    } else {
+    if (message.getMxp().countRows() < rows) {
       val x = FACTORY.makeZero(rows, cols);
       x.fillMatching(dataInputAccessStore(dataInput, rows * cols));
       return new InitialisationIgaMessage(srcId, -1, x);
+    } else {
+      message
+          .withRows(rows) // ensure the client knows that we are using matrix with potentially empty row
+          .reattach(srcId);
+
+      message.getMxp().fillMatching(dataInputAccessStore(dataInput, rows * cols));
+      return message;
     }
   }
 

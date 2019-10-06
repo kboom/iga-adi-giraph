@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.giraph.conf.GiraphConfiguration;
+import org.apache.giraph.conf.ImmutableClassesGiraphConfiguration;
 import org.apache.giraph.job.GiraphJob;
 
 import java.nio.file.Path;
@@ -87,7 +88,10 @@ public class GiraphTestJob {
     @SneakyThrows
     private GiraphJob createJob(GiraphConfiguration conf) {
       val rand = new Random();
-      return new GiraphJob(igaConfiguration(conf), "iga-test-job-" + rand.nextLong());
+      return new GiraphJob(
+          new ImmutableClassesGiraphConfiguration<>(igaConfiguration(conf)),
+          "iga-test-job-" + rand.nextLong()
+      );
     }
 
     private GiraphConfiguration createConfiguration() {

@@ -5,14 +5,14 @@ import org.ojalgo.structure.Access2D;
 
 class InitialisationAccess2D implements Access2D<Double> {
 
-  private TransformableRegion<Double> left;
-  private TransformableRegion<Double> right;
-  private int leftRows;
+  private final TransformableRegion<Double> left;
+  private final TransformableRegion<Double> right;
+  private final int leftRows;
 
-  InitialisationAccess2D(TransformableRegion<Double> left, TransformableRegion<Double> right) {
+  InitialisationAccess2D(TransformableRegion<Double> left, TransformableRegion<Double> right, int leftRows) {
     this.left = left;
     this.right = right;
-    this.leftRows = (int) left.countRows();
+    this.leftRows = leftRows;
   }
 
   @Override

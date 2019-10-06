@@ -13,6 +13,7 @@ import static edu.agh.iga.adi.giraph.direction.config.InitialComputationConfigur
 
 public enum InitialProblemType {
   CONSTANT(conf -> (x, y) -> 1),
+  LINEAR(conf -> Double::sum),
   RADIAL((conf) -> {
     val radiusRatio = RADIAL_PROBLEM_RADIUS_RATIO.get(conf);
     val problemSize = PROBLEM_SIZE.get(conf);

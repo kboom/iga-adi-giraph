@@ -11,4 +11,5 @@ exec ./run.cloud.sh \
 	--init-problem RADIAL \
 	--config giraph.zkList="iga-adi-m:2181" \
   --config giraph.msgRequestWarningThreshold=1 \
-  --config giraph.logLevel=debug
+  --config giraph.logLevel=debug \
+  --config iga.storeSolution=false

@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.PROBLEM_SIZE;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.STORE_SOLUTION;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.giraph.conf.GiraphConstants.VERTEX_OUTPUT_FORMAT_SUBDIR;
 import static org.apache.log4j.Logger.getLogger;
@@ -76,6 +77,7 @@ public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable,
     private final DirectionTree directionTree;
     private TaskAttemptContext context;
     private int currentStep = StepVertexOutputFormat.step;
+    private boolean storeSolution;
 
     private IdWithValueVertexWriter(DirectionTree directionTree) {
       this.directionTree = directionTree;
@@ -85,6 +87,7 @@ public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable,
     public void initialize(TaskAttemptContext context) throws IOException, InterruptedException {
       this.context = context;
       super.initialize(context);
+      storeSolution = STORE_SOLUTION.get(context.getConfiguration());
     }
 
     @Override
@@ -94,12 +97,10 @@ public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable,
 
     @Override
     public void writeVertex(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) throws IOException, InterruptedException {
-      if (StepVertexOutputFormat.isLast) {
+      if (storeSolution && StepVertexOutputFormat.isLast) {
         if (currentStep != StepVertexOutputFormat.step) {
-          LOG.error("!!! Init check" + vertex.getId());
-          synchronized (IdWithValueVertexWriter.class) {
+          synchronized (IdWithValueVertexWriter.class) { // todo remove if this does not help with thread safety
             if (currentStep != StepVertexOutputFormat.step) {
-              LOG.error("!!! Init exec" + vertex.getId());
               close(getContext());
               initialize(context); // need to refresh
               currentStep = StepVertexOutputFormat.step;

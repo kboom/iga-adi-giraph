@@ -4,6 +4,7 @@ import com.beust.jcommander.JCommander;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.giraph.conf.GiraphConfiguration;
+import org.apache.giraph.conf.ImmutableClassesGiraphConfiguration;
 import org.apache.giraph.job.GiraphConfigurationValidator;
 import org.apache.giraph.yarn.GiraphYarnClient;
 import org.apache.hadoop.conf.Configured;
@@ -42,7 +43,7 @@ public class IgaSolverTool extends Configured implements Tool {
     igaConfiguration(giraphConf);
     printConfiguration(giraphConf);
     validateConfiguration(giraphConf);
-    return runJob(giraphConf);
+    return runJob(new ImmutableClassesGiraphConfiguration<>(giraphConf));
   }
 
   private static IgaOptions processOptions(String[] strings) {
