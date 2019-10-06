@@ -3,6 +3,7 @@ package edu.agh.iga.adi.giraph.direction;
 import edu.agh.iga.adi.giraph.direction.test.GiraphTestJob;
 import lombok.SneakyThrows;
 import lombok.val;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -11,7 +12,7 @@ import java.nio.file.Path;
 import static edu.agh.iga.adi.giraph.core.IgaConstants.ROWS_BOUND_TO_NODE;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.COEFFICIENTS_PROBLEM;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.SURFACE_PROBLEM;
-import static edu.agh.iga.adi.giraph.direction.computation.InitialProblemType.LINEAR;
+import static edu.agh.iga.adi.giraph.direction.computation.InitialProblemType.*;
 import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.*;
 import static edu.agh.iga.adi.giraph.direction.test.GiraphTestJob.giraphJob;
 import static edu.agh.iga.adi.giraph.direction.test.ProblemLoader.loadProblem;
@@ -109,6 +110,7 @@ class StepComputationIntTest {
         .areEqualToResource(IDENTITY_MAT, ROWS_BOUND_TO_NODE);
   }
 
+  @Disabled
   @Test
   @SneakyThrows
   void canRunTwoIterationsOfLinearProjection(@TempDir Path dir) {
@@ -120,7 +122,7 @@ class StepComputationIntTest {
         .configuration(conf -> {
           STEP_COUNT.set(conf, 2);
           INITIAL_PROBLEM_TYPE.set(conf, LINEAR);
-          PROBLEM_SIZE.set(conf, 12);
+          PROBLEM_SIZE.set(conf, 24);
           HEIGHT_PARTITIONS.set(conf, 2);
           FIRST_INITIALISATION_TYPE.set(conf, SURFACE_PROBLEM.getType());
         })

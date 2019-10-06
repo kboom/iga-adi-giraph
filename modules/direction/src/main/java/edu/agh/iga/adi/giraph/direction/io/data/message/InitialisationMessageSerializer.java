@@ -36,22 +36,23 @@ final class InitialisationMessageSerializer implements MessageSerializer<Initial
 
   @Override
   public InitialisationIgaMessage readMessage(InitialisationIgaMessage message, DataInput dataInput) throws IOException {
-    val srcId = dataInput.readLong();
-    val rows = dataInput.readInt();
-    val cols = dataInput.readInt();
-
-    if (message.getMxp().countRows() < rows) {
-      val x = FACTORY.makeZero(rows, cols);
-      x.fillMatching(dataInputAccessStore(dataInput, rows * cols));
-      return new InitialisationIgaMessage(srcId, -1, x);
-    } else {
-      message
-          .withRows(rows) // ensure the client knows that we are using matrix with potentially empty row
-          .reattach(srcId);
-
-      message.getMxp().fillMatching(dataInputAccessStore(dataInput, rows * cols));
-      return message;
-    }
+    return readMessage(dataInput);
+//    val srcId = dataInput.readLong();
+//    val rows = dataInput.readInt();
+//    val cols = dataInput.readInt();
+//
+//    if (message.getMxp().countRows() < rows) {
+//      val x = FACTORY.makeZero(rows, cols);
+//      x.fillMatching(dataInputAccessStore(dataInput, rows * cols));
+//      return new InitialisationIgaMessage(srcId, -1, x);
+//    } else {
+//      message
+//          .withRows(rows) // ensure the client knows that we are using matrix with potentially empty row
+//          .reattach(srcId);
+//
+//      message.getMxp().fillMatching(dataInputAccessStore(dataInput, rows * cols));
+//      return message;
+//    }
   }
 
 }
