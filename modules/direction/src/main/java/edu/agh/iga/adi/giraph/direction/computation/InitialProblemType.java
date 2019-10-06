@@ -13,7 +13,7 @@ import static edu.agh.iga.adi.giraph.direction.config.InitialComputationConfigur
 
 public enum InitialProblemType {
   CONSTANT(conf -> (x, y) -> 1),
-  LINEAR(conf -> Double::sum),
+  LINEAR_SUM(conf -> Double::sum),
   LINEAR_X(conf -> (x, y) -> x),
   LINEAR_Y(conf -> (x, y) -> y),
   RADIAL((conf) -> {
