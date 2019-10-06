@@ -13,6 +13,7 @@ import static edu.agh.iga.adi.giraph.core.IgaConstants.ROWS_BOUND_TO_NODE;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.COEFFICIENTS_PROBLEM;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.SURFACE_PROBLEM;
 import static edu.agh.iga.adi.giraph.direction.computation.InitialProblemType.LINEAR;
+import static edu.agh.iga.adi.giraph.direction.computation.InitialProblemType.LINEAR_X;
 import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.*;
 import static edu.agh.iga.adi.giraph.direction.test.GiraphTestJob.giraphJob;
 import static edu.agh.iga.adi.giraph.direction.test.ProblemLoader.loadProblem;
@@ -110,7 +111,6 @@ class StepComputationIntTest {
         .areEqualToResource(IDENTITY_MAT, ROWS_BOUND_TO_NODE);
   }
 
-  @Disabled
   @Test
   @SneakyThrows
   void canRunTwoIterationsOfLinearProjection(@TempDir Path dir) {
@@ -121,8 +121,8 @@ class StepComputationIntTest {
         .coefficientsOutputDir(outputDir)
         .configuration(conf -> {
           STEP_COUNT.set(conf, 2);
-          INITIAL_PROBLEM_TYPE.set(conf, LINEAR);
-          PROBLEM_SIZE.set(conf, 24);
+          INITIAL_PROBLEM_TYPE.set(conf, LINEAR_X);
+          PROBLEM_SIZE.set(conf, 12);
           HEIGHT_PARTITIONS.set(conf, 2);
           FIRST_INITIALISATION_TYPE.set(conf, SURFACE_PROBLEM.getType());
         })

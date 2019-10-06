@@ -25,6 +25,10 @@ public class CoefficientSolution implements PartialSolution {
 
   @Override
   public double valueAt(double x, double y) {
+    return internalValueAt(y, x); // we rotate the plane
+  }
+
+  private double internalValueAt(double x, double y) {
     val ielemx = (long) (x / mesh.getDx());
     val ielemy = (long) (y / mesh.getDy());
     val localx = x - mesh.getDx() * ielemx;
