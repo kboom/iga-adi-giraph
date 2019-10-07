@@ -46,17 +46,8 @@ public class IgaElement {
     return new IgaElement(id, ma, mb, mx);
   }
 
-  public IgaElement clean() {
-    if (ma != null) {
-      ma.reset();
-    }
-    if (mb != null) {
-      mb.reset();
-    }
-    if (mx != null) {
-      mx.reset();
-    }
-    return this;
+  public IgaElement withMx(PrimitiveDenseStore mx) {
+    return igaElement(id, ma, mb, mx);
   }
 
 }

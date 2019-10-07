@@ -3,16 +3,23 @@ package edu.agh.iga.adi.giraph.core.operations;
 import edu.agh.iga.adi.giraph.core.*;
 import org.ojalgo.matrix.store.TransformableRegion;
 
+import static edu.agh.iga.adi.giraph.core.IgaConstants.ROWS_BOUND_TO_NODE;
 import static edu.agh.iga.adi.giraph.core.operations.BackwardsSubstituteInterimOperation.BackwardsSubstituteInterimMessage;
 import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.partialBackwardsSubstitution;
 import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.swapDofs;
 import static org.ojalgo.function.constant.PrimitiveMath.ADD;
+import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
 
 public final class BackwardsSubstituteInterimOperation implements IgaOperation<BackwardsSubstituteInterimMessage> {
 
   public static final BackwardsSubstituteInterimOperation BACKWARDS_SUBSTITUTE_INTERIM_OPERATION
       = new BackwardsSubstituteInterimOperation();
+
+  @Override
+  public IgaElement preConsume(IgaVertex vertex, IgaContext ctx, IgaElement element) {
+    return element.withMx(FACTORY.makeZero(ROWS_BOUND_TO_NODE, ctx.getMesh().getDofsX()));
+  }
 
   @Override
   public BackwardsSubstituteInterimMessage sendMessage(IgaVertex dstId, IgaElement element) {

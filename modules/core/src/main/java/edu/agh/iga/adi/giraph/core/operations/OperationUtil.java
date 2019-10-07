@@ -15,12 +15,14 @@ final class OperationUtil {
     e.ma.regionByLimits(rows, size).exchangeRows(a, b);
     e.ma.regionByLimits(size, cols).exchangeColumns(a, b);
     e.mb.exchangeRows(a, b);
-    e.mx.exchangeRows(a, b);
+    if (e.mx != null) {
+      e.mx.exchangeRows(a, b);
+    }
   }
 
   static void partialForwardElimination(IgaElement e, int elim, int size) {
-    final int rows = (int) e.mx.countRows();
-    final int nrhs = (int) e.mx.countColumns();
+    final int rows = (int) e.mb.countRows();
+    final int nrhs = (int) e.mb.countColumns();
     final double[] ma = e.ma.data; // column-major
     final double[] mb = e.mb.data; // column-major
 

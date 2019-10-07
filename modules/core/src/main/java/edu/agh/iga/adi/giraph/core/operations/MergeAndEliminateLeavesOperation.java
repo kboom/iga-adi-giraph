@@ -49,8 +49,7 @@ public final class MergeAndEliminateLeavesOperation implements IgaOperation<Merg
     val mesh = ctx.getMesh();
     val ma = FACTORY.makeZero(5, 5);
     val mb = FACTORY.makeZero(5, mesh.getDofsX());
-    val mx = FACTORY.makeZero(5, mesh.getDofsX());
-    return igaElement(vertex.id(), ma, mb, mx);
+    return igaElement(vertex.id(), ma, mb, null);
   }
 
   @Override
