@@ -52,16 +52,12 @@ public final class TranspositionIgaOperation implements IgaOperation<Transpositi
     val mo = (int) src.offsetLeft();
     val pp = new PartitionProvider(dst, (int) mxp.countRows());
 
-    BasicLogger.debug(element.mb);
-
     val targetBlock = element.mb
         .regionByRows(0, 1, 2)
         .regionByOffsets(0, min(1, mo) * 5 + (max(1, mo) - 1) * 3)
         .regionByLimits(3, mo + (int) mxp.countRows());
 
     targetBlock.fillMatching(pp, MULTIPLY, mxp.regionByTransposing());
-
-    BasicLogger.debug(element.mb);
   }
 
   private boolean isLeading(IgaVertex dst, IgaElement element) {

@@ -28,7 +28,6 @@ public class CoefficientSolution implements PartialSolution {
     int cols = (int) coefficients.countColumns();
     PrimitiveDenseStore ds = PrimitiveDenseStore.FACTORY.makeZero(rows, cols);
     ds.fillMatching(coef);
-    BasicLogger.error(ds);
   }
 
   @Override
