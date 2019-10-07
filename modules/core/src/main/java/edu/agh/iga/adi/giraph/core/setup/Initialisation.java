@@ -53,7 +53,7 @@ public class Initialisation {
     val leftMxp = leftMessage.getMxp();
     val rightMxp = msgArr.length > 1 ? msgArr[1].getMxp() : null;
 
-    return new CoefficientSolution(igaContext.getMesh(), new InitialisationAccess2D(leftMxp, rightMxp, leftMessage.getRows()));
+    return new CoefficientSolution(igaContext.getMesh(), new InitialisationAccess2D(leftMxp, rightMxp));
   }
 
   @Getter
@@ -62,18 +62,11 @@ public class Initialisation {
 
     private final TransformableRegion<Double> mxp;
     private final long dstId;
-    private int rows;
 
     public InitialisationIgaMessage(long srcId, long dstId, TransformableRegion<Double> mxp) {
       super(srcId, null);
       this.mxp = mxp;
       this.dstId = dstId;
-      withRows((int) mxp.countRows());
-    }
-
-    public InitialisationIgaMessage withRows(int rows) {
-      this.rows = rows;
-      return this;
     }
 
     @Override
