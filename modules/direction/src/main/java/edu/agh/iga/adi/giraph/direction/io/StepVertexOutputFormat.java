@@ -12,12 +12,15 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.log4j.Logger;
+import org.ojalgo.matrix.store.PrimitiveDenseStore;
 
 import java.io.IOException;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.STORE_SOLUTION;
+import static java.lang.String.format;
+import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.giraph.conf.GiraphConstants.VERTEX_OUTPUT_FORMAT_SUBDIR;
 import static org.apache.log4j.Logger.getLogger;
@@ -97,6 +100,10 @@ public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable,
 
     @Override
     public void writeVertex(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) throws IOException, InterruptedException {
+      if (LOG.isTraceEnabled()) {
+        logElementSize(vertex);
+      }
+
       if (storeSolution && StepVertexOutputFormat.isLast) {
         if (currentStep != StepVertexOutputFormat.step) {
           synchronized (IdWithValueVertexWriter.class) { // todo remove if this does not help with thread safety
@@ -108,6 +115,20 @@ public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable,
           }
         }
         getRecordWriter().write(convertVertexToLine(vertex), null);
+      }
+    }
+
+    private void logElementSize(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
+      val vid = vertex.getId().get();
+      val v = vertexOf(directionTree, vid);
+      val element = vertex.getValue().getElement();
+      if (element != null) {
+        val aRows = rowsOrZero(element.ma);
+        val bRows = rowsOrZero(element.mb);
+        val xRows = rowsOrZero(element.mx);
+        LOG.trace(format("[%d] %s %s: %d/%d/%d", StepVertexOutputFormat.step, vertex.isHalted() ? "H" : "A", v, aRows, bRows, xRows));
+      } else {
+        LOG.trace(format("[%d] %s %s: empty", StepVertexOutputFormat.step, vertex.isHalted() ? "H" : "A",  v));
       }
     }
 
@@ -143,6 +164,10 @@ public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable,
       }
     }
 
+  }
+
+  private static Long rowsOrZero(PrimitiveDenseStore ma) {
+    return ofNullable(ma).map(PrimitiveDenseStore::countRows).orElse(0L);
   }
 
 }

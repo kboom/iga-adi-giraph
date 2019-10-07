@@ -44,7 +44,7 @@ public final class InitialComputation extends IgaComputation {
       });
 
       computationLog(element);
-      operationOf(vertex).ifPresent(operation -> value.withValue(operation.postSend(element, getTree())));
+      operationOf(vertex).ifPresent(operation -> vertex.setValue(value.withValue(operation.postSend(element, getTree()))));
     }
 
     vertex.voteToHalt();

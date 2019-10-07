@@ -2,8 +2,6 @@ package edu.agh.iga.adi.giraph.core.factory;
 
 import edu.agh.iga.adi.giraph.core.IgaElement;
 import edu.agh.iga.adi.giraph.core.IgaVertex;
-import edu.agh.iga.adi.giraph.core.IgaVertex.BranchVertex;
-import edu.agh.iga.adi.giraph.core.IgaVertex.LeafVertex;
 import edu.agh.iga.adi.giraph.core.Mesh;
 import edu.agh.iga.adi.giraph.core.problem.Problem;
 import edu.agh.iga.adi.giraph.core.splines.BSpline1;
@@ -14,7 +12,7 @@ import org.ojalgo.matrix.store.PrimitiveDenseStore;
 import org.ojalgo.structure.Access2D;
 
 import static edu.agh.iga.adi.giraph.core.GaussPoints.*;
-import static edu.agh.iga.adi.giraph.core.IgaConstants.*;
+import static edu.agh.iga.adi.giraph.core.IgaConstants.LEAF_SIZE;
 import static edu.agh.iga.adi.giraph.core.IgaElement.igaElement;
 import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
@@ -33,14 +31,15 @@ public final class HorizontalElementFactory implements ElementFactory {
   }
 
   @Override
-  public IgaElement createElement(Problem problem, IgaVertex vertex) {
-    if (vertex.is(LeafVertex.class)) {
-      return leafElement(problem, vertex);
-    }
-    if (vertex.is(BranchVertex.class)) {
-      return branchElement(vertex);
-    }
-    return emptyElement(vertex);
+  public IgaElement createLeafElement(Problem problem, IgaVertex vertex) {
+    val ma = FACTORY.makeZero(LEAF_SIZE, LEAF_SIZE);
+    coefficients.coefficients().supplyTo(ma);
+    return igaElement(
+        vertex.id(),
+        ma,
+        rhs(problem, vertex),
+        null
+    );
   }
 
   @Override
@@ -58,24 +57,6 @@ public final class HorizontalElementFactory implements ElementFactory {
     val ma = FACTORY.makeZero(5, 5);
     val mb = FACTORY.makeZero(5, mesh.getDofsX());
     val mx = FACTORY.makeZero(5, mesh.getDofsX());
-    return igaElement(vertex.id(), ma, mb, mx);
-  }
-
-  private IgaElement leafElement(Problem problem, IgaVertex vertex) {
-    val ma = FACTORY.makeZero(LEAF_SIZE, LEAF_SIZE);
-    coefficients.coefficients().supplyTo(ma);
-    return igaElement(
-        vertex.id(),
-        ma,
-        rhs(problem, vertex),
-        null
-    );
-  }
-
-  private IgaElement emptyElement(IgaVertex vertex) {
-    final PrimitiveDenseStore ma = FACTORY.makeZero(ROWS_BOUND_TO_NODE, COLS_BOUND_TO_NODE);
-    final PrimitiveDenseStore mb = FACTORY.makeZero(ROWS_BOUND_TO_NODE, mesh.getDofsX());
-    final PrimitiveDenseStore mx = FACTORY.makeZero(ROWS_BOUND_TO_NODE, mesh.getDofsX());
     return igaElement(vertex.id(), ma, mb, mx);
   }
 
