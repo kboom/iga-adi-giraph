@@ -36,20 +36,7 @@ final class InitialisationMessageSerializer implements MessageSerializer<Initial
 
   @Override
   public InitialisationIgaMessage readMessage(InitialisationIgaMessage message, DataInput dataInput) throws IOException {
-    val srcId = dataInput.readLong();
-    val rows = dataInput.readInt();
-    val cols = dataInput.readInt();
-
-    // some have 3 some have 2 - todo probably should be optimized to re-use the same rather than creating a new one...
-    if (message.getMxp().countRows() == rows) {
-      message.reattach(srcId);
-      message.getMxp().fillMatching(dataInputAccessStore(dataInput, rows * cols));
-      return message;
-    } else {
-      val x = FACTORY.makeZero(rows, cols);
-      x.fillMatching(dataInputAccessStore(dataInput, rows * cols));
-      return new InitialisationIgaMessage(srcId, -1, x);
-    }
+    return readMessage(dataInput); // the consumer needs all messages, cannot iterate
   }
 
 }

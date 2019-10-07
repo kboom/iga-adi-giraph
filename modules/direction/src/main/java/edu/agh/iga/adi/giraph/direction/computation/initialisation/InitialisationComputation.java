@@ -2,7 +2,6 @@ package edu.agh.iga.adi.giraph.direction.computation.initialisation;
 
 import edu.agh.iga.adi.giraph.core.IgaVertex.BranchVertex;
 import edu.agh.iga.adi.giraph.core.factory.HorizontalElementFactory;
-import edu.agh.iga.adi.giraph.core.problem.ProblemFactory;
 import edu.agh.iga.adi.giraph.core.setup.Initialisation;
 import edu.agh.iga.adi.giraph.core.setup.Initialisation.InitialisationIgaMessage;
 import edu.agh.iga.adi.giraph.direction.computation.IgaComputation;
@@ -34,12 +33,15 @@ public class InitialisationComputation extends IgaComputation {
   private InitialisationPhase phase;
   private Initialisation initialisation;
 
+  private final IgaMessageWritable msgWritable = new IgaMessageWritable();
+  private final LongWritable idWritable = new LongWritable();
+
   @Override
   public void preSuperstep() {
-    IntWritable iteration = getAggregatedValue(COMPUTATION_ITERATION);
-    IntWritable step = getAggregatedValue(STEP);
+    final IntWritable iteration = getAggregatedValue(COMPUTATION_ITERATION);
+    final IntWritable step = getAggregatedValue(STEP);
     phase = resolvePhase(iteration.get());
-    ProblemFactory pf = getProblemFactory(getConf(), step.get());
+    val pf = getProblemFactory(getConf(), step.get());
     val ef = new HorizontalElementFactory(getMesh(), pf.coefficients());
     initialisation = new Initialisation(getIgaContext(), ef, pf);
   }
@@ -68,11 +70,15 @@ public class InitialisationComputation extends IgaComputation {
       if (LOG.isDebugEnabled()) {
         LOG.debug("Sending coefficients from " + igaVertex);
       }
+
       initialisation.sendMessages(igaVertex, elementOf(vertex))
-          .forEach(msg -> sendMessage(
-              new LongWritable(msg.getDstId()),
-              new IgaMessageWritable(msg)
-          ));
+          .forEach(msg -> {
+            idWritable.set(msg.getDstId());
+            sendMessage(
+                idWritable,
+                msgWritable.withMessage(msg)
+            );
+          });
     }
   }
 
@@ -82,7 +88,7 @@ public class InitialisationComputation extends IgaComputation {
   ) {
     Stream<InitialisationIgaMessage> msg = messagesOf(messages).map(f -> (InitialisationIgaMessage) f);
     val element = initialisation.receiveMessages(vertexOf(vertex), msg);
-    vertex.setValue(new IgaElementWritable(element));
+    vertex.setValue(vertex.getValue().withValue(element));
   }
 
   enum InitialisationPhase {

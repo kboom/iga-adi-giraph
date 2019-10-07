@@ -18,24 +18,24 @@ public class MemoryLogger extends DefaultWorkerObserver {
   @Override
   public void preApplication() {
     super.preApplication();
-    if (LOG.isDebugEnabled()) {
-      LOG.debug(memoryEnvironment());
+    if (LOG.isInfoEnabled()) {
+      LOG.info(memoryEnvironment());
     }
   }
 
   @Override
   public void preSuperstep(long superstep) {
     super.preSuperstep(superstep);
-    if (LOG.isDebugEnabled()) {
-      LOG.debug(memoryStats(START, superstep));
+    if (LOG.isInfoEnabled()) {
+      LOG.info(memoryStats(START, superstep));
     }
   }
 
   @Override
   public void postSuperstep(long superstep) {
     super.postSuperstep(superstep);
-    if (LOG.isDebugEnabled()) {
-      LOG.debug(memoryStats(END, superstep));
+    if (LOG.isInfoEnabled()) {
+      LOG.info(memoryStats(END, superstep));
     }
   }
 
@@ -43,14 +43,14 @@ public class MemoryLogger extends DefaultWorkerObserver {
     val heapMemoryUsage = getMemoryMXBean().getHeapMemoryUsage();
     val initMemory = heapMemoryUsage.getInit();
     val maxMemory = heapMemoryUsage.getMax();
-    return format("Environment: %d,%d", initMemory, maxMemory);
+    return format("IGA-MEMORY-ENV: %d,%d", initMemory, maxMemory);
   }
 
   private static String memoryStats(String prefix, long superstep) {
     val heapMemoryUsage = getMemoryMXBean().getHeapMemoryUsage();
     val usedMemory = heapMemoryUsage.getUsed();
     val committedMemory = heapMemoryUsage.getCommitted();
-    return format("%d,%s,%d,%d", superstep, prefix, usedMemory, committedMemory);
+    return format("IGA-MEMORY: %d,%s,%d,%d", superstep, prefix, usedMemory, committedMemory);
   }
 
 }

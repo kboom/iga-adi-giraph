@@ -17,7 +17,6 @@ import java.util.stream.Stream;
 
 import static edu.agh.iga.adi.giraph.core.setup.VertexDependencies.coefficientsFor;
 import static edu.agh.iga.adi.giraph.core.setup.VertexDependencies.verticesDependingOn;
-import static java.util.stream.Collectors.toList;
 
 @RequiredArgsConstructor
 public class Initialisation {
@@ -48,14 +47,13 @@ public class Initialisation {
    * @return
    */
   private PartialSolution partialSolutionFrom(Stream<InitialisationIgaMessage> messages) {
-    val rowChunks = messages.sorted()
-        .map(InitialisationIgaMessage::getMxp)
-        .collect(toList());
+    InitialisationIgaMessage[] msgArr = messages.sorted().toArray(InitialisationIgaMessage[]::new);
+    val leftMessage = msgArr[0];
 
-    val left = rowChunks.get(0);
-    val right = rowChunks.size() > 1 ? rowChunks.get(1) : null;
+    val leftMxp = leftMessage.getMxp();
+    val rightMxp = msgArr.length > 1 ? msgArr[1].getMxp() : null;
 
-    return new CoefficientSolution(igaContext.getMesh(), new InitialisationAccess2D(left, right));
+    return new CoefficientSolution(igaContext.getMesh(), new InitialisationAccess2D(leftMxp, rightMxp));
   }
 
   @Getter

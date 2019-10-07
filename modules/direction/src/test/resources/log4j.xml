@@ -4,7 +4,7 @@
 
     <appender name="default.console" class="org.apache.log4j.ConsoleAppender">
         <param name="target" value="System.out" />
-        <param name="threshold" value="debug" />
+        <param name="threshold" value="trace" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c] - %m%n" />
         </layout>
@@ -13,7 +13,7 @@
     <appender name="default.file" class="org.apache.log4j.FileAppender">
         <param name="file" value="log.log" />
         <param name="append" value="false" />
-        <param name="threshold" value="debug" />
+        <param name="threshold" value="trace" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c] - %m%n" />
         </layout>
@@ -22,7 +22,7 @@
     <appender name="mat.file" class="org.apache.log4j.FileAppender">
         <param name="file" value="mat.log" />
         <param name="append" value="false" />
-        <param name="threshold" value="debug" />
+        <param name="threshold" value="trace" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%m%n" />
         </layout>
@@ -31,7 +31,7 @@
     <appender name="mem.file" class="org.apache.log4j.FileAppender">
         <param name="file" value="mem.log" />
         <param name="append" value="false" />
-        <param name="threshold" value="debug" />
+        <param name="threshold" value="trace" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%m%n" />
         </layout>
@@ -45,6 +45,12 @@
     <logger name="edu.agh.iga.adi.giraph.direction.performance.MemoryLogger" additivity="false">
         <level value="debug" />
         <appender-ref ref="mem.file" />
+    </logger>
+
+    <logger name="edu.agh.iga.adi.giraph" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="default.console" />
+        <appender-ref ref="default.file" />
     </logger>
 
     <root>

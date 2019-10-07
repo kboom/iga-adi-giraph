@@ -1,22 +1,22 @@
 package edu.agh.iga.adi.giraph.core.setup;
 
+import lombok.val;
 import org.ojalgo.matrix.store.TransformableRegion;
 import org.ojalgo.structure.Access2D;
 
 class InitialisationAccess2D implements Access2D<Double> {
 
-  private TransformableRegion<Double> left;
-  private TransformableRegion<Double> right;
-  private int leftRows;
+  private final TransformableRegion<Double> left;
+  private final TransformableRegion<Double> right;
 
   InitialisationAccess2D(TransformableRegion<Double> left, TransformableRegion<Double> right) {
     this.left = left;
     this.right = right;
-    this.leftRows = (int) left.countRows();
   }
 
   @Override
   public double doubleValue(long row, long col) {
+    val leftRows = left.countRows();
     if (row < leftRows) {
       return left.doubleValue(row, col);
     } else {

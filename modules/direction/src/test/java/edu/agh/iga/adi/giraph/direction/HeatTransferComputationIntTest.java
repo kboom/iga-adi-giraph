@@ -27,7 +27,7 @@ class HeatTransferComputationIntTest {
     GiraphTestJob job = giraphJob()
         .coefficientsOutputDir(outputDir)
         .configuration(conf -> {
-          PROBLEM_SIZE.set(conf, 48);
+          PROBLEM_SIZE.set(conf, 24);
           HEIGHT_PARTITIONS.set(conf, 2);
           STEP_COUNT.set(conf, 2);
           STEP_DELTA.set(conf, 0.1f);
@@ -42,9 +42,9 @@ class HeatTransferComputationIntTest {
 
     // then
     assertThatCoefficients(outputDir.resolve("step-0"))
-        .checksumEquals(460.79993271450707, ROWS_BOUND_TO_NODE);
+        .checksumEquals(110.79465240563042, ROWS_BOUND_TO_NODE);
     assertThatCoefficients(outputDir.resolve("step-1"))
-        .checksumEquals(460.800138987652, ROWS_BOUND_TO_NODE);
+        .checksumEquals(296.0888602564154, ROWS_BOUND_TO_NODE);
   }
 
 }

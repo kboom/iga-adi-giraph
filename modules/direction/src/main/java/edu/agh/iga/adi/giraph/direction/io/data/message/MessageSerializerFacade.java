@@ -14,6 +14,7 @@ import edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateRootOperation.Mer
 import edu.agh.iga.adi.giraph.core.operations.setup.TranspositionIgaOperation.TranspositionIgaMessage;
 import edu.agh.iga.adi.giraph.core.setup.Initialisation.InitialisationIgaMessage;
 import lombok.val;
+import org.apache.log4j.Logger;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -29,8 +30,11 @@ import static edu.agh.iga.adi.giraph.direction.io.data.message.MergeAndEliminate
 import static edu.agh.iga.adi.giraph.direction.io.data.message.MergeAndEliminateLeavesMessageSerializer.MERGE_AND_ELIMINATE_LEAVES_MESSAGE_SERIALIZER;
 import static edu.agh.iga.adi.giraph.direction.io.data.message.MergeAndEliminateRootMessageSerializer.MERGE_AND_ELIMINATE_ROOT_MESSAGE_SERIALIZER;
 import static edu.agh.iga.adi.giraph.direction.io.data.message.TranspositionMessageSerializer.TRANSPOSITION_MESSAGE_SERIALIZER;
+import static org.apache.log4j.Logger.getLogger;
 
 public final class MessageSerializerFacade {
+
+  private static final Logger LOG = getLogger(MessageSerializerFacade.class);
 
   private static final Map<Class<?>, MessageSerializer> SERIALIZER_MAP = ImmutableMap.<Class<?>, MessageSerializer>builder()
       .put(BackwardsSubstituteBranchMessage.class, BACKWARDS_SUBSTITUTE_BRANCH_MESSAGE_SERIALIZER)
@@ -76,8 +80,14 @@ public final class MessageSerializerFacade {
       val messageSerializer = SERIALIZER_MAP.get(messageClazz);
       if (message != null) {
         if (message.getClass().equals(messageClazz)) {
+          if (LOG.isTraceEnabled()) {
+            LOG.trace("Reusing the same message for " + messageClazz);
+          }
           return messageSerializer.readMessage(message, dataInput);
         }
+      }
+      if (LOG.isTraceEnabled()) {
+        LOG.trace("Creating a new message for " + messageClazz);
       }
       return messageSerializer.readMessage(dataInput);
     } catch (IOException e) {

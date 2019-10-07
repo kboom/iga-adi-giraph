@@ -42,6 +42,7 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.giraph.conf.GiraphConstants.*;
+import static org.apache.giraph.io.formats.GiraphFileInputFormat.VERTEX_INPUT_DIR;
 import static org.apache.giraph.master.BspServiceMaster.NUM_MASTER_ZK_INPUT_SPLIT_THREADS;
 import static org.apache.giraph.partition.PartitionBalancer.PARTITION_BALANCE_ALGORITHM;
 import static org.apache.giraph.partition.PartitionBalancer.STATIC_BALANCE_ALGORITHM;
@@ -52,6 +53,8 @@ public class IgaConfiguration {
   private static final Logger LOG = getLogger(IgaConfiguration.class);
 
   public static final BooleanConfOption CONFIGURE_JAVA_OPTS = new BooleanConfOption("giraph.configureJavaOpts", true, "Whether to configure java opts");
+
+  public static final BooleanConfOption STORE_SOLUTION = new BooleanConfOption("iga.storeSolution", true, "Whether to store the solution or not.");
 
   public static final BooleanConfOption USE_G1_COLLECTOR = new BooleanConfOption("iga.useG1", false, "Use G1GC collector");
 
@@ -71,7 +74,7 @@ public class IgaConfiguration {
   public static final IntConfOption STEP_COUNT = new IntConfOption("iga.problem.steps", 1, "The number of steps to run");
   public static final IntConfOption HEIGHT_PARTITIONS = new IntConfOption("iga.tree.partition.size", 1, "The height of tree partitions");
   public static final StrConfOption FIRST_INITIALISATION_TYPE = new StrConfOption("iga.initialisation.type", SURFACE_PROBLEM.getType(), "The type of initialisation - " + resolverTypes() + " - use surface if you initialise the leaves or coefficients if you initialize the branches");
-  public static final StrConfOption COEFFICIENTS_INPUT = new StrConfOption("mapred.input.dir", createTempDir().getPath(), "The (HDFS) directory to read the coefficients from");
+  public static final StrConfOption COEFFICIENTS_INPUT = new StrConfOption("giraph.vertex.input.dir", createTempDir().getPath(), "The (HDFS) directory to read the coefficients from");
   public static final StrConfOption COEFFICIENTS_OUTPUT = new StrConfOption("mapred.output.dir", createTempDir().getPath(), "The (HDFS) directory to put the coefficients to");
   public static final StrConfOption ZK_DIR = new StrConfOption("giraph.zkDir", createTempDir().getPath(), "The zookeeper directory to put coefficients to");
 
