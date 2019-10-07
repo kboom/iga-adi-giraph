@@ -32,6 +32,11 @@ public final class BackwardsSubstituteRootOperation implements IgaOperation<Back
   }
 
   @Override
+  public IgaElement postSend(IgaElement element, DirectionTree tree) {
+    return null;
+  }
+
+  @Override
   public void consumeMessage(IgaElement element, BackwardsSubstituteRootMessage message, DirectionTree tree) {
     element.mx.regionByOffsets(2, 0).modifyMatching(ADD, message.mx);
   }

@@ -43,7 +43,7 @@ public final class FactorisationComputation extends IgaComputation {
       Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex,
       Iterable<IgaMessageWritable> messages
   ) {
-    operationOf(messages).ifPresent(operation -> vertex.getValue().withValue(operation.preConsume(vertexOf(vertex), getIgaContext(), vertex.getValue().getElement())));
+    operationOf(messages).ifPresent(operation -> vertex.getValue().withValue(operation.preConsume(vertexOf(vertex), getIgaContext(), elementOf(vertex))));
     send(vertex, update(vertex, messages));
 
     if (isLastRun) {
@@ -52,7 +52,9 @@ public final class FactorisationComputation extends IgaComputation {
       vertex.voteToHalt(); // we halt the vertices cause we are sending the messages which will wake the other
     }
 
-    computationLog(vertex.getValue().getElement());
+    val updatedElement = elementOf(vertex);
+    computationLog(updatedElement);
+    operationOf(vertex).ifPresent(operation -> vertex.setValue(vertex.getValue().withValue(operation.postSend(updatedElement, getTree()))));
   }
 
   private IgaElement update(
