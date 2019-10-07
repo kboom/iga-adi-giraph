@@ -38,23 +38,23 @@
     </appender>
 
     <logger name="edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger" additivity="false">
-        <level value="trace" />
+        <level value="debug" />
         <appender-ref ref="mat.file" />
     </logger>
 
     <logger name="edu.agh.iga.adi.giraph.direction.performance.MemoryLogger" additivity="false">
-        <level value="info" />
+        <level value="debug" />
         <appender-ref ref="mem.file" />
     </logger>
 
     <logger name="edu.agh.iga.adi.giraph" additivity="false">
-        <level value="trace" />
+        <level value="debug" />
         <appender-ref ref="default.console" />
         <appender-ref ref="default.file" />
     </logger>
 
     <root>
-        <priority value="trace" />
+        <priority value="debug" />
         <appender-ref ref="default.console" />
         <appender-ref ref="default.file" />
     </root>
