@@ -32,6 +32,11 @@ public final class BackwardsSubstituteBranchOperation implements IgaOperation<Ba
   }
 
   @Override
+  public IgaElement postSend(IgaElement element, DirectionTree tree) {
+    return null;
+  }
+
+  @Override
   public void consumeMessage(IgaElement element, BackwardsSubstituteBranchMessage message, DirectionTree tree) {
     element.mx.regionByLimits(5, (int) element.mx.countColumns()).regionByOffsets(1, 0).modifyMatching(ADD, message.mx);
   }

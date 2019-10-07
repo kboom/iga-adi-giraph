@@ -33,6 +33,12 @@ public final class BackwardsSubstituteInterimOperation implements IgaOperation<B
   }
 
   @Override
+  public IgaElement postSend(IgaElement element, DirectionTree tree) {
+    return null;
+//    return element;
+  }
+
+  @Override
   public void consumeMessage(IgaElement element, BackwardsSubstituteInterimMessage message, DirectionTree tree) {
     element.mx.regionByOffsets(2, 0).modifyMatching(ADD, message.mx);
   }
