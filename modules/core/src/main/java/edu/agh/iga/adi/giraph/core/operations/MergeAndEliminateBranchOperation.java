@@ -2,7 +2,6 @@ package edu.agh.iga.adi.giraph.core.operations;
 
 import edu.agh.iga.adi.giraph.core.*;
 import lombok.val;
-import org.ojalgo.matrix.store.PrimitiveDenseStore;
 import org.ojalgo.matrix.store.TransformableRegion;
 
 import static edu.agh.iga.adi.giraph.core.IgaConstants.COLS_BOUND_TO_NODE;
@@ -33,8 +32,7 @@ public final class MergeAndEliminateBranchOperation implements IgaOperation<Merg
   public IgaElement preConsume(IgaVertex vertex, IgaContext ctx, IgaElement element) {
     val ma = FACTORY.makeZero(ROWS_BOUND_TO_NODE, COLS_BOUND_TO_NODE);
     val mb = FACTORY.makeZero(ROWS_BOUND_TO_NODE, ctx.getMesh().getDofsX());
-    val mx = FACTORY.makeZero(ROWS_BOUND_TO_NODE, ctx.getMesh().getDofsX()); // todo this is not needed at this stage
-    return igaElement(vertex.id(), ma, mb, mx);
+    return igaElement(vertex.id(), ma, mb, null);
   }
 
   @Override

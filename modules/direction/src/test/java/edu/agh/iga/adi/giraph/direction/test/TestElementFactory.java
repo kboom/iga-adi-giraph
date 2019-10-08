@@ -21,7 +21,7 @@ public class TestElementFactory {
     HorizontalElementFactory ef = new HorizontalElementFactory(mesh, EXPLICIT_METHOD_COEFFICIENTS);
     return LongStream.rangeClosed(1, tree.lastIndexOfLeafRow())
         .boxed()
-        .map(id -> ef.createElement(problem, IgaVertex.vertexOf(tree, id)))
+        .map(id -> ef.createLeafElement(problem, IgaVertex.vertexOf(tree, id)))
         .collect(Collectors.toSet());
   }
 

@@ -4,6 +4,7 @@ import edu.agh.iga.adi.giraph.core.IgaContext;
 import edu.agh.iga.adi.giraph.core.IgaElement;
 import edu.agh.iga.adi.giraph.core.IgaMessage;
 import edu.agh.iga.adi.giraph.core.IgaVertex;
+import edu.agh.iga.adi.giraph.core.IgaVertex.LeafVertex;
 import edu.agh.iga.adi.giraph.core.factory.ElementFactory;
 import edu.agh.iga.adi.giraph.core.problem.PartialSolution;
 import edu.agh.iga.adi.giraph.core.problem.ProblemFactory;
@@ -33,10 +34,14 @@ public class Initialisation {
   }
 
   public IgaElement receiveMessages(IgaVertex vertex, Stream<InitialisationIgaMessage> messages) {
-    return elementFactory.createElement(
-        problemFactory.problemFor(partialSolutionFrom(messages)),
-        vertex
-    );
+    if (vertex.is(LeafVertex.class)) {
+      return elementFactory.createLeafElement(
+          problemFactory.problemFor(partialSolutionFrom(messages)),
+          vertex
+      );
+    } else {
+      throw new IllegalStateException();
+    }
   }
 
   /**

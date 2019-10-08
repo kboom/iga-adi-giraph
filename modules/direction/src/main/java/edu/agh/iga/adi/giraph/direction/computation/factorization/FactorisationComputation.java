@@ -2,6 +2,7 @@ package edu.agh.iga.adi.giraph.direction.computation.factorization;
 
 import edu.agh.iga.adi.giraph.core.IgaElement;
 import edu.agh.iga.adi.giraph.core.IgaMessage;
+import edu.agh.iga.adi.giraph.core.IgaOperation;
 import edu.agh.iga.adi.giraph.direction.computation.IgaComputation;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
@@ -25,16 +26,17 @@ public final class FactorisationComputation extends IgaComputation {
 
   private static final Logger LOG = Logger.getLogger(FactorisationComputation.class);
 
-  private IgaComputationPhase phase;
+  private IgaComputationPhase currentPhase;
+  private IgaComputationPhase nextPhase;
   private boolean isLastRun;
 
   @Override
   public void preSuperstep() {
     loadPhase();
     loadLastComputationFlag();
-    logPhase(phase);
+    logPhase(currentPhase);
     if (LOG.isDebugEnabled()) {
-      LOG.debug(format("================ SUPER STEP (%d) %s ================", getSuperstep() - 1, phase));
+      LOG.debug(format("================ SUPER STEP (%d) %s ================", getSuperstep() - 1, currentPhase));
     }
   }
 
@@ -43,7 +45,7 @@ public final class FactorisationComputation extends IgaComputation {
       Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex,
       Iterable<IgaMessageWritable> messages
   ) {
-    operationOf(messages).ifPresent(operation -> vertex.getValue().withValue(operation.preConsume(vertexOf(vertex), getIgaContext(), vertex.getValue().getElement())));
+    operationOf(messages).ifPresent(operation -> vertex.getValue().withValue(operation.preConsume(vertexOf(vertex), getIgaContext(), elementOf(vertex))));
     send(vertex, update(vertex, messages));
 
     if (isLastRun) {
@@ -52,7 +54,13 @@ public final class FactorisationComputation extends IgaComputation {
       vertex.voteToHalt(); // we halt the vertices cause we are sending the messages which will wake the other
     }
 
-    computationLog(vertex.getValue().getElement());
+    val updatedElement = elementOf(vertex);
+    computationLog(updatedElement);
+    operationOf(vertex, this::matchesPhase).ifPresent(operation -> vertex.setValue(vertex.getValue().withValue(operation.postSend(updatedElement, getTree()))));
+  }
+
+  private boolean matchesPhase(IgaOperation igaOperation) {
+    return nextPhase == null || nextPhase.matchesOperation(igaOperation);
   }
 
   private IgaElement update(
@@ -85,7 +93,7 @@ public final class FactorisationComputation extends IgaComputation {
       val igaOperation = edge.getValue().getIgaOperation();
       val dstIdWritable = edge.getTargetVertexId();
       val dstId = dstIdWritable.get();
-      if (phase.matchesDirection(element.id, dstId)) {
+      if (currentPhase.matchesDirection(element.id, dstId)) {
         val dstVertex = vertexOf(dstId);
         val msg = igaOperation.sendMessage(dstVertex, element);
         sendMessage(dstIdWritable, new IgaMessageWritable(msg));
@@ -98,7 +106,9 @@ public final class FactorisationComputation extends IgaComputation {
 
   private void loadPhase() {
     IntWritable iteration = getAggregatedValue(COMPUTATION_ITERATION);
-    phase = phaseFor(getTree(), iteration.get());
+    val localSuperstep = iteration.get();
+    currentPhase = phaseFor(getTree(), localSuperstep);
+    nextPhase = phaseFor(getTree(), localSuperstep + 1);
   }
 
   private void loadLastComputationFlag() {

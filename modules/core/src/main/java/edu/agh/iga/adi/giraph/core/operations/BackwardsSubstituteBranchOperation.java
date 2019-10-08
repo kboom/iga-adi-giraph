@@ -7,11 +7,17 @@ import static edu.agh.iga.adi.giraph.core.operations.BackwardsSubstituteBranchOp
 import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.partialBackwardsSubstitution;
 import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.swapDofs;
 import static org.ojalgo.function.constant.PrimitiveMath.ADD;
+import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
 public final class BackwardsSubstituteBranchOperation implements IgaOperation<BackwardsSubstituteBranchMessage> {
 
   public static final BackwardsSubstituteBranchOperation BACKWARDS_SUBSTITUTE_BRANCH_OPERATION
       = new BackwardsSubstituteBranchOperation();
+
+  @Override
+  public IgaElement preConsume(IgaVertex vertex, IgaContext ctx, IgaElement element) {
+    return element.withMx(FACTORY.makeZero(5, ctx.getMesh().getDofsX()));
+  }
 
   @Override
   public BackwardsSubstituteBranchMessage sendMessage(IgaVertex dstId, IgaElement element) {
@@ -29,6 +35,11 @@ public final class BackwardsSubstituteBranchOperation implements IgaOperation<Ba
       default:
         throw new IllegalStateException("Could not send message");
     }
+  }
+
+  @Override
+  public IgaElement postSend(IgaElement element, DirectionTree tree) {
+    return null;
   }
 
   @Override

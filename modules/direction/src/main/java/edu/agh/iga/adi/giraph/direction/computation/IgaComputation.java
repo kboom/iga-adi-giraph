@@ -17,14 +17,17 @@ import org.apache.giraph.worker.WorkerGlobalCommUsage;
 import org.apache.hadoop.io.LongWritable;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static edu.agh.iga.adi.giraph.core.Mesh.aMesh;
-import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.direction.computation.ProblemFactoryResolver.getProblemFactory;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.PROBLEM_SIZE;
 import static java.util.stream.StreamSupport.stream;
 
 public abstract class IgaComputation extends BasicComputation<LongWritable, IgaElementWritable, IgaOperationWritable, IgaMessageWritable> {
+
+  private static final Predicate<IgaOperation> ALWAYS_TRUE = __ -> true;
 
   @Getter
   @Delegate
@@ -56,10 +59,17 @@ public abstract class IgaComputation extends BasicComputation<LongWritable, IgaE
   }
 
   protected Optional<IgaOperation> operationOf(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
+    return operationOf(vertex, ALWAYS_TRUE);
+  }
+
+  protected Optional<IgaOperation> operationOf(
+      Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex,
+      Predicate<IgaOperation> operationPredicate
+  ) {
     return stream(vertex.getEdges().spliterator(), false)
         .map(Edge::getValue)
         .map(IgaOperationWritable::getIgaOperation)
-        .distinct()
+        .filter(operationPredicate)
         .findAny();
   }
 

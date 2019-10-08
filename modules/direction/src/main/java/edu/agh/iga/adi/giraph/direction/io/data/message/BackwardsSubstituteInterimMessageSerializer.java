@@ -1,9 +1,7 @@
 package edu.agh.iga.adi.giraph.direction.io.data.message;
 
-import edu.agh.iga.adi.giraph.core.IgaMessage;
 import edu.agh.iga.adi.giraph.core.operations.BackwardsSubstituteInterimOperation.BackwardsSubstituteInterimMessage;
 import lombok.val;
-import org.ojalgo.matrix.store.PrimitiveDenseStore;
 
 import java.io.DataInput;
 import java.io.DataOutput;

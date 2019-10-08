@@ -2,6 +2,7 @@ package edu.agh.iga.adi.giraph.direction.io;
 
 import edu.agh.iga.adi.giraph.core.DirectionTree;
 import edu.agh.iga.adi.giraph.core.IgaVertex;
+import edu.agh.iga.adi.giraph.core.IgaVertex.LeafVertex;
 import edu.agh.iga.adi.giraph.core.IgaVertex.RootVertex;
 import edu.agh.iga.adi.giraph.core.factory.ElementFactory;
 import edu.agh.iga.adi.giraph.core.factory.HorizontalElementFactory;
@@ -100,7 +101,11 @@ public class InMemoryStepInputFormat extends VertexValueInputFormat<LongWritable
 
     @Override
     public IgaElementWritable getCurrentVertexValue() {
-      return new IgaElementWritable(elementFactory.createElement(problem, currentVertex));
+      if (currentVertex.is(LeafVertex.class)) {
+        return new IgaElementWritable(elementFactory.createLeafElement(problem, currentVertex));
+      } else {
+        return null;
+      }
     }
 
     @Override

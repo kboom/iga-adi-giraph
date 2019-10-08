@@ -37,14 +37,28 @@
         </layout>
     </appender>
 
+    <appender name="vof.file" class="org.apache.log4j.FileAppender">
+        <param name="file" value="vof.log" />
+        <param name="append" value="false" />
+        <param name="threshold" value="trace" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%m%n" />
+        </layout>
+    </appender>
+
     <logger name="edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger" additivity="false">
-        <level value="debug" />
+        <level value="trace" />
         <appender-ref ref="mat.file" />
     </logger>
 
     <logger name="edu.agh.iga.adi.giraph.direction.performance.MemoryLogger" additivity="false">
         <level value="debug" />
         <appender-ref ref="mem.file" />
+    </logger>
+
+    <logger name="edu.agh.iga.adi.giraph.direction.io.StepVertexOutputFormat" additivity="false">
+        <level value="trace" />
+        <appender-ref ref="vof.file" />
     </logger>
 
     <logger name="edu.agh.iga.adi.giraph" additivity="false">

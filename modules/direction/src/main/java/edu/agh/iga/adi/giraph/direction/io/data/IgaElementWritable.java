@@ -16,11 +16,12 @@ import static edu.agh.iga.adi.giraph.direction.io.data.DataInputAccessStore.data
 import static edu.agh.iga.adi.giraph.direction.io.data.DataOutputReceiver.receiveInto;
 import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
-public final class IgaElementWritable implements WritableComparable {
+public class IgaElementWritable implements WritableComparable {
 
   private static final int COEFFICIENTS_DEFINED = 1 << 1;
   private static final int RHS_DEFINED = 1 << 2;
   private static final int UNKNOWNS_DEFINED = 1 << 3;
+  private static final int ELEMENT_NULL = 1 << 4;
 
   private IgaElement igaElement;
 
@@ -30,8 +31,13 @@ public final class IgaElementWritable implements WritableComparable {
 
   @Override
   public void write(DataOutput dataOutput) throws IOException {
+    dataOutput.writeInt(flagsOf(igaElement));
+
+    if (igaElement == null) {
+      return;
+    }
+
     dataOutput.writeLong(igaElement.id);
-    dataOutput.writeInt(identifyMatricesToSend(igaElement));
 
     // we always hold the same number of rows for all matrices (if we store them)
     dataOutput.writeShort((short) firstNonNullMatrix(igaElement.ma, igaElement.mb, igaElement.mx).countRows());
@@ -57,16 +63,21 @@ public final class IgaElementWritable implements WritableComparable {
 
   @Override
   public void readFields(DataInput dataInput) throws IOException {
+    val flags = dataInput.readInt();
+
+    if (elementNull(flags)) {
+      return;
+    }
+
     val srcId = dataInput.readLong();
-    val matricesPresent = dataInput.readInt();
     val rows = dataInput.readShort();
 
-    val ma = coefficientsPresent(matricesPresent) ? readSquareMatrix(dataInput, rows) : null;
+    val ma = coefficientsPresent(flags) ? readSquareMatrix(dataInput, rows) : null;
 
-    if (rhsPresent(matricesPresent) || unknownsPresent(matricesPresent)) {
+    if (rhsPresent(flags) || unknownsPresent(flags)) {
       val dofs = dataInput.readInt();
-      val mb = rhsPresent(matricesPresent) ? readMatrix(dataInput, rows, dofs) : null;
-      val mx = unknownsPresent(matricesPresent) ? readMatrix(dataInput, rows, dofs) : null;
+      val mb = rhsPresent(flags) ? readMatrix(dataInput, rows, dofs) : null;
+      val mx = unknownsPresent(flags) ? readMatrix(dataInput, rows, dofs) : null;
       igaElement = igaElement(srcId, ma, mb, mx);
     } else {
       igaElement = igaElement(srcId, ma, null, null);
@@ -104,11 +115,19 @@ public final class IgaElementWritable implements WritableComparable {
     return (bitmask & RHS_DEFINED) > 0;
   }
 
-  private static int identifyMatricesToSend(IgaElement igaElement) {
-    val coefficientsDefined = igaElement.ma != null ? COEFFICIENTS_DEFINED : 0;
-    val rhsDefined = igaElement.mb != null ? RHS_DEFINED : 0;
-    val unknownsDefined = igaElement.mx != null ? UNKNOWNS_DEFINED : 0;
-    return coefficientsDefined | rhsDefined | unknownsDefined;
+  private static boolean elementNull(int bitmask) {
+    return (bitmask & ELEMENT_NULL) > 0;
+  }
+
+  private static int flagsOf(IgaElement igaElement) {
+    if (igaElement == null) {
+      return ELEMENT_NULL;
+    } else {
+      val coefficientsDefined = igaElement.ma != null ? COEFFICIENTS_DEFINED : 0;
+      val rhsDefined = igaElement.mb != null ? RHS_DEFINED : 0;
+      val unknownsDefined = igaElement.mx != null ? UNKNOWNS_DEFINED : 0;
+      return coefficientsDefined | rhsDefined | unknownsDefined;
+    }
   }
 
   @Override
