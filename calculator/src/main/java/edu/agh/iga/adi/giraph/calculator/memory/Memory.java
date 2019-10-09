@@ -41,7 +41,7 @@ public class Memory {
     return bytes <= other.bytes;
   }
 
-  private Memory times(int times) {
+  public Memory times(int times) {
     return bytes(bytes * times);
   }
 
