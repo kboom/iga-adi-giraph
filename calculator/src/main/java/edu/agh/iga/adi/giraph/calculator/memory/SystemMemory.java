@@ -69,9 +69,10 @@ public class SystemMemory {
     return allocatedMemory.remove(handle);
   }
 
-
   private boolean hasFreeMemory(Memory memory) {
-    return false;
+    return allocatedMemory.values()
+        .fold(memory, Memory::sum)
+        .isNotGraterThan(availableMemory);
   }
 
   private boolean isAllocated(MemoryHandle handle) {
