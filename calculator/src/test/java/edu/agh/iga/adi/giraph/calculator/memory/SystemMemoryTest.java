@@ -10,6 +10,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class SystemMemoryTest {
 
+  private static final Memory HUGE_MEMORY = ONE_GB_MEMORY.times(1024);
+
   private static final SystemMemory INITIAL_SYSTEM_MEMORY = systemMemory(
       SystemMemoryCreated.builder()
           .totalMemory(ONE_GB_MEMORY)
@@ -37,6 +39,14 @@ class SystemMemoryTest {
                     .memory(ONE_MB_MEMORY)
                     .build()
             )
+        );
+  }
+
+  @Test
+  void isOutOfMemoryIfAllocationTooLarge() {
+    assertThatEither(INITIAL_SYSTEM_MEMORY.allocate(HUGE_MEMORY, DUMMY_MEMORY_HANDLE))
+        .hasLeft(event -> assertThat(event)
+            .isEqualToComparingFieldByField(new OutOfSystemMemoryException())
         );
   }
 

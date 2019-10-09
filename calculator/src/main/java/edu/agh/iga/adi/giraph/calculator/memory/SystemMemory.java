@@ -24,7 +24,7 @@ public class SystemMemory {
         .build();
   }
 
-  public Either<OutOfMemoryException, SystemMemoryAllocated> allocate(Memory memory, MemoryHandle handle) {
+  public Either<OutOfSystemMemoryException, SystemMemoryAllocated> allocate(Memory memory, MemoryHandle handle) {
     if (hasFreeMemory(memory)) {
       return Either.right(
           SystemMemoryAllocated.builder()
@@ -33,7 +33,7 @@ public class SystemMemory {
               .build()
       );
     } else {
-      return Either.left(new OutOfMemoryException());
+      return Either.left(new OutOfSystemMemoryException());
     }
   }
 

@@ -19,21 +19,21 @@ public class Memory {
   private static final int THREE_ORDERS = 1024;
   private static final int ONE_MB = THREE_ORDERS * THREE_ORDERS;
 
-  private int bytes;
+  private long bytes;
 
-  public static Memory bytes(int b) {
+  public static Memory bytes(long b) {
     return new Memory(b);
   }
 
-  public static Memory kilobytes(int kb) {
+  public static Memory kilobytes(long kb) {
     return bytes(THREE_ORDERS).times(kb);
   }
 
-  public static Memory megabytes(int mb) {
+  public static Memory megabytes(long mb) {
     return kilobytes(THREE_ORDERS).times(mb);
   }
 
-  public static Memory gigabytes(int gb) {
+  public static Memory gigabytes(long gb) {
     return megabytes(THREE_ORDERS).times(gb);
   }
 
@@ -41,8 +41,12 @@ public class Memory {
     return bytes <= other.bytes;
   }
 
-  public Memory times(int times) {
+  public Memory times(long times) {
     return bytes(bytes * times);
+  }
+
+  public Memory times(int times) {
+    return times((long) times);
   }
 
   public static Memory sum(Memory left, Memory right) {
