@@ -1,5 +1,6 @@
 package edu.agh.iga.adi.giraph.calculator;
 
+import edu.agh.iga.adi.giraph.calculator.core.Problem;
 import org.junit.jupiter.api.Test;
 
 import static edu.agh.iga.adi.giraph.calculator.MemoryCalculator.memoryRequirementsFor;

@@ -1,5 +1,6 @@
 package edu.agh.iga.adi.giraph.calculator;
 
+import edu.agh.iga.adi.giraph.calculator.core.Problem;
 import lombok.NoArgsConstructor;
 
 import java.util.List;

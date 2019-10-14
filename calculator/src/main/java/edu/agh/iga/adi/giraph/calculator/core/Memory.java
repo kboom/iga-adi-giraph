@@ -1,9 +1,11 @@
-package edu.agh.iga.adi.giraph.calculator.memory;
+package edu.agh.iga.adi.giraph.calculator.core;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import lombok.experimental.Wither;
 
+import static java.lang.Long.MAX_VALUE;
+import static java.util.Arrays.stream;
 import static lombok.AccessLevel.PRIVATE;
 
 @Value
@@ -11,6 +13,7 @@ import static lombok.AccessLevel.PRIVATE;
 @RequiredArgsConstructor(access = PRIVATE)
 public class Memory {
 
+  public static final Memory INFINITE_MEMORY = gigabytes(MAX_VALUE);
   public static final Memory ZERO_MEMORY = megabytes(0);
   public static final Memory ONE_KB_MEMORY = kilobytes(1);
   public static final Memory ONE_MB_MEMORY = megabytes(1);
@@ -49,8 +52,19 @@ public class Memory {
     return times((long) times);
   }
 
-  public static Memory sum(Memory left, Memory right) {
-    return bytes(left.bytes + right.bytes);
+  public static Memory sum(Memory first, Memory second, Memory... other) {
+    return bytes(first.bytes + second.bytes + stream(other).mapToLong(Memory::getBytes).sum());
   }
 
+  public Memory plus(Memory other) {
+    return null;
+  }
+
+  public static Memory greaterOf(Memory first, Memory second) {
+
+  }
+
+  public Memory minus(Memory memory) {
+    return null;
+  }
 }

@@ -1,11 +1,12 @@
-package edu.agh.iga.adi.giraph.calculator.memory;
+package edu.agh.iga.adi.giraph.calculator.core.system;
 
+import edu.agh.iga.adi.giraph.calculator.core.Memory;
 import org.junit.jupiter.api.Test;
 
 import static edu.agh.iga.adi.giraph.calculator.assertj.EitherAssertions.assertThatEither;
-import static edu.agh.iga.adi.giraph.calculator.memory.DummyHandles.DUMMY_MEMORY_HANDLE;
-import static edu.agh.iga.adi.giraph.calculator.memory.Memory.*;
-import static edu.agh.iga.adi.giraph.calculator.memory.SystemMemory.systemMemory;
+import static edu.agh.iga.adi.giraph.calculator.core.system.DummyHandles.DUMMY_MEMORY_HANDLE;
+import static edu.agh.iga.adi.giraph.calculator.core.Memory.*;
+import static edu.agh.iga.adi.giraph.calculator.core.system.SystemMemory.systemMemory;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SystemMemoryTest {

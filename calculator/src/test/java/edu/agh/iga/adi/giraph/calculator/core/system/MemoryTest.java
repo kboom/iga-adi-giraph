@@ -1,8 +1,8 @@
-package edu.agh.iga.adi.giraph.calculator.memory;
+package edu.agh.iga.adi.giraph.calculator.core.system;
 
 import org.junit.jupiter.api.Test;
 
-import static edu.agh.iga.adi.giraph.calculator.memory.Memory.*;
+import static edu.agh.iga.adi.giraph.calculator.core.Memory.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MemoryTest {

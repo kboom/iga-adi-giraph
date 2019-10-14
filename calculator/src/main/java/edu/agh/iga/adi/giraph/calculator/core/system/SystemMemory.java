@@ -1,5 +1,6 @@
-package edu.agh.iga.adi.giraph.calculator.memory;
+package edu.agh.iga.adi.giraph.calculator.core.system;
 
+import edu.agh.iga.adi.giraph.calculator.core.Memory;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 import io.vavr.control.Either;
@@ -12,7 +13,7 @@ import static lombok.AccessLevel.PRIVATE;
 
 @Wither(PRIVATE)
 @Builder(access = PRIVATE)
-public class SystemMemory {
+public final class SystemMemory {
 
   private final Memory availableMemory;
   private final Map<MemoryHandle, Memory> allocatedMemory;
