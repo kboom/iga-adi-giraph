@@ -4,8 +4,8 @@ import edu.agh.iga.adi.giraph.calculator.core.Memory;
 import org.junit.jupiter.api.Test;
 
 import static edu.agh.iga.adi.giraph.calculator.assertj.EitherAssertions.assertThatEither;
-import static edu.agh.iga.adi.giraph.calculator.core.system.DummyHandles.DUMMY_MEMORY_HANDLE;
 import static edu.agh.iga.adi.giraph.calculator.core.Memory.*;
+import static edu.agh.iga.adi.giraph.calculator.core.system.DummyHandles.DUMMY_MEMORY_HANDLE;
 import static edu.agh.iga.adi.giraph.calculator.core.system.SystemMemory.systemMemory;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -56,7 +56,7 @@ class SystemMemoryTest {
     assertThatEither(ALLOCATED_SYSTEM_MEMORY.free(DUMMY_MEMORY_HANDLE))
         .hasRight(event -> assertThat(event)
             .isEqualToComparingFieldByField(
-                new SystemMemoryFreed(DUMMY_MEMORY_HANDLE)
+                new SystemMemoryFreed(DUMMY_MEMORY_HANDLE, QUARTER_ALLOCATION.getMemory())
             )
         );
   }

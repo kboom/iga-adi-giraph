@@ -13,7 +13,7 @@ import static lombok.AccessLevel.PRIVATE;
 @RequiredArgsConstructor(access = PRIVATE)
 public class Memory {
 
-  public static final Memory INFINITE_MEMORY = gigabytes(MAX_VALUE);
+  public static final Memory INFINITE_MEMORY = bytes(MAX_VALUE);
   public static final Memory ZERO_MEMORY = megabytes(0);
   public static final Memory ONE_KB_MEMORY = kilobytes(1);
   public static final Memory ONE_MB_MEMORY = megabytes(1);
@@ -57,14 +57,19 @@ public class Memory {
   }
 
   public Memory plus(Memory other) {
-    return null;
+    return bytes(bytes + other.bytes);
+  }
+
+  public Memory minus(Memory other) {
+    return bytes(bytes - other.bytes);
   }
 
   public static Memory greaterOf(Memory first, Memory second) {
-
+    return first.bytes > second.bytes ? first : second;
   }
 
-  public Memory minus(Memory memory) {
-    return null;
+  public Memory divide(int pieces) {
+    return bytes(bytes / pieces);
   }
+
 }

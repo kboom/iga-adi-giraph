@@ -16,7 +16,7 @@ import static java.util.stream.IntStream.rangeClosed;
 
 public class Solver {
 
-  public static SystemMemory runSolver(Problem problem, SystemMemory systemMemory) {
+  public static List<SystemMemoryEvent> solverEvents(Problem problem, SystemMemory systemMemory) {
     return manage(systemMemory, problem)
         .apply(Solver::mergeAndEliminateLeaves)
         .apply(Solver::mergeAndEliminateBranches)
@@ -25,7 +25,8 @@ public class Solver {
         .apply(Solver::backwardsSubstituteRoot)
         .applyRepeated(interimHeight(problem), Solver::backwardsSubstituteInterim)
         .apply(Solver::backwardsSubstituteBranch)
-        .get();
+        .apply(Solver::transposeAndInitialize)
+        .getEvents();
   }
 
   private static SystemMemoryAllocated mergeAndEliminateLeaves(Problem problem, SystemMemory systemMemory) {
@@ -51,8 +52,8 @@ public class Solver {
 
   private static SystemMemoryAllocated mergeAndEliminateRoot(Problem problem, SystemMemory systemMemory) {
     return systemMemory.allocate(
-        MERGE_AND_ELIMINATE_INTERIM.totalMemory(problem.getSize(), 1),
-        MERGE_AND_ELIMINATE_INTERIM
+        MERGE_AND_ELIMINATE_ROOT.totalMemory(problem.getSize(), 1),
+        MERGE_AND_ELIMINATE_ROOT
     ).getOrElseThrow(Solver::fail);
   }
 
@@ -74,6 +75,13 @@ public class Solver {
     return systemMemory.allocate(
         BACKWARDS_SUBSTITUTE_BRANCH.totalMemory(problem.getSize(), problem.getHeight() - 1),
         BACKWARDS_SUBSTITUTE_BRANCH
+    ).getOrElseThrow(Solver::fail);
+  }
+
+  private static SystemMemoryAllocated transposeAndInitialize(Problem problem, SystemMemory systemMemory) {
+    return systemMemory.allocate(
+        TRANSPOSE_AND_INITIALISE.totalMemory(problem.getSize(), problem.getHeight()),
+        TRANSPOSE_AND_INITIALISE
     ).getOrElseThrow(Solver::fail);
   }
 
@@ -108,11 +116,8 @@ public class Solver {
       return this;
     }
 
-    SystemMemory get() {
-      return eventList.foldLeft(
-          systemMemory,
-          (systemMemory, event) -> systemMemory.apply(event).getOrElseThrow(Solver::fail)
-      );
+    List<SystemMemoryEvent> getEvents() {
+      return eventList;
     }
 
   }

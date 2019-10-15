@@ -7,6 +7,7 @@ import io.vavr.control.Either;
 import lombok.Builder;
 import lombok.experimental.Wither;
 
+import static edu.agh.iga.adi.giraph.calculator.core.Memory.ZERO_MEMORY;
 import static io.vavr.API.*;
 import static io.vavr.Predicates.instanceOf;
 import static lombok.AccessLevel.PRIVATE;
@@ -40,7 +41,7 @@ public final class SystemMemory {
 
   public Either<IllegalMemoryAccessException, SystemMemoryFreed> free(MemoryHandle handle) {
     if (isAllocated(handle)) {
-      return Either.right(new SystemMemoryFreed(handle));
+      return Either.right(new SystemMemoryFreed(handle, allocatedMemory.getOrElse(handle, ZERO_MEMORY)));
     } else {
       return Either.left(new IllegalMemoryAccessException());
     }
