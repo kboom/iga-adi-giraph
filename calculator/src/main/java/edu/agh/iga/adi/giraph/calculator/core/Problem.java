@@ -13,8 +13,4 @@ public class Problem {
   @Builder.Default
   int workers = 1;
 
-  int getHeight() {
-    return (int) (Math.log(size / 3.0) + 1);
-  }
-
 }

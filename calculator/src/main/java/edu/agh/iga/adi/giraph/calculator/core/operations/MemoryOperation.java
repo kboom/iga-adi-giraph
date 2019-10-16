@@ -2,10 +2,12 @@ package edu.agh.iga.adi.giraph.calculator.core.operations;
 
 import edu.agh.iga.adi.giraph.calculator.core.Memory;
 import edu.agh.iga.adi.giraph.calculator.core.system.MemoryHandle;
+import lombok.val;
 
 import java.util.function.Function;
 
 import static edu.agh.iga.adi.giraph.calculator.core.Memory.sum;
+import static edu.agh.iga.adi.giraph.calculator.core.ProblemTree.totalHeight;
 import static edu.agh.iga.adi.giraph.calculator.core.TypesMemory.DOUBLE_MEMORY;
 
 public enum MemoryOperation implements MemoryHandle {
@@ -25,7 +27,18 @@ public enum MemoryOperation implements MemoryHandle {
   }
 
   public Memory totalMemory(int elements, int level) {
-    return mapper.apply(elements).times(elements / 3 / (level - 1));
+    return mapper.apply(elements).times(elementsAtLevel(elements, level));
+  }
+
+  private int elementsAtLevel(int elements, int level) {
+    val totalHeight = totalHeight(elements);
+    if (level == totalHeight) {
+      return elements;
+    }
+    if (level == totalHeight - 1) {
+      return elements / 3;
+    }
+    return elements / (3 * (totalHeight - level));
   }
 
 }

@@ -22,7 +22,7 @@ class MemoryCalculator {
     return MemoryRequirements.builder()
         .problem(problem)
         .totalMemory(totalMemory.getMax())
-        .workerMemory(totalMemory.getCurrent().divide(problem.getWorkers()))
+        .workerMemory(totalMemory.getMax().divide(problem.getWorkers()))
         .build();
   }
 
