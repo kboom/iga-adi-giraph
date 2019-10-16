@@ -24,6 +24,11 @@ class MemoryCalculatorTest {
       .workers(1)
       .build();
 
+  private static final Problem PROBLEM_12288 = Problem.builder()
+      .size(12288)
+      .workers(1)
+      .build();
+
   @Test
   void memoryRequirementsFor12Elements() {
     assertThat(memoryRequirementsFor(PROBLEM_12)).isEqualToComparingFieldByField(
@@ -53,6 +58,17 @@ class MemoryCalculatorTest {
             .problem(PROBLEM_6144)
             .totalMemory(bytes(8996049344L)) // 8579 MB
             .workerMemory(bytes(8996049344L))
+            .build()
+    );
+  }
+
+  @Test
+  void memoryRequirementsFor12288Elements() {
+    assertThat(memoryRequirementsFor(PROBLEM_12288)).isEqualToComparingFieldByField(
+        MemoryRequirements.builder()
+            .problem(PROBLEM_12288)
+            .totalMemory(bytes(36527502784L)) // 34835 MB
+            .workerMemory(bytes(36527502784L))
             .build()
     );
   }

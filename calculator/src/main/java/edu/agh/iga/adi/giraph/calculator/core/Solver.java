@@ -1,8 +1,6 @@
 package edu.agh.iga.adi.giraph.calculator.core;
 
-import edu.agh.iga.adi.giraph.calculator.core.system.SystemMemory;
-import edu.agh.iga.adi.giraph.calculator.core.system.SystemMemoryAllocated;
-import edu.agh.iga.adi.giraph.calculator.core.system.SystemMemoryEvent;
+import edu.agh.iga.adi.giraph.calculator.core.system.*;
 import io.vavr.collection.List;
 import lombok.AllArgsConstructor;
 
@@ -11,7 +9,8 @@ import java.util.function.BiFunction;
 import static edu.agh.iga.adi.giraph.calculator.core.ProblemTree.interimHeight;
 import static edu.agh.iga.adi.giraph.calculator.core.ProblemTree.totalHeight;
 import static edu.agh.iga.adi.giraph.calculator.core.Solver.SystemMemoryManager.manage;
-import static edu.agh.iga.adi.giraph.calculator.core.operations.MemoryOperation.*;
+import static edu.agh.iga.adi.giraph.calculator.core.operations.CreateVertexOperation.LEAF_MERGING;
+import static edu.agh.iga.adi.giraph.calculator.core.operations.SendMessageOperation.*;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.rangeClosed;
 
@@ -19,7 +18,9 @@ public class Solver {
 
   public static List<SystemMemoryEvent> solverEvents(Problem problem, SystemMemory systemMemory) {
     return manage(systemMemory, problem)
+        .apply(Solver::createLeaves)
         .apply(Solver::mergeAndEliminateLeaves)
+        .apply(Solver::deleteLeaves)
         .apply(Solver::mergeAndEliminateBranches)
         .applyRepeated(interimHeight(problem), Solver::mergeAndEliminateInterim)
         .apply(Solver::mergeAndEliminateRoot)
@@ -28,6 +29,17 @@ public class Solver {
         .apply(Solver::backwardsSubstituteBranch)
         .apply(Solver::transposeAndInitialize)
         .getEvents();
+  }
+
+  private static SystemMemoryEvent createLeaves(Problem problem, SystemMemory systemMemory) {
+    return systemMemory.allocate(
+        LEAF_MERGING.totalMemory(problem.getSize(), totalHeight(problem)),
+        LEAF_MERGING
+    ).getOrElseThrow(Solver::fail);
+  }
+
+  private static SystemMemoryEvent deleteLeaves(Problem problem, SystemMemory systemMemory) {
+    return free(systemMemory, LEAF_MERGING);
   }
 
   private static SystemMemoryAllocated mergeAndEliminateLeaves(Problem problem, SystemMemory systemMemory) {
@@ -86,6 +98,9 @@ public class Solver {
     ).getOrElseThrow(Solver::fail);
   }
 
+  private static SystemMemoryFreed free(SystemMemory systemMemory, MemoryHandle handle) {
+    return systemMemory.free(handle).getOrElseThrow(Solver::fail);
+  }
 
   private static IllegalStateException fail() {
     return new IllegalStateException();
@@ -94,17 +109,18 @@ public class Solver {
   @AllArgsConstructor
   static class SystemMemoryManager {
 
-    private final SystemMemory systemMemory;
     private final Problem problem;
 
+    private SystemMemory systemMemory;
     private List<SystemMemoryEvent> eventList;
 
     static SystemMemoryManager manage(SystemMemory memory, Problem problem) {
-      return new SystemMemoryManager(memory, problem, List.empty());
+      return new SystemMemoryManager(problem, memory, List.empty());
     }
 
     SystemMemoryManager apply(BiFunction<Problem, SystemMemory, SystemMemoryEvent> mapper) {
       eventList = eventList.append(mapper.apply(problem, systemMemory));
+      systemMemory = systemMemory.apply(eventList.last()).getOrElseThrow(() -> new IllegalStateException());
       return this;
     }
 
