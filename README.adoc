@@ -27,9 +27,9 @@ mvn exec:exec@[YOUR SIMULATION]
 where `[YOUR SIMULATION]` has to be replaced with one of
 
 |===
-|Simulation |Value 
+|Simulation |Value
 
-|Identity |identity 
+|Identity |identity
 |===
 
 === Running locally using docker
@@ -39,9 +39,7 @@ You can find the logs under:
 
 === Running on cloud
 
-There is an https://issues.apache.org/jira/browse/GIRAPH-859[unresolved issue] in Giraph which translates into inability to automatically
-upload JARs to the workers if the user launching the computations is different than yarn (Giraph would upload the JARs to the directory belonging to the user
-launching the application but look for them in the yarn user directory so they would be missing).
+There is an https://issues.apache.org/jira/browse/GIRAPH-859[unresolved issue] in Giraph which translates into inability to automatically upload JARs to the workers if the user launching the computations is different than yarn (Giraph would upload the JARs to the directory belonging to the user launching the application but look for them in the yarn user directory so they would be missing).
 
 There are severeal possible workarounds to this:
 * just to run the application using yarn user
@@ -75,10 +73,10 @@ Or one of the defaults
 == Configuration parameters
 
 |===
-|Name |Value |Meaning |Influence 
+|Name |Value |Meaning |Influence
 
-|_giraph.useNettyDirectMemory_ |true |netty direct buffers |speeds up 
-|_giraph.useUnsafeSerialization_ |true |unsafe serialisation uses unsafe memory allocation |speeds up 
+|_giraph.useNettyDirectMemory_ |true |netty direct buffers |speeds up
+|_giraph.useUnsafeSerialization_ |true |unsafe serialisation uses unsafe memory allocation |speeds up
 |_giraph.masterPartitionCountMultiplier_ |1 |the number of partitions per worker |netural
 |_giraph.numComputeThreads_| 1|the number of threads to use per worker|the default one is better
 |_giraph.numInputThreads_| 1|the number of threads to use for input split|the default one is better
@@ -164,8 +162,12 @@ https://exceptionshub.com/hadoop-no-filesystem-for-scheme-file.html[Missing file
 This means there always will be an additional container next to the workers which just handle master tasks.
 When choosing memory this means that the memory requirement is not `workers * memory` but `(workers + 1) * memory + 512mb`
 as there is a 4th container that sets up other containers.
-* `giraph.zkList` has to be set to the zookeeper address - if not,
-Giraph would bring up 2 additional nodes just to handle Zookeeper which is generally slower and wastes memory.
+* `giraph.zkList` has to be set to the zookeeper address - if not, Giraph would bring up 2 additional nodes just to handle Zookeeper which is generally slower and wastes memory.
+
+== Remaining ideas
+
+[qanda]
+Can we hold of with creating X matrix for the merging stage as there are only zeros and do this only before the substitutions?
 
 == Links
 

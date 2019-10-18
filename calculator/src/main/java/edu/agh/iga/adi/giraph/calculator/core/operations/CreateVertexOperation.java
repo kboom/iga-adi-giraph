@@ -1,6 +1,7 @@
 package edu.agh.iga.adi.giraph.calculator.core.operations;
 
 import edu.agh.iga.adi.giraph.calculator.core.Memory;
+import edu.agh.iga.adi.giraph.calculator.core.system.IdMemoryHandle;
 import edu.agh.iga.adi.giraph.calculator.core.system.MemoryHandle;
 import lombok.val;
 
@@ -15,8 +16,8 @@ public enum CreateVertexOperation implements MemoryHandle {
   BRANCH_MERGING(e -> sum(DOUBLE_MEMORY.times(5 * 5), DOUBLE_MEMORY.times(5 * e))),
   INTERIM_MERGING(e -> sum(DOUBLE_MEMORY.times(6 * 6), DOUBLE_MEMORY.times(6 * e))),
   ROOT(e -> sum(DOUBLE_MEMORY.times(6 * 6), DOUBLE_MEMORY.times(6 * e), DOUBLE_MEMORY.times(6 * e))),
-  INTERIM_SUBSTITUTION(e -> sum(DOUBLE_MEMORY.times(5 * 5), DOUBLE_MEMORY.times(5 * e), DOUBLE_MEMORY.times(5 * e))),
-  BRANCH_SUBSITUTION(e -> sum(DOUBLE_MEMORY.times(6 * 6), DOUBLE_MEMORY.times(6 * e), DOUBLE_MEMORY.times(6 * e)));
+  INTERIM_SUBSTITUTION(e -> DOUBLE_MEMORY.times(5 * e)),
+  BRANCH_SUBSITUTION(e -> DOUBLE_MEMORY.times(6 * e));
 
   Function<Integer, Memory> mapper;
 
@@ -26,6 +27,10 @@ public enum CreateVertexOperation implements MemoryHandle {
 
   public Memory totalMemory(int elements, int level) {
     return mapper.apply(elements).times(elementsAtLevel(elements, level));
+  }
+
+  public MemoryHandle handle(int code) {
+    return new IdMemoryHandle(toString(), code);
   }
 
   private int elementsAtLevel(int elements, int level) {
