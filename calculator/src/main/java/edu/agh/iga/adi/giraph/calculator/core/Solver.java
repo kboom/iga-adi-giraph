@@ -2,14 +2,11 @@ package edu.agh.iga.adi.giraph.calculator.core;
 
 import edu.agh.iga.adi.giraph.calculator.core.system.*;
 import io.vavr.collection.List;
-import lombok.AllArgsConstructor;
 import lombok.val;
-
-import java.util.function.BiFunction;
 
 import static edu.agh.iga.adi.giraph.calculator.core.ProblemTree.interimHeight;
 import static edu.agh.iga.adi.giraph.calculator.core.ProblemTree.totalHeight;
-import static edu.agh.iga.adi.giraph.calculator.core.Solver.SystemMemoryManager.manage;
+import static edu.agh.iga.adi.giraph.calculator.core.SystemMemoryManager.manage;
 import static edu.agh.iga.adi.giraph.calculator.core.operations.CreateVertexOperation.*;
 import static edu.agh.iga.adi.giraph.calculator.core.operations.SendMessageOperation.*;
 
@@ -29,10 +26,8 @@ public class Solver {
             interimHeight(problem),
             Solver::backwardsSubstituteInterimStep
         )
-//        .apply(Solver::allocateBackwardsSubstituteBranchVertices)
-//        .apply(Solver::freeBackwardsSubstituteInterimMessages)
-//        .apply(Solver::backwardsSubstituteBranch)
-//        .apply(Solver::transposeAndInitialize)
+        .applyAll(Solver::backwardsSubstituteBranchStep)
+        .applyAll(Solver::transposeAndInitializeStep)
         .getEvents();
   }
 
@@ -41,7 +36,8 @@ public class Solver {
         .apply(Solver::allocateLeavesForMerging)
         .apply(Solver::allocateMergeAndEliminateLeavesMessages)
         .apply(Solver::freeLeavesForMerging)
-        .apply(Solver::allocateBranchesForMerging)
+        .apply(totalHeight(problem) - 1, Solver::allocateBranchesForMerging)
+        .apply(Solver::freeMergeAndEliminateLeavesMessages)
         .getEvents();
   }
 
@@ -85,16 +81,42 @@ public class Solver {
     val height = step + 2;
     return manage(systemMemory, problem)
         .apply(height, Solver::allocateBackwardsSubstituteInterimMessages)
-        .apply(height, Solver::allocateInterimForBackwardsSubstitution)
-        .apply(height, Solver::freeBackwardsSubstituteInterimMessages)
         .applyAll(height, Solver::freeInterimVertices)
+        .apply(height, Solver::freeBackwardsSubstituteInterimMessages)
+        .apply(height + 1, Solver::allocateInterimForBackwardsSubstitution)
         .getEvents();
   }
 
-  private static SystemMemoryEvent allocateBackwardsSubstituteBranchVertices(Problem problem, SystemMemory systemMemory) {
+  private static List<SystemMemoryEvent> backwardsSubstituteBranchStep(Problem problem, SystemMemory systemMemory) {
+    val height = totalHeight(problem) - 1;
+    return manage(systemMemory, problem)
+        .apply(height, Solver::allocateBackwardsSubstituteBranchMessages)
+        .applyAll(height, Solver::freeInterimVertices)
+        .apply(height, Solver::allocateBackwardsSubstituteBranchVertices)
+        .apply(height, Solver::freeBackwardsSubstituteBranchMessages)
+        .getEvents();
+  }
+
+  private static List<SystemMemoryEvent> transposeAndInitializeStep(Problem problem, SystemMemory systemMemory) {
+    val height = totalHeight(problem) - 1;
+    return manage(systemMemory, problem)
+        .apply(Solver::transposeAndInitialize)
+        .applyAll(height, Solver::freeBranchVertices)
+        .apply(Solver::freeTransposeAndInitialize)
+        .getEvents();
+  }
+
+  private static SystemMemoryEvent allocateBackwardsSubstituteBranchVertices(Problem problem, SystemMemory systemMemory, int value) {
     return systemMemory.allocate(
-        BRANCH_FOR_BACKWARDS_SUBSTITUTION.totalMemory(problem.getSize(), 1),
-        BRANCH_FOR_BACKWARDS_SUBSTITUTION
+        BRANCH_FOR_BACKWARDS_SUBSTITUTION.totalMemory(problem.getSize(), value),
+        BRANCH_FOR_BACKWARDS_SUBSTITUTION.handle(value)
+    ).getOrElseThrow(Solver::fail);
+  }
+
+  private static SystemMemoryEvent allocateBackwardsSubstituteBranchMessages(Problem problem, SystemMemory systemMemory, int value) {
+    return systemMemory.allocate(
+        BACKWARDS_SUBSTITUTE_BRANCH_MESSAGE.totalMemory(problem.getSize(), value),
+        BACKWARDS_SUBSTITUTE_BRANCH_MESSAGE.handle(value)
     ).getOrElseThrow(Solver::fail);
   }
 
@@ -119,6 +141,10 @@ public class Solver {
 
   private static SystemMemoryEvent freeMergeAndEliminateInterimMessages(Problem problem, SystemMemory systemMemory, int value) {
     return free(systemMemory, MERGE_AND_ELIMINATE_INTERIM_MESSAGE.handle(value));
+  }
+
+  private static SystemMemoryEvent freeBackwardsSubstituteBranchMessages(Problem problem, SystemMemory systemMemory, int value) {
+    return free(systemMemory, BACKWARDS_SUBSTITUTE_BRANCH_MESSAGE.handle(value));
   }
 
   private static SystemMemoryEvent allocateInterimForBackwardsSubstitution(Problem problem, SystemMemory systemMemory, int value) {
@@ -147,15 +173,15 @@ public class Solver {
     return free(systemMemory, MERGE_AND_ELIMINATE_LEAVES_MESSAGE);
   }
 
-  private static SystemMemoryEvent allocateBranchesForMerging(Problem problem, SystemMemory systemMemory) {
+  private static SystemMemoryEvent allocateBranchesForMerging(Problem problem, SystemMemory systemMemory, int value) {
     return systemMemory.allocate(
-        BRANCHES_FOR_MERGING.totalMemory(problem.getSize(), totalHeight(problem) - 1),
-        BRANCHES_FOR_MERGING
+        BRANCHES_FOR_MERGING.totalMemory(problem.getSize(), value),
+        BRANCHES_FOR_MERGING.handle(value)
     ).getOrElseThrow(Solver::fail);
   }
 
-  private static SystemMemoryEvent freeBranchesForMerging(Problem problem, SystemMemory systemMemory) {
-    return free(systemMemory, BRANCHES_FOR_MERGING);
+  private static SystemMemoryEvent freeBranchesForMerging(Problem problem, SystemMemory systemMemory, int value) {
+    return free(systemMemory, BRANCHES_FOR_MERGING.handle(value));
   }
 
   private static SystemMemoryEvent allocateLeavesForMerging(Problem problem, SystemMemory systemMemory) {
@@ -181,10 +207,6 @@ public class Solver {
         MERGE_AND_ELIMINATE_BRANCH_MESSAGE.totalMemory(problem.getSize(), totalHeight(problem) - 1),
         MERGE_AND_ELIMINATE_BRANCH_MESSAGE
     ).getOrElseThrow(Solver::fail);
-  }
-
-  private static SystemMemoryAllocated allocateMergeAndEliminateInterimMessages(Problem problem, SystemMemory systemMemory) {
-    return allocateMergeAndEliminateInterimMessages(problem, systemMemory, totalHeight(problem) - 2);
   }
 
   private static SystemMemoryAllocated allocateMergeAndEliminateInterimMessages(Problem problem, SystemMemory systemMemory, int value) {
@@ -215,33 +237,29 @@ public class Solver {
         .getEvents();
   }
 
-  private static SystemMemoryEvent freeBackwardsSubstituteRootMessages(Problem problem, SystemMemory systemMemory) {
-    return free(systemMemory, BACKWARDS_SUBSTITUTE_ROOT_MESSAGE);
+  private static List<SystemMemoryEvent> freeBranchVertices(Problem problem, SystemMemory systemMemory, int value) {
+    return manage(systemMemory, problem)
+        .apply(value, Solver::freeBranchesForMerging)
+        .apply(value, Solver::freeBranchesForSubstitution)
+        .getEvents();
   }
 
-  private static SystemMemoryEvent freeBackwardsSubstituteInterimMessages(Problem problem, SystemMemory systemMemory) {
-    return free(systemMemory, BACKWARDS_SUBSTITUTE_INTERIM_MESSAGE.handle(interimHeight(problem)));
+  private static SystemMemoryEvent freeBranchesForSubstitution(Problem problem, SystemMemory systemMemory, int value) {
+    return free(systemMemory, BRANCH_FOR_BACKWARDS_SUBSTITUTION.handle(value));
+  }
+
+  private static SystemMemoryEvent freeBackwardsSubstituteRootMessages(Problem problem, SystemMemory systemMemory) {
+    return free(systemMemory, BACKWARDS_SUBSTITUTE_ROOT_MESSAGE);
   }
 
   private static SystemMemoryEvent freeBackwardsSubstituteInterimMessages(Problem problem, SystemMemory systemMemory, int value) {
     return free(systemMemory, BACKWARDS_SUBSTITUTE_INTERIM_MESSAGE.handle(value));
   }
 
-  private static SystemMemoryEvent allocateBackwardsSubstituteInterimMessages(Problem problem, SystemMemory systemMemory) {
-    return allocateBackwardsSubstituteInterimMessages(problem, systemMemory, 1);
-  }
-
   private static SystemMemoryEvent allocateBackwardsSubstituteInterimMessages(Problem problem, SystemMemory systemMemory, int value) {
     return systemMemory.allocate(
         BACKWARDS_SUBSTITUTE_INTERIM_MESSAGE.totalMemory(problem.getSize(), value),
         BACKWARDS_SUBSTITUTE_INTERIM_MESSAGE.handle(value)
-    ).getOrElseThrow(Solver::fail);
-  }
-
-  private static SystemMemoryAllocated backwardsSubstituteBranch(Problem problem, SystemMemory systemMemory) {
-    return systemMemory.allocate(
-        BACKWARDS_SUBSTITUTE_BRANCH_MESSAGE.totalMemory(problem.getSize(), totalHeight(problem) - 1),
-        BACKWARDS_SUBSTITUTE_BRANCH_MESSAGE
     ).getOrElseThrow(Solver::fail);
   }
 
@@ -252,65 +270,16 @@ public class Solver {
     ).getOrElseThrow(Solver::fail);
   }
 
+  private static SystemMemoryEvent freeTransposeAndInitialize(Problem problem, SystemMemory systemMemory) {
+    return free(systemMemory, TRANSPOSE_AND_INITIALISE_MESSAGE);
+  }
+
   private static SystemMemoryFreed free(SystemMemory systemMemory, MemoryHandle handle) {
     return systemMemory.free(handle).getOrElseThrow(Solver::fail);
   }
 
   private static IllegalStateException fail() {
     return new IllegalStateException();
-  }
-
-  @AllArgsConstructor
-  static class SystemMemoryManager {
-
-    private final Problem problem;
-
-    private SystemMemory systemMemory;
-    private List<SystemMemoryEvent> eventList;
-
-    static SystemMemoryManager manage(SystemMemory memory, Problem problem) {
-      return new SystemMemoryManager(problem, memory, List.empty());
-    }
-
-    SystemMemoryManager apply(BiFunction<Problem, SystemMemory, SystemMemoryEvent> mapper) {
-      val newEvent = mapper.apply(problem, systemMemory);
-      systemMemory = systemMemory.apply(newEvent).getOrElseThrow(() -> new IllegalStateException());
-      eventList = eventList.append(newEvent);
-      return this;
-    }
-
-    SystemMemoryManager applyAll(BiFunction<Problem, SystemMemory, List<SystemMemoryEvent>> mapper) {
-      val newEvents = mapper.apply(problem, systemMemory);
-      systemMemory = newEvents.foldLeft(systemMemory, (m, e) -> m.apply(e).getOrElseThrow(() -> new IllegalStateException()));
-      eventList = eventList.appendAll(newEvents);
-      return this;
-    }
-
-    <T> SystemMemoryManager apply(T value, TriFunction<Problem, SystemMemory, T, SystemMemoryEvent> mapper) {
-      return applyAll(value, (problem, memory, v) -> List.of(mapper.apply(problem, memory, v)));
-    }
-
-    <T> SystemMemoryManager applyAll(T value, TriFunction<Problem, SystemMemory, T, List<SystemMemoryEvent>> mapper) {
-      val newEvents = mapper.apply(problem, systemMemory, value);
-      systemMemory = newEvents.foldLeft(systemMemory, (m, e) -> m.apply(e).getOrElseThrow(() -> new IllegalStateException()));
-      eventList = eventList.appendAll(newEvents);
-      return this;
-    }
-
-    SystemMemoryManager applyRepeated(int times, TriFunction<Problem, SystemMemory, Integer, List<SystemMemoryEvent>> mapper) {
-      return List.rangeClosed(1, times)
-          .foldLeft(this, (context, step) -> context.applyAll(step, mapper));
-    }
-
-    List<SystemMemoryEvent> getEvents() {
-      return eventList;
-    }
-
-  }
-
-  @FunctionalInterface
-  public interface TriFunction<A, B, C, D> {
-    D apply(A a, B b, C c);
   }
 
 }

@@ -39,8 +39,8 @@ class MemoryCalculatorTest {
     assertThat(memoryRequirementsFor(PROBLEM_12)).isEqualToComparingFieldByField(
         MemoryRequirements.builder()
             .problem(PROBLEM_12)
-            .totalMemory(bytes(32128))
-            .workerMemory(bytes(32128))
+            .totalMemory(bytes(17984))
+            .workerMemory(bytes(17984))
             .build()
     );
   }
@@ -50,8 +50,8 @@ class MemoryCalculatorTest {
     assertThat(memoryRequirementsFor(PROBLEM_24)).isEqualToComparingFieldByField(
         MemoryRequirements.builder()
             .problem(PROBLEM_24)
-            .totalMemory(bytes(123008))
-            .workerMemory(bytes(123008))
+            .totalMemory(bytes(65152))
+            .workerMemory(bytes(65152))
             .build()
     );
   }
@@ -61,8 +61,8 @@ class MemoryCalculatorTest {
     assertThat(memoryRequirementsFor(PROBLEM_48)).isEqualToComparingFieldByField(
         MemoryRequirements.builder()
             .problem(PROBLEM_48)
-            .totalMemory(bytes(123008))
-            .workerMemory(bytes(123008))
+            .totalMemory(bytes(247040))
+            .workerMemory(bytes(247040))
             .build()
     );
   }
@@ -72,8 +72,8 @@ class MemoryCalculatorTest {
     assertThat(memoryRequirementsFor(PROBLEM_6144)).isEqualToComparingFieldByField(
         MemoryRequirements.builder()
             .problem(PROBLEM_6144)
-            .totalMemory(bytes(8996049344L)) // 8579 MB
-            .workerMemory(bytes(8996049344L))
+            .totalMemory(bytes(3826941952L)) // 8579 MB
+            .workerMemory(bytes(3826941952L))
             .build()
     );
   }
@@ -83,8 +83,8 @@ class MemoryCalculatorTest {
     assertThat(memoryRequirementsFor(PROBLEM_12288)).isEqualToComparingFieldByField(
         MemoryRequirements.builder()
             .problem(PROBLEM_12288)
-            .totalMemory(bytes(36527502784L)) // 34835 MB
-            .workerMemory(bytes(36527502784L))
+            .totalMemory(bytes(15304294400L)) // 34835 MB
+            .workerMemory(bytes(15304294400L))
             .build()
     );
   }
