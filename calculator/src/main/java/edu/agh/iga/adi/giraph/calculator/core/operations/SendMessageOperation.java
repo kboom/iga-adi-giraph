@@ -12,14 +12,14 @@ import static edu.agh.iga.adi.giraph.calculator.core.ProblemTree.totalHeight;
 import static edu.agh.iga.adi.giraph.calculator.core.TypesMemory.DOUBLE_MEMORY;
 
 public enum SendMessageOperation implements MemoryHandle {
-  MERGE_AND_ELIMINATE_LEAVES_MESSAGES(e -> sum(DOUBLE_MEMORY.times(3 * 3), DOUBLE_MEMORY.times(3 * e))),
-  MERGE_AND_ELIMINATE_BRANCH(e -> sum(DOUBLE_MEMORY.times(5 * 5), DOUBLE_MEMORY.times(5 * e))),
-  MERGE_AND_ELIMINATE_INTERIM(e -> sum(DOUBLE_MEMORY.times(6 * 6), DOUBLE_MEMORY.times(6 * e))),
-  MERGE_AND_ELIMINATE_ROOT(e -> sum(DOUBLE_MEMORY.times(6 * 6), DOUBLE_MEMORY.times(6 * e), DOUBLE_MEMORY.times(6 * e))),
-  BACKWARDS_SUBSTITUTE_ROOT(e -> sum(DOUBLE_MEMORY.times(6 * 6), DOUBLE_MEMORY.times(6 * e), DOUBLE_MEMORY.times(6 * e))),
-  BACKWARDS_SUBSTITUTE_INTERIM(e -> sum(DOUBLE_MEMORY.times(6 * 6), DOUBLE_MEMORY.times(6 * e), DOUBLE_MEMORY.times(6 * e))),
-  BACKWARDS_SUBSTITUTE_BRANCH(e -> sum(DOUBLE_MEMORY.times(5 * 5), DOUBLE_MEMORY.times(5 * e), DOUBLE_MEMORY.times(5 * e))),
-  TRANSPOSE_AND_INITIALISE(e -> sum(DOUBLE_MEMORY.times(3 * 3), DOUBLE_MEMORY.times(3 * e)).times(3));
+  MERGE_AND_ELIMINATE_LEAVES_MESSAGE(e -> sum(DOUBLE_MEMORY.times(3 * 3), DOUBLE_MEMORY.times(3 * e))),
+  MERGE_AND_ELIMINATE_BRANCH_MESSAGE(e -> sum(DOUBLE_MEMORY.times(5 * 5), DOUBLE_MEMORY.times(5 * e))),
+  MERGE_AND_ELIMINATE_INTERIM_MESSAGE(e -> sum(DOUBLE_MEMORY.times(6 * 6), DOUBLE_MEMORY.times(6 * e))),
+  MERGE_AND_ELIMINATE_ROOT_MESSAGE(e -> sum(DOUBLE_MEMORY.times(6 * 6), DOUBLE_MEMORY.times(6 * e), DOUBLE_MEMORY.times(6 * e))),
+  BACKWARDS_SUBSTITUTE_ROOT_MESSAGE(e -> sum(DOUBLE_MEMORY.times(6 * 6), DOUBLE_MEMORY.times(6 * e), DOUBLE_MEMORY.times(6 * e))),
+  BACKWARDS_SUBSTITUTE_INTERIM_MESSAGE(e -> sum(DOUBLE_MEMORY.times(6 * 6), DOUBLE_MEMORY.times(6 * e), DOUBLE_MEMORY.times(6 * e))),
+  BACKWARDS_SUBSTITUTE_BRANCH_MESSAGE(e -> sum(DOUBLE_MEMORY.times(5 * 5), DOUBLE_MEMORY.times(5 * e), DOUBLE_MEMORY.times(5 * e))),
+  TRANSPOSE_AND_INITIALISE_MESSAGE(e -> sum(DOUBLE_MEMORY.times(3 * 3), DOUBLE_MEMORY.times(3 * e)).times(3));
 
   Function<Integer, Memory> mapper;
 

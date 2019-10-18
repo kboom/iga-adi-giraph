@@ -12,12 +12,12 @@ import static edu.agh.iga.adi.giraph.calculator.core.ProblemTree.totalHeight;
 import static edu.agh.iga.adi.giraph.calculator.core.TypesMemory.DOUBLE_MEMORY;
 
 public enum CreateVertexOperation implements MemoryHandle {
-  LEAF_MERGING(e -> sum(DOUBLE_MEMORY.times(3 * 3), DOUBLE_MEMORY.times(3 * e))),
-  BRANCH_MERGING(e -> sum(DOUBLE_MEMORY.times(5 * 5), DOUBLE_MEMORY.times(5 * e))),
-  INTERIM_MERGING(e -> sum(DOUBLE_MEMORY.times(6 * 6), DOUBLE_MEMORY.times(6 * e))),
+  LEAVES_FOR_MERGING(e -> sum(DOUBLE_MEMORY.times(3 * 3), DOUBLE_MEMORY.times(3 * e))),
+  BRANCHES_FOR_MERGING(e -> sum(DOUBLE_MEMORY.times(5 * 5), DOUBLE_MEMORY.times(5 * e))),
+  INTERIM_FOR_MERGING(e -> sum(DOUBLE_MEMORY.times(6 * 6), DOUBLE_MEMORY.times(6 * e))),
   ROOT(e -> sum(DOUBLE_MEMORY.times(6 * 6), DOUBLE_MEMORY.times(6 * e), DOUBLE_MEMORY.times(6 * e))),
-  INTERIM_SUBSTITUTION(e -> DOUBLE_MEMORY.times(5 * e)),
-  BRANCH_SUBSITUTION(e -> DOUBLE_MEMORY.times(6 * e));
+  INTERIM_FOR_BACKWARDS_SUBSTITUTION(e -> DOUBLE_MEMORY.times(5 * e)),
+  BRANCH_FOR_BACKWARDS_SUBSTITUTION(e -> DOUBLE_MEMORY.times(6 * e));
 
   Function<Integer, Memory> mapper;
 

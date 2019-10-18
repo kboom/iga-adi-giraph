@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 public class ProblemTree {
 
   public static int interimHeight(Problem problem) {
-    return totalHeight(problem) - 3;
+    return totalHeight(problem) - 4;
   }
 
   public static int totalHeight(Problem problem) {

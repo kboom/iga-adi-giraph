@@ -19,6 +19,11 @@ class MemoryCalculatorTest {
       .workers(1)
       .build();
 
+  private static final Problem PROBLEM_48 = Problem.builder()
+      .size(48)
+      .workers(1)
+      .build();
+
   private static final Problem PROBLEM_6144 = Problem.builder()
       .size(6144)
       .workers(1)
@@ -45,6 +50,17 @@ class MemoryCalculatorTest {
     assertThat(memoryRequirementsFor(PROBLEM_24)).isEqualToComparingFieldByField(
         MemoryRequirements.builder()
             .problem(PROBLEM_24)
+            .totalMemory(bytes(123008))
+            .workerMemory(bytes(123008))
+            .build()
+    );
+  }
+
+  @Test
+  void memoryRequirementsFor48Elements() {
+    assertThat(memoryRequirementsFor(PROBLEM_48)).isEqualToComparingFieldByField(
+        MemoryRequirements.builder()
+            .problem(PROBLEM_48)
             .totalMemory(bytes(123008))
             .workerMemory(bytes(123008))
             .build()
