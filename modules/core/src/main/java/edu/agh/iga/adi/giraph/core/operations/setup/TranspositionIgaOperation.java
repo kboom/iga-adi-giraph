@@ -4,11 +4,10 @@ import edu.agh.iga.adi.giraph.core.*;
 import lombok.Getter;
 import lombok.val;
 import org.ojalgo.matrix.store.TransformableRegion;
-import org.ojalgo.netio.BasicLogger;
 
 import static edu.agh.iga.adi.giraph.core.IgaConstants.LEAF_SIZE;
 import static edu.agh.iga.adi.giraph.core.IgaElement.igaElement;
-import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
+import static edu.agh.iga.adi.giraph.core.IgaVertexType.vertexType;
 import static edu.agh.iga.adi.giraph.core.operations.setup.TranspositionIgaOperation.TranspositionIgaMessage;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -46,11 +45,13 @@ public final class TranspositionIgaOperation implements IgaOperation<Transpositi
   @Override
   public void consumeMessage(IgaElement element, TranspositionIgaMessage message, DirectionTree tree) {
     val srcId = (int) message.getSrcId();
+    val dstId = element.id;
     val mxp = message.mxp;
-    val src = vertexOf(tree, srcId);
-    val dst = vertexOf(tree, element.id);
-    val mo = (int) src.offsetLeft();
-    val pp = new PartitionProvider(dst, (int) mxp.countRows());
+
+    val srcVType = vertexType(tree, srcId);
+
+    val mo = (int) srcVType.offsetLeft(tree, srcId);
+    val pp = new PartitionProvider(dstId, tree, (int) mxp.countRows());
 
     val targetBlock = element.mb
         .regionByRows(0, 1, 2)
@@ -61,7 +62,7 @@ public final class TranspositionIgaOperation implements IgaOperation<Transpositi
   }
 
   private boolean isLeading(IgaVertex dst, IgaElement element) {
-    return vertexOf(dst.getTree(), element.id).isLeading();
+    return vertexType(dst.getTree(), element.id).isLeading(dst.getTree(), element.id);
   }
 
   public static class TranspositionIgaMessage extends IgaMessage {
