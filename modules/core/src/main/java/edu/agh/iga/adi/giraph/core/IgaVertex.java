@@ -12,14 +12,19 @@ import static edu.agh.iga.adi.giraph.core.IgaVertex.ChildPosition.*;
 import static java.lang.String.format;
 import static java.math.RoundingMode.FLOOR;
 
-public class IgaVertex {
+public abstract class IgaVertex {
 
-  private final long id;
   private final DirectionTree tree;
+  private long id;
 
   private IgaVertex(DirectionTree tree, long id) {
     this.tree = tree;
     this.id = id;
+  }
+
+  public IgaVertex reuseSameTypeFor(long id) {
+    this.id = id;
+    return this;
   }
 
   public static IgaVertex vertexOf(DirectionTree tree, long id) {

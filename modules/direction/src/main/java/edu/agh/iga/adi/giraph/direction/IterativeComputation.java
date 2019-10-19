@@ -43,7 +43,7 @@ public class IterativeComputation extends DefaultMasterCompute {
 
     stepCount = STEP_COUNT.get(getConf());
     int problemSize = PROBLEM_SIZE.get(getConf());
-    tree = new DirectionTree(problemSize);
+    tree = new CachedDirectionTree(problemSize);
     registerAggregator(COMPUTATION_ITERATION, IntOverwriteAggregator.class);
     registerAggregator(LAST_COMPUTATION_FLAG, BooleanOverwriteAggregator.class);
     registerAggregator(ENDING_SUPER_STEP_OF_STEP, BooleanOverwriteAggregator.class);

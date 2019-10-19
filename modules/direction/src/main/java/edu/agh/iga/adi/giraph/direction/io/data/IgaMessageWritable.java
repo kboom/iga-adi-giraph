@@ -51,4 +51,7 @@ public class IgaMessageWritable implements WritableComparable {
     return (T) igaMessage;
   }
 
+  public void set(IgaMessage igaMessage) {
+    this.igaMessage = igaMessage;
+  }
 }

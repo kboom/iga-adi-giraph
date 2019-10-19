@@ -47,18 +47,27 @@ public class TranspositionComputation extends IgaComputation {
   }
 
   private void send(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
-    val igaVertex = vertexOf(vertex);
     if (LOG.isTraceEnabled()) {
-      LOG.trace("Running transposition on " + igaVertex);
+      LOG.trace("Running transposition on " + vertex.getId().get());
     }
     val element = vertex.getValue().getElement();
     val lastLeafIndex = getTree().lastIndexOfLeafRow();
-    for (long l = getTree().firstIndexOfLeafRow(); l <= lastLeafIndex; l++) {
-      val dst = vertexOf(l);
-      val igaMessage = TRANSPOSITION_IGA_OPERATION.sendMessage(dst, element); // todo reuse same object, send previous message to reuse?
+
+    val firstIndexOfLeafRow = getTree().firstIndexOfLeafRow();
+    val dst = vertexOf(firstIndexOfLeafRow);
+
+    val idWritable = new LongWritable();
+    val msgWritable = new IgaMessageWritable();
+
+    for (long l = firstIndexOfLeafRow; l <= lastLeafIndex; l++) {
+      dst.reuseSameTypeFor(l);
+
+      idWritable.set(l);
+      msgWritable.set(TRANSPOSITION_IGA_OPERATION.sendMessage(dst, element));
+
       sendMessage(
-          new LongWritable(l), // todo reuse same object
-          new IgaMessageWritable(igaMessage) // todo reuse same object
+          idWritable,
+          msgWritable
       );
     }
   }
