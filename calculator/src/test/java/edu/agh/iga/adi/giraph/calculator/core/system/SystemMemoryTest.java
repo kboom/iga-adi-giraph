@@ -1,0 +1,64 @@
+package edu.agh.iga.adi.giraph.calculator.core.system;
+
+import edu.agh.iga.adi.giraph.calculator.core.Memory;
+import org.junit.jupiter.api.Test;
+
+import static edu.agh.iga.adi.giraph.calculator.assertj.EitherAssertions.assertThatEither;
+import static edu.agh.iga.adi.giraph.calculator.core.Memory.*;
+import static edu.agh.iga.adi.giraph.calculator.core.system.DummyHandles.DUMMY_MEMORY_HANDLE;
+import static edu.agh.iga.adi.giraph.calculator.core.system.SystemMemory.systemMemory;
+import static org.assertj.core.api.Assertions.assertThat;
+
+class SystemMemoryTest {
+
+  private static final Memory HUGE_MEMORY = ONE_GB_MEMORY.times(1024);
+
+  private static final SystemMemory INITIAL_SYSTEM_MEMORY = systemMemory(
+      SystemMemoryCreated.builder()
+          .totalMemory(ONE_GB_MEMORY)
+          .build()
+  );
+
+  private static final SystemMemoryAllocated QUARTER_ALLOCATION = SystemMemoryAllocated.builder()
+      .memory(ONE_KB_MEMORY.times(256))
+      .handle(DUMMY_MEMORY_HANDLE)
+      .build();
+
+  private static final SystemMemory ALLOCATED_SYSTEM_MEMORY = systemMemory(
+      SystemMemoryCreated.builder()
+          .totalMemory(ONE_GB_MEMORY)
+          .build()
+  ).apply(QUARTER_ALLOCATION).get();
+
+  @Test
+  void canAllocateMemory() {
+    assertThatEither(INITIAL_SYSTEM_MEMORY.allocate(ONE_MB_MEMORY, DUMMY_MEMORY_HANDLE))
+        .hasRight(event -> assertThat(event)
+            .isEqualToComparingFieldByField(
+                SystemMemoryAllocated.builder()
+                    .handle(DUMMY_MEMORY_HANDLE)
+                    .memory(ONE_MB_MEMORY)
+                    .build()
+            )
+        );
+  }
+
+  @Test
+  void isOutOfMemoryIfAllocationTooLarge() {
+    assertThatEither(INITIAL_SYSTEM_MEMORY.allocate(HUGE_MEMORY, DUMMY_MEMORY_HANDLE))
+        .hasLeft(event -> assertThat(event)
+            .isEqualToComparingFieldByField(new OutOfSystemMemoryException())
+        );
+  }
+
+  @Test
+  void canFreeMemory() {
+    assertThatEither(ALLOCATED_SYSTEM_MEMORY.free(DUMMY_MEMORY_HANDLE))
+        .hasRight(event -> assertThat(event)
+            .isEqualToComparingFieldByField(
+                new SystemMemoryFreed(DUMMY_MEMORY_HANDLE, QUARTER_ALLOCATION.getMemory())
+            )
+        );
+  }
+
+}
