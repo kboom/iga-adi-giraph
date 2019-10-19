@@ -1,7 +1,6 @@
 package edu.agh.iga.adi.giraph.direction;
 
 import edu.agh.iga.adi.giraph.core.DirectionTree;
-import edu.agh.iga.adi.giraph.core.IgaVertex;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import lombok.val;
@@ -11,7 +10,7 @@ import org.apache.giraph.partition.SimpleLongRangePartitionerFactory;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.log4j.Logger;
 
-import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
+import static edu.agh.iga.adi.giraph.core.IgaVertexType.vertexType;
 import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.PROBLEM_SIZE;
 
 /**
@@ -29,11 +28,17 @@ public class IgaPartitionerFactory extends GraphPartitionerFactory<LongWritable,
 
   @Override
   public int getPartition(LongWritable id, int partitionCount, int workerCount) {
-    // todo significant pressure on memory
-    IgaVertex igaVertex = vertexOf(directionTree, id.get());
-    val partition = getPartitionInRange(igaVertex.offsetLeft(), igaVertex.strengthOf(), partitionCount); // todo this
+    val vid = id.get();
+    val vertexType = vertexType(directionTree, vid);
+
+    val partition = getPartitionInRange(
+        vertexType.offsetLeft(directionTree, vid),
+        vertexType.strengthOf(directionTree, vid),
+        partitionCount
+    );
+
     if (LOG.isTraceEnabled()) {
-      LOG.trace(String.format("Partition for vertex: %s,%d", igaVertex, partition));
+      LOG.trace(String.format("P-> %s,%d", vertexType.describe(directionTree, vid), partition));
     }
     return partition;
   }
