@@ -55,6 +55,15 @@
         </layout>
     </appender>
 
+    <appender name="ser.file" class="org.apache.log4j.FileAppender">
+        <param name="file" value="ser.log" />
+        <param name="append" value="false" />
+        <param name="threshold" value="trace" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%m%n" />
+        </layout>
+    </appender>
+
     <logger name="edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger" additivity="false">
         <level value="trace" />
         <appender-ref ref="mat.file" />
@@ -73,6 +82,11 @@
     <logger name="edu.agh.iga.adi.giraph.direction.IgaPartitionerFactory" additivity="false">
         <level value="trace" />
         <appender-ref ref="part.file" />
+    </logger>
+
+    <logger name="edu.agh.iga.adi.giraph.direction.io.data.message.MessageSerializerFacade" additivity="false">
+        <level value="trace" />
+        <appender-ref ref="ser.file" />
     </logger>
 
     <logger name="edu.agh.iga.adi.giraph" additivity="false">
