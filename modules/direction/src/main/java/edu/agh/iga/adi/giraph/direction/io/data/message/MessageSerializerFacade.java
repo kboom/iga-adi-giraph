@@ -81,13 +81,13 @@ public final class MessageSerializerFacade {
       if (message != null) {
         if (message.getClass().equals(messageClazz)) {
           if (LOG.isTraceEnabled()) {
-            LOG.trace("Reusing the same message for " + messageClazz);
+            LOG.trace("R " + messageClazz.getSimpleName());
           }
           return messageSerializer.readMessage(message, dataInput);
         }
       }
       if (LOG.isTraceEnabled()) {
-        LOG.trace("Creating a new message for " + messageClazz);
+        LOG.trace("C " + messageClazz.getSimpleName());
       }
       return messageSerializer.readMessage(dataInput);
     } catch (IOException e) {
