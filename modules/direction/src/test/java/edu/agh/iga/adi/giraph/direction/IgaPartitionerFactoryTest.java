@@ -26,6 +26,16 @@ class IgaPartitionerFactoryTest {
   }
 
   @Test
+  void assignsLeaf13ToPartition0() {
+    assertThat(PARTITIONER_FACTORY.getPartition(new LongWritable(13L), 2, 2)).isEqualTo(0);
+  }
+
+  @Test
+  void assignsLeaf14ToPartition1() {
+    assertThat(PARTITIONER_FACTORY.getPartition(new LongWritable(14L), 2, 2)).isEqualTo(1);
+  }
+
+  @Test
   void assignsLeaf19ToPartition1() {
     assertThat(PARTITIONER_FACTORY.getPartition(new LongWritable(19L), 2, 2)).isEqualTo(1);
   }
