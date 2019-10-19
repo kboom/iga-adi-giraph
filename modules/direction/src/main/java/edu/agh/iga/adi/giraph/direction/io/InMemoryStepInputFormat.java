@@ -112,8 +112,8 @@ public class InMemoryStepInputFormat extends VertexValueInputFormat<LongWritable
     public boolean nextVertex() {
       if (vertices.hasNext()) {
         currentVertex = vertices.next();
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("Producing vertex " + currentVertex);
+        if (LOG.isTraceEnabled()) {
+          LOG.trace("Producing vertex " + currentVertex);
         }
         return true;
       } else {
