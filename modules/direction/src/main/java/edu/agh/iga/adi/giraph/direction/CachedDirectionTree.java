@@ -4,14 +4,14 @@ import edu.agh.iga.adi.giraph.core.DirectionTree;
 
 public final class CachedDirectionTree extends DirectionTree {
 
-  int height = -1;
-  int branchingHeight = -1;
-  long firstIndexOfLeafRow = -1;
-  long lastIndexOfLeafRow = -1;
-  long firstIndexOfBranchingRow = -1;
-  long lastIndexOfBranchingRow = -1;
-  long strengthOfLeaves = -1;
-  int size = -1;
+  private int height = -1;
+  private int branchingHeight = -1;
+  private long firstIndexOfLeafRow = -1;
+  private long lastIndexOfLeafRow = -1;
+  private long firstIndexOfBranchingRow = -1;
+  private long lastIndexOfBranchingRow = -1;
+  private long strengthOfLeaves = -1;
+  private int size = -1;
 
   public CachedDirectionTree(int problemSize) {
     super(problemSize);
