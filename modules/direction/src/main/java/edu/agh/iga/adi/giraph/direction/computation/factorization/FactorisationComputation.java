@@ -35,8 +35,8 @@ public final class FactorisationComputation extends IgaComputation {
     loadPhase();
     loadLastComputationFlag();
     logPhase(currentPhase);
-    if (LOG.isDebugEnabled()) {
-      LOG.debug(format("================ SUPER STEP (%d) %s ================", getSuperstep() - 1, currentPhase));
+    if (LOG.isTraceEnabled()) {
+      LOG.trace(format("================ SUPER STEP (%d) %s ================", getSuperstep() - 1, currentPhase));
     }
   }
 
@@ -67,8 +67,8 @@ public final class FactorisationComputation extends IgaComputation {
       Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex,
       Iterable<IgaMessageWritable> messages
   ) {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug(format(
+    if (LOG.isTraceEnabled()) {
+      LOG.trace(format(
           "Processing messages on %d with messages %s",
           vertex.getId().get(),
           messagesOf(messages).map(IgaMessage::getSrcId).map(String::valueOf).collect(joining(","))
@@ -97,8 +97,8 @@ public final class FactorisationComputation extends IgaComputation {
         val dstVertex = vertexOf(dstId);
         val msg = igaOperation.sendMessage(dstVertex, element);
         sendMessage(dstIdWritable, new IgaMessageWritable(msg));
-        if (LOG.isDebugEnabled()) {
-          LOG.debug(format("Sending message to %d %s", dstId, igaOperation));
+        if (LOG.isTraceEnabled()) {
+          LOG.trace(format("Sending message to %d %s", dstId, igaOperation));
         }
       }
     });

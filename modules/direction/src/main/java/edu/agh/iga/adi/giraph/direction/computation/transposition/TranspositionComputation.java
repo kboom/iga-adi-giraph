@@ -48,8 +48,8 @@ public class TranspositionComputation extends IgaComputation {
 
   private void send(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
     val igaVertex = vertexOf(vertex);
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Running transposition on " + igaVertex);
+    if (LOG.isTraceEnabled()) {
+      LOG.trace("Running transposition on " + igaVertex);
     }
     val element = vertex.getValue().getElement();
     val lastLeafIndex = getTree().lastIndexOfLeafRow();

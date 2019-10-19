@@ -67,8 +67,8 @@ public class InitialisationComputation extends IgaComputation {
   private void doSend(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
     val igaVertex = vertexOf(vertex);
     if (igaVertex.is(BranchVertex.class)) {
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("Sending coefficients from " + igaVertex);
+      if (LOG.isTraceEnabled()) {
+        LOG.trace("Sending coefficients from " + igaVertex);
       }
 
       initialisation.sendMessages(igaVertex, elementOf(vertex))

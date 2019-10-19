@@ -74,8 +74,8 @@ public final class IgaEdgeInputFormat extends EdgeInputFormat<LongWritable, IgaO
     public boolean nextEdge() {
       if (operations.hasNext()) {
         currentOperation = operations.next();
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("Producing operation " + currentOperation);
+        if (LOG.isTraceEnabled()) {
+          LOG.trace("Producing operation " + currentOperation);
         }
         return true;
       } else {

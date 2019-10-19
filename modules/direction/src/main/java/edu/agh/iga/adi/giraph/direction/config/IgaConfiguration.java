@@ -95,7 +95,7 @@ public class IgaConfiguration {
     USE_MESSAGE_SIZE_ENCODING.set(conf, true); // todo not sure about this
     convenienceSettings(conf);
 
-    WAIT_TASK_DONE_TIMEOUT_MS.set(conf, (int) MINUTES.toMillis(1)); // no need to wait
+    WAIT_TASK_DONE_TIMEOUT_MS.set(conf, (int) MINUTES.toMillis(1));
     HDFS_FILE_CREATION_RETRY_WAIT_MS.set(conf, 1000);
 
 //    USE_MESSAGE_SIZE_ENCODING.set(conf, true);
