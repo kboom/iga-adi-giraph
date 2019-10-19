@@ -1,6 +1,7 @@
 package edu.agh.iga.adi.giraph.direction.computation;
 
 import edu.agh.iga.adi.giraph.core.*;
+import edu.agh.iga.adi.giraph.direction.CachedDirectionTree;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
@@ -42,7 +43,7 @@ public abstract class IgaComputation extends BasicComputation<LongWritable, IgaE
   ) {
     super.initialize(graphState, workerClientRequestProcessor, serviceWorker, workerGlobalCommUsage);
     val elementCount = PROBLEM_SIZE.get(getConf());
-    val directionTree = new DirectionTree(elementCount);
+    val directionTree = new CachedDirectionTree(elementCount);
     val mesh = aMesh().withElements(elementCount).build();
 
     igaContext = IgaContext.builder()
