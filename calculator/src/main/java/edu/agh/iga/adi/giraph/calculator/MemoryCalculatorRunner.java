@@ -34,12 +34,16 @@ public class MemoryCalculatorRunner {
   private static Stream<MemoryRequirements> memoryRequirements(CalculatorParameters parameters) {
     return IntStream.range(0, parameters.getMeshSizes())
         .map(p -> (int) (12 * Math.pow(2, p)))
-        .mapToObj(size ->
-            Problem.builder()
-                .size(size)
-                .workers(parameters.getWorkers())
-                .build()
-        )
+        .boxed()
+        .flatMap(size ->
+            parameters.getWorkers()
+                .stream()
+                .map(workers ->
+                    Problem.builder()
+                        .size(size)
+                        .workers(workers)
+                        .build()
+                ))
         .map(MemoryCalculator::memoryRequirementsFor);
   }
 

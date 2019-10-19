@@ -6,6 +6,8 @@ import lombok.Getter;
 
 import java.util.List;
 
+import static com.beust.jcommander.internal.Lists.newArrayList;
+
 @Builder
 @Getter
 class CalculatorParameters {
@@ -15,14 +17,10 @@ class CalculatorParameters {
 
   @Parameter(names = {"-w", "--workers"}, description = "The number of workers used")
   @Builder.Default
-  private Integer workers = 2;
+  private List<Integer> workers = newArrayList(1, 2, 4);
 
   @Parameter(names = {"--sizes"}, description = "The number of mesh sizes to compute the statistics for")
   @Builder.Default
   private Integer meshSizes = 13;
-
-  @Parameter(description = "Available workers")
-  @Builder.Default
-  private List<String> availableWorkers;
 
 }

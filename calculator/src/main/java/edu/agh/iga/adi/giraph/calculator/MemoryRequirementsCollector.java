@@ -37,9 +37,8 @@ class MemoryRequirementsCollector {
   }
 
   private static Stream<Problem> combineWithWorkers(CalculatorParameters parameters, Integer problemSize) {
-    return parameters.getAvailableWorkers()
+    return parameters.getWorkers()
         .stream()
-        .map(Integer::parseInt)
         .map(
             workers ->
                 Problem.builder()

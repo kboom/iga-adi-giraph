@@ -3,7 +3,6 @@ package edu.agh.iga.adi.giraph.calculator;
 import org.junit.jupiter.api.Test;
 
 import static edu.agh.iga.adi.giraph.calculator.MemoryRequirementsCollector.listRequirementsFor;
-import static java.lang.String.valueOf;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,7 +13,7 @@ class MemoryRequirementsCollectorTest {
   void producesNoRequirementsForNoWorkers() {
     assertThat(listRequirementsFor(
         CalculatorParameters.builder()
-            .availableWorkers(emptyList())
+            .workers(emptyList())
             .build()
     )).isEmpty();
   }
@@ -32,7 +31,7 @@ class MemoryRequirementsCollectorTest {
   void producesOneRequirementForSingleWorkerAndProblemSize() {
     assertThat(listRequirementsFor(
         CalculatorParameters.builder()
-            .availableWorkers(singletonList(valueOf(1)))
+            .workers(singletonList(1))
             .meshSizes(1)
             .build()
     )).hasSize(1);
@@ -42,10 +41,10 @@ class MemoryRequirementsCollectorTest {
   void producesAsManyRequirementsAsCombinationsOfWorkersAndProblemSizes() {
     assertThat(listRequirementsFor(
         CalculatorParameters.builder()
-            .availableWorkers(singletonList(valueOf(2)))
+            .workers(singletonList(2))
             .meshSizes(3)
             .build()
-    )).hasSize(6);
+    )).hasSize(3);
   }
 
 }
