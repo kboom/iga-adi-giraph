@@ -71,4 +71,8 @@ public enum IgaVertexType {
     return String.valueOf(directionTree.size()).length();
   }
 
+  public boolean isLeading(DirectionTree tree, long id) {
+    return offsetLeft(tree, id) == 0;
+  }
+
 }
