@@ -5,7 +5,7 @@ import com.google.common.math.LongMath;
 
 import static java.math.RoundingMode.UNNECESSARY;
 
-public final class DirectionTree {
+public class DirectionTree {
 
   private final int problemSize;
 
