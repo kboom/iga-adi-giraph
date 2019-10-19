@@ -2,28 +2,27 @@ package edu.agh.iga.adi.giraph.calculator;
 
 import com.beust.jcommander.Parameter;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Builder
-@Value
+@Getter
 class CalculatorParameters {
 
   @Parameter(names = "--help", help = true)
-  boolean help;
+  private boolean help;
 
   @Parameter(names = {"-w", "--workers"}, description = "The number of workers used")
   @Builder.Default
-  Integer workers = 1;
+  private Integer workers = 2;
 
   @Parameter(names = {"--sizes"}, description = "The number of mesh sizes to compute the statistics for")
   @Builder.Default
-  Integer meshSizes = 10;
+  private Integer meshSizes = 13;
 
   @Parameter(description = "Available workers")
   @Builder.Default
-  List<String> availableWorkers = new ArrayList<>();
+  private List<String> availableWorkers;
 
 }

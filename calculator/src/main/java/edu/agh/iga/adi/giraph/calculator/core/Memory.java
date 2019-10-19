@@ -3,8 +3,11 @@ package edu.agh.iga.adi.giraph.calculator.core;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import lombok.experimental.Wither;
+import lombok.val;
 
 import static java.lang.Long.MAX_VALUE;
+import static java.lang.Math.round;
+import static java.lang.String.valueOf;
 import static java.util.Arrays.stream;
 import static lombok.AccessLevel.PRIVATE;
 
@@ -70,6 +73,16 @@ public class Memory {
 
   public Memory divide(int pieces) {
     return bytes(bytes / pieces);
+  }
+
+  public String inGigabytes() {
+    val digits = 100.0;
+    return valueOf(round(((float) bytes / ONE_MB / THREE_ORDERS) * digits) / digits);
+  }
+
+  public String inMegabytes() {
+    val digits = 100.0;
+    return valueOf(round(((float) bytes / ONE_MB) * digits) / digits);
   }
 
 }

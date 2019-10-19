@@ -1,13 +1,18 @@
 package edu.agh.iga.adi.giraph.calculator;
 
 import com.beust.jcommander.JCommander;
+import edu.agh.iga.adi.giraph.calculator.core.Problem;
 import lombok.val;
+
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static java.lang.System.exit;
 
 public class MemoryCalculatorRunner {
 
-  private static void main(String[] strings) {
+
+  public static void main(String[] strings) {
     val parameters = CalculatorParameters.builder().build();
     JCommander commander = parseParameters(parameters);
     commander.parse(strings);
@@ -16,6 +21,26 @@ public class MemoryCalculatorRunner {
       commander.usage();
       exit(0);
     }
+
+    print(parameters);
+  }
+
+  private static void print(CalculatorParameters parameters) {
+    memoryRequirements(parameters)
+        .map(MemoryRequirementsFormatter::format)
+        .forEach(System.out::println);
+  }
+
+  private static Stream<MemoryRequirements> memoryRequirements(CalculatorParameters parameters) {
+    return IntStream.range(0, parameters.getMeshSizes())
+        .map(p -> (int) (12 * Math.pow(2, p)))
+        .mapToObj(size ->
+            Problem.builder()
+                .size(size)
+                .workers(parameters.getWorkers())
+                .build()
+        )
+        .map(MemoryCalculator::memoryRequirementsFor);
   }
 
   private static JCommander parseParameters(CalculatorParameters parameters) {
