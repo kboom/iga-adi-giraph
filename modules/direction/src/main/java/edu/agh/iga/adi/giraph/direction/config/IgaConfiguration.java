@@ -1,6 +1,7 @@
 package edu.agh.iga.adi.giraph.direction.config;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import edu.agh.iga.adi.giraph.core.problem.ProblemType;
 import edu.agh.iga.adi.giraph.direction.IgaPartitionerFactory;
 import edu.agh.iga.adi.giraph.direction.IgaWorkerContext;
@@ -16,9 +17,6 @@ import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import edu.agh.iga.adi.giraph.direction.performance.MemoryLogger;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.giraph.comm.flow_control.StaticFlowControl;
-import org.apache.giraph.comm.netty.NettyClient;
 import org.apache.giraph.conf.*;
 import org.apache.giraph.io.VertexInputFormat;
 import org.apache.giraph.worker.MemoryObserver;
@@ -28,6 +26,7 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -38,11 +37,16 @@ import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolve
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.SURFACE_PROBLEM;
 import static edu.agh.iga.adi.giraph.direction.computation.InitialProblemType.CONSTANT;
 import static java.lang.Integer.MAX_VALUE;
+import static java.lang.String.valueOf;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.join;
+import static org.apache.giraph.comm.flow_control.CreditBasedFlowControl.MAX_NUM_OF_OPEN_REQUESTS_PER_WORKER;
+import static org.apache.giraph.comm.flow_control.CreditBasedFlowControl.MAX_NUM_OF_UNSENT_REQUESTS;
+import static org.apache.giraph.comm.messages.MessageEncodeAndStoreType.BYTEARRAY_PER_PARTITION;
+import static org.apache.giraph.comm.messages.MessageEncodeAndStoreType.EXTRACT_BYTEARRAY_PER_PARTITION;
+import static org.apache.giraph.comm.netty.NettyClient.LIMIT_OPEN_REQUESTS_PER_WORKER;
 import static org.apache.giraph.conf.GiraphConstants.*;
-import static org.apache.giraph.io.formats.GiraphFileInputFormat.VERTEX_INPUT_DIR;
 import static org.apache.giraph.master.BspServiceMaster.NUM_MASTER_ZK_INPUT_SPLIT_THREADS;
 import static org.apache.giraph.partition.PartitionBalancer.PARTITION_BALANCE_ALGORITHM;
 import static org.apache.giraph.partition.PartitionBalancer.STATIC_BALANCE_ALGORITHM;
@@ -56,13 +60,15 @@ public class IgaConfiguration {
 
   public static final BooleanConfOption STORE_SOLUTION = new BooleanConfOption("iga.storeSolution", true, "Whether to store the solution or not.");
 
-  public static final BooleanConfOption USE_G1_COLLECTOR = new BooleanConfOption("iga.useG1", false, "Use G1GC collector");
+  public static final BooleanConfOption USE_G1_COLLECTOR = new BooleanConfOption("iga.useG1", false, "Use G1GC " +
+      "collector"); // it crashes the solver for larger computation sizes
 
   public static final IntConfOption WORKER_CORES = new IntConfOption("iga.cores", 1, "The number of cores per worker");
   public static final IntConfOption WORKER_MEMORY = new IntConfOption("iga.memory", 1, "The amount of memory per worker in gigabytes");
 
   public static final FloatConfOption NEW_GEN_MEMORY_FRACTION = new FloatConfOption("iga.newGenMemoryFraction", 0.1f, "Fraction of total mapper memory to use for new generation");
-  public static final FloatConfOption CORES_FRACTION_DURING_COMMUNICATION = new FloatConfOption("iga.coresFractionDuringCommunication", 0.7f, "Fraction of mapper cores to use for threads which overlap with" +
+  public static final FloatConfOption CORES_FRACTION_DURING_COMMUNICATION = new FloatConfOption("iga" +
+      ".coresFractionDuringCommunication", 1f, "Fraction of mapper cores to use for threads which overlap with" +
       " network communication");
 
   public static final StrConfOption JAVA_JOB_OPTIONS = new StrConfOption("yarn.app.mapreduce.am.command-opts", null, "Java options passed to the workers");
@@ -92,10 +98,9 @@ public class IgaConfiguration {
 
     solverOptions(conf);
     generalTuning(conf);
-    USE_MESSAGE_SIZE_ENCODING.set(conf, true); // todo not sure about this
-    convenienceSettings(conf);
+//    USE_MESSAGE_SIZE_ENCODING.set(conf, true); // todo not sure about this
+    resiliencySettings(conf);
 
-    WAIT_TASK_DONE_TIMEOUT_MS.set(conf, (int) MINUTES.toMillis(1));
     HDFS_FILE_CREATION_RETRY_WAIT_MS.set(conf, 1000);
 
 //    USE_MESSAGE_SIZE_ENCODING.set(conf, true);
@@ -103,23 +108,26 @@ public class IgaConfiguration {
 //    conf.setOutEdgesClass(ByteArrayEdges.class);
 
     // todo message store
-//    MESSAGE_STORE_FACTORY_CLASS.set(conf, InMemoryMessageStoreFactory.class);
-//    ASYNC_MESSAGE_STORE_THREADS_COUNT.set(conf, 8); todo would it help?
-
+//    MESSAGE_STORE_FACTORY_CLASS.set(conf, InMemoryMessageStoreFactory.class); // already creates
+//    LongByteArrayMessageStore by default
     setPartitioning(conf);
     return conf;
   }
 
   private static void setPartitioning(GiraphConfiguration conf) {
     // Seems that no re-balancing is required
-    conf.set(PARTITION_BALANCE_ALGORITHM, STATIC_BALANCE_ALGORITHM);
+    conf.setIfUnset(PARTITION_BALANCE_ALGORITHM, STATIC_BALANCE_ALGORITHM);
     conf.setGraphPartitionerFactoryClass(IgaPartitionerFactory.class);
   }
 
-  private static void convenienceSettings(GiraphConfiguration conf) {
-    MAX_MASTER_SUPERSTEP_WAIT_MSECS.set(conf, (int) MINUTES.toMillis(1));
-    NETTY_MAX_CONNECTION_FAILURES.set(conf, 10);
-    WAIT_TIME_BETWEEN_CONNECTION_RETRIES_MS.set(conf, 100);
+  private static void resiliencySettings(GiraphConfiguration conf) {
+    WAIT_TASK_DONE_TIMEOUT_MS.setIfUnset(conf, (int) MINUTES.toMillis(1));
+    MAX_MASTER_SUPERSTEP_WAIT_MSECS.setIfUnset(conf, (int) MINUTES.toMillis(1));
+    MAX_REQUEST_MILLISECONDS.setIfUnset(conf, (int) MINUTES.toMinutes(15));
+    NETTY_MAX_CONNECTION_FAILURES.setIfUnset(conf, 1000);
+    WAIT_TIME_BETWEEN_CONNECTION_RETRIES_MS.setIfUnset(conf, 100);
+    conf.setIfUnset("giraph.resendTimedOutRequests", "true");
+    conf.setIfUnset("giraph.waitForOtherWorkersMsec", valueOf(MINUTES.toMillis(60)));
   }
 
   private static void solverOptions(GiraphConfiguration conf) {
@@ -147,6 +155,8 @@ public class IgaConfiguration {
     int cores = WORKER_CORES.get(conf);
     int workerMemoryGB = WORKER_MEMORY.get(conf);
 
+    ASYNC_MESSAGE_STORE_THREADS_COUNT.setIfUnset(conf, cores);
+
     conf.setInt("giraph.yarn.task.heap.mb", workerMemoryGB * ONE_KB);
 
     conf.setIfUnset(NUM_MASTER_ZK_INPUT_SPLIT_THREADS, Integer.toString(cores));
@@ -171,9 +181,8 @@ public class IgaConfiguration {
     GiraphConstants.CHANNELS_PER_SERVER.setIfUnset(conf,
         Math.max(1, 2 * threadsDuringCommunication / workers));
 
-    // Limit number of open requests to 2000
-    NettyClient.LIMIT_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, true);
-    StaticFlowControl.MAX_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, 100);
+    customConfig(conf);
+
     // Pooled allocator in netty is faster
     GiraphConstants.NETTY_USE_POOLED_ALLOCATOR.setIfUnset(conf, true);
     // Turning off auto read is faster
@@ -181,7 +190,7 @@ public class IgaConfiguration {
 
     // Synchronize full gc calls across workers
     MemoryObserver.USE_MEMORY_OBSERVER.setIfUnset(conf, true);
-    // MemoryObserver.MIN_MS_BETWEEN_FULL_GCS.setIfUnset(conf, 60 * 1000);
+    MemoryObserver.MIN_MS_BETWEEN_FULL_GCS.setIfUnset(conf, 10 * 1000);
 
     // Increase number of partitions per compute thread
     GiraphConstants.MIN_PARTITIONS_PER_COMPUTE_THREAD.setIfUnset(conf, 3);
@@ -197,9 +206,12 @@ public class IgaConfiguration {
     // Enable tracking and printing of metrics
     GiraphConstants.METRICS_ENABLE.setIfUnset(conf, true);
 
+    conf.set("giraph.msgRequestWarningThreshold", "1");
+
     if (CONFIGURE_JAVA_OPTS.get(conf)) {
       List<String> javaOpts = getMemoryJavaOpts(conf);
       javaOpts.addAll(getGcJavaOpts(conf));
+      javaOpts.addAll(tuningJavaOpts(conf));
       JAVA_JOB_OPTIONS.set(conf, join(javaOpts, " "));
     }
 
@@ -208,15 +220,30 @@ public class IgaConfiguration {
      */
     NETTY_USE_DIRECT_MEMORY.set(conf, true);
 
-    NETTY_CLIENT_THREADS.set(conf, conf.getMaxWorkers());
-    CLIENT_SEND_BUFFER_SIZE.set(conf, 32 * ONE_MB);
-    CLIENT_RECEIVE_BUFFER_SIZE.set(conf, 32 * ONE_MB);
-    SERVER_SEND_BUFFER_SIZE.set(conf, 32 * ONE_MB);
-    SERVER_RECEIVE_BUFFER_SIZE.set(conf, 32 * ONE_MB);
-    MAX_MSG_REQUEST_SIZE.set(conf, 32 * ONE_MB);
     REQUEST_SIZE_WARNING_THRESHOLD.set(conf, 1);
-    MAX_VERTEX_REQUEST_SIZE.set(conf, 32 * ONE_MB);
-    MAX_EDGE_REQUEST_SIZE.set(conf, 32 * ONE_MB);
+    NETTY_CLIENT_THREADS.set(conf, threadsDuringCommunication);
+    CLIENT_RECEIVE_BUFFER_SIZE.set(conf,  ONE_MB);
+    CLIENT_SEND_BUFFER_SIZE.set(conf, 32 * ONE_MB);
+    SERVER_SEND_BUFFER_SIZE.set(conf, 32 * ONE_MB);
+    SERVER_RECEIVE_BUFFER_SIZE.set(conf, 64 * ONE_MB);
+    MAX_MSG_REQUEST_SIZE.set(conf, 64 * ONE_MB);
+    MAX_VERTEX_REQUEST_SIZE.set(conf, 64 * ONE_MB);
+    MAX_EDGE_REQUEST_SIZE.set(conf, 64 * ONE_MB);
+
+    USE_MESSAGE_SIZE_ENCODING.set(conf, true);
+
+    MESSAGE_ENCODE_AND_STORE_TYPE.set(conf, BYTEARRAY_PER_PARTITION); // todo not sure
+  }
+
+  private static void customConfig(GiraphConfiguration conf) {
+    // Limit number of open requests to 2000
+//    LIMIT_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, false);
+//    StaticFlowControl.MAX_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, 100);
+
+    // we use this instead
+    LIMIT_OPEN_REQUESTS_PER_WORKER.set(conf, true);
+    MAX_NUM_OF_UNSENT_REQUESTS.set(conf, 100);
+    MAX_NUM_OF_OPEN_REQUESTS_PER_WORKER.set(conf, 20);
   }
 
   private static String currentJar() {
@@ -254,5 +281,10 @@ public class IgaConfiguration {
     }
     return gcJavaOpts;
   }
+
+  private static List<String> tuningJavaOpts(GiraphConfiguration conf) {
+    return Lists.newArrayList("jdk.tls.disabledAlgorithms=SSLv3, GCM");
+  }
+
 
 }
