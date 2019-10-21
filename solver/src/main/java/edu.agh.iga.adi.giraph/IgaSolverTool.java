@@ -53,7 +53,7 @@ public class IgaSolverTool extends Configured implements Tool {
         .build();
     commander.parse(strings);
 
-    LOG.info("Parsed config" + o.toString());
+    LOG.error("Parsed config" + o.toString());
 
     if (o.isHelp()) {
       commander.usage();
