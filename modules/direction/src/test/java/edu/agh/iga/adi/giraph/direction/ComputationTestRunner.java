@@ -13,7 +13,7 @@ import org.apache.giraph.edge.HashMapEdges;
 import org.apache.giraph.graph.Computation;
 import org.apache.giraph.master.MasterCompute;
 import org.apache.giraph.utils.TestGraph;
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -59,7 +59,7 @@ public class ComputationTestRunner {
     }
 
     public ComputationTestRunAssertions isRunForGraph(Function<IgaTestGraph, IgaTestGraph> modifier) {
-      TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> graph = new TestGraph<>(config);
+      TestGraph<IntWritable, IgaElementWritable, IgaOperationWritable> graph = new TestGraph<>(config);
       modifier.apply(new IgaTestGraph(graph, mesh, tree));
       try {
         return new ComputationTestRunAssertions(runWithInMemoryOutput(config, graph));
@@ -72,9 +72,9 @@ public class ComputationTestRunner {
 
   public static class ComputationTestRunAssertions {
 
-    private final TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> output;
+    private final TestGraph<IntWritable, IgaElementWritable, IgaOperationWritable> output;
 
-    private ComputationTestRunAssertions(TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> output) {
+    private ComputationTestRunAssertions(TestGraph<IntWritable, IgaElementWritable, IgaOperationWritable> output) {
       this.output = output;
     }
 

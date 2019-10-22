@@ -6,11 +6,11 @@ public final class CachedDirectionTree extends DirectionTree {
 
   private int height = -1;
   private int branchingHeight = -1;
-  private long firstIndexOfLeafRow = -1;
-  private long lastIndexOfLeafRow = -1;
-  private long firstIndexOfBranchingRow = -1;
-  private long lastIndexOfBranchingRow = -1;
-  private long strengthOfLeaves = -1;
+  private int firstIndexOfLeafRow = -1;
+  private int lastIndexOfLeafRow = -1;
+  private int firstIndexOfBranchingRow = -1;
+  private int lastIndexOfBranchingRow = -1;
+  private int strengthOfLeaves = -1;
   private int size = -1;
 
   public CachedDirectionTree(int problemSize) {
@@ -42,7 +42,7 @@ public final class CachedDirectionTree extends DirectionTree {
   }
 
   @Override
-  public long firstIndexOfLeafRow() {
+  public int firstIndexOfLeafRow() {
     if (firstIndexOfLeafRow == -1) {
       synchronized (this) {
         if (firstIndexOfLeafRow == -1) {
@@ -54,7 +54,7 @@ public final class CachedDirectionTree extends DirectionTree {
   }
 
   @Override
-  public long lastIndexOfLeafRow() {
+  public int lastIndexOfLeafRow() {
     if (lastIndexOfLeafRow == -1) {
       synchronized (this) {
         if (lastIndexOfLeafRow == -1) {
@@ -66,7 +66,7 @@ public final class CachedDirectionTree extends DirectionTree {
   }
 
   @Override
-  public long firstIndexOfBranchingRow() {
+  public int firstIndexOfBranchingRow() {
     if (firstIndexOfBranchingRow == -1) {
       synchronized (this) {
         if (firstIndexOfBranchingRow == -1) {
@@ -78,7 +78,7 @@ public final class CachedDirectionTree extends DirectionTree {
   }
 
   @Override
-  public long lastIndexOfBranchingRow() {
+  public int lastIndexOfBranchingRow() {
     if (lastIndexOfBranchingRow == -1) {
       synchronized (this) {
         if (lastIndexOfBranchingRow == -1) {
@@ -90,7 +90,7 @@ public final class CachedDirectionTree extends DirectionTree {
   }
 
   @Override
-  public long strengthOfLeaves() {
+  public int strengthOfLeaves() {
     if (strengthOfLeaves == -1) {
       synchronized (this) {
         if (strengthOfLeaves == -1) {

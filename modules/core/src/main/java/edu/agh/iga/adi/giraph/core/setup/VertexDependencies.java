@@ -4,9 +4,9 @@ import edu.agh.iga.adi.giraph.core.IgaVertex;
 import lombok.NoArgsConstructor;
 import lombok.val;
 
-import java.util.stream.LongStream;
+import java.util.stream.IntStream;
 
-import static java.util.stream.LongStream.rangeClosed;
+import static java.util.stream.IntStream.rangeClosed;
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
@@ -19,14 +19,14 @@ class VertexDependencies {
   private static final int[] INTERIM_LAST = {2};
   private static final int[] INTERIM_ALL = {0, 1, 2};
 
-  static LongStream verticesDependingOn(IgaVertex vertex) {
+  static IntStream verticesDependingOn(IgaVertex vertex) {
     if (vertex.isLeading()) {
-      long firstLeaf = vertex.getTree().firstIndexOfLeafRow();
+      val firstLeaf = vertex.getTree().firstIndexOfLeafRow();
       // first vertex holds 5 meaningful rows
-      return LongStream.of(firstLeaf, firstLeaf + 1, firstLeaf + 2, firstLeaf + 3, firstLeaf + 4);
+      return IntStream.of(firstLeaf, firstLeaf + 1, firstLeaf + 2, firstLeaf + 3, firstLeaf + 4);
     }
     if (vertex.isTrailing()) {
-      long lastLeaf = vertex.getTree().lastIndexOfLeafRow();
+      val lastLeaf = vertex.getTree().lastIndexOfLeafRow();
       return rangeClosed(lastLeaf - 2, lastLeaf);
     }
     // other branch vertices rely on their children and their closest cousins

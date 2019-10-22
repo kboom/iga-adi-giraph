@@ -22,7 +22,7 @@ final class MergeAndEliminateBranchMessageSerializer implements MessageSerialize
 
   @Override
   public void writeMessage(DataOutput dataOutput, MergeAndEliminateBranchMessage message) throws IOException {
-    dataOutput.writeLong(message.getSrcId());
+    dataOutput.writeInt(message.getSrcId());
     dataOutput.writeInt((int) message.getMb().countColumns());
     message.getMa().asCollectable1D().supplyTo(receiveInto(dataOutput));
     message.getMb().asCollectable1D().supplyTo(receiveInto(dataOutput));
@@ -30,7 +30,7 @@ final class MergeAndEliminateBranchMessageSerializer implements MessageSerialize
 
   @Override
   public MergeAndEliminateBranchMessage readMessage(DataInput dataInput) throws IOException {
-    val srcId = dataInput.readLong();
+    val srcId = dataInput.readInt();
     val dofs = dataInput.readInt();
     PrimitiveDenseStore ma = FACTORY.makeZero(CONTRIBUTED_ROWS, CONTRIBUTED_COLS);
     ma.fillMatching(dataInputAccessStore(dataInput, CONTRIBUTED_ROWS * CONTRIBUTED_COLS));
@@ -41,7 +41,7 @@ final class MergeAndEliminateBranchMessageSerializer implements MessageSerialize
 
   @Override
   public MergeAndEliminateBranchMessage readMessage(MergeAndEliminateBranchMessage message, DataInput dataInput) throws IOException {
-    val srcId = dataInput.readLong();
+    val srcId = dataInput.readInt();
     val dofs = dataInput.readInt();
     message.getMa().fillMatching(dataInputAccessStore(dataInput, CONTRIBUTED_ROWS * CONTRIBUTED_COLS));
     message.getMb().fillMatching(dataInputAccessStore(dataInput, CONTRIBUTED_ROWS * dofs));

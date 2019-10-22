@@ -3,7 +3,6 @@ package edu.agh.iga.adi.giraph.direction.computation.factorization;
 import edu.agh.iga.adi.giraph.core.DirectionTree;
 import edu.agh.iga.adi.giraph.core.IgaOperation;
 import edu.agh.iga.adi.giraph.core.operations.*;
-import edu.agh.iga.adi.giraph.direction.computation.IgaComputation;
 
 import static edu.agh.iga.adi.giraph.direction.computation.factorization.IgaComputationDirection.DOWN;
 import static edu.agh.iga.adi.giraph.direction.computation.factorization.IgaComputationDirection.UP;

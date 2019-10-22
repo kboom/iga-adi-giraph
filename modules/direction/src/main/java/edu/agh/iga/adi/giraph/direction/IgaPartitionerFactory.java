@@ -7,7 +7,7 @@ import lombok.val;
 import org.apache.giraph.conf.ImmutableClassesGiraphConfiguration;
 import org.apache.giraph.partition.GraphPartitionerFactory;
 import org.apache.giraph.partition.SimpleLongRangePartitionerFactory;
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.log4j.Logger;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertexType.vertexType;
@@ -20,14 +20,14 @@ import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.PROBLEM_S
  *
  * @see SimpleLongRangePartitionerFactory
  */
-public class IgaPartitionerFactory extends GraphPartitionerFactory<LongWritable, IgaElementWritable, IgaOperationWritable> {
+public class IgaPartitionerFactory extends GraphPartitionerFactory<IntWritable, IgaElementWritable, IgaOperationWritable> {
 
   private static final Logger LOG = Logger.getLogger(IgaPartitionerFactory.class);
 
   private DirectionTree directionTree;
 
   @Override
-  public int getPartition(LongWritable id, int partitionCount, int workerCount) {
+  public int getPartition(IntWritable id, int partitionCount, int workerCount) {
     val vid = id.get();
     val vertexType = vertexType(directionTree, vid);
 

@@ -3,6 +3,7 @@ package edu.agh.iga.adi.giraph.core;
 import com.google.common.collect.ImmutableList;
 import com.google.common.math.IntMath;
 import com.google.common.math.LongMath;
+import lombok.val;
 
 import java.util.List;
 import java.util.Objects;
@@ -15,19 +16,19 @@ import static java.math.RoundingMode.FLOOR;
 public abstract class IgaVertex {
 
   private final DirectionTree tree;
-  private long id;
+  private int id;
 
-  private IgaVertex(DirectionTree tree, long id) {
+  private IgaVertex(DirectionTree tree, int id) {
     this.tree = tree;
     this.id = id;
   }
 
-  public IgaVertex reuseSameTypeFor(long id) {
+  public IgaVertex reuseSameTypeFor(int id) {
     this.id = id;
     return this;
   }
 
-  public static IgaVertex vertexOf(DirectionTree tree, long id) {
+  public static IgaVertex vertexOf(DirectionTree tree, int id) {
     if (id == 1) {
       return new RootVertex(tree);
     }
@@ -43,15 +44,15 @@ public abstract class IgaVertex {
     throw new IllegalStateException(format("The problem tree does not have vertex %d", id));
   }
 
-  private InterimVertex interimVertex(long id) {
+  private InterimVertex interimVertex(int id) {
     return new InterimVertex(tree, id);
   }
 
-  private BranchVertex branchVertex(long id) {
+  private BranchVertex branchVertex(int id) {
     return new BranchVertex(tree, id);
   }
 
-  private LeafVertex leafVertex(long id) {
+  private LeafVertex leafVertex(int id) {
     return new LeafVertex(tree, id);
   }
 
@@ -63,7 +64,7 @@ public abstract class IgaVertex {
     return id > dst.id;
   }
 
-  public long id() {
+  public int id() {
     return id;
   }
 
@@ -88,13 +89,13 @@ public abstract class IgaVertex {
     return is(InterimVertex.class) && rowIndexOf() == tree.branchingHeight() - 1;
   }
 
-  public long strengthOf() {
+  public int strengthOf() {
     return tree.strengthOfRow(rowIndexOf());
   }
 
   public ChildPosition childPosition() {
     if (is(LeafVertex.class)) {
-      int position = (int) (tree.strengthOfLeaves() + offsetLeft()) % 3;
+      int position = (tree.strengthOfLeaves() + offsetLeft()) % 3;
       switch (position) {
         case 0:
           return LEFT;
@@ -109,11 +110,11 @@ public abstract class IgaVertex {
     return id % 2 == 0 ? LEFT : RIGHT;
   }
 
-  public long offsetLeft() {
+  public int offsetLeft() {
     return id - tree.firstIndexOfRow(rowIndexOf());
   }
 
-  public long offsetRight() {
+  public int offsetRight() {
     return tree.lastIndexOfRow(rowIndexOf()) - id;
   }
 
@@ -140,7 +141,7 @@ public abstract class IgaVertex {
 
   public List<IgaVertex> children() {
     return leftChildOf().map(child -> {
-      final long offset = child.id();
+      val offset = child.id();
       if (child.is(InterimVertex.class)) {
         return ImmutableList.<IgaVertex>of(interimVertex(offset), interimVertex(offset + 1));
       }
@@ -157,31 +158,31 @@ public abstract class IgaVertex {
     }).orElse(ImmutableList.of());
   }
 
-  public long getLeftSegment() {
-    long share = tree.strengthOfLeaves() / strengthOf();
+  public int getLeftSegment() {
+    val share = tree.strengthOfLeaves() / strengthOf();
     return share * offsetLeft();
   }
 
-  public long leftDescendantAt(int height) {
+  public int leftDescendantAt(int height) {
     final int currentHeight = rowIndexOf();
     final int branchingHeight = tree.branchingHeight();
     if (currentHeight + height <= branchingHeight) {
       return IntMath.pow(2, height) * id;
     } else {
-      final long parentId = IntMath.pow(2, height - 1) * id;
-      final long parentOffset = parentId - tree.firstIndexOfBranchingRow();
+      val parentId = IntMath.pow(2, height - 1) * id;
+      val parentOffset = parentId - tree.firstIndexOfBranchingRow();
       return tree.firstIndexOfLeafRow() + 3 * parentOffset;
     }
   }
 
-  public long rightDescendantAt(int height) {
+  public int rightDescendantAt(int height) {
     final int currentHeight = rowIndexOf();
     final int branchingHeight = tree.branchingHeight();
     if (currentHeight + height <= branchingHeight) {
       return IntMath.pow(2, height) * (id + 1) - 1;
     } else {
-      final long parentId = IntMath.pow(2, height - 1) * (id + 1) - 1;
-      final long parentOffset = parentId - tree.firstIndexOfBranchingRow();
+      val parentId = IntMath.pow(2, height - 1) * (id + 1) - 1;
+      val parentOffset = parentId - tree.firstIndexOfBranchingRow();
       return tree.firstIndexOfLeafRow() + 3 * (parentOffset + 1) - 1;
     }
   }
@@ -202,7 +203,7 @@ public abstract class IgaVertex {
 
   public static class InterimVertex extends IgaVertex {
 
-    private InterimVertex(DirectionTree tree, long id) {
+    private InterimVertex(DirectionTree tree, int id) {
       super(tree, id);
     }
 
@@ -210,7 +211,7 @@ public abstract class IgaVertex {
 
   public static class BranchVertex extends IgaVertex {
 
-    private BranchVertex(DirectionTree tree, long id) {
+    private BranchVertex(DirectionTree tree, int id) {
       super(tree, id);
     }
 
@@ -218,7 +219,7 @@ public abstract class IgaVertex {
 
   public static class LeafVertex extends IgaVertex {
 
-    private LeafVertex(DirectionTree tree, long id) {
+    private LeafVertex(DirectionTree tree, int id) {
       super(tree, id);
     }
 

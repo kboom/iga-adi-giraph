@@ -21,14 +21,14 @@ final class BackwardsSubstituteRootMessageSerializer implements MessageSerialize
 
   @Override
   public void writeMessage(DataOutput dataOutput, BackwardsSubstituteRootMessage message) throws IOException {
-    dataOutput.writeLong(message.getSrcId());
+    dataOutput.writeInt(message.getSrcId());
     dataOutput.writeInt((int) message.mx.countColumns());
     message.mx.asCollectable1D().supplyTo(receiveInto(dataOutput));
   }
 
   @Override
   public BackwardsSubstituteRootMessage readMessage(DataInput dataInput) throws IOException {
-    val srcId = dataInput.readLong();
+    val srcId = dataInput.readInt();
     val dofs = dataInput.readInt();
     PrimitiveDenseStore ds = FACTORY.makeZero(CONTRIBUTED_ROWS, dofs);
     ds.fillMatching(dataInputAccessStore(dataInput, CONTRIBUTED_ROWS * dofs));
@@ -37,7 +37,7 @@ final class BackwardsSubstituteRootMessageSerializer implements MessageSerialize
 
   @Override
   public BackwardsSubstituteRootMessage readMessage(BackwardsSubstituteRootMessage message, DataInput dataInput) throws IOException {
-    val srcId = dataInput.readLong();
+    val srcId = dataInput.readInt();
     val dofs = dataInput.readInt();
     message.mx.fillMatching(dataInputAccessStore(dataInput, CONTRIBUTED_ROWS * dofs));
     message.reattach(srcId);

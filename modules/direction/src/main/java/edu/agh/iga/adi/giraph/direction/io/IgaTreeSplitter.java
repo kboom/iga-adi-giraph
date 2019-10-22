@@ -2,10 +2,11 @@ package edu.agh.iga.adi.giraph.direction.io;
 
 import com.google.common.collect.ImmutableList;
 import edu.agh.iga.adi.giraph.core.DirectionTree;
+import lombok.val;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.LongStream;
+import java.util.stream.IntStream;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static java.lang.Math.max;
@@ -31,19 +32,18 @@ final class IgaTreeSplitter {
     }
 
     if (cheight > 0) {
-      builder.add(new IgaInputSplit(vertexOf(tree, 1L), cheight));
+      builder.add(new IgaInputSplit(vertexOf(tree, 1), cheight));
     }
 
     return builder.build();
   }
 
   private Iterator<IgaInputSplit> inputSplitsFor(int height, int heightPerSegment) {
-    final long firstIndex = tree.firstIndexOfRow(height + 1);
-    final long lastIndex = tree.lastIndexOfRow(height + 1);
+    val firstIndex = tree.firstIndexOfRow(height + 1);
+    val lastIndex = tree.lastIndexOfRow(height + 1);
 
-    return LongStream.range(firstIndex, lastIndex + 1)
-        .boxed()
-        .map(i -> new IgaInputSplit(vertexOf(tree, i), heightPerSegment))
+    return IntStream.range(firstIndex, lastIndex + 1)
+        .mapToObj(i -> new IgaInputSplit(vertexOf(tree, i), heightPerSegment))
         .iterator();
   }
 

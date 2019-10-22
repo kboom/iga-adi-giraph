@@ -20,31 +20,31 @@ public final class TestOperationFactory {
     this.tree = tree;
   }
 
-  public DirectedOperation mergeAndEliminateLeaves(long src, long dst) {
+  public DirectedOperation mergeAndEliminateLeaves(int src, int dst) {
     return new DirectedOperation(vertexOf(tree, src), vertexOf(tree, dst), MERGE_AND_ELIMINATE_LEAVES_OPERATION);
   }
 
-  public DirectedOperation mergeAndEliminateBranch(long src, long dst) {
+  public DirectedOperation mergeAndEliminateBranch(int src, int dst) {
     return new DirectedOperation(vertexOf(tree, src), vertexOf(tree, dst), MERGE_AND_ELIMINATE_BRANCH_OPERATION);
   }
 
-  public DirectedOperation mergeAndEliminateInterim(long src, long dst) {
+  public DirectedOperation mergeAndEliminateInterim(int src, int dst) {
     return new DirectedOperation(vertexOf(tree, src), vertexOf(tree, dst), MERGE_AND_ELIMINATE_INTERIM_OPERATION);
   }
 
-  public DirectedOperation mergeAndEliminateRoot(long src, long dst) {
+  public DirectedOperation mergeAndEliminateRoot(int src, int dst) {
     return new DirectedOperation(vertexOf(tree, src), vertexOf(tree, dst), MERGE_AND_ELIMINATE_ROOT_OPERATION);
   }
 
-  public DirectedOperation backwardsSubstituteRoot(long src, long dst) {
+  public DirectedOperation backwardsSubstituteRoot(int src, int dst) {
     return new DirectedOperation(vertexOf(tree, src), vertexOf(tree, dst), BACKWARDS_SUBSTITUTE_ROOT_OPERATION);
   }
 
-  public DirectedOperation backwardsSubstituteInterim(long src, long dst) {
+  public DirectedOperation backwardsSubstituteInterim(int src, int dst) {
     return new DirectedOperation(vertexOf(tree, src), vertexOf(tree, dst), BACKWARDS_SUBSTITUTE_INTERIM_OPERATION);
   }
 
-  public DirectedOperation backwardsSubstituteBranch(long src, long dst) {
+  public DirectedOperation backwardsSubstituteBranch(int src, int dst) {
     return new DirectedOperation(vertexOf(tree, src), vertexOf(tree, dst), BACKWARDS_SUBSTITUTE_BRANCH_OPERATION);
   }
 

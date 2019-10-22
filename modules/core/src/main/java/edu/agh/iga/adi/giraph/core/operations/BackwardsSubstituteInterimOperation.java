@@ -61,7 +61,7 @@ public final class BackwardsSubstituteInterimOperation implements IgaOperation<B
 
     public final TransformableRegion<Double> mx;
 
-    public BackwardsSubstituteInterimMessage(long srcId, TransformableRegion<Double> mx) {
+    public BackwardsSubstituteInterimMessage(int srcId, TransformableRegion<Double> mx) {
       super(srcId, BACKWARDS_SUBSTITUTE_INTERIM_OPERATION);
       this.mx = mx;
     }

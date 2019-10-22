@@ -61,7 +61,7 @@ public final class MergeAndEliminateRootOperation implements IgaOperation<MergeA
     public final TransformableRegion<Double> ma;
     public final TransformableRegion<Double> mb;
 
-    public MergeAndEliminateRootMessage(long srcId, TransformableRegion<Double> ma, TransformableRegion<Double> mb) {
+    public MergeAndEliminateRootMessage(int srcId, TransformableRegion<Double> ma, TransformableRegion<Double> mb) {
       super(srcId, MERGE_AND_ELIMINATE_ROOT_OPERATION);
       this.ma = ma;
       this.mb = mb;

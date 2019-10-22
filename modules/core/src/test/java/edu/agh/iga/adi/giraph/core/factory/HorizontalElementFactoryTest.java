@@ -17,7 +17,7 @@ class HorizontalElementFactoryTest {
   @Test
   void canCreateElement() {
     // when
-    IgaElement element = factory.createLeafElement(LINEAR_PROBLEM, vertexOf(Problems.TREE_12, 8L));
+    IgaElement element = factory.createLeafElement(LINEAR_PROBLEM, vertexOf(Problems.TREE_12, 8));
 
     // then
     assertThatElement(element)

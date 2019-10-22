@@ -59,7 +59,7 @@ public final class BackwardsSubstituteRootOperation implements IgaOperation<Back
 
     public final TransformableRegion<Double> mx;
 
-    public BackwardsSubstituteRootMessage(long srcId, TransformableRegion<Double> mx) {
+    public BackwardsSubstituteRootMessage(int srcId, TransformableRegion<Double> mx) {
       super(srcId, BACKWARDS_SUBSTITUTE_ROOT_OPERATION);
       this.mx = mx;
     }

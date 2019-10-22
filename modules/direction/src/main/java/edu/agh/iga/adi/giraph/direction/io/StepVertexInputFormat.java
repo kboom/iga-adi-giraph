@@ -10,7 +10,7 @@ import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import lombok.val;
 import org.apache.giraph.io.formats.TextVertexValueInputFormat;
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
@@ -21,8 +21,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
-import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.PROBLEM_SIZE;
 import static edu.agh.iga.adi.giraph.direction.computation.ProblemFactoryResolver.getProblemFactory;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.PROBLEM_SIZE;
 import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
 /**
@@ -37,7 +37,7 @@ import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
  * The ordering of vertices is not important but vertex file splits should match the partitioning scheme so
  * data doesn't have to be transferred over the network.
  */
-public class StepVertexInputFormat extends TextVertexValueInputFormat<LongWritable, IgaElementWritable, IgaOperationWritable> {
+public class StepVertexInputFormat extends TextVertexValueInputFormat<IntWritable, IgaElementWritable, IgaOperationWritable> {
 
   private static final Pattern SEPARATOR = Pattern.compile("[ ,]");
 
@@ -73,8 +73,8 @@ public class StepVertexInputFormat extends TextVertexValueInputFormat<LongWritab
     }
 
     @Override
-    protected LongWritable getId(double[] line) {
-      return new LongWritable((long) line[0]);
+    protected IntWritable getId(double[] line) {
+      return new IntWritable((int) line[0]);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class StepVertexInputFormat extends TextVertexValueInputFormat<LongWritab
     }
 
     private IgaVertex vertex(double v) {
-      return vertexOf(directionTree, (long) v);
+      return vertexOf(directionTree, (int) v);
     }
 
     private MatrixStore<Double> asMatrix(IgaVertex vertex, double[] line) {

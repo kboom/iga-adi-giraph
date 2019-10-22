@@ -7,7 +7,7 @@ import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import lombok.val;
 import org.apache.giraph.graph.Vertex;
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
 
 import static edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger.computationLog;
 import static edu.agh.iga.adi.giraph.direction.computation.factorization.FactorizationLogger.logPhase;
@@ -27,7 +27,7 @@ public final class InitialComputation extends IgaComputation {
 
   @Override
   public void compute(
-      Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex,
+      Vertex<IntWritable, IgaElementWritable, IgaOperationWritable> vertex,
       Iterable<IgaMessageWritable> messages
   ) {
     val igaVertex = vertexOf(vertex);

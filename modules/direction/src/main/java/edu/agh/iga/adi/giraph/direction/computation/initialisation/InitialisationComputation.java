@@ -11,7 +11,6 @@ import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import lombok.val;
 import org.apache.giraph.graph.Vertex;
 import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.LongWritable;
 import org.apache.log4j.Logger;
 
 import java.util.stream.Stream;
@@ -34,7 +33,7 @@ public class InitialisationComputation extends IgaComputation {
   private Initialisation initialisation;
 
   private final IgaMessageWritable msgWritable = new IgaMessageWritable();
-  private final LongWritable idWritable = new LongWritable();
+  private final IntWritable idWritable = new IntWritable();
 
   @Override
   public void preSuperstep() {
@@ -48,7 +47,7 @@ public class InitialisationComputation extends IgaComputation {
 
   @Override
   public void compute(
-      Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex,
+      Vertex<IntWritable, IgaElementWritable, IgaOperationWritable> vertex,
       Iterable<IgaMessageWritable> messages
   ) {
     switch (phase) {
@@ -64,7 +63,7 @@ public class InitialisationComputation extends IgaComputation {
     }
   }
 
-  private void doSend(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
+  private void doSend(Vertex<IntWritable, IgaElementWritable, IgaOperationWritable> vertex) {
     val igaVertex = vertexOf(vertex);
     if (igaVertex.is(BranchVertex.class)) {
       if (LOG.isTraceEnabled()) {
@@ -83,7 +82,7 @@ public class InitialisationComputation extends IgaComputation {
   }
 
   private void receive(
-      Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex,
+      Vertex<IntWritable, IgaElementWritable, IgaOperationWritable> vertex,
       Iterable<IgaMessageWritable> messages
   ) {
     Stream<InitialisationIgaMessage> msg = messagesOf(messages).map(f -> (InitialisationIgaMessage) f);

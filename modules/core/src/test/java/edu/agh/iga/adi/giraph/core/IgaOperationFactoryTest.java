@@ -18,7 +18,7 @@ class IgaOperationFactoryTest {
 
   @Test
   void canGenerateTopTriangle() {
-    assertThat(newArrayList(operationsFor(TREE_12, vertexOf(TREE_12, 1L), 1)))
+    assertThat(newArrayList(operationsFor(TREE_12, vertexOf(TREE_12, 1), 1)))
         .containsExactlyInAnyOrder(
             T12OF.mergeAndEliminateRoot(2, 1),
             T12OF.mergeAndEliminateRoot(3, 1),
@@ -29,7 +29,7 @@ class IgaOperationFactoryTest {
 
   @Test
   void canGenerateBottomTriangle() {
-    assertThat(newArrayList(operationsFor(TREE_12, vertexOf(TREE_12, 4L), 1)))
+    assertThat(newArrayList(operationsFor(TREE_12, vertexOf(TREE_12, 4), 1)))
         .containsExactlyInAnyOrder(
             T12OF.mergeAndEliminateLeaves(8, 4),
             T12OF.mergeAndEliminateLeaves(9, 4),

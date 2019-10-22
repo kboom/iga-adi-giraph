@@ -22,7 +22,7 @@ class IgaElementWritableTest {
     IgaElementWritable readElement = new IgaElementWritable();
     ByteArrayDataOutput dataOutput = newDataOutput();
     IgaElementWritable wroteElement = new IgaElementWritable(igaElement(
-        1L,
+        1,
         FACTORY.makeFilled(3, 3, UNIFORM_DISTRIBUTION),
         FACTORY.makeFilled(3, 14, UNIFORM_DISTRIBUTION),
         FACTORY.makeFilled(3, 14, UNIFORM_DISTRIBUTION)
@@ -42,7 +42,7 @@ class IgaElementWritableTest {
     IgaElementWritable readElement = new IgaElementWritable();
     ByteArrayDataOutput dataOutput = newDataOutput();
     IgaElementWritable wroteElement = new IgaElementWritable(igaElement(
-        2L,
+        2,
         FACTORY.makeFilled(6, 6, UNIFORM_DISTRIBUTION),
         FACTORY.makeFilled(6, 14, UNIFORM_DISTRIBUTION),
         FACTORY.makeFilled(6, 14, UNIFORM_DISTRIBUTION)
@@ -62,7 +62,7 @@ class IgaElementWritableTest {
     IgaElementWritable readElement = new IgaElementWritable();
     ByteArrayDataOutput dataOutput = newDataOutput();
     IgaElementWritable wroteElement = new IgaElementWritable(igaElement(
-        2L,
+        2,
         FACTORY.makeFilled(6, 6, UNIFORM_DISTRIBUTION),
         FACTORY.makeFilled(6, 14, UNIFORM_DISTRIBUTION),
         null
@@ -82,7 +82,7 @@ class IgaElementWritableTest {
     IgaElementWritable readElement = new IgaElementWritable();
     ByteArrayDataOutput dataOutput = newDataOutput();
     IgaElementWritable wroteElement = new IgaElementWritable(igaElement(
-        2L,
+        2,
         FACTORY.makeFilled(6, 6, UNIFORM_DISTRIBUTION),
         FACTORY.makeFilled(6, 14, UNIFORM_DISTRIBUTION),
         FACTORY.makeFilled(6, 14, UNIFORM_DISTRIBUTION)

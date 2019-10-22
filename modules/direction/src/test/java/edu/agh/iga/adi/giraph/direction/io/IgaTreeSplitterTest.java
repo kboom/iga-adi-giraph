@@ -22,7 +22,7 @@ final class IgaTreeSplitterTest {
   void splits12Into1() {
     assertThat(SPLITTER_12.allSplitsFor(1))
         .containsExactlyInAnyOrder(
-            inputSplit(TREE_12, 1L, 3)
+            inputSplit(TREE_12, 1, 3)
         );
   }
 
@@ -30,9 +30,9 @@ final class IgaTreeSplitterTest {
   void splits12Into2() {
     assertThat(SPLITTER_12.allSplitsFor(2))
         .containsExactlyInAnyOrder(
-            inputSplit(TREE_12, 2L, 2),
-            inputSplit(TREE_12, 3L, 2),
-            inputSplit(TREE_12, 1L, 1)
+            inputSplit(TREE_12, 2, 2),
+            inputSplit(TREE_12, 3, 2),
+            inputSplit(TREE_12, 1, 1)
         );
   }
 
@@ -40,7 +40,7 @@ final class IgaTreeSplitterTest {
   void splits24Into1() {
     assertThat(SPLITTER_24.allSplitsFor(1))
         .containsExactlyInAnyOrder(
-            inputSplit(TREE_24, 1L, 4)
+            inputSplit(TREE_24, 1, 4)
         );
   }
 
@@ -48,9 +48,9 @@ final class IgaTreeSplitterTest {
   void splits24Into2() {
     assertThat(SPLITTER_24.allSplitsFor(2))
         .containsExactlyInAnyOrder(
-            inputSplit(TREE_24, 2L, 3),
-            inputSplit(TREE_24, 3L, 3),
-            inputSplit(TREE_24, 1L, 1)
+            inputSplit(TREE_24, 2, 3),
+            inputSplit(TREE_24, 3, 3),
+            inputSplit(TREE_24, 1, 1)
         );
   }
 
@@ -58,23 +58,23 @@ final class IgaTreeSplitterTest {
   void splits768Into2() {
     assertThat(SPLITTER_768.allSplitsFor(2))
         .containsExactlyInAnyOrder(
-            inputSplit(TREE_768, 16L, 5),
-            inputSplit(TREE_768, 17L, 5),
-            inputSplit(TREE_768, 18L, 5),
-            inputSplit(TREE_768, 19L, 5),
-            inputSplit(TREE_768, 20L, 5),
-            inputSplit(TREE_768, 21L, 5),
-            inputSplit(TREE_768, 22L, 5),
-            inputSplit(TREE_768, 23L, 5),
-            inputSplit(TREE_768, 24L, 5),
-            inputSplit(TREE_768, 25L, 5),
-            inputSplit(TREE_768, 26L, 5),
-            inputSplit(TREE_768, 27L, 5),
-            inputSplit(TREE_768, 28L, 5),
-            inputSplit(TREE_768, 29L, 5),
-            inputSplit(TREE_768, 30L, 5),
-            inputSplit(TREE_768, 31L, 5),
-            inputSplit(TREE_768, 1L, 4)
+            inputSplit(TREE_768, 16, 5),
+            inputSplit(TREE_768, 17, 5),
+            inputSplit(TREE_768, 18, 5),
+            inputSplit(TREE_768, 19, 5),
+            inputSplit(TREE_768, 20, 5),
+            inputSplit(TREE_768, 21, 5),
+            inputSplit(TREE_768, 22, 5),
+            inputSplit(TREE_768, 23, 5),
+            inputSplit(TREE_768, 24, 5),
+            inputSplit(TREE_768, 25, 5),
+            inputSplit(TREE_768, 26, 5),
+            inputSplit(TREE_768, 27, 5),
+            inputSplit(TREE_768, 28, 5),
+            inputSplit(TREE_768, 29, 5),
+            inputSplit(TREE_768, 30, 5),
+            inputSplit(TREE_768, 31, 5),
+            inputSplit(TREE_768, 1, 4)
         );
   }
 
@@ -82,45 +82,45 @@ final class IgaTreeSplitterTest {
   void splits768Into3() {
     assertThat(SPLITTER_768.allSplitsFor(3))
         .containsExactlyInAnyOrder(
-            inputSplit(TREE_768, 32L, 4),
-            inputSplit(TREE_768, 33L, 4),
-            inputSplit(TREE_768, 34L, 4),
-            inputSplit(TREE_768, 35L, 4),
-            inputSplit(TREE_768, 36L, 4),
-            inputSplit(TREE_768, 37L, 4),
-            inputSplit(TREE_768, 38L, 4),
-            inputSplit(TREE_768, 39L, 4),
-            inputSplit(TREE_768, 40L, 4),
-            inputSplit(TREE_768, 41L, 4),
-            inputSplit(TREE_768, 42L, 4),
-            inputSplit(TREE_768, 43L, 4),
-            inputSplit(TREE_768, 44L, 4),
-            inputSplit(TREE_768, 45L, 4),
-            inputSplit(TREE_768, 46L, 4),
-            inputSplit(TREE_768, 47L, 4),
-            inputSplit(TREE_768, 48L, 4),
-            inputSplit(TREE_768, 49L, 4),
-            inputSplit(TREE_768, 50L, 4),
-            inputSplit(TREE_768, 51L, 4),
-            inputSplit(TREE_768, 52L, 4),
-            inputSplit(TREE_768, 53L, 4),
-            inputSplit(TREE_768, 54L, 4),
-            inputSplit(TREE_768, 55L, 4),
-            inputSplit(TREE_768, 56L, 4),
-            inputSplit(TREE_768, 57L, 4),
-            inputSplit(TREE_768, 58L, 4),
-            inputSplit(TREE_768, 59L, 4),
-            inputSplit(TREE_768, 60L, 4),
-            inputSplit(TREE_768, 61L, 4),
-            inputSplit(TREE_768, 62L, 4),
-            inputSplit(TREE_768, 63L, 4),
-            inputSplit(TREE_768, 2L, 4),
-            inputSplit(TREE_768, 3L, 4),
-            inputSplit(TREE_768, 1L, 1)
+            inputSplit(TREE_768, 32, 4),
+            inputSplit(TREE_768, 33, 4),
+            inputSplit(TREE_768, 34, 4),
+            inputSplit(TREE_768, 35, 4),
+            inputSplit(TREE_768, 36, 4),
+            inputSplit(TREE_768, 37, 4),
+            inputSplit(TREE_768, 38, 4),
+            inputSplit(TREE_768, 39, 4),
+            inputSplit(TREE_768, 40, 4),
+            inputSplit(TREE_768, 41, 4),
+            inputSplit(TREE_768, 42, 4),
+            inputSplit(TREE_768, 43, 4),
+            inputSplit(TREE_768, 44, 4),
+            inputSplit(TREE_768, 45, 4),
+            inputSplit(TREE_768, 46, 4),
+            inputSplit(TREE_768, 47, 4),
+            inputSplit(TREE_768, 48, 4),
+            inputSplit(TREE_768, 49, 4),
+            inputSplit(TREE_768, 50, 4),
+            inputSplit(TREE_768, 51, 4),
+            inputSplit(TREE_768, 52, 4),
+            inputSplit(TREE_768, 53, 4),
+            inputSplit(TREE_768, 54, 4),
+            inputSplit(TREE_768, 55, 4),
+            inputSplit(TREE_768, 56, 4),
+            inputSplit(TREE_768, 57, 4),
+            inputSplit(TREE_768, 58, 4),
+            inputSplit(TREE_768, 59, 4),
+            inputSplit(TREE_768, 60, 4),
+            inputSplit(TREE_768, 61, 4),
+            inputSplit(TREE_768, 62, 4),
+            inputSplit(TREE_768, 63, 4),
+            inputSplit(TREE_768, 2, 4),
+            inputSplit(TREE_768, 3, 4),
+            inputSplit(TREE_768, 1, 1)
         );
   }
 
-  private IgaInputSplit inputSplit(DirectionTree tree, long root, int height) {
+  private IgaInputSplit inputSplit(DirectionTree tree, int root, int height) {
     return new IgaInputSplit(vertexOf(tree, root), height);
   }
 

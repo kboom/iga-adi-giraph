@@ -2,6 +2,7 @@ package edu.agh.iga.adi.giraph.direction.io;
 
 import edu.agh.iga.adi.giraph.core.DirectionTree;
 import edu.agh.iga.adi.giraph.core.IgaVertex;
+import lombok.val;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.InputSplit;
 
@@ -68,14 +69,14 @@ public class IgaInputSplit extends InputSplit implements Writable {
   @Override
   public void write(DataOutput dataOutput) throws IOException {
     dataOutput.writeInt(root.getTree().getProblemSize());
-    dataOutput.writeLong(root.id());
+    dataOutput.writeInt(root.id());
     dataOutput.writeInt(height);
   }
 
   @Override
   public void readFields(DataInput dataInput) throws IOException {
-    final int problemSize = dataInput.readInt();
-    final long rootId = dataInput.readLong();
+    val problemSize = dataInput.readInt();
+    val rootId = dataInput.readInt();
     root = vertexOf(new DirectionTree(problemSize), rootId);
     height = dataInput.readInt();
   }

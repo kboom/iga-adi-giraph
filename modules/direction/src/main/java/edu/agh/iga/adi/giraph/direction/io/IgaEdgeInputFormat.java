@@ -9,7 +9,7 @@ import org.apache.giraph.edge.EdgeFactory;
 import org.apache.giraph.io.EdgeInputFormat;
 import org.apache.giraph.io.EdgeReader;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
@@ -25,7 +25,7 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static org.apache.log4j.Logger.getLogger;
 
-public final class IgaEdgeInputFormat extends EdgeInputFormat<LongWritable, IgaOperationWritable> {
+public final class IgaEdgeInputFormat extends EdgeInputFormat<IntWritable, IgaOperationWritable> {
 
   private static final Logger LOG = getLogger(IgaEdgeInputFormat.class);
 
@@ -48,7 +48,7 @@ public final class IgaEdgeInputFormat extends EdgeInputFormat<LongWritable, IgaO
   }
 
   @Override
-  public EdgeReader<LongWritable, IgaOperationWritable> createEdgeReader(InputSplit split, TaskAttemptContext context) {
+  public EdgeReader<IntWritable, IgaOperationWritable> createEdgeReader(InputSplit split, TaskAttemptContext context) {
     IgaInputSplit vertexSplit = (IgaInputSplit) split;
     final int size = PROBLEM_SIZE.get(getConf());
     final DirectionTree tree = new DirectionTree(size);
@@ -61,7 +61,7 @@ public final class IgaEdgeInputFormat extends EdgeInputFormat<LongWritable, IgaO
     );
   }
 
-  public class IgaEdgeReader extends EdgeReader<LongWritable, IgaOperationWritable> {
+  public class IgaEdgeReader extends EdgeReader<IntWritable, IgaOperationWritable> {
 
     private final Iterator<DirectedOperation> operations;
     private DirectedOperation currentOperation;
@@ -84,14 +84,14 @@ public final class IgaEdgeInputFormat extends EdgeInputFormat<LongWritable, IgaO
     }
 
     @Override
-    public LongWritable getCurrentSourceId() {
-      return new LongWritable(currentOperation.getSrc().id());
+    public IntWritable getCurrentSourceId() {
+      return new IntWritable(currentOperation.getSrc().id());
     }
 
     @Override
-    public Edge<LongWritable, IgaOperationWritable> getCurrentEdge() {
+    public Edge<IntWritable, IgaOperationWritable> getCurrentEdge() {
       return EdgeFactory.create(
-          new LongWritable(currentOperation.getDst().id()),
+          new IntWritable(currentOperation.getDst().id()),
           new IgaOperationWritable(currentOperation.getOperation())
       );
     }

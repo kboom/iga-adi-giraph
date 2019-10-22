@@ -17,15 +17,15 @@ class IgaVertexTest {
 
   @Test
   void v1isRoot() {
-    assertThat(vertexOf(TREE, 1L))
+    assertThat(vertexOf(TREE, 1))
         .isInstanceOf(RootVertex.class)
         .extracting(IgaVertex::id)
-        .isEqualTo(1L);
+        .isEqualTo(1);
   }
 
   @ParameterizedTest
-  @ValueSource(longs = {2L, 3L})
-  void interimVertices(long id) {
+  @ValueSource(ints = {2, 3})
+  void interimVertices(int id) {
     assertThat(vertexOf(TREE, id))
         .isInstanceOf(InterimVertex.class)
         .extracting(IgaVertex::id)
@@ -33,8 +33,8 @@ class IgaVertexTest {
   }
 
   @ParameterizedTest
-  @ValueSource(longs = {4L, 5L, 6L, 7L})
-  void branchVertices(long id) {
+  @ValueSource(ints = {4, 5, 6, 7})
+  void branchVertices(int id) {
     assertThat(vertexOf(TREE, id))
         .isInstanceOf(BranchVertex.class)
         .extracting(IgaVertex::id)
@@ -42,8 +42,8 @@ class IgaVertexTest {
   }
 
   @ParameterizedTest
-  @ValueSource(longs = {8L, 9L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L})
-  void leafVertices(long id) {
+  @ValueSource(ints = {8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19})
+  void leafVertices(int id) {
     assertThat(vertexOf(TREE, id))
         .isInstanceOf(LeafVertex.class)
         .extracting(IgaVertex::id)
@@ -52,102 +52,102 @@ class IgaVertexTest {
 
   @Test
   void childrenRoot() {
-    assertThat(vertexOf(TREE, 1L).children())
+    assertThat(vertexOf(TREE, 1).children())
         .hasOnlyElementsOfType(InterimVertex.class)
         .extracting(IgaVertex::id)
-        .containsExactlyInAnyOrder(2L, 3L);
+        .containsExactlyInAnyOrder(2, 3);
   }
 
   @Test
   void v2children() {
-    assertThat(vertexOf(TREE, 2L).children())
+    assertThat(vertexOf(TREE, 2).children())
         .hasOnlyElementsOfType(BranchVertex.class)
         .extracting(IgaVertex::id)
-        .containsExactlyInAnyOrder(4L, 5L);
+        .containsExactlyInAnyOrder(4, 5);
   }
 
   @Test
   void v3children() {
-    assertThat(vertexOf(TREE, 3L).children())
+    assertThat(vertexOf(TREE, 3).children())
         .hasOnlyElementsOfType(BranchVertex.class)
         .extracting(IgaVertex::id)
-        .containsExactlyInAnyOrder(6L, 7L);
+        .containsExactlyInAnyOrder(6, 7);
   }
 
   @Test
   void v4children() {
-    assertThat(vertexOf(TREE, 4L).children())
+    assertThat(vertexOf(TREE, 4).children())
         .hasOnlyElementsOfType(LeafVertex.class)
         .extracting(IgaVertex::id)
-        .containsExactlyInAnyOrder(8L, 9L, 10L);
+        .containsExactlyInAnyOrder(8, 9, 10);
   }
 
   @Test
   void v7children() {
-    assertThat(vertexOf(TREE, 7L).children())
+    assertThat(vertexOf(TREE, 7).children())
         .hasOnlyElementsOfType(LeafVertex.class)
         .extracting(IgaVertex::id)
-        .containsExactlyInAnyOrder(17L, 18L, 19L);
+        .containsExactlyInAnyOrder(17, 18, 19);
   }
 
   @Test
   void firstLeftDescendantOfRootIs2() {
-    assertThat(vertexOf(TREE, 1L).leftDescendantAt(1)).isEqualTo(2);
+    assertThat(vertexOf(TREE, 1).leftDescendantAt(1)).isEqualTo(2);
   }
 
   @Test
   void secondLeftDescendantOfRootIs4() {
-    assertThat(vertexOf(TREE, 1L).leftDescendantAt(2)).isEqualTo(4);
+    assertThat(vertexOf(TREE, 1).leftDescendantAt(2)).isEqualTo(4);
   }
 
   @Test
   void lastLeftDescendantOfRootIs8() {
-    assertThat(vertexOf(TREE, 1L).leftDescendantAt(3)).isEqualTo(8);
+    assertThat(vertexOf(TREE, 1).leftDescendantAt(3)).isEqualTo(8);
   }
 
   @Test
   void firstLeftDescendantOf3Is6() {
-    assertThat(vertexOf(TREE, 3L).leftDescendantAt(1)).isEqualTo(6);
+    assertThat(vertexOf(TREE, 3).leftDescendantAt(1)).isEqualTo(6);
   }
 
   @Test
   void lastLeftDescendantOf3Is14() {
-    assertThat(vertexOf(TREE, 3L).leftDescendantAt(2)).isEqualTo(14);
+    assertThat(vertexOf(TREE, 3).leftDescendantAt(2)).isEqualTo(14);
   }
 
   @Test
   void lastLeftDescendantOf5Is11() {
-    assertThat(vertexOf(TREE, 5L).leftDescendantAt(1)).isEqualTo(11);
+    assertThat(vertexOf(TREE, 5).leftDescendantAt(1)).isEqualTo(11);
   }
 
   @Test
   void firstRightDescendantOfRootIs3() {
-    assertThat(vertexOf(TREE, 1L).rightDescendantAt(1)).isEqualTo(3);
+    assertThat(vertexOf(TREE, 1).rightDescendantAt(1)).isEqualTo(3);
   }
 
   @Test
   void secondRightDescendantOfRootIs7() {
-    assertThat(vertexOf(TREE, 1L).rightDescendantAt(2)).isEqualTo(7);
+    assertThat(vertexOf(TREE, 1).rightDescendantAt(2)).isEqualTo(7);
   }
 
   @Test
   void lastRightDescendantOfRootIs19() {
-    assertThat(vertexOf(TREE, 1L).rightDescendantAt(3)).isEqualTo(19);
+    assertThat(vertexOf(TREE, 1).rightDescendantAt(3)).isEqualTo(19);
   }
 
   @Test
   void firstRightDescendantOf3Is7() {
-    assertThat(vertexOf(TREE, 3L).rightDescendantAt(1)).isEqualTo(7);
+    assertThat(vertexOf(TREE, 3).rightDescendantAt(1)).isEqualTo(7);
   }
 
   @Test
   void lastRightDescendantOf3Is19() {
-    assertThat(vertexOf(TREE, 3L).rightDescendantAt(2)).isEqualTo(19);
+    assertThat(vertexOf(TREE, 3).rightDescendantAt(2)).isEqualTo(19);
   }
 
   @Test
   void lastRightDescendantOf5Is13() {
-    assertThat(vertexOf(TREE, 5L).rightDescendantAt(1)).isEqualTo(13);
+    assertThat(vertexOf(TREE, 5).rightDescendantAt(1)).isEqualTo(13);
   }
 
 }

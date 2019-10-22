@@ -62,7 +62,7 @@ public final class MergeAndEliminateInterimOperation implements IgaOperation<Mer
     public final TransformableRegion<Double> ma;
     public final TransformableRegion<Double> mb;
 
-    public MergeAndEliminateInterimMessage(long srcId, TransformableRegion<Double> ma, TransformableRegion<Double> mb) {
+    public MergeAndEliminateInterimMessage(int srcId, TransformableRegion<Double> ma, TransformableRegion<Double> mb) {
       super(srcId, MERGE_AND_ELIMINATE_INTERIM_OPERATION);
       this.ma = ma;
       this.mb = mb;

@@ -66,9 +66,9 @@ public class Initialisation {
   public static class InitialisationIgaMessage extends IgaMessage implements Comparable<InitialisationIgaMessage> {
 
     private final TransformableRegion<Double> mxp;
-    private final long dstId;
+    private final int dstId;
 
-    public InitialisationIgaMessage(long srcId, long dstId, TransformableRegion<Double> mxp) {
+    public InitialisationIgaMessage(int srcId, int dstId, TransformableRegion<Double> mxp) {
       super(srcId, null);
       this.mxp = mxp;
       this.dstId = dstId;
@@ -76,7 +76,7 @@ public class Initialisation {
 
     @Override
     public int compareTo(InitialisationIgaMessage o) {
-      return (int) (getSrcId() - o.getSrcId());
+      return getSrcId() - o.getSrcId();
     }
   }
 
