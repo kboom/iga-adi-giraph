@@ -18,6 +18,10 @@ public final class Mesh implements Serializable {
 
     private int dofsY;
 
+    private int dx;
+
+    private int dy;
+
     private Mesh() {
     }
 
@@ -26,11 +30,11 @@ public final class Mesh implements Serializable {
     }
 
     public double getDx() {
-        return resolutionX / elementsX;
+        return dx;
     }
 
     public double getDy() {
-        return resolutionY / elementsY;
+        return dy;
     }
 
     public int getElementsY() {
@@ -74,6 +78,9 @@ public final class Mesh implements Serializable {
             }
             mesh.dofsX = mesh.elementsX + mesh.splineOrder;
             mesh.dofsY = mesh.elementsY + mesh.splineOrder;
+
+            mesh.dx = (int) mesh.resolutionX / mesh.elementsX;
+            mesh.dy = (int) mesh.resolutionY / mesh.elementsY;
             return mesh;
         }
 
