@@ -58,7 +58,7 @@ public final class BackwardsSubstituteBranchOperation implements IgaOperation<Ba
 
     public final TransformableRegion<Double> mx;
 
-    public BackwardsSubstituteBranchMessage(long srcId, TransformableRegion<Double> mx) {
+    public BackwardsSubstituteBranchMessage(int srcId, TransformableRegion<Double> mx) {
       super(srcId, BACKWARDS_SUBSTITUTE_BRANCH_OPERATION);
       this.mx = mx;
     }

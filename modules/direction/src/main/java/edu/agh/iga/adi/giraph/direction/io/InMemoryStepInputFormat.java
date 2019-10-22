@@ -12,7 +12,7 @@ import lombok.val;
 import org.apache.giraph.io.VertexValueInputFormat;
 import org.apache.giraph.io.VertexValueReader;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
@@ -36,12 +36,12 @@ import static org.apache.log4j.Logger.getLogger;
  * This is useful mainly for solving dummy problems which initial values can be found through math formulas.
  * Real problems tend to need a series of values which correspond to a bitmap surface which needs to be projected onto BSpline basis.
  */
-public class InMemoryStepInputFormat extends VertexValueInputFormat<LongWritable, IgaElementWritable> {
+public class InMemoryStepInputFormat extends VertexValueInputFormat<IntWritable, IgaElementWritable> {
 
   private static final Logger LOG = getLogger(InMemoryStepInputFormat.class);
 
   @Override
-  public VertexValueReader<LongWritable, IgaElementWritable> createVertexValueReader(InputSplit split, TaskAttemptContext context) {
+  public VertexValueReader<IntWritable, IgaElementWritable> createVertexValueReader(InputSplit split, TaskAttemptContext context) {
     IgaInputSplit vertexSplit = (IgaInputSplit) split;
     val mesh = meshOf(getConf());
     val pf = getProblemFactory(getConf());
@@ -81,7 +81,7 @@ public class InMemoryStepInputFormat extends VertexValueInputFormat<LongWritable
         .collect(collectingAndThen(toList(), Collections::unmodifiableList));
   }
 
-  public static final class StaticProblemInputReader extends VertexValueReader<LongWritable, IgaElementWritable> {
+  public static final class StaticProblemInputReader extends VertexValueReader<IntWritable, IgaElementWritable> {
 
     private final Iterator<IgaVertex> vertices;
     private final ElementFactory elementFactory;
@@ -95,8 +95,8 @@ public class InMemoryStepInputFormat extends VertexValueInputFormat<LongWritable
     }
 
     @Override
-    public LongWritable getCurrentVertexId() {
-      return new LongWritable(currentVertex.id());
+    public IntWritable getCurrentVertexId() {
+      return new IntWritable(currentVertex.id());
     }
 
     @Override

@@ -37,7 +37,7 @@ public class IgaElementWritable implements WritableComparable {
       return;
     }
 
-    dataOutput.writeLong(igaElement.id);
+    dataOutput.writeInt(igaElement.id);
 
     // we always hold the same number of rows for all matrices (if we store them)
     dataOutput.writeShort((short) firstNonNullMatrix(igaElement.ma, igaElement.mb, igaElement.mx).countRows());
@@ -69,7 +69,7 @@ public class IgaElementWritable implements WritableComparable {
       return;
     }
 
-    val srcId = dataInput.readLong();
+    val srcId = dataInput.readInt();
     val rows = dataInput.readShort();
 
     val ma = coefficientsPresent(flags) ? readSquareMatrix(dataInput, rows) : null;
@@ -133,7 +133,7 @@ public class IgaElementWritable implements WritableComparable {
   @Override
   public int compareTo(Object o) {
     IgaElementWritable other = (IgaElementWritable) o;
-    return (int) (igaElement.id - other.igaElement.id);
+    return igaElement.id - other.igaElement.id;
   }
 
   @SuppressWarnings("unused")

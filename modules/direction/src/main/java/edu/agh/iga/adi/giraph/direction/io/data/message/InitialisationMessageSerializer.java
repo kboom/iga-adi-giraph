@@ -18,7 +18,7 @@ final class InitialisationMessageSerializer implements MessageSerializer<Initial
 
   @Override
   public void writeMessage(DataOutput dataOutput, InitialisationIgaMessage message) throws IOException {
-    dataOutput.writeLong(message.getSrcId());
+    dataOutput.writeInt(message.getSrcId());
     dataOutput.writeInt((int) message.getMxp().countRows());
     dataOutput.writeInt((int) message.getMxp().countColumns());
     message.getMxp().asCollectable1D().supplyTo(receiveInto(dataOutput));
@@ -26,7 +26,7 @@ final class InitialisationMessageSerializer implements MessageSerializer<Initial
 
   @Override
   public InitialisationIgaMessage readMessage(DataInput dataInput) throws IOException {
-    val srcId = dataInput.readLong();
+    val srcId = dataInput.readInt();
     val rows = dataInput.readInt();
     val cols = dataInput.readInt();
     val x = FACTORY.makeZero(rows, cols);

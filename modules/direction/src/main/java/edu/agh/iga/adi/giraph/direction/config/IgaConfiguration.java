@@ -17,16 +17,16 @@ import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import edu.agh.iga.adi.giraph.direction.performance.MemoryLogger;
+import org.apache.giraph.comm.flow_control.StaticFlowControl;
 import org.apache.giraph.conf.*;
 import org.apache.giraph.io.VertexInputFormat;
 import org.apache.giraph.worker.MemoryObserver;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -41,11 +41,8 @@ import static java.lang.String.valueOf;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.join;
-import static org.apache.giraph.comm.flow_control.CreditBasedFlowControl.MAX_NUM_OF_OPEN_REQUESTS_PER_WORKER;
-import static org.apache.giraph.comm.flow_control.CreditBasedFlowControl.MAX_NUM_OF_UNSENT_REQUESTS;
 import static org.apache.giraph.comm.messages.MessageEncodeAndStoreType.BYTEARRAY_PER_PARTITION;
-import static org.apache.giraph.comm.messages.MessageEncodeAndStoreType.EXTRACT_BYTEARRAY_PER_PARTITION;
-import static org.apache.giraph.comm.netty.NettyClient.LIMIT_OPEN_REQUESTS_PER_WORKER;
+import static org.apache.giraph.comm.netty.NettyClient.LIMIT_NUMBER_OF_OPEN_REQUESTS;
 import static org.apache.giraph.conf.GiraphConstants.*;
 import static org.apache.giraph.master.BspServiceMaster.NUM_MASTER_ZK_INPUT_SPLIT_THREADS;
 import static org.apache.giraph.partition.PartitionBalancer.PARTITION_BALANCE_ALGORITHM;
@@ -140,7 +137,7 @@ public class IgaConfiguration {
     conf.addWorkerObserverClass(MemoryLogger.class);
     conf.setYarnLibJars(currentJar());
     STATIC_GRAPH.set(conf, true);
-    VERTEX_ID_CLASS.set(conf, LongWritable.class);
+    VERTEX_ID_CLASS.set(conf, IntWritable.class);
     VERTEX_VALUE_CLASS.set(conf, IgaElementWritable.class);
     EDGE_VALUE_CLASS.set(conf, IgaOperationWritable.class);
     OUTGOING_MESSAGE_VALUE_CLASS.set(conf, IgaMessageWritable.class);
@@ -218,32 +215,32 @@ public class IgaConfiguration {
     /**
      * Netty tuning (custom, not verified other than the buffer sizes)
      */
-    NETTY_USE_DIRECT_MEMORY.set(conf, true);
+    NETTY_USE_DIRECT_MEMORY.setIfUnset(conf, false); // todo this is unpredictable as it allocates memory outside of JVM
 
-    REQUEST_SIZE_WARNING_THRESHOLD.set(conf, 1);
-    NETTY_CLIENT_THREADS.set(conf, threadsDuringCommunication);
-    CLIENT_RECEIVE_BUFFER_SIZE.set(conf,  ONE_MB);
-    CLIENT_SEND_BUFFER_SIZE.set(conf, 32 * ONE_MB);
-    SERVER_SEND_BUFFER_SIZE.set(conf, 32 * ONE_MB);
-    SERVER_RECEIVE_BUFFER_SIZE.set(conf, 64 * ONE_MB);
-    MAX_MSG_REQUEST_SIZE.set(conf, 64 * ONE_MB);
-    MAX_VERTEX_REQUEST_SIZE.set(conf, 64 * ONE_MB);
-    MAX_EDGE_REQUEST_SIZE.set(conf, 64 * ONE_MB);
+    REQUEST_SIZE_WARNING_THRESHOLD.setIfUnset(conf, 1);
+    NETTY_CLIENT_THREADS.setIfUnset(conf, threadsDuringCommunication);
+    CLIENT_RECEIVE_BUFFER_SIZE.setIfUnset(conf, ONE_MB);
+    CLIENT_SEND_BUFFER_SIZE.setIfUnset(conf, 32 * ONE_MB);
+    SERVER_SEND_BUFFER_SIZE.setIfUnset(conf, 32 * ONE_MB);
+    SERVER_RECEIVE_BUFFER_SIZE.setIfUnset(conf, 64 * ONE_MB);
+    MAX_MSG_REQUEST_SIZE.setIfUnset(conf, 64 * ONE_MB);
+    MAX_VERTEX_REQUEST_SIZE.setIfUnset(conf, 64 * ONE_MB);
+    MAX_EDGE_REQUEST_SIZE.setIfUnset(conf, 64 * ONE_MB);
 
-    USE_MESSAGE_SIZE_ENCODING.set(conf, true);
+    USE_MESSAGE_SIZE_ENCODING.setIfUnset(conf, true);
 
-    MESSAGE_ENCODE_AND_STORE_TYPE.set(conf, BYTEARRAY_PER_PARTITION); // todo not sure
+    MESSAGE_ENCODE_AND_STORE_TYPE.setIfUnset(conf, BYTEARRAY_PER_PARTITION); // todo not sure
   }
 
   private static void customConfig(GiraphConfiguration conf) {
     // Limit number of open requests to 2000
-//    LIMIT_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, false);
-//    StaticFlowControl.MAX_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, 100);
+    LIMIT_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, true);
+    StaticFlowControl.MAX_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, 10000);
 
     // we use this instead
-    LIMIT_OPEN_REQUESTS_PER_WORKER.set(conf, true);
-    MAX_NUM_OF_UNSENT_REQUESTS.set(conf, 100);
-    MAX_NUM_OF_OPEN_REQUESTS_PER_WORKER.set(conf, 20);
+//    LIMIT_OPEN_REQUESTS_PER_WORKER.set(conf, true);
+//    MAX_NUM_OF_UNSENT_REQUESTS.set(conf, 100);
+//    MAX_NUM_OF_OPEN_REQUESTS_PER_WORKER.set(conf, 20);
   }
 
   private static String currentJar() {

@@ -69,7 +69,7 @@ public final class MergeAndEliminateLeavesOperation implements IgaOperation<Merg
     public final TransformableRegion<Double> ma;
     public final TransformableRegion<Double> mb;
 
-    public MergeAndEliminateLeavesMessage(long srcId, TransformableRegion<Double> ma, TransformableRegion<Double> mb) {
+    public MergeAndEliminateLeavesMessage(int srcId, TransformableRegion<Double> ma, TransformableRegion<Double> mb) {
       super(srcId, MERGE_AND_ELIMINATE_LEAVES_OPERATION);
       this.ma = ma;
       this.mb = mb;

@@ -18,7 +18,7 @@ final class TranspositionMessageSerializer implements MessageSerializer<Transpos
 
   @Override
   public void writeMessage(DataOutput dataOutput, TranspositionIgaMessage message) throws IOException {
-    dataOutput.writeLong(message.getSrcId());
+    dataOutput.writeInt(message.getSrcId());
     dataOutput.writeInt((int) message.mxp.countRows());
     dataOutput.writeInt((int) message.mxp.countColumns());
     message.mxp.asCollectable1D().supplyTo(receiveInto(dataOutput));
@@ -26,7 +26,7 @@ final class TranspositionMessageSerializer implements MessageSerializer<Transpos
 
   @Override
   public TranspositionIgaMessage readMessage(DataInput dataInput) throws IOException {
-    val srcId = dataInput.readLong();
+    val srcId = dataInput.readInt();
     val rows = dataInput.readInt();
     val cols = dataInput.readInt();
     val x = FACTORY.makeZero(rows, cols);
@@ -36,7 +36,7 @@ final class TranspositionMessageSerializer implements MessageSerializer<Transpos
 
   @Override
   public TranspositionIgaMessage readMessage(TranspositionIgaMessage message, DataInput dataInput) throws IOException {
-    val srcId = dataInput.readLong();
+    val srcId = dataInput.readInt();
     val rows = dataInput.readInt();
     val cols = dataInput.readInt();
 

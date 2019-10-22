@@ -11,17 +11,17 @@ class VertexDependenciesTest {
 
   @Test
   void leadingBranch() {
-    assertThat(verticesDependingOn(BRANCH_4)).containsExactlyInAnyOrder(8L, 9L, 10L, 11L, 12L);
+    assertThat(verticesDependingOn(BRANCH_4)).containsExactlyInAnyOrder(8, 9, 10, 11, 12);
   }
 
   @Test
   void middleBranch() {
-    assertThat(verticesDependingOn(BRANCH_5)).containsExactlyInAnyOrder(11L, 12L, 13L, 14L, 15L);
+    assertThat(verticesDependingOn(BRANCH_5)).containsExactlyInAnyOrder(11, 12, 13, 14, 15);
   }
 
   @Test
   void trailingBranch() {
-    assertThat(verticesDependingOn(BRANCH_7)).containsExactlyInAnyOrder(17L, 18L, 19L);
+    assertThat(verticesDependingOn(BRANCH_7)).containsExactlyInAnyOrder(17, 18, 19);
   }
 
   @Test

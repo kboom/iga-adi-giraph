@@ -21,7 +21,7 @@ public final class TranspositionIgaOperation implements IgaOperation<Transpositi
 
   @Override
   public TranspositionIgaMessage sendMessage(IgaVertex dst, IgaElement element) {
-    val leftOffset = (int) dst.offsetLeft();
+    val leftOffset = dst.offsetLeft();
     val columns = element.mx.regionByColumns(leftOffset, leftOffset + 1, leftOffset + 2);
     if (isLeading(dst, element)) {
       return new TranspositionIgaMessage(element.id, columns.regionByRows(0, 1, 2, 3, 4));
@@ -44,7 +44,7 @@ public final class TranspositionIgaOperation implements IgaOperation<Transpositi
 
   @Override
   public void consumeMessage(IgaElement element, TranspositionIgaMessage message, DirectionTree tree) {
-    val srcId = (int) message.getSrcId();
+    val srcId = message.getSrcId();
     val dstId = element.id;
     val mxp = message.mxp;
 
@@ -70,7 +70,7 @@ public final class TranspositionIgaOperation implements IgaOperation<Transpositi
     @Getter
     public final TransformableRegion<Double> mxp;
 
-    public TranspositionIgaMessage(long srcId, TransformableRegion<Double> mxp) {
+    public TranspositionIgaMessage(int srcId, TransformableRegion<Double> mxp) {
       super(srcId, TRANSPOSITION_IGA_OPERATION);
       this.mxp = mxp;
     }

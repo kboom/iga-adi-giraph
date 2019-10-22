@@ -15,7 +15,7 @@ import org.apache.giraph.graph.BasicComputation;
 import org.apache.giraph.graph.GraphState;
 import org.apache.giraph.graph.Vertex;
 import org.apache.giraph.worker.WorkerGlobalCommUsage;
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -26,7 +26,7 @@ import static edu.agh.iga.adi.giraph.direction.computation.ProblemFactoryResolve
 import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.PROBLEM_SIZE;
 import static java.util.stream.StreamSupport.stream;
 
-public abstract class IgaComputation extends BasicComputation<LongWritable, IgaElementWritable, IgaOperationWritable, IgaMessageWritable> {
+public abstract class IgaComputation extends BasicComputation<IntWritable, IgaElementWritable, IgaOperationWritable, IgaMessageWritable> {
 
   private static final Predicate<IgaOperation> ALWAYS_TRUE = __ -> true;
 
@@ -37,8 +37,8 @@ public abstract class IgaComputation extends BasicComputation<LongWritable, IgaE
   @Override
   public void initialize(
       GraphState graphState,
-      WorkerClientRequestProcessor<LongWritable, IgaElementWritable, IgaOperationWritable> workerClientRequestProcessor,
-      CentralizedServiceWorker<LongWritable, IgaElementWritable, IgaOperationWritable> serviceWorker,
+      WorkerClientRequestProcessor<IntWritable, IgaElementWritable, IgaOperationWritable> workerClientRequestProcessor,
+      CentralizedServiceWorker<IntWritable, IgaElementWritable, IgaOperationWritable> serviceWorker,
       WorkerGlobalCommUsage workerGlobalCommUsage
   ) {
     super.initialize(graphState, workerClientRequestProcessor, serviceWorker, workerGlobalCommUsage);
@@ -59,12 +59,12 @@ public abstract class IgaComputation extends BasicComputation<LongWritable, IgaE
         .findFirst();
   }
 
-  protected Optional<IgaOperation> operationOf(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
+  protected Optional<IgaOperation> operationOf(Vertex<IntWritable, IgaElementWritable, IgaOperationWritable> vertex) {
     return operationOf(vertex, ALWAYS_TRUE);
   }
 
   protected Optional<IgaOperation> operationOf(
-      Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex,
+      Vertex<IntWritable, IgaElementWritable, IgaOperationWritable> vertex,
       Predicate<IgaOperation> operationPredicate
   ) {
     return stream(vertex.getEdges().spliterator(), false)
@@ -74,15 +74,15 @@ public abstract class IgaComputation extends BasicComputation<LongWritable, IgaE
         .findAny();
   }
 
-  protected IgaVertex vertexOf(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
+  protected IgaVertex vertexOf(Vertex<IntWritable, IgaElementWritable, IgaOperationWritable> vertex) {
     return vertexOf(vertex.getId().get());
   }
 
-  protected IgaVertex vertexOf(long vertexId) {
+  protected IgaVertex vertexOf(int vertexId) {
     return IgaVertex.vertexOf(getTree(), vertexId);
   }
 
-  protected static IgaElement elementOf(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
+  protected static IgaElement elementOf(Vertex<IntWritable, IgaElementWritable, IgaOperationWritable> vertex) {
     return vertex.getValue().getElement();
   }
 

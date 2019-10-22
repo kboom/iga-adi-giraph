@@ -6,7 +6,7 @@ import java.util.stream.StreamSupport;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
 import static java.util.Spliterators.spliteratorUnknownSize;
-import static java.util.stream.LongStream.range;
+import static java.util.stream.IntStream.range;
 
 public class IgaVertexFactory {
 

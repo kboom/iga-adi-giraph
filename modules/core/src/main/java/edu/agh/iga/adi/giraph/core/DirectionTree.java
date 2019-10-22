@@ -29,31 +29,31 @@ public class DirectionTree {
     return IntMath.log2(problemSize / 3, UNNECESSARY) + 1;
   }
 
-  public long firstIndexOfRow(int level) {
+  public int firstIndexOfRow(int level) {
     return IntMath.pow(2, level - 1);
   }
 
-  public long lastIndexOfRow(int level) {
+  public int lastIndexOfRow(int level) {
     return firstIndexOfRow(level) + strengthOfRow(level) - 1;
   }
 
-  public long firstIndexOfLeafRow() {
+  public int firstIndexOfLeafRow() {
     return firstIndexOfRow(leafHeight());
   }
 
-  public long lastIndexOfLeafRow() {
+  public int lastIndexOfLeafRow() {
     return firstIndexOfLeafRow() + strengthOfRow(leafHeight()) - 1;
   }
 
-  public long firstIndexOfBranchingRow() {
+  public int firstIndexOfBranchingRow() {
     return firstIndexOfRow(branchingHeight());
   }
 
-  public long lastIndexOfBranchingRow() {
+  public int lastIndexOfBranchingRow() {
     return firstIndexOfBranchingRow() + strengthOfRow(branchingHeight()) - 1;
   }
 
-  public long strengthOfRow(int level) {
+  public int strengthOfRow(int level) {
     if (level < leafHeight()) {
       return IntMath.pow(2, level - 1);
     } else {
@@ -61,7 +61,7 @@ public class DirectionTree {
     }
   }
 
-  public long strengthOfLeaves() {
+  public int strengthOfLeaves() {
     return strengthOfRow(leafHeight());
   }
 

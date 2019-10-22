@@ -61,7 +61,7 @@ public final class MergeAndEliminateBranchOperation implements IgaOperation<Merg
     private final TransformableRegion<Double> ma;
     private final TransformableRegion<Double> mb;
 
-    public MergeAndEliminateBranchMessage(long srcId, TransformableRegion<Double> ma, TransformableRegion<Double> mb) {
+    public MergeAndEliminateBranchMessage(int srcId, TransformableRegion<Double> ma, TransformableRegion<Double> mb) {
       super(srcId, MERGE_AND_ELIMINATE_BRANCH_OPERATION);
       this.ma = ma;
       this.mb = mb;

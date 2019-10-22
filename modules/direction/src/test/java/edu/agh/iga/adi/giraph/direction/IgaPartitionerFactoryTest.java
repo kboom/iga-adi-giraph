@@ -2,7 +2,7 @@ package edu.agh.iga.adi.giraph.direction;
 
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.conf.ImmutableClassesGiraphConfiguration;
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.junit.jupiter.api.Test;
 
 import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.*;
@@ -22,22 +22,22 @@ class IgaPartitionerFactoryTest {
 
   @Test
   void assignsLeaf8ToPartition0() {
-    assertThat(PARTITIONER_FACTORY.getPartition(new LongWritable(8L), 2, 2)).isEqualTo(0);
+    assertThat(PARTITIONER_FACTORY.getPartition(new IntWritable(8), 2, 2)).isEqualTo(0);
   }
 
   @Test
   void assignsLeaf13ToPartition0() {
-    assertThat(PARTITIONER_FACTORY.getPartition(new LongWritable(13L), 2, 2)).isEqualTo(0);
+    assertThat(PARTITIONER_FACTORY.getPartition(new IntWritable(13), 2, 2)).isEqualTo(0);
   }
 
   @Test
   void assignsLeaf14ToPartition1() {
-    assertThat(PARTITIONER_FACTORY.getPartition(new LongWritable(14L), 2, 2)).isEqualTo(1);
+    assertThat(PARTITIONER_FACTORY.getPartition(new IntWritable(14), 2, 2)).isEqualTo(1);
   }
 
   @Test
   void assignsLeaf19ToPartition1() {
-    assertThat(PARTITIONER_FACTORY.getPartition(new LongWritable(19L), 2, 2)).isEqualTo(1);
+    assertThat(PARTITIONER_FACTORY.getPartition(new IntWritable(19), 2, 2)).isEqualTo(1);
   }
 
   @Test

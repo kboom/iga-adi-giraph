@@ -9,14 +9,14 @@ public class IgaElement {
 
   private static final int COLS_BOUND_TO_NODE = 6;
 
-  public final long id;
+  public final int id;
 
   public final PrimitiveDenseStore ma;
   public final PrimitiveDenseStore mb;
   public final PrimitiveDenseStore mx;
 
   private IgaElement(
-      long id,
+      int id,
       PrimitiveDenseStore ma,
       PrimitiveDenseStore mb,
       PrimitiveDenseStore mx
@@ -28,7 +28,7 @@ public class IgaElement {
   }
 
   @Deprecated // todo used only in tests
-  public static IgaElement igaElement(long id, int elements) {
+  public static IgaElement igaElement(int id, int elements) {
     return new IgaElement(
         id,
         FACTORY.makeZero(ROWS_BOUND_TO_NODE, COLS_BOUND_TO_NODE),
@@ -38,7 +38,7 @@ public class IgaElement {
   }
 
   public static IgaElement igaElement(
-      long id,
+      int id,
       PrimitiveDenseStore ma,
       PrimitiveDenseStore mb,
       PrimitiveDenseStore mx

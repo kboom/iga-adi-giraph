@@ -7,7 +7,6 @@ import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import lombok.val;
 import org.apache.giraph.graph.Vertex;
 import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.LongWritable;
 import org.apache.log4j.Logger;
 
 import static edu.agh.iga.adi.giraph.core.operations.setup.TranspositionIgaOperation.TRANSPOSITION_IGA_OPERATION;
@@ -32,7 +31,7 @@ public class TranspositionComputation extends IgaComputation {
 
   @Override
   public void compute(
-      Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex,
+      Vertex<IntWritable, IgaElementWritable, IgaOperationWritable> vertex,
       Iterable<IgaMessageWritable> message
   ) {
     switch (phase) {
@@ -46,7 +45,7 @@ public class TranspositionComputation extends IgaComputation {
     }
   }
 
-  private void send(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
+  private void send(Vertex<IntWritable, IgaElementWritable, IgaOperationWritable> vertex) {
     if (LOG.isTraceEnabled()) {
       LOG.trace("Running transposition on " + vertex.getId().get());
     }
@@ -56,10 +55,10 @@ public class TranspositionComputation extends IgaComputation {
     val firstIndexOfLeafRow = getTree().firstIndexOfLeafRow();
     val dst = vertexOf(firstIndexOfLeafRow);
 
-    val idWritable = new LongWritable();
+    val idWritable = new IntWritable();
     val msgWritable = new IgaMessageWritable();
 
-    for (long l = firstIndexOfLeafRow; l <= lastLeafIndex; l++) {
+    for (int l = firstIndexOfLeafRow; l <= lastLeafIndex; l++) {
       dst.reuseSameTypeFor(l);
 
       idWritable.set(l);
@@ -72,7 +71,7 @@ public class TranspositionComputation extends IgaComputation {
     }
   }
 
-  private void receive(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex, Iterable<IgaMessageWritable> message) {
+  private void receive(Vertex<IntWritable, IgaElementWritable, IgaOperationWritable> vertex, Iterable<IgaMessageWritable> message) {
     vertex.setValue(
         vertex.getValue()
             .withValue(TRANSPOSITION_IGA_OPERATION.preConsume(vertexOf(vertex), getIgaContext(), elementOf(vertex)))

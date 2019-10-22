@@ -60,12 +60,12 @@ public final class HeatTransferPhenomena implements Problem, SolutionTransformer
       solution += b3dx * b3y * c.doubleValue(2, ielemy + 2);
 
     } else {
-      double b1dy = b1.getSecondDerivativeValueAt(localy);
-      double b1x = b1.getValue(localx);
-      double b2dy = b2.getSecondDerivativeValueAt(localy);
-      double b2x = b2.getValue(localx);
-      double b3dy = b3.getSecondDerivativeValueAt(localy);
-      double b3x = b3.getValue(localx);
+      val b1dy = b1.getSecondDerivativeValueAt(localy);
+      val b1x = b1.getValue(localx);
+      val b2dy = b2.getSecondDerivativeValueAt(localy);
+      val b2x = b2.getValue(localx);
+      val b3dy = b3.getSecondDerivativeValueAt(localy);
+      val b3x = b3.getValue(localx);
 
       solution += b1x * b1dy * c.doubleValue(0, ielemy);
       solution += b1x * b2dy * c.doubleValue(0, ielemy + 1);

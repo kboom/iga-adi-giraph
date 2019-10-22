@@ -79,7 +79,7 @@ class StepComputationTest {
         .thenAssertThatGraph(assertions ->
             assertions
                 .hasElementWithUnknowns(
-                    4L,
+                    4,
                     matrixOfSize(5, 14).withValues(
                         -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5,
                         0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
@@ -90,7 +90,7 @@ class StepComputationTest {
                     3
                 )
                 .hasElementWithUnknowns(
-                    5L,
+                    5,
                     matrixOfSize(5, 14).withValues(
                         2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5,
                         3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5,
@@ -101,7 +101,7 @@ class StepComputationTest {
                     3
                 )
                 .hasElementWithUnknowns(
-                    6L,
+                    6,
                     matrixOfSize(5, 14).withValues(
                         5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5,
                         6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5, 6.5,
@@ -112,7 +112,7 @@ class StepComputationTest {
                     3
                 )
                 .hasElementWithUnknowns(
-                    7L,
+                    7,
                     matrixOfSize(5, 14).withValues(
                         8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5,
                         9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5, 9.5,
@@ -133,7 +133,7 @@ class StepComputationTest {
         .thenAssertThatGraph(assertions ->
             assertions
                 .hasElementWithUnknowns(
-                    4L,
+                    4,
                     matrixOfSize(5, 14).withValues(
                         // @formatter:off
                        -1, -0,  1,  2,  3,  4, 5,  6,  7,  8,  9, 10, 11, 12,
@@ -146,7 +146,7 @@ class StepComputationTest {
                     3
                 )
                 .hasElementWithUnknowns(
-                    5L,
+                    5,
                     matrixOfSize(5, 14).withValues(
                         // @formatter:off
                         2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
@@ -159,7 +159,7 @@ class StepComputationTest {
                     3
                 )
                 .hasElementWithUnknowns(
-                    6L,
+                    6,
                     matrixOfSize(5, 14).withValues(
                         // @formatter:off
                         5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
@@ -172,7 +172,7 @@ class StepComputationTest {
                     3
                 )
                 .hasElementWithUnknowns(
-                    7L,
+                    7,
                     matrixOfSize(5, 14).withValues(
                         // @formatter:off
                          8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,

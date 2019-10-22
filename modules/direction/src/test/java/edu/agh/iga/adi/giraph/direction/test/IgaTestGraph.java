@@ -10,7 +10,7 @@ import org.apache.giraph.edge.Edge;
 import org.apache.giraph.edge.EdgeFactory;
 import org.apache.giraph.graph.Vertex;
 import org.apache.giraph.utils.TestGraph;
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
 
 import java.util.List;
 
@@ -19,12 +19,12 @@ import static java.util.Collections.singletonList;
 
 public final class IgaTestGraph {
 
-  private final TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> graph;
+  private final TestGraph<IntWritable, IgaElementWritable, IgaOperationWritable> graph;
   private final DirectionTree directionTree;
   private final Mesh mesh;
 
   public IgaTestGraph(
-      TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> graph,
+      TestGraph<IntWritable, IgaElementWritable, IgaOperationWritable> graph,
       Mesh mesh,
       DirectionTree directionTree
   ) {
@@ -38,7 +38,7 @@ public final class IgaTestGraph {
   }
 
   public static IgaTestGraph igaTestGraphOn(
-      TestGraph<LongWritable, IgaElementWritable, IgaOperationWritable> graph,
+      TestGraph<IntWritable, IgaElementWritable, IgaOperationWritable> graph,
       Mesh mesh,
       DirectionTree directionTree
   ) {
@@ -46,14 +46,14 @@ public final class IgaTestGraph {
   }
 
   public IgaTestGraph withVertex(
-      long srcId, IgaOperation operation, long dstId
+      int srcId, IgaOperation operation, int dstId
   ) {
     graph.addVertex(withVertex(srcId, igaElement(srcId, mesh.getDofsX()), operation, dstId));
     return this;
   }
 
   public IgaTestGraph withVertexElement(IgaElement element) {
-    graph.getVertex(new LongWritable(element.id)).setValue(new IgaElementWritable(element));
+    graph.getVertex(new IntWritable(element.id)).setValue(new IgaElementWritable(element));
     return this;
   }
 
@@ -62,17 +62,17 @@ public final class IgaTestGraph {
     return this;
   }
 
-  private Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> withVertex(
-      long srcId, IgaElement srcElement, IgaOperation operation, long dstId
+  private Vertex<IntWritable, IgaElementWritable, IgaOperationWritable> withVertex(
+      int srcId, IgaElement srcElement, IgaOperation operation, int dstId
   ) {
-    Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex = createVertex();
+    Vertex<IntWritable, IgaElementWritable, IgaOperationWritable> vertex = createVertex();
 
-    List<Edge<LongWritable, IgaOperationWritable>> edgesList = singletonList(
-        EdgeFactory.create(new LongWritable(dstId), new IgaOperationWritable(operation))
+    List<Edge<IntWritable, IgaOperationWritable>> edgesList = singletonList(
+        EdgeFactory.create(new IntWritable(dstId), new IgaOperationWritable(operation))
     );
 
     vertex.initialize(
-        new LongWritable(srcId),
+        new IntWritable(srcId),
         new IgaElementWritable(srcElement),
         edgesList
     );
@@ -80,7 +80,7 @@ public final class IgaTestGraph {
     return vertex;
   }
 
-  private Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> createVertex() {
+  private Vertex<IntWritable, IgaElementWritable, IgaOperationWritable> createVertex() {
     return graph.getConf().createVertex();
   }
 

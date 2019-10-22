@@ -11,7 +11,6 @@ import lombok.val;
 import org.apache.giraph.graph.Vertex;
 import org.apache.hadoop.io.BooleanWritable;
 import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.LongWritable;
 import org.apache.log4j.Logger;
 
 import static edu.agh.iga.adi.giraph.direction.StepAggregators.COMPUTATION_ITERATION;
@@ -42,7 +41,7 @@ public final class FactorisationComputation extends IgaComputation {
 
   @Override
   public final void compute(
-      Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex,
+      Vertex<IntWritable, IgaElementWritable, IgaOperationWritable> vertex,
       Iterable<IgaMessageWritable> messages
   ) {
     operationOf(messages).ifPresent(operation -> vertex.getValue().withValue(operation.preConsume(vertexOf(vertex), getIgaContext(), elementOf(vertex))));
@@ -64,7 +63,7 @@ public final class FactorisationComputation extends IgaComputation {
   }
 
   private IgaElement update(
-      Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex,
+      Vertex<IntWritable, IgaElementWritable, IgaOperationWritable> vertex,
       Iterable<IgaMessageWritable> messages
   ) {
     if (LOG.isTraceEnabled()) {
@@ -88,7 +87,7 @@ public final class FactorisationComputation extends IgaComputation {
     msg.getOperation().consumeMessage(element, msg, getTree());
   }
 
-  private void send(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex, IgaElement element) {
+  private void send(Vertex<IntWritable, IgaElementWritable, IgaOperationWritable> vertex, IgaElement element) {
     vertex.getEdges().forEach(edge -> {
       val igaOperation = edge.getValue().getIgaOperation();
       val dstIdWritable = edge.getTargetVertexId();

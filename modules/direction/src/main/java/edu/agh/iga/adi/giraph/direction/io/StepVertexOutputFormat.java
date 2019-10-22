@@ -8,7 +8,7 @@ import lombok.val;
 import org.apache.giraph.graph.Vertex;
 import org.apache.giraph.io.formats.GiraphTextOutputFormat;
 import org.apache.giraph.io.formats.TextVertexOutputFormat;
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.log4j.Logger;
@@ -39,7 +39,7 @@ import static org.apache.log4j.Logger.getLogger;
  * In reality, the solver runs this as many times as there are super steps and for each super step
  * that is the last super step of any given step we store the values in a subdirectory so we collect all results.
  */
-public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable, IgaElementWritable, IgaOperationWritable> {
+public class StepVertexOutputFormat extends TextVertexOutputFormat<IntWritable, IgaElementWritable, IgaOperationWritable> {
 
   private static final Logger LOG = getLogger(StepVertexOutputFormat.class);
 
@@ -99,7 +99,7 @@ public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable,
     }
 
     @Override
-    public void writeVertex(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) throws IOException, InterruptedException {
+    public void writeVertex(Vertex<IntWritable, IgaElementWritable, IgaOperationWritable> vertex) throws IOException, InterruptedException {
       if (LOG.isTraceEnabled()) {
         logElementSize(vertex);
       }
@@ -118,7 +118,7 @@ public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable,
       }
     }
 
-    private void logElementSize(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
+    private void logElementSize(Vertex<IntWritable, IgaElementWritable, IgaOperationWritable> vertex) {
       val vid = vertex.getId().get();
       val v = vertexOf(directionTree, vid);
       val element = vertex.getValue().getElement();
@@ -132,7 +132,7 @@ public class StepVertexOutputFormat extends TextVertexOutputFormat<LongWritable,
       }
     }
 
-    private Text convertVertexToLine(Vertex<LongWritable, IgaElementWritable, IgaOperationWritable> vertex) {
+    private Text convertVertexToLine(Vertex<IntWritable, IgaElementWritable, IgaOperationWritable> vertex) {
       val vid = vertex.getId().get();
       val v = vertexOf(directionTree, vid);
       if (v.is(BranchVertex.class)) {

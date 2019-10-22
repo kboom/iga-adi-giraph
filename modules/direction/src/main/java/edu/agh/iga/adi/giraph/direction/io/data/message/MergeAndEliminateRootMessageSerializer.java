@@ -21,7 +21,7 @@ final class MergeAndEliminateRootMessageSerializer implements MessageSerializer<
 
   @Override
   public void writeMessage(DataOutput dataOutput, MergeAndEliminateRootMessage message) throws IOException {
-    dataOutput.writeLong(message.getSrcId());
+    dataOutput.writeInt(message.getSrcId());
     dataOutput.writeInt((int) message.mb.countColumns());
     message.ma.asCollectable1D().supplyTo(receiveInto(dataOutput));
     message.mb.asCollectable1D().supplyTo(receiveInto(dataOutput));
@@ -29,7 +29,7 @@ final class MergeAndEliminateRootMessageSerializer implements MessageSerializer<
 
   @Override
   public MergeAndEliminateRootMessage readMessage(DataInput dataInput) throws IOException {
-    val srcId = dataInput.readLong();
+    val srcId = dataInput.readInt();
     val dofs = dataInput.readInt();
     val ma = FACTORY.makeZero(CONTRIBUTED_ROWS, CONTRIBUTED_COLS);
     ma.fillMatching(dataInputAccessStore(dataInput, CONTRIBUTED_ROWS * CONTRIBUTED_COLS));
@@ -40,7 +40,7 @@ final class MergeAndEliminateRootMessageSerializer implements MessageSerializer<
 
   @Override
   public MergeAndEliminateRootMessage readMessage(MergeAndEliminateRootMessage message, DataInput dataInput) throws IOException {
-    val srcId = dataInput.readLong();
+    val srcId = dataInput.readInt();
     val dofs = dataInput.readInt();
     message.ma.fillMatching(dataInputAccessStore(dataInput, CONTRIBUTED_ROWS * CONTRIBUTED_COLS));
     message.mb.fillMatching(dataInputAccessStore(dataInput, CONTRIBUTED_ROWS * dofs));

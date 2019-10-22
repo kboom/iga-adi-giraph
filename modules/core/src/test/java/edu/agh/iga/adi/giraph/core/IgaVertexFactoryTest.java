@@ -12,72 +12,72 @@ class IgaVertexFactoryTest {
 
   @Test
   void childrenOfRootIn12() {
-    assertThat(newArrayList(childrenOf(vertexOf(TREE_12, 1L), 3)))
+    assertThat(newArrayList(childrenOf(vertexOf(TREE_12, 1), 3)))
         .containsExactlyInAnyOrder(
-            vertexOf(TREE_12, 2L),
-            vertexOf(TREE_12, 3L),
-            vertexOf(TREE_12, 4L),
-            vertexOf(TREE_12, 5L),
-            vertexOf(TREE_12, 6L),
-            vertexOf(TREE_12, 7L),
-            vertexOf(TREE_12, 8L),
-            vertexOf(TREE_12, 9L),
-            vertexOf(TREE_12, 10L),
-            vertexOf(TREE_12, 11L),
-            vertexOf(TREE_12, 12L),
-            vertexOf(TREE_12, 13L),
-            vertexOf(TREE_12, 14L),
-            vertexOf(TREE_12, 15L),
-            vertexOf(TREE_12, 16L),
-            vertexOf(TREE_12, 17L),
-            vertexOf(TREE_12, 18L),
-            vertexOf(TREE_12, 19L)
+            vertexOf(TREE_12, 2),
+            vertexOf(TREE_12, 3),
+            vertexOf(TREE_12, 4),
+            vertexOf(TREE_12, 5),
+            vertexOf(TREE_12, 6),
+            vertexOf(TREE_12, 7),
+            vertexOf(TREE_12, 8),
+            vertexOf(TREE_12, 9),
+            vertexOf(TREE_12, 10),
+            vertexOf(TREE_12, 11),
+            vertexOf(TREE_12, 12),
+            vertexOf(TREE_12, 13),
+            vertexOf(TREE_12, 14),
+            vertexOf(TREE_12, 15),
+            vertexOf(TREE_12, 16),
+            vertexOf(TREE_12, 17),
+            vertexOf(TREE_12, 18),
+            vertexOf(TREE_12, 19)
         );
   }
 
   @Test
   void childrenOf2LIn12() {
-    assertThat(newArrayList(childrenOf(vertexOf(TREE_12, 2L), 2)))
+    assertThat(newArrayList(childrenOf(vertexOf(TREE_12, 2), 2)))
         .containsExactlyInAnyOrder(
-            vertexOf(TREE_12, 4L),
-            vertexOf(TREE_12, 5L),
-            vertexOf(TREE_12, 8L),
-            vertexOf(TREE_12, 9L),
-            vertexOf(TREE_12, 10L),
-            vertexOf(TREE_12, 11L),
-            vertexOf(TREE_12, 12L),
-            vertexOf(TREE_12, 13L)
+            vertexOf(TREE_12, 4),
+            vertexOf(TREE_12, 5),
+            vertexOf(TREE_12, 8),
+            vertexOf(TREE_12, 9),
+            vertexOf(TREE_12, 10),
+            vertexOf(TREE_12, 11),
+            vertexOf(TREE_12, 12),
+            vertexOf(TREE_12, 13)
         );
   }
 
   @Test
   void childrenOf3LIn12() {
-    assertThat(newArrayList(childrenOf(vertexOf(TREE_12, 3L), 2)))
+    assertThat(newArrayList(childrenOf(vertexOf(TREE_12, 3), 2)))
         .containsExactlyInAnyOrder(
-            vertexOf(TREE_12, 6L),
-            vertexOf(TREE_12, 7L),
-            vertexOf(TREE_12, 14L),
-            vertexOf(TREE_12, 15L),
-            vertexOf(TREE_12, 16L),
-            vertexOf(TREE_12, 17L),
-            vertexOf(TREE_12, 18L),
-            vertexOf(TREE_12, 19L)
+            vertexOf(TREE_12, 6),
+            vertexOf(TREE_12, 7),
+            vertexOf(TREE_12, 14),
+            vertexOf(TREE_12, 15),
+            vertexOf(TREE_12, 16),
+            vertexOf(TREE_12, 17),
+            vertexOf(TREE_12, 18),
+            vertexOf(TREE_12, 19)
         );
   }
 
   @Test
   void childrenOf5LIn12() {
-    assertThat(newArrayList(childrenOf(vertexOf(TREE_12, 5L), 1)))
+    assertThat(newArrayList(childrenOf(vertexOf(TREE_12, 5), 1)))
         .containsExactlyInAnyOrder(
-            vertexOf(TREE_12, 11L),
-            vertexOf(TREE_12, 12L),
-            vertexOf(TREE_12, 13L)
+            vertexOf(TREE_12, 11),
+            vertexOf(TREE_12, 12),
+            vertexOf(TREE_12, 13)
         );
   }
 
   @Test
   void emptyForZeroHeight() {
-    assertThat(newArrayList(childrenOf(vertexOf(TREE_12, 1L), 0)))
+    assertThat(newArrayList(childrenOf(vertexOf(TREE_12, 1), 0)))
         .isEmpty();
   }
 
