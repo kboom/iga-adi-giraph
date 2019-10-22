@@ -38,8 +38,7 @@ public class IgaVertexFactory {
   public static Iterator<IgaVertex> childrenOf(IgaVertex parent, int height) {
     return range(1, height + 1)
         .flatMap(h -> range(parent.leftDescendantAt((int) h), parent.rightDescendantAt((int) h) + 1))
-        .boxed()
-        .map(id -> vertexOf(parent.getTree(), id))
+        .mapToObj(id -> vertexOf(parent.getTree(), id))
         .iterator();
   }
 
