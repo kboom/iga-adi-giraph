@@ -1,7 +1,6 @@
 package edu.agh.iga.adi.giraph.direction.config;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import edu.agh.iga.adi.giraph.core.problem.ProblemType;
 import edu.agh.iga.adi.giraph.direction.IgaPartitionerFactory;
 import edu.agh.iga.adi.giraph.direction.IgaWorkerContext;
@@ -20,6 +19,7 @@ import edu.agh.iga.adi.giraph.direction.performance.MemoryLogger;
 import org.apache.giraph.comm.flow_control.StaticFlowControl;
 import org.apache.giraph.conf.*;
 import org.apache.giraph.io.VertexInputFormat;
+import org.apache.giraph.partition.ByteArrayPartition;
 import org.apache.giraph.worker.MemoryObserver;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.IntWritable;
@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.io.Files.createTempDir;
 import static edu.agh.iga.adi.giraph.core.problem.ProblemType.PROJECTION;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.COEFFICIENTS_PROBLEM;
@@ -135,6 +136,7 @@ public class IgaConfiguration {
     conf.setVertexInputFormatClass(inputFormatsByInitType.get(FIRST_INITIALISATION_TYPE.get(conf)));
     conf.setVertexOutputFormatClass(StepVertexOutputFormat.class);
     conf.addWorkerObserverClass(MemoryLogger.class);
+    conf.setPartitionClass(ByteArrayPartition.class);
     conf.setYarnLibJars(currentJar());
     STATIC_GRAPH.set(conf, true);
     VERTEX_ID_CLASS.set(conf, IntWritable.class);
@@ -208,7 +210,8 @@ public class IgaConfiguration {
     if (CONFIGURE_JAVA_OPTS.get(conf)) {
       List<String> javaOpts = getMemoryJavaOpts(conf);
       javaOpts.addAll(getGcJavaOpts(conf));
-      javaOpts.addAll(tuningJavaOpts(conf));
+      javaOpts.addAll(tuningJavaOpts());
+      javaOpts.addAll(observabilityJavaOpts());
       JAVA_JOB_OPTIONS.set(conf, join(javaOpts, " "));
     }
 
@@ -279,8 +282,23 @@ public class IgaConfiguration {
     return gcJavaOpts;
   }
 
-  private static List<String> tuningJavaOpts(GiraphConfiguration conf) {
-    return Lists.newArrayList("jdk.tls.disabledAlgorithms=SSLv3, GCM");
+  private static List<String> tuningJavaOpts() {
+    return newArrayList(
+        "-d64",
+        "jdk.tls.disabledAlgorithms=SSLv3, GCM",
+        "-server",
+        "-XX:ReservedCodeCacheSize=256MB"
+    );
+  }
+
+  private static List<String> observabilityJavaOpts() {
+    return newArrayList(
+        "-XX:+UnlockDiagnosticVMOptions",
+        "-XX:+PrintFlagsFinal",
+        "-XX:+HeapDumpOnOutOfMemoryError",
+        "-XX:HeapDumpPath=<LOG_DIR>/@taskid@.hprof",
+        "-XX:OnOutOfMemoryError=\"free -m\""
+    );
   }
 
 
