@@ -10,12 +10,12 @@
         </layout>
     </appender>
 
-    <logger name="edu.agh.iga.adi.giraph.IgaSolverTool" additivity="false">
+    <logger name="edu.agh.iga.adi.giraph" additivity="false">
         <level value="all" />
         <appender-ref ref="default.console"/>
     </logger>
 
-    <logger name="org.apache.giraph.master.MasterThread" additivity="false">
+    <logger name="org.apache.giraph" additivity="false">
         <level value="all" />
         <appender-ref ref="default.console"/>
     </logger>
