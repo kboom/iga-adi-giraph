@@ -18,6 +18,8 @@ import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import edu.agh.iga.adi.giraph.direction.performance.MemoryLogger;
 import lombok.val;
+import org.apache.giraph.comm.flow_control.StaticFlowControl;
+import org.apache.giraph.comm.netty.NettyClient;
 import org.apache.giraph.conf.*;
 import org.apache.giraph.io.VertexInputFormat;
 import org.apache.giraph.partition.ByteArrayPartition;
@@ -194,7 +196,7 @@ public class IgaConfiguration {
 
     // Synchronize full gc calls across workers
     MemoryObserver.USE_MEMORY_OBSERVER.setIfUnset(conf, true);
-    MemoryObserver.MIN_MS_BETWEEN_FULL_GCS.setIfUnset(conf, 10 * 1000);
+    // MemoryObserver.MIN_MS_BETWEEN_FULL_GCS.setIfUnset(conf, 60 * 1000);
 
     // Increase number of partitions per compute thread
     GiraphConstants.MIN_PARTITIONS_PER_COMPUTE_THREAD.setIfUnset(conf, 3);
@@ -246,14 +248,13 @@ public class IgaConfiguration {
   }
 
   private static void customConfig(GiraphConfiguration conf) {
-    // Limit number of open requests to 2000
-//    LIMIT_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, true);
-//    StaticFlowControl.MAX_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, 10000);
+    NettyClient.LIMIT_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, true);
+    StaticFlowControl.MAX_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, 100);
 
     // we use this instead
-    LIMIT_OPEN_REQUESTS_PER_WORKER.set(conf, true);
-    MAX_NUM_OF_UNSENT_REQUESTS.set(conf, 100);
-    MAX_NUM_OF_OPEN_REQUESTS_PER_WORKER.set(conf, 20);
+//    LIMIT_OPEN_REQUESTS_PER_WORKER.set(conf, true);
+//    MAX_NUM_OF_UNSENT_REQUESTS.set(conf, 100);
+//    MAX_NUM_OF_OPEN_REQUESTS_PER_WORKER.set(conf, 20);
   }
 
   private static String currentJar() {
