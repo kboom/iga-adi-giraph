@@ -152,6 +152,19 @@ https://giraph.apache.org/options.html[Reference]
 |201s
 |===
 
+== JVM tuning
+
+```
+-ea
+-XX:+UsePerfData
+-server
+-d64
+-XX:+TieredCompilation
+-XX:-BackgroundCompilation
+-XX:+PrintAdaptiveSizePolicy
+-XX:+PrintNMTStatistics
+```
+
 == Solved issues
 
 https://exceptionshub.com/hadoop-no-filesystem-for-scheme-file.html[Missing filesystem]
