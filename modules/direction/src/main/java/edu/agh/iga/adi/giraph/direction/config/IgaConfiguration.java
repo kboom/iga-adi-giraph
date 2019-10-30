@@ -17,9 +17,11 @@ import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import edu.agh.iga.adi.giraph.direction.performance.MemoryLogger;
+import lombok.val;
 import org.apache.giraph.comm.flow_control.StaticFlowControl;
 import org.apache.giraph.conf.*;
 import org.apache.giraph.io.VertexInputFormat;
+import org.apache.giraph.partition.ByteArrayPartition;
 import org.apache.giraph.worker.MemoryObserver;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.IntWritable;
@@ -31,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.io.Files.createTempDir;
 import static edu.agh.iga.adi.giraph.core.problem.ProblemType.PROJECTION;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.COEFFICIENTS_PROBLEM;
@@ -41,8 +44,11 @@ import static java.lang.String.valueOf;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.join;
+import static org.apache.giraph.comm.flow_control.CreditBasedFlowControl.MAX_NUM_OF_OPEN_REQUESTS_PER_WORKER;
+import static org.apache.giraph.comm.flow_control.CreditBasedFlowControl.MAX_NUM_OF_UNSENT_REQUESTS;
 import static org.apache.giraph.comm.messages.MessageEncodeAndStoreType.BYTEARRAY_PER_PARTITION;
 import static org.apache.giraph.comm.netty.NettyClient.LIMIT_NUMBER_OF_OPEN_REQUESTS;
+import static org.apache.giraph.comm.netty.NettyClient.LIMIT_OPEN_REQUESTS_PER_WORKER;
 import static org.apache.giraph.conf.GiraphConstants.*;
 import static org.apache.giraph.master.BspServiceMaster.NUM_MASTER_ZK_INPUT_SPLIT_THREADS;
 import static org.apache.giraph.partition.PartitionBalancer.PARTITION_BALANCE_ALGORITHM;
@@ -68,7 +74,9 @@ public class IgaConfiguration {
       ".coresFractionDuringCommunication", 1f, "Fraction of mapper cores to use for threads which overlap with" +
       " network communication");
 
-  public static final StrConfOption JAVA_JOB_OPTIONS = new StrConfOption("yarn.app.mapreduce.am.command-opts", null, "Java options passed to the workers");
+  public static final StrConfOption JAVA_JOB_OPTIONS = new StrConfOption("container.java.opts", null, "Java options " +
+      "passed " +
+      "to the workers");
 
   public static final IntConfOption PROBLEM_SIZE = new IntConfOption("iga.problem.size", 12, "The number of elements in one direction");
   public static final EnumConfOption<ProblemType> PROBLEM_TYPE = new EnumConfOption<>("iga.problem.type", ProblemType.class, PROJECTION, "The type of the problem to simulate");
@@ -135,6 +143,7 @@ public class IgaConfiguration {
     conf.setVertexInputFormatClass(inputFormatsByInitType.get(FIRST_INITIALISATION_TYPE.get(conf)));
     conf.setVertexOutputFormatClass(StepVertexOutputFormat.class);
     conf.addWorkerObserverClass(MemoryLogger.class);
+    conf.setPartitionClass(ByteArrayPartition.class);
     conf.setYarnLibJars(currentJar());
     STATIC_GRAPH.set(conf, true);
     VERTEX_ID_CLASS.set(conf, IntWritable.class);
@@ -142,7 +151,7 @@ public class IgaConfiguration {
     EDGE_VALUE_CLASS.set(conf, IgaOperationWritable.class);
     OUTGOING_MESSAGE_VALUE_CLASS.set(conf, IgaMessageWritable.class);
     MAX_NUMBER_OF_SUPERSTEPS.set(conf, MAX_VALUE);
-    USE_SUPERSTEP_COUNTERS.set(conf, false); // todo enable this for detailed breakdown of computation times per superstep
+    USE_SUPERSTEP_COUNTERS.set(conf, false);
     conf.setDoOutputDuringComputation(true); // to support multiple steps, we're not using checkpoints, we can just restart the job where we left off from the last step (load saved coefficients)
     VERTEX_OUTPUT_FORMAT_THREAD_SAFE.set(conf, false); // is not thread safe
   }
@@ -208,18 +217,24 @@ public class IgaConfiguration {
     if (CONFIGURE_JAVA_OPTS.get(conf)) {
       List<String> javaOpts = getMemoryJavaOpts(conf);
       javaOpts.addAll(getGcJavaOpts(conf));
-      javaOpts.addAll(tuningJavaOpts(conf));
-      JAVA_JOB_OPTIONS.set(conf, join(javaOpts, " "));
+      javaOpts.addAll(tuningJavaOpts());
+      javaOpts.addAll(observabilityJavaOpts());
+      val options = join(javaOpts, " ");
+      JAVA_JOB_OPTIONS.setIfUnset(conf, options);
+      LOG.info("Configuring java options: " + JAVA_JOB_OPTIONS.get(conf));
+    } else {
+      LOG.info("Using default java options");
     }
 
     /**
      * Netty tuning (custom, not verified other than the buffer sizes)
      */
-    NETTY_USE_DIRECT_MEMORY.setIfUnset(conf, false); // todo this is unpredictable as it allocates memory outside of JVM
+    NETTY_USE_DIRECT_MEMORY.setIfUnset(conf, true); // this allows to avoid copying objects before sending, but needs
+    // some free space
 
     REQUEST_SIZE_WARNING_THRESHOLD.setIfUnset(conf, 1);
     NETTY_CLIENT_THREADS.setIfUnset(conf, threadsDuringCommunication);
-    CLIENT_RECEIVE_BUFFER_SIZE.setIfUnset(conf, ONE_MB);
+    CLIENT_RECEIVE_BUFFER_SIZE.setIfUnset(conf, 32 * ONE_MB);
     CLIENT_SEND_BUFFER_SIZE.setIfUnset(conf, 32 * ONE_MB);
     SERVER_SEND_BUFFER_SIZE.setIfUnset(conf, 32 * ONE_MB);
     SERVER_RECEIVE_BUFFER_SIZE.setIfUnset(conf, 64 * ONE_MB);
@@ -229,18 +244,18 @@ public class IgaConfiguration {
 
     USE_MESSAGE_SIZE_ENCODING.setIfUnset(conf, true);
 
-    MESSAGE_ENCODE_AND_STORE_TYPE.setIfUnset(conf, BYTEARRAY_PER_PARTITION); // todo not sure
+    MESSAGE_ENCODE_AND_STORE_TYPE.setIfUnset(conf, BYTEARRAY_PER_PARTITION);
   }
 
   private static void customConfig(GiraphConfiguration conf) {
     // Limit number of open requests to 2000
-    LIMIT_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, true);
-    StaticFlowControl.MAX_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, 10000);
+//    LIMIT_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, true);
+//    StaticFlowControl.MAX_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, 10000);
 
     // we use this instead
-//    LIMIT_OPEN_REQUESTS_PER_WORKER.set(conf, true);
-//    MAX_NUM_OF_UNSENT_REQUESTS.set(conf, 100);
-//    MAX_NUM_OF_OPEN_REQUESTS_PER_WORKER.set(conf, 20);
+    LIMIT_OPEN_REQUESTS_PER_WORKER.set(conf, true);
+    MAX_NUM_OF_UNSENT_REQUESTS.set(conf, 1000);
+    MAX_NUM_OF_OPEN_REQUESTS_PER_WORKER.set(conf, 100);
   }
 
   private static String currentJar() {
@@ -251,15 +266,9 @@ public class IgaConfiguration {
   }
 
   private static List<String> getMemoryJavaOpts(Configuration conf) {
-    int memoryGb = WORKER_MEMORY.get(conf);
-    List<String> javaOpts = new ArrayList<>();
-    // Set xmx and xms to the same value
-    javaOpts.add("-Xms" + memoryGb + "g");
-    javaOpts.add("-Xmx" + memoryGb + "g");
-    // Non-uniform memory allocator (great for multi-threading and appears to
-    // have no impact when single threaded)
-    javaOpts.add("-XX:+UseNUMA");
-    return javaOpts;
+    return Lists.newArrayList(
+        "-XX:+UseNUMA"
+    );
   }
 
   private static List<String> getGcJavaOpts(Configuration conf) {
@@ -273,14 +282,27 @@ public class IgaConfiguration {
       gcJavaOpts.add("-XX:+UseParallelGC");
       gcJavaOpts.add("-XX:+UseParallelOldGC");
       // Fix new size generation
-      gcJavaOpts.add("-XX:NewSize=" + newGenMemoryGb + "g");
-      gcJavaOpts.add("-XX:MaxNewSize=" + newGenMemoryGb + "g");
+      gcJavaOpts.add("-XX:NewSize=" + newGenMemoryGb + "G");
+      gcJavaOpts.add("-XX:MaxNewSize=" + newGenMemoryGb + "G");
     }
     return gcJavaOpts;
   }
 
-  private static List<String> tuningJavaOpts(GiraphConfiguration conf) {
-    return Lists.newArrayList("jdk.tls.disabledAlgorithms=SSLv3, GCM");
+  private static List<String> tuningJavaOpts() {
+    return newArrayList(
+        "-server",
+        "-XX:ReservedCodeCacheSize=256M"
+    );
+  }
+
+  private static List<String> observabilityJavaOpts() {
+    return newArrayList(
+        "-XX:+UnlockDiagnosticVMOptions",
+        "-XX:+PrintFlagsFinal",
+        "-XX:+HeapDumpOnOutOfMemoryError",
+        "-XX:HeapDumpPath=<LOG_DIR>/@taskid@.hprof",
+        "-XX:OnOutOfMemoryError='free -m'"
+    );
   }
 
 

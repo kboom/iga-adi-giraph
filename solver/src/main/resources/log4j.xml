@@ -6,17 +6,27 @@
         <param name="target" value="System.out"/>
         <param name="threshold" value="debug"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c] - %m%n"/>
+            <param name="ConversionPattern" value="%-5p [%C{1}] %m%n"/>
         </layout>
     </appender>
 
-    <logger name="edu.agh.iga.adi.giraph.IgaSolverTool" additivity="false">
-        <level value="all" />
+    <logger name="edu.agh.iga.adi.giraph" additivity="false">
+        <level value="error" />
         <appender-ref ref="default.console"/>
     </logger>
 
     <logger name="org.apache.giraph.master.MasterThread" additivity="false">
-        <level value="all" />
+        <level value="info" />
+        <appender-ref ref="default.console"/>
+    </logger>
+
+    <logger name="org.apache.giraph.worker.BspServiceWorker" additivity="false">
+        <level value="info" />
+        <appender-ref ref="default.console"/>
+    </logger>
+
+    <logger name="org.apache.giraph.yarn" additivity="false">
+        <level value="info" />
         <appender-ref ref="default.console"/>
     </logger>
 
