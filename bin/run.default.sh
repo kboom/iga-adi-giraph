@@ -10,7 +10,7 @@ exec ./run.cloud.sh \
 	-p HEAT \
 	--init-problem RADIAL \
 	--config giraph.zkList="iga-adi-m:2181" \
-  --config giraph.logLevel=info \
+  --config giraph.logLevel=error \
   --config giraph.yarn.task.overhead.percent=0.3 \
   --config iga.storeSolution=false \
   --config giraph.minPartitionsPerComputeThread=3 \

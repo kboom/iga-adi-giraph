@@ -19,7 +19,6 @@ import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import edu.agh.iga.adi.giraph.direction.performance.MemoryLogger;
 import lombok.val;
 import org.apache.giraph.comm.flow_control.StaticFlowControl;
-import org.apache.giraph.comm.netty.NettyClient;
 import org.apache.giraph.conf.*;
 import org.apache.giraph.io.VertexInputFormat;
 import org.apache.giraph.partition.ByteArrayPartition;
@@ -45,10 +44,8 @@ import static java.lang.String.valueOf;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.join;
-import static org.apache.giraph.comm.flow_control.CreditBasedFlowControl.MAX_NUM_OF_OPEN_REQUESTS_PER_WORKER;
-import static org.apache.giraph.comm.flow_control.CreditBasedFlowControl.MAX_NUM_OF_UNSENT_REQUESTS;
 import static org.apache.giraph.comm.messages.MessageEncodeAndStoreType.BYTEARRAY_PER_PARTITION;
-import static org.apache.giraph.comm.netty.NettyClient.LIMIT_OPEN_REQUESTS_PER_WORKER;
+import static org.apache.giraph.comm.netty.NettyClient.LIMIT_NUMBER_OF_OPEN_REQUESTS;
 import static org.apache.giraph.conf.GiraphConstants.*;
 import static org.apache.giraph.master.BspServiceMaster.NUM_MASTER_ZK_INPUT_SPLIT_THREADS;
 import static org.apache.giraph.partition.PartitionBalancer.PARTITION_BALANCE_ALGORITHM;
@@ -151,7 +148,7 @@ public class IgaConfiguration {
     EDGE_VALUE_CLASS.set(conf, IgaOperationWritable.class);
     OUTGOING_MESSAGE_VALUE_CLASS.set(conf, IgaMessageWritable.class);
     MAX_NUMBER_OF_SUPERSTEPS.set(conf, MAX_VALUE);
-    USE_SUPERSTEP_COUNTERS.set(conf, false); // todo enable this for detailed breakdown of computation times per superstep
+    USE_SUPERSTEP_COUNTERS.set(conf, false);
     conf.setDoOutputDuringComputation(true); // to support multiple steps, we're not using checkpoints, we can just restart the job where we left off from the last step (load saved coefficients)
     VERTEX_OUTPUT_FORMAT_THREAD_SAFE.set(conf, false); // is not thread safe
   }
@@ -196,7 +193,7 @@ public class IgaConfiguration {
 
     // Synchronize full gc calls across workers
     MemoryObserver.USE_MEMORY_OBSERVER.setIfUnset(conf, true);
-    // MemoryObserver.MIN_MS_BETWEEN_FULL_GCS.setIfUnset(conf, 60 * 1000);
+    MemoryObserver.MIN_MS_BETWEEN_FULL_GCS.setIfUnset(conf, 10 * 1000);
 
     // Increase number of partitions per compute thread
     GiraphConstants.MIN_PARTITIONS_PER_COMPUTE_THREAD.setIfUnset(conf, 3);
@@ -244,12 +241,13 @@ public class IgaConfiguration {
 
     USE_MESSAGE_SIZE_ENCODING.setIfUnset(conf, true);
 
-    MESSAGE_ENCODE_AND_STORE_TYPE.setIfUnset(conf, BYTEARRAY_PER_PARTITION); // todo not sure
+    MESSAGE_ENCODE_AND_STORE_TYPE.setIfUnset(conf, BYTEARRAY_PER_PARTITION);
   }
 
   private static void customConfig(GiraphConfiguration conf) {
-    NettyClient.LIMIT_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, true);
-    StaticFlowControl.MAX_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, 100);
+    // Limit number of open requests to 2000
+    LIMIT_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, true);
+    StaticFlowControl.MAX_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, 10000);
 
     // we use this instead
 //    LIMIT_OPEN_REQUESTS_PER_WORKER.set(conf, true);
