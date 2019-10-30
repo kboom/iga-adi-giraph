@@ -44,8 +44,11 @@ import static java.lang.String.valueOf;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.join;
+import static org.apache.giraph.comm.flow_control.CreditBasedFlowControl.MAX_NUM_OF_OPEN_REQUESTS_PER_WORKER;
+import static org.apache.giraph.comm.flow_control.CreditBasedFlowControl.MAX_NUM_OF_UNSENT_REQUESTS;
 import static org.apache.giraph.comm.messages.MessageEncodeAndStoreType.BYTEARRAY_PER_PARTITION;
 import static org.apache.giraph.comm.netty.NettyClient.LIMIT_NUMBER_OF_OPEN_REQUESTS;
+import static org.apache.giraph.comm.netty.NettyClient.LIMIT_OPEN_REQUESTS_PER_WORKER;
 import static org.apache.giraph.conf.GiraphConstants.*;
 import static org.apache.giraph.master.BspServiceMaster.NUM_MASTER_ZK_INPUT_SPLIT_THREADS;
 import static org.apache.giraph.partition.PartitionBalancer.PARTITION_BALANCE_ALGORITHM;
@@ -246,13 +249,13 @@ public class IgaConfiguration {
 
   private static void customConfig(GiraphConfiguration conf) {
     // Limit number of open requests to 2000
-    LIMIT_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, true);
-    StaticFlowControl.MAX_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, 10000);
+//    LIMIT_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, true);
+//    StaticFlowControl.MAX_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, 10000);
 
     // we use this instead
-//    LIMIT_OPEN_REQUESTS_PER_WORKER.set(conf, true);
-//    MAX_NUM_OF_UNSENT_REQUESTS.set(conf, 100);
-//    MAX_NUM_OF_OPEN_REQUESTS_PER_WORKER.set(conf, 20);
+    LIMIT_OPEN_REQUESTS_PER_WORKER.set(conf, true);
+    MAX_NUM_OF_UNSENT_REQUESTS.set(conf, 1000);
+    MAX_NUM_OF_OPEN_REQUESTS_PER_WORKER.set(conf, 100);
   }
 
   private static String currentJar() {

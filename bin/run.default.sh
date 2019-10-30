@@ -14,7 +14,7 @@ exec ./run.cloud.sh \
   --config giraph.yarn.task.overhead.percent=0.3 \
   --config iga.storeSolution=false \
   --config giraph.minPartitionsPerComputeThread=3 \
-  --config giraph.useNettyDirectMemory=false \
+  --config giraph.useNettyDirectMemory=true \
   --config giraph.heap.enableReactiveJmapDumping=true \
   --config giraph.jmap.histo.enable=true \
   --config giraph.jmap.histo.live=true
