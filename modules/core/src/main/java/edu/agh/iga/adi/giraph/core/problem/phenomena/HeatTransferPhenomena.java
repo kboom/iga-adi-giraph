@@ -39,46 +39,49 @@ public final class HeatTransferPhenomena implements Problem, SolutionTransformer
     val localx = x - mesh.getDx() * ielemx;
     val localy = y - mesh.getDy() * ielemy;
 
-    double solution = 0.0;
-
     if (!isEven()) {
-      val b1dx = b1.getSecondDerivativeValueAt(localx);
-      val b1y = b1.getValue(localy);
-      val b2dx = b2.getSecondDerivativeValueAt(localx);
-      val b2y = b2.getValue(localy);
-      val b3dx = b3.getSecondDerivativeValueAt(localx);
-      val b3y = b3.getValue(localy);
-
-      solution += b1dx * b1y * c.doubleValue(0, ielemy);
-      solution += b1dx * b2y * c.doubleValue(0, ielemy + 1);
-      solution += b1dx * b3y * c.doubleValue(0, ielemy + 2);
-      solution += b2dx * b1y * c.doubleValue(1, ielemy);
-      solution += b2dx * b2y * c.doubleValue(1, ielemy + 1);
-      solution += b2dx * b3y * c.doubleValue(1, ielemy + 2);
-      solution += b3dx * b1y * c.doubleValue(2, ielemy);
-      solution += b3dx * b2y * c.doubleValue(2, ielemy + 1);
-      solution += b3dx * b3y * c.doubleValue(2, ielemy + 2);
-
+      return even(c, ielemy, localx, localy);
     } else {
-      val b1dy = b1.getSecondDerivativeValueAt(localy);
-      val b1x = b1.getValue(localx);
-      val b2dy = b2.getSecondDerivativeValueAt(localy);
-      val b2x = b2.getValue(localx);
-      val b3dy = b3.getSecondDerivativeValueAt(localy);
-      val b3x = b3.getValue(localx);
-
-      solution += b1x * b1dy * c.doubleValue(0, ielemy);
-      solution += b1x * b2dy * c.doubleValue(0, ielemy + 1);
-      solution += b1x * b3dy * c.doubleValue(0, ielemy + 2);
-      solution += b2x * b1dy * c.doubleValue(1, ielemy);
-      solution += b2x * b2dy * c.doubleValue(1, ielemy + 1);
-      solution += b2x * b3dy * c.doubleValue(1, ielemy + 2);
-      solution += b3x * b1dy * c.doubleValue(2, ielemy);
-      solution += b3x * b2dy * c.doubleValue(2, ielemy + 1);
-      solution += b3x * b3dy * c.doubleValue(2, ielemy + 2);
+      return odd(c, ielemy, localx, localy);
     }
+  }
 
-    return solution;
+  private static double odd(Access2D<Double> c, long ielemy, double localx, double localy) {
+    val b1dy = b1.getSecondDerivativeValueAt(localy);
+    val b1x = b1.getValue(localx);
+    val b2dy = b2.getSecondDerivativeValueAt(localy);
+    val b2x = b2.getValue(localx);
+    val b3dy = b3.getSecondDerivativeValueAt(localy);
+    val b3x = b3.getValue(localx);
+
+    return b1x * b1dy * c.doubleValue(0, ielemy)
+        + b1x * b2dy * c.doubleValue(0, ielemy + 1)
+        + b1x * b3dy * c.doubleValue(0, ielemy + 2)
+        + b2x * b1dy * c.doubleValue(1, ielemy)
+        + b2x * b2dy * c.doubleValue(1, ielemy + 1)
+        + b2x * b3dy * c.doubleValue(1, ielemy + 2)
+        + b3x * b1dy * c.doubleValue(2, ielemy)
+        + b3x * b2dy * c.doubleValue(2, ielemy + 1)
+        + b3x * b3dy * c.doubleValue(2, ielemy + 2);
+  }
+
+  private static double even(Access2D<Double> c, long ielemy, double localx, double localy) {
+    val b1dx = b1.getSecondDerivativeValueAt(localx);
+    val b1y = b1.getValue(localy);
+    val b2dx = b2.getSecondDerivativeValueAt(localx);
+    val b2y = b2.getValue(localy);
+    val b3dx = b3.getSecondDerivativeValueAt(localx);
+    val b3y = b3.getValue(localy);
+
+    return b1dx * b1y * c.doubleValue(0, ielemy)
+        + b1dx * b2y * c.doubleValue(0, ielemy + 1)
+        + b1dx * b3y * c.doubleValue(0, ielemy + 2)
+        + b2dx * b1y * c.doubleValue(1, ielemy)
+        + b2dx * b2y * c.doubleValue(1, ielemy + 1)
+        + b2dx * b3y * c.doubleValue(1, ielemy + 2)
+        + b3dx * b1y * c.doubleValue(2, ielemy)
+        + b3dx * b2y * c.doubleValue(2, ielemy + 1)
+        + b3dx * b3y * c.doubleValue(2, ielemy + 2);
   }
 
   private boolean isEven() {

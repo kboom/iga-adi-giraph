@@ -2,6 +2,7 @@ package edu.agh.iga.adi.giraph.core.operations;
 
 import edu.agh.iga.adi.giraph.core.IgaElement;
 import lombok.NoArgsConstructor;
+import lombok.val;
 
 import static lombok.AccessLevel.PRIVATE;
 import static org.ojalgo.function.constant.PrimitiveMath.DIVIDE;
@@ -54,7 +55,8 @@ final class OperationUtil {
         for (int icol = irow + 1; icol < size; icol++) {
           e.mx.set(irow, irhs, e.mx.doubleValue(irow, irhs) - e.ma.doubleValue(irow, icol) * e.mx.doubleValue(icol, irhs));
         }
-        e.mx.modifyOne(irow, irhs, DIVIDE.by(e.ma.doubleValue(irow, irow)));
+        val currentX = e.mx.doubleValue(irow, irhs);
+        e.mx.set(irow, irhs, currentX / e.ma.doubleValue(irow, irow));
       }
     }
   }
