@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 exec ./run.cloud.sh \
   -s 2 \
-  -e 6144 \
+  -e 24576 \
 	-w 2 \
 	-h 4 \
 	-c 4 \

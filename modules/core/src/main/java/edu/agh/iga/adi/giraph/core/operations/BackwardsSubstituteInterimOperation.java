@@ -18,7 +18,7 @@ public final class BackwardsSubstituteInterimOperation implements IgaOperation<B
 
   @Override
   public IgaElement preConsume(IgaVertex vertex, IgaContext ctx, IgaElement element) {
-    return element.withMx(FACTORY.makeZero(ROWS_BOUND_TO_NODE, ctx.getMesh().getDofsX()));
+    return element.withMx(FACTORY.make(ROWS_BOUND_TO_NODE, ctx.getMesh().getDofsX()));
   }
 
   @Override
@@ -42,7 +42,6 @@ public final class BackwardsSubstituteInterimOperation implements IgaOperation<B
   @Override
   public IgaElement postSend(IgaElement element, DirectionTree tree) {
     return null;
-//    return element;
   }
 
   @Override
