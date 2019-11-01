@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-set -ex
-
 MASTER_ID=${1}
 
 THIS_DIR=$(dirname "$0")

@@ -8,5 +8,5 @@ IGA_HOME=$(cd "${BIN_DIR}/../.." || exit ; pwd)
 gcloud compute scp \
   --zone "europe-west4-a" \
   --tunnel-through-iap  \
-  --recurse "${MASTER_ID}":~/logs/* "${MASTER_ID}":~/suite-* \
+  --recurse "${MASTER_ID}":~/logs/* \
   "${IGA_HOME}/logs"

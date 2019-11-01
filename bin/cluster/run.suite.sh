@@ -35,4 +35,7 @@ for ((i=2;i<=$#;i++)); do
 
   echo "Downloading logs for ${APP_ID}"
   "${DOWNLOAD_LOGS_SCRIPT}" "${APP_ID}"
+
+  echo "Copying suite file to the log dir"
+  cp "${OUTPUT_FILE}"* "logs/${APP_ID}/"
 done
