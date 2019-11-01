@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set +xe
 
-TIMESTAMP=$(date +%s)
+TIMESTAMP=${TIMESTAMP:-$(date +%s)}
 HDFS_RESULTS_DIR=hdfs://iga-adi-m/user/kbhit/${TIMESTAMP}
 
 # This makes sure our fat JAR including Giraph classes is available for master and for looking for JAR file to send to HDFS for workers
