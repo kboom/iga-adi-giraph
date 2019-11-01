@@ -4,6 +4,7 @@
 SCRIPTPATH="$( cd "$(dirname "$0")" || exit ; pwd -P )"
 RUN_SCRIPT="${SCRIPTPATH}/run.cloud.sh"
 
+set -x
 IGA_STEPS=${IGA_STEPS:-2}
 IGA_PROBLEM_SIZE=${IGA_PROBLEM_SIZE:-384}
 IGA_WORKERS=${IGA_WORKERS:-1}
