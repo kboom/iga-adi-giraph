@@ -2,9 +2,10 @@
 set +xe
 
 TIMESTAMP=${TIMESTAMP:-$(date +%s)}
-HDFS_RESULTS_DIR=hdfs://iga-adi-m/user/kbhit/${TIMESTAMP}
+HDFS_RESULTS_DIR=hdfs://$(hostname)/user/$(whoami)/${TIMESTAMP}
 
 # This makes sure our fat JAR including Giraph classes is available for master and for looking for JAR file to send to HDFS for workers
+# shellcheck disable=SC2125
 HADOOP_CLASSPATH=$(pwd)/*
 export HADOOP_CLASSPATH
 
