@@ -11,6 +11,7 @@ import org.apache.giraph.master.DefaultMasterCompute;
 import org.apache.hadoop.io.BooleanWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Counter;
+import org.apache.log4j.Logger;
 
 import static edu.agh.iga.adi.giraph.direction.Flags.INT_FALSE;
 import static edu.agh.iga.adi.giraph.direction.Flags.INT_TRUE;
@@ -19,11 +20,14 @@ import static edu.agh.iga.adi.giraph.direction.StepAggregators.*;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.COEFFICIENTS_PROBLEM;
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.computationResolverFor;
 import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.*;
+import static org.apache.log4j.Logger.getLogger;
 
 /**
  * Computes one full time step of the Alternating Directions Solver.
  */
 public class IterativeComputation extends DefaultMasterCompute {
+
+  private static final Logger LOG = getLogger(IterativeComputation.class);
 
   private DirectionTree tree;
   private Class<? extends Computation> previousComputation;
@@ -93,6 +97,7 @@ public class IterativeComputation extends DefaultMasterCompute {
       setComputationIteration(0);
       computationIteration.setValue(0);
       if (stepCounter.getValue() >= stepCount) {
+        LOG.info("Halting computation after " + getSuperstep() + " supersteps");
         haltComputation();
       } else {
         previousComputation = InitialisationComputation.class;
