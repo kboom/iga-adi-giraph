@@ -189,3 +189,5 @@ Can we hold of with creating X matrix for the merging stage as there are only ze
 * https://github.com/uwsampa/giraph-docker[Giraph on Docker]
 * https://github.com/o19s/Hadoopadoop/blob/master/matrixtranspose/MatrixTranspose.java[Hadoop Matrix Transposition]
 * https://www.ojalgo.org/code-examples/[ojAlgo examples]
+* https://ftp.icm.edu.pl/packages/gnuplot/5.2.2/gnuplot.pdf[Gnuplot full documentation]
+* http://www.gnuplot.info/docs_4.0/gpcard.pdf[Gnuplot quick reference]
