@@ -21,4 +21,5 @@ plot for [indx in "12288 6144 3072 1536"] \
 	pt 5 ps 1 lc indx \
 	title sprintf("%s^2", indx);
 
-replot
+a=system("awk -F "," '{ if($1 == 12288) print $2 $5}' single.csv")
+
