@@ -1,3 +1,4 @@
+set title "Serial scalability"
 set datafile separator ","
 set xlabel 'Problem Size [N]'
 set ylabel 'Time [ms]'
@@ -8,9 +9,15 @@ set output 'serial-scalability.png'
 set autoscale fix
 set logscale
 set format y "10^%L"
+set fit errorvariables
 
-f(x) = 1
+o(x) = a*x + c
 
-plot 'single.csv' using ($1**2):($2==1?$5:0):xtic($1) title ''
+fit o(x) 'single.csv' using ($1**2):($2==1?$5:1/0) via a, c
+otitle = sprintf("%.3f*N+%.2f (+/- %.2e)", a, c, a_err)
+
+plot \
+	'single.csv' using ($1**2):($2==1?$5:1/0):xtic($1) pt 5 ps 1 lc rgb 'black' notitle, \
+	 o(x) with lines lc rgb 'black' title otitle
 
 replot
