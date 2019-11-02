@@ -11,6 +11,7 @@ IGA_WORKERS=${IGA_WORKERS:-1}
 IGA_WORKER_CORES=${IGA_WORKER_CORES:-1}
 IGA_WORKER_MEMORY=${IGA_WORKER_MEMORY:-2048}
 IGA_PARTITION_HEIGHT=${IGA_PARTITION_HEIGHT:-3}
+IGA_MEMORY_OVERHEAD_PERCENT=${IGA_MEMORY_OVERHEAD_PERCENT:-0.2}
 
 exec "${RUN_SCRIPT}" \
   -s "${IGA_STEPS}" \
@@ -23,7 +24,7 @@ exec "${RUN_SCRIPT}" \
 	-p HEAT \
 	--init-problem RADIAL \
 	--config giraph.zkList="iga-adi-m:2181" \
-  --config giraph.logLevel=debug \
-  --config giraph.yarn.task.overhead.percent=0.3 \
+  --config giraph.logLevel=info \
+  --config giraph.yarn.task.overhead.percent="${IGA_MEMORY_OVERHEAD_PERCENT}" \
   --config iga.storeSolution=false \
   --config giraph.minPartitionsPerComputeThread=3

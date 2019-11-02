@@ -7,6 +7,7 @@ COOLDOWN=${COOLDOWN:-10s}
 [ "$#" == "0" ] && set -- IGA_PROBLEM_SIZE 12
 
 # Input parameters
+SUITE_NAME=${SUITE_NAME:-""}
 PERF_VARIABLE_NAME="${1}"
 
 # Get the directories
@@ -25,7 +26,7 @@ for ((i=2;i<=$#;i++)); do
   sleep "${COOLDOWN}"
 
   echo "Storing application state"
-  APP_ID=$(yarn application -list -appStates ALL | grep -m 1 -oe "application_[0-9]*_[0-9]*")
+  APP_ID=$(yarn application -list -appStates ALL | sort -r | grep -m 1 -oe "application_[0-9]*_[0-9]*")
   if [[ -z "${APP_ID}" ]]; then
     echo "Could not locate application" 1>&2
     exit 1
@@ -38,4 +39,7 @@ for ((i=2;i<=$#;i++)); do
 
   echo "Copying suite file to the log dir"
   cp "${OUTPUT_FILE}"* "logs/${APP_ID}/"
+
+  echo "Renaming dir to match suite"
+  mv "logs/${APP_ID}" "logs/suite-${SUITE_NAME}-${APP_ID}"
 done
