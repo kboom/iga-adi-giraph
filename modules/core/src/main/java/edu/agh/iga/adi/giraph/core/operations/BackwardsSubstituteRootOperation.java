@@ -17,7 +17,7 @@ public final class BackwardsSubstituteRootOperation implements IgaOperation<Back
 
   @Override
   public IgaElement preConsume(IgaVertex vertex, IgaContext ctx, IgaElement element) {
-    return element.withMx(FACTORY.makeZero(ROWS_BOUND_TO_NODE, ctx.getMesh().getDofsX()));
+    return element.withMx(FACTORY.make(ROWS_BOUND_TO_NODE, ctx.getMesh().getDofsX()));
   }
 
   @Override

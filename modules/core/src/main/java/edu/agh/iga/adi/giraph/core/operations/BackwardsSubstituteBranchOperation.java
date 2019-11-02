@@ -16,7 +16,7 @@ public final class BackwardsSubstituteBranchOperation implements IgaOperation<Ba
 
   @Override
   public IgaElement preConsume(IgaVertex vertex, IgaContext ctx, IgaElement element) {
-    return element.withMx(FACTORY.makeZero(5, ctx.getMesh().getDofsX()));
+    return element.withMx(FACTORY.make(5, ctx.getMesh().getDofsX()));
   }
 
   @Override

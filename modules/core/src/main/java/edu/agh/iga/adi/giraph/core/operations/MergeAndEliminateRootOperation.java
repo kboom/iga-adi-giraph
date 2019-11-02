@@ -30,9 +30,9 @@ public final class MergeAndEliminateRootOperation implements IgaOperation<MergeA
 
   @Override
   public IgaElement preConsume(IgaVertex vertex, IgaContext ctx, IgaElement element) {
-    val ma = FACTORY.makeZero(ROWS_BOUND_TO_NODE, COLS_BOUND_TO_NODE);
-    val mb = FACTORY.makeZero(ROWS_BOUND_TO_NODE, ctx.getMesh().getDofsX());
-    val mx = FACTORY.makeZero(ROWS_BOUND_TO_NODE, ctx.getMesh().getDofsX());
+    val ma = FACTORY.make(ROWS_BOUND_TO_NODE, COLS_BOUND_TO_NODE);
+    val mb = FACTORY.make(ROWS_BOUND_TO_NODE, ctx.getMesh().getDofsX());
+    val mx = FACTORY.make(ROWS_BOUND_TO_NODE, ctx.getMesh().getDofsX());
     return igaElement(vertex.id(), ma, mb, mx);
   }
 

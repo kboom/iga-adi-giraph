@@ -48,7 +48,6 @@ public class CoefficientSolution implements PartialSolution {
     val sp3x = b3.getValue(localx);
     val sp3y = b3.getValue(localy);
 
-    // we explicitly handle only a stripe of the solution square indexed locally so we don't care about the global x
     return coef.doubleValue(0, ielemy) * sp1x * sp1y +
         coef.doubleValue(0, ielemy + 1) * sp1x * sp2y +
         coef.doubleValue(0, ielemy + 2) * sp1x * sp3y +

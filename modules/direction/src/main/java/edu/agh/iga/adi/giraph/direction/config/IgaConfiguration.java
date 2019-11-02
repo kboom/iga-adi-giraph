@@ -18,7 +18,6 @@ import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import edu.agh.iga.adi.giraph.direction.performance.MemoryLogger;
 import lombok.val;
-import org.apache.giraph.comm.flow_control.StaticFlowControl;
 import org.apache.giraph.conf.*;
 import org.apache.giraph.io.VertexInputFormat;
 import org.apache.giraph.partition.ByteArrayPartition;
@@ -47,7 +46,6 @@ import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.giraph.comm.flow_control.CreditBasedFlowControl.MAX_NUM_OF_OPEN_REQUESTS_PER_WORKER;
 import static org.apache.giraph.comm.flow_control.CreditBasedFlowControl.MAX_NUM_OF_UNSENT_REQUESTS;
 import static org.apache.giraph.comm.messages.MessageEncodeAndStoreType.BYTEARRAY_PER_PARTITION;
-import static org.apache.giraph.comm.netty.NettyClient.LIMIT_NUMBER_OF_OPEN_REQUESTS;
 import static org.apache.giraph.comm.netty.NettyClient.LIMIT_OPEN_REQUESTS_PER_WORKER;
 import static org.apache.giraph.conf.GiraphConstants.*;
 import static org.apache.giraph.master.BspServiceMaster.NUM_MASTER_ZK_INPUT_SPLIT_THREADS;
@@ -65,6 +63,9 @@ public class IgaConfiguration {
 
   public static final BooleanConfOption USE_G1_COLLECTOR = new BooleanConfOption("iga.useG1", false, "Use G1GC " +
       "collector"); // it crashes the solver for larger computation sizes
+
+  public static final BooleanConfOption HEAP_DUMP_ON_OOM = new BooleanConfOption("iga.heap.dump", false, "Use heap " +
+      "dump on OOM"); // it crashes the solver for larger computation sizes
 
   public static final IntConfOption WORKER_CORES = new IntConfOption("iga.cores", 1, "The number of cores per worker");
   public static final IntConfOption WORKER_MEMORY = new IntConfOption("iga.memory", 1, "The amount of memory per worker in gigabytes");
@@ -103,7 +104,6 @@ public class IgaConfiguration {
 
     solverOptions(conf);
     generalTuning(conf);
-//    USE_MESSAGE_SIZE_ENCODING.set(conf, true); // todo not sure about this
     resiliencySettings(conf);
 
     HDFS_FILE_CREATION_RETRY_WAIT_MS.set(conf, 1000);
@@ -212,13 +212,11 @@ public class IgaConfiguration {
     // Enable tracking and printing of metrics
     GiraphConstants.METRICS_ENABLE.setIfUnset(conf, true);
 
-    conf.set("giraph.msgRequestWarningThreshold", "1");
-
     if (CONFIGURE_JAVA_OPTS.get(conf)) {
       List<String> javaOpts = getMemoryJavaOpts(conf);
       javaOpts.addAll(getGcJavaOpts(conf));
       javaOpts.addAll(tuningJavaOpts());
-      javaOpts.addAll(observabilityJavaOpts());
+      javaOpts.addAll(observabilityJavaOpts(conf));
       val options = join(javaOpts, " ");
       JAVA_JOB_OPTIONS.setIfUnset(conf, options);
       LOG.info("Configuring java options: " + JAVA_JOB_OPTIONS.get(conf));
@@ -234,13 +232,13 @@ public class IgaConfiguration {
 
     REQUEST_SIZE_WARNING_THRESHOLD.setIfUnset(conf, 1);
     NETTY_CLIENT_THREADS.setIfUnset(conf, threadsDuringCommunication);
-    CLIENT_RECEIVE_BUFFER_SIZE.setIfUnset(conf, 32 * ONE_MB);
-    CLIENT_SEND_BUFFER_SIZE.setIfUnset(conf, 32 * ONE_MB);
-    SERVER_SEND_BUFFER_SIZE.setIfUnset(conf, 32 * ONE_MB);
-    SERVER_RECEIVE_BUFFER_SIZE.setIfUnset(conf, 64 * ONE_MB);
-    MAX_MSG_REQUEST_SIZE.setIfUnset(conf, 64 * ONE_MB);
-    MAX_VERTEX_REQUEST_SIZE.setIfUnset(conf, 64 * ONE_MB);
-    MAX_EDGE_REQUEST_SIZE.setIfUnset(conf, 64 * ONE_MB);
+    CLIENT_RECEIVE_BUFFER_SIZE.setIfUnset(conf, ONE_MB);
+    CLIENT_SEND_BUFFER_SIZE.setIfUnset(conf, ONE_MB);
+    SERVER_SEND_BUFFER_SIZE.setIfUnset(conf, ONE_MB);
+    SERVER_RECEIVE_BUFFER_SIZE.setIfUnset(conf, ONE_MB);
+    MAX_MSG_REQUEST_SIZE.setIfUnset(conf, ONE_MB);
+    MAX_VERTEX_REQUEST_SIZE.setIfUnset(conf, ONE_MB);
+    MAX_EDGE_REQUEST_SIZE.setIfUnset(conf, ONE_MB);
 
     USE_MESSAGE_SIZE_ENCODING.setIfUnset(conf, true);
 
@@ -253,9 +251,9 @@ public class IgaConfiguration {
 //    StaticFlowControl.MAX_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, 10000);
 
     // we use this instead
-    LIMIT_OPEN_REQUESTS_PER_WORKER.set(conf, true);
-    MAX_NUM_OF_UNSENT_REQUESTS.set(conf, 1000);
-    MAX_NUM_OF_OPEN_REQUESTS_PER_WORKER.set(conf, 100);
+    LIMIT_OPEN_REQUESTS_PER_WORKER.setIfUnset(conf, true);
+    MAX_NUM_OF_UNSENT_REQUESTS.setIfUnset(conf, 10000);
+    MAX_NUM_OF_OPEN_REQUESTS_PER_WORKER.setIfUnset(conf, 1000);
   }
 
   private static String currentJar() {
@@ -276,6 +274,8 @@ public class IgaConfiguration {
     if (USE_G1_COLLECTOR.get(conf)) {
       gcJavaOpts.add("-XX:+UseG1GC");
       gcJavaOpts.add("-XX:MaxGCPauseMillis=500");
+      gcJavaOpts.add("-XX:+UseStringDeduplication");
+//      gcJavaOpts.add("-XX:G1HeapRegionSize=");
     } else {
       int newGenMemoryGb = Math.max(1, (int) (WORKER_MEMORY.get(conf) * NEW_GEN_MEMORY_FRACTION.get(conf)));
       // Use parallel gc collector
@@ -292,17 +292,25 @@ public class IgaConfiguration {
     return newArrayList(
         "-server",
         "-XX:ReservedCodeCacheSize=256M"
+//        "-XX:+AggressiveOpts"
+//        "-XX:MaxTrivialSize=12",
+//        "-XX:MaxInlineSize=270",
+//        "-XX:InlineSmallCode=2000",
+//        "-Djava.net.preferIPv4Stack=true"
     );
   }
 
-  private static List<String> observabilityJavaOpts() {
-    return newArrayList(
+  private static List<String> observabilityJavaOpts(GiraphConfiguration conf) {
+    List<String> opts = Lists.newArrayList(
         "-XX:+UnlockDiagnosticVMOptions",
         "-XX:+PrintFlagsFinal",
-        "-XX:+HeapDumpOnOutOfMemoryError",
-        "-XX:HeapDumpPath=<LOG_DIR>/@taskid@.hprof",
         "-XX:OnOutOfMemoryError='free -m'"
     );
+    if (HEAP_DUMP_ON_OOM.get(conf)) {
+      opts.add("-XX:+HeapDumpOnOutOfMemoryError");
+      opts.add("-XX:HeapDumpPath=<LOG_DIR>/@taskid@.hprof");
+    }
+    return opts;
   }
 
 

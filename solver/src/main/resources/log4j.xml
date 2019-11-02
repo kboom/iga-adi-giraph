@@ -20,12 +20,22 @@
         <appender-ref ref="default.console"/>
     </logger>
 
+    <logger name="org.apache.giraph.master.BspServiceMaster" additivity="false">
+        <level value="info" />
+        <appender-ref ref="default.console"/>
+    </logger>
+
     <logger name="org.apache.giraph.worker.BspServiceWorker" additivity="false">
         <level value="info" />
         <appender-ref ref="default.console"/>
     </logger>
 
     <logger name="org.apache.giraph.yarn" additivity="false">
+        <level value="info" />
+        <appender-ref ref="default.console"/>
+    </logger>
+
+    <logger name="org.apache.giraph.zk.ZooKeeperManager" additivity="false">
         <level value="info" />
         <appender-ref ref="default.console"/>
     </logger>

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+export IGA_STEPS=2
+export IGA_PROBLEM_SIZE=1536
+export IGA_WORKERS=1
+export IGA_WORKER_CORES=16
+export IGA_WORKER_MEMORY=40
+export IGA_PARTITION_HEIGHT=6
