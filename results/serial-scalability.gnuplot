@@ -14,7 +14,7 @@ set fit errorvariables
 o(x) = a*x + c
 
 fit o(x) 'single.csv' using ($1**2):($2==1?$5:1/0) via a, c
-otitle = sprintf("%.3f*N+%.2f (+/- %.2e)", a, c, a_err)
+otitle = sprintf("%.3f*N+%.2f (+/- %.2f%)", a, c, a_err*100)
 
 plot \
 	'single.csv' using ($1**2):($2==1?$5:1/0):xtic($1) pt 5 ps 1 lc rgb 'black' notitle, \
