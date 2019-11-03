@@ -7,7 +7,7 @@ COOLDOWN=${COOLDOWN:-10s}
 [ "$#" == "0" ] && set -- IGA_PROBLEM_SIZE 12
 
 # Input parameters
-SUITE_NAME=${SUITE_NAME:-""}
+SUITE_NAME=${SUITE_NAME:-DEFAULT}
 PERF_VARIABLE_NAME="${1}"
 
 # Get the directories

@@ -129,8 +129,8 @@ public class IgaConfiguration {
     WAIT_TASK_DONE_TIMEOUT_MS.setIfUnset(conf, (int) MINUTES.toMillis(1));
     MAX_MASTER_SUPERSTEP_WAIT_MSECS.setIfUnset(conf, (int) MINUTES.toMillis(1));
     MAX_REQUEST_MILLISECONDS.setIfUnset(conf, (int) MINUTES.toMinutes(15));
-    NETTY_MAX_CONNECTION_FAILURES.setIfUnset(conf, 1000);
-    WAIT_TIME_BETWEEN_CONNECTION_RETRIES_MS.setIfUnset(conf, 100);
+    NETTY_MAX_CONNECTION_FAILURES.setIfUnset(conf, 10);
+    WAIT_TIME_BETWEEN_CONNECTION_RETRIES_MS.setIfUnset(conf, 1000);
     conf.setIfUnset("giraph.resendTimedOutRequests", "true");
     conf.setIfUnset("giraph.waitForOtherWorkersMsec", valueOf(MINUTES.toMillis(60)));
   }
@@ -142,7 +142,7 @@ public class IgaConfiguration {
     conf.setEdgeInputFormatClass(IgaEdgeInputFormat.class);
     conf.setVertexInputFormatClass(inputFormatsByInitType.get(FIRST_INITIALISATION_TYPE.get(conf)));
     conf.setVertexOutputFormatClass(StepVertexOutputFormat.class);
-    conf.addWorkerObserverClass(MemoryLogger.class);
+    conf.addWorkerObserverClass(MemoryLogger.class); // does not appear to cause issue infinite wait issue
     conf.setPartitionClass(ByteArrayPartition.class);
     conf.setYarnLibJars(currentJar());
     STATIC_GRAPH.set(conf, true);
@@ -184,7 +184,7 @@ public class IgaConfiguration {
 
     // Ensure we can utilize all communication threads by having enough
     // channels per server, in cases when we have just a few machines
-    GiraphConstants.CHANNELS_PER_SERVER.setIfUnset(conf,
+    CHANNELS_PER_SERVER.setIfUnset(conf,
         Math.max(1, 2 * threadsDuringCommunication / workers));
 
     customConfig(conf);
@@ -231,7 +231,8 @@ public class IgaConfiguration {
     // some free space
 
     REQUEST_SIZE_WARNING_THRESHOLD.setIfUnset(conf, 1);
-    NETTY_CLIENT_THREADS.setIfUnset(conf, threadsDuringCommunication);
+    // https://issues.apache.org/jira/projects/GIRAPH/issues/GIRAPH-1145?filter=allopenissues
+    NETTY_CLIENT_THREADS.setIfUnset(conf, CHANNELS_PER_SERVER.get(conf));
     CLIENT_RECEIVE_BUFFER_SIZE.setIfUnset(conf, ONE_MB);
     CLIENT_SEND_BUFFER_SIZE.setIfUnset(conf, ONE_MB);
     SERVER_SEND_BUFFER_SIZE.setIfUnset(conf, ONE_MB);

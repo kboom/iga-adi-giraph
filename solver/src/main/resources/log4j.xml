@@ -40,6 +40,16 @@
         <appender-ref ref="default.console"/>
     </logger>
 
+    <logger name="org.apache.giraph.graph.GraphTaskManager" additivity="false">
+        <level value="info" />
+        <appender-ref ref="default.console"/>
+    </logger>
+
+    <logger name="org.apache.giraph" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="default.console"/>
+    </logger>
+
     <root>
         <priority value="error"/>
         <appender-ref ref="default.console"/>
