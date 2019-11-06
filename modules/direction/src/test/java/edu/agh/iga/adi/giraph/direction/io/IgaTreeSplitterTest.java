@@ -48,6 +48,18 @@ final class IgaTreeSplitterTest {
   }
 
   @Test
+  void splits12Into8() {
+    assertThat(SPLITTER_12.allSplitsFor(8))
+        .containsExactlyInAnyOrder(
+            inputSplit(TREE_12, 1, 2),
+            inputSplit(TREE_12, 4, 1),
+            inputSplit(TREE_12, 5, 1),
+            inputSplit(TREE_12, 6, 1),
+            inputSplit(TREE_12, 7, 1)
+        );
+  }
+
+  @Test
   void splits24Into1() {
     assertThat(SPLITTER_24.allSplitsFor(1))
         .containsExactlyInAnyOrder(

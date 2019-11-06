@@ -27,7 +27,7 @@ final class IgaTreeSplitter {
     val leavesStrength = tree.strengthOfLeaves();
     val partitions = optimalPartitionCount(partitionCountHint);
     val leavesPerPartition = leavesStrength / partitions;
-    val bottomTreeHeight = log2((leavesPerPartition + 1) / 3, UNNECESSARY) + 1;
+    val bottomTreeHeight = leavesPerPartition > 1 ? log2((leavesPerPartition + 1) / 3, UNNECESSARY) + 1 : 1;
     val tipTreeHeight = treeHeight - bottomTreeHeight;
 
     return Stream.concat(
@@ -55,10 +55,9 @@ final class IgaTreeSplitter {
   }
 
   private int optimalPartitionCount(int partitionCountHint) {
-    val strengthOfLeaves = tree.strengthOfLeaves();
-    val branchStrength = strengthOfLeaves / 3;
+    val branchStrength =  tree.strengthOfLeaves() / 3;
     if (branchStrength / partitionCountHint < 1) {
-      return strengthOfLeaves;
+      return branchStrength;
     } else if (partitionCountHint == 1 || partitionCountHint % 2 == 0) {
       return partitionCountHint;
     } else {
