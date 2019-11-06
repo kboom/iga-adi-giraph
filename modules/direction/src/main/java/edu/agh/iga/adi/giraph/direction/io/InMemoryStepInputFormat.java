@@ -48,7 +48,7 @@ public class InMemoryStepInputFormat extends VertexValueInputFormat<IntWritable,
     val elementFactory = new HorizontalElementFactory(mesh, pf.coefficients());
     return new StaticProblemInputReader(
         elementFactory,
-        INITIAL_PROBLEM_TYPE.get(getConf()).createProblem(getConf()), // todo for now
+        INITIAL_PROBLEM_TYPE.get(getConf()).createProblem(getConf()),
         vertices(vertexSplit)
     );
   }
@@ -70,12 +70,11 @@ public class InMemoryStepInputFormat extends VertexValueInputFormat<IntWritable,
 
   @Override
   public List<InputSplit> getSplits(JobContext context, int minSplitCountHint) {
-    final Configuration config = context.getConfiguration();
-    final int problemSize = PROBLEM_SIZE.get(config);
-    final DirectionTree tree = new DirectionTree(problemSize);
-    final IgaTreeSplitter igaTreeSplitter = new IgaTreeSplitter(tree);
-    final int heightPartitionCountHint = HEIGHT_PARTITIONS.get(config);
-    return igaTreeSplitter.allSplitsFor(heightPartitionCountHint)
+    val config = context.getConfiguration();
+    val problemSize = PROBLEM_SIZE.get(config);
+    val tree = new DirectionTree(problemSize);
+    val igaTreeSplitter = new IgaTreeSplitter(tree);
+    return igaTreeSplitter.allSplitsFor(minSplitCountHint)
         .stream()
         .map(s -> (InputSplit) s)
         .collect(collectingAndThen(toList(), Collections::unmodifiableList));
