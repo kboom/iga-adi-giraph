@@ -198,7 +198,14 @@ public class IgaConfiguration {
     MemoryObserver.MIN_MS_BETWEEN_FULL_GCS.setIfUnset(conf, 10 * 1000);
 
     // Increase number of partitions per compute thread
-    GiraphConstants.MIN_PARTITIONS_PER_COMPUTE_THREAD.setIfUnset(conf, 3);
+    if (!USER_PARTITION_COUNT.isDefaultValue(conf) || !PARTITION_COUNT_MULTIPLIER.isDefaultValue(conf)) {
+      failPartitionCountSetting();
+    }
+
+    MIN_PARTITIONS_PER_COMPUTE_THREAD.setIfUnset(conf, 4);
+    if ((MIN_PARTITIONS_PER_COMPUTE_THREAD.get(conf) * workers * cores) % 2 != 0) {
+      throw new IllegalArgumentException("Partition count should be divisible by 2 or equal to 1.");
+    }
 
     // Prefer ip addresses
     GiraphConstants.PREFER_IP_ADDRESSES.setIfUnset(conf, true);
@@ -243,6 +250,12 @@ public class IgaConfiguration {
     USE_MESSAGE_SIZE_ENCODING.setIfUnset(conf, true);
 
     MESSAGE_ENCODE_AND_STORE_TYPE.setIfUnset(conf, BYTEARRAY_PER_PARTITION);
+  }
+
+  private static void failPartitionCountSetting() {
+    throw new IllegalArgumentException("Partition count should not be set manually. Modify " +
+        "MIN_PARTITIONS_PER_COMPUTE_THREAD and/or PARTITION_COUNT_MULTIPLIER and /or  the number of workers and " +
+        "cores per worker");
   }
 
   private static void customConfig(GiraphConfiguration conf) {

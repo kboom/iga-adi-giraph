@@ -21,7 +21,7 @@ public class PartitioningStrategy {
   public int partitionFor(int vid) {
     val vt = vertexType(tree, vid);
     val ri = vt.rowIndexOf(tree, vid);
-    if(ri - 1 <= tipHeight) {
+    if (ri - 1 <= tipHeight) {
       return 0;
     } else {
       val verticesPerPartition = vt.strengthOf(tree, vid) / partitions;
@@ -52,13 +52,13 @@ public class PartitioningStrategy {
       DirectionTree tree,
       int partitionCountHint
   ) {
-    val branchStrength =  tree.strengthOfLeaves() / 3;
+    val branchStrength = tree.strengthOfLeaves() / 3;
     if (branchStrength / partitionCountHint < 1) {
       return branchStrength;
     } else if (partitionCountHint == 1 || partitionCountHint % 2 == 0) {
       return partitionCountHint;
     } else {
-      return 2 * partitionCountHint;
+      throw new IllegalStateException("Invalid partition count. Should be an even number or equal to 1.");
     }
   }
 
