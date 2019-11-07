@@ -33,11 +33,11 @@ public enum IgaVertexType {
     throw new IllegalStateException(format("The problem tree does not have vertex %d", vid));
   }
 
-  public long offsetLeft(final DirectionTree directionTree, final long vid) {
+  public int offsetLeft(final DirectionTree directionTree, final int vid) {
     return vid - directionTree.firstIndexOfRow(rowIndexOf(directionTree, vid));
   }
 
-  public long strengthOf(DirectionTree directionTree, long vid) {
+  public int strengthOf(DirectionTree directionTree, int vid) {
     return directionTree.strengthOfRow(rowIndexOf(directionTree, vid));
   }
 
@@ -54,7 +54,7 @@ public enum IgaVertexType {
     return LongMath.log2(vid, FLOOR) + 1;
   }
 
-  public String describe(DirectionTree directionTree, long vid) {
+  public String describe(DirectionTree directionTree, int vid) {
     return String.format(
         "%0" + maxDigits(directionTree) + "d[%s][R=%0" + maxDigitsHeight(directionTree) +"d][O=%0" + maxDigits(directionTree) + "d]",
         vid,
@@ -71,7 +71,7 @@ public enum IgaVertexType {
     return String.valueOf(directionTree.size()).length();
   }
 
-  public boolean isLeading(DirectionTree tree, long id) {
+  public boolean isLeading(DirectionTree tree, int id) {
     return offsetLeft(tree, id) == 0;
   }
 

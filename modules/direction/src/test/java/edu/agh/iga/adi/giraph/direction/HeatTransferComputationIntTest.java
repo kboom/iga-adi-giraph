@@ -28,7 +28,6 @@ class HeatTransferComputationIntTest {
         .coefficientsOutputDir(outputDir)
         .configuration(conf -> {
           PROBLEM_SIZE.set(conf, 24);
-          HEIGHT_PARTITIONS.set(conf, 2);
           STEP_COUNT.set(conf, 2);
           STEP_DELTA.set(conf, 0.1f);
           INITIAL_PROBLEM_TYPE.set(conf, RADIAL);

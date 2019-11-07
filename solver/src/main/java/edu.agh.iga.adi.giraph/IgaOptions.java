@@ -43,9 +43,6 @@ class IgaOptions {
   @Parameter(names = {"-s", "--steps"}, description = "The number of steps")
   private Integer steps = 1;
 
-  @Parameter(names = {"-h", "--height"}, description = "The height of each partition")
-  private Integer height = 1;
-
   @Parameter(names = {"-t", "--type"}, description = "The type of the computations. One of {surface, projection}")
   private String type;
 

@@ -65,7 +65,6 @@ public class IgaSolverTool extends Configured implements Tool {
 
   private void populateCustomConfiguration(GiraphConfiguration config, IgaOptions options) {
     PROBLEM_SIZE.set(config, options.getElements());
-    HEIGHT_PARTITIONS.set(config, options.getHeight());
     FIRST_INITIALISATION_TYPE.set(config, options.getType());
     ofNullable(options.getInputDirectory()).ifPresent(i -> addInput(config, i));
     COEFFICIENTS_OUTPUT.set(config, options.getOutputDirectory());

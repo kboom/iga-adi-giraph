@@ -12,6 +12,7 @@ IGA_WORKER_CORES=${IGA_WORKER_CORES:-1}
 IGA_WORKER_MEMORY=${IGA_WORKER_MEMORY:-2048}
 IGA_PARTITION_HEIGHT=${IGA_PARTITION_HEIGHT:-3}
 IGA_MEMORY_OVERHEAD_PERCENT=${IGA_MEMORY_OVERHEAD_PERCENT:-0.2}
+IGA_USE_DIRECT_MEMORY=${IGA_USE_DIRECT_MEMORY:-true}
 IGA_LOG_LEVEL=${IGA_LOG_LEVEL:-error}
 
 exec "${RUN_SCRIPT}" \
@@ -27,6 +28,7 @@ exec "${RUN_SCRIPT}" \
 	--config giraph.zkList="iga-adi-m:2181" \
   --config giraph.logLevel="${IGA_LOG_LEVEL}" \
   --config giraph.yarn.task.overhead.percent="${IGA_MEMORY_OVERHEAD_PERCENT}" \
+  --config giraph.useNettyDirectMemory="${IGA_USE_DIRECT_MEMORY}" \
   --config iga.storeSolution=false \
   --config giraph.minPartitionsPerComputeThread=3 \
   "${@}"

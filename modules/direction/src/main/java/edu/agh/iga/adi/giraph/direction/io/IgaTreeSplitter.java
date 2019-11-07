@@ -9,9 +9,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static com.google.common.math.IntMath.log2;
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
-import static java.math.RoundingMode.UNNECESSARY;
+import static edu.agh.iga.adi.giraph.direction.PartitioningStrategy.partitioningStrategy;
 import static java.util.stream.Collectors.collectingAndThen;
 
 final class IgaTreeSplitter {
@@ -23,16 +22,15 @@ final class IgaTreeSplitter {
   }
 
   List<IgaInputSplit> allSplitsFor(int partitionCountHint) {
-    val treeHeight = tree.height();
-    val leavesStrength = tree.strengthOfLeaves();
-    val partitions = optimalPartitionCount(partitionCountHint);
-    val leavesPerPartition = leavesStrength / partitions;
-    val bottomTreeHeight = leavesPerPartition > 1 ? log2((leavesPerPartition + 1) / 3, UNNECESSARY) + 1 : 1;
-    val tipTreeHeight = treeHeight - bottomTreeHeight;
+    val partitionStrategy = partitioningStrategy(tree, partitionCountHint);
 
     return Stream.concat(
-        rootSplitIfApplicable(tipTreeHeight),
-        leafSplits(partitions, bottomTreeHeight, tipTreeHeight)
+        rootSplitIfApplicable(partitionStrategy.getTipHeight()),
+        leafSplits(
+            partitionStrategy.getPartitions(),
+            partitionStrategy.getBottomHeight(),
+            partitionStrategy.getTipHeight()
+        )
     ).collect(collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
   }
 
@@ -54,15 +52,6 @@ final class IgaTreeSplitter {
     return new IgaInputSplit(vertexOf(tree, 1), tipTreeHeight);
   }
 
-  private int optimalPartitionCount(int partitionCountHint) {
-    val branchStrength =  tree.strengthOfLeaves() / 3;
-    if (branchStrength / partitionCountHint < 1) {
-      return branchStrength;
-    } else if (partitionCountHint == 1 || partitionCountHint % 2 == 0) {
-      return partitionCountHint;
-    } else {
-      return 2 * partitionCountHint;
-    }
-  }
+
 
 }

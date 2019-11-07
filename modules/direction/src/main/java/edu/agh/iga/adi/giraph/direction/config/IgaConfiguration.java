@@ -84,7 +84,6 @@ public class IgaConfiguration {
   public static final EnumConfOption<InitialProblemType> INITIAL_PROBLEM_TYPE = new EnumConfOption<>("iga.problem.initial.type", InitialProblemType.class, CONSTANT, "The type of the initial surface to generate");
   public static final FloatConfOption STEP_DELTA = new FloatConfOption("iga.step.delta", 0.000000001f, "The length of the time step");
   public static final IntConfOption STEP_COUNT = new IntConfOption("iga.problem.steps", 1, "The number of steps to run");
-  public static final IntConfOption HEIGHT_PARTITIONS = new IntConfOption("iga.tree.partition.size", 1, "The height of tree partitions");
   public static final StrConfOption FIRST_INITIALISATION_TYPE = new StrConfOption("iga.initialisation.type", SURFACE_PROBLEM.getType(), "The type of initialisation - " + resolverTypes() + " - use surface if you initialise the leaves or coefficients if you initialize the branches");
   public static final StrConfOption COEFFICIENTS_INPUT = new StrConfOption("giraph.vertex.input.dir", createTempDir().getPath(), "The (HDFS) directory to read the coefficients from");
   public static final StrConfOption COEFFICIENTS_OUTPUT = new StrConfOption("mapred.output.dir", createTempDir().getPath(), "The (HDFS) directory to put the coefficients to");

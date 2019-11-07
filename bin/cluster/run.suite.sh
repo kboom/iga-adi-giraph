@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -ex
 
-COOLDOWN=${COOLDOWN:-10s}
+COOLDOWN=${COOLDOWN:-30s}
 
 # If no arguments passed use IGA_PROBLEM_SIZE as a variable and 12 as a single size to run
 [ "$#" == "0" ] && set -- IGA_PROBLEM_SIZE 12

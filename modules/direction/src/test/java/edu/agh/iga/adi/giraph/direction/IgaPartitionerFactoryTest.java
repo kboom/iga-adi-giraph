@@ -14,7 +14,6 @@ class IgaPartitionerFactoryTest {
 
   static {
     GiraphConfiguration config = new GiraphConfiguration();
-    HEIGHT_PARTITIONS.set(config, 1);
     PROBLEM_SIZE.set(config, 12);
     igaConfiguration(config);
     PARTITIONER_FACTORY.setConf(new ImmutableClassesGiraphConfiguration<>(config));

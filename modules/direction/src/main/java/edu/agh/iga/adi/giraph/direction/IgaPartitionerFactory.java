@@ -7,10 +7,13 @@ import lombok.val;
 import org.apache.giraph.conf.ImmutableClassesGiraphConfiguration;
 import org.apache.giraph.partition.GraphPartitionerFactory;
 import org.apache.giraph.partition.SimpleLongRangePartitionerFactory;
+import org.apache.giraph.worker.LocalData;
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Writable;
 import org.apache.log4j.Logger;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertexType.vertexType;
+import static edu.agh.iga.adi.giraph.direction.PartitioningStrategy.partitioningStrategy;
 import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.PROBLEM_SIZE;
 
 /**
@@ -26,21 +29,39 @@ public class IgaPartitionerFactory extends GraphPartitionerFactory<IntWritable, 
 
   private DirectionTree directionTree;
 
+  /**
+   * The partitioning strategy is valid only for a given partition hint.
+   * As we don't allow dynamic changes to the cluster we can assume it is never changed once assigned.
+   * Otherwise it would need to be in a concurrent map which decreases performance.
+   */
+  private PartitioningStrategy partitioningStrategy;
+
   @Override
   public int getPartition(IntWritable id, int partitionCount, int workerCount) {
     val vid = id.get();
-    val vertexType = vertexType(directionTree, vid);
 
-    val partition = getPartitionInRange(
-        vertexType.offsetLeft(directionTree, vid),
-        vertexType.strengthOf(directionTree, vid),
-        partitionCount
-    );
+    assumePartitioningStrategy(partitionCount);
+
+    val partition = partitioningStrategy.partitionFor(vid);
 
     if (LOG.isTraceEnabled()) {
+      val vertexType = vertexType(directionTree, vid);
       LOG.trace(String.format("P-> %s,%d", vertexType.describe(directionTree, vid), partition));
     }
     return partition;
+  }
+
+  private void assumePartitioningStrategy(int partitionCount) {
+    if(partitioningStrategy == null) {
+      synchronized (this) {
+        if(partitioningStrategy == null) {
+          partitioningStrategy = partitioningStrategy(
+              directionTree,
+              partitionCount
+          );
+        }
+      }
+    }
   }
 
   @Override
