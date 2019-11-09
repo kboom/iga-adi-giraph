@@ -184,6 +184,7 @@ Can we hold of with creating X matrix for the merging stage as there are only ze
 
 == Links
 
+* https://docs.oracle.com/javase/8/embedded/develop-apps-platforms/codecache.htm[Code cache JVM tuning]
 * https://github.com/sakserv/hadoop-mini-clusters[Hadoop mini clusters]
 * https://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-common/yarn-default.xml[YARN property list]
 * https://github.com/uwsampa/giraph-docker[Giraph on Docker]

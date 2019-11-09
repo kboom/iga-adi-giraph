@@ -59,7 +59,8 @@ public class IgaConfiguration {
 
   public static final BooleanConfOption CONFIGURE_JAVA_OPTS = new BooleanConfOption("giraph.configureJavaOpts", true, "Whether to configure java opts");
 
-  public static final BooleanConfOption STORE_SOLUTION = new BooleanConfOption("iga.storeSolution", true, "Whether to store the solution or not.");
+  public static final BooleanConfOption STORE_SOLUTION = new BooleanConfOption("iga.storeSolution", true, "Whether " +
+      "to store the solution or not.");
 
   public static final BooleanConfOption USE_G1_COLLECTOR = new BooleanConfOption("iga.useG1", false, "Use G1GC " +
       "collector"); // it crashes the solver for larger computation sizes
@@ -195,15 +196,16 @@ public class IgaConfiguration {
 
     // Synchronize full gc calls across workers
     MemoryObserver.USE_MEMORY_OBSERVER.setIfUnset(conf, true);
-    MemoryObserver.MIN_MS_BETWEEN_FULL_GCS.setIfUnset(conf, 10 * 1000);
+    MemoryObserver.MIN_MS_BETWEEN_FULL_GCS.setIfUnset(conf, 60 * 1000);
 
     // Increase number of partitions per compute thread
     if (!USER_PARTITION_COUNT.isDefaultValue(conf) || !PARTITION_COUNT_MULTIPLIER.isDefaultValue(conf)) {
       failPartitionCountSetting();
     }
 
-    MIN_PARTITIONS_PER_COMPUTE_THREAD.setIfUnset(conf, 4);
-    if ((MIN_PARTITIONS_PER_COMPUTE_THREAD.get(conf) * workers * cores) % 2 != 0) {
+    MIN_PARTITIONS_PER_COMPUTE_THREAD.setIfUnset(conf, 1);
+    final int totalPartitions = MIN_PARTITIONS_PER_COMPUTE_THREAD.get(conf) * workers * cores;
+    if (totalPartitions > 1 && totalPartitions % 2 != 0) {
       throw new IllegalArgumentException("Partition count should be divisible by 2 or equal to 1.");
     }
 
@@ -302,15 +304,7 @@ public class IgaConfiguration {
   }
 
   private static List<String> tuningJavaOpts() {
-    return newArrayList(
-        "-server",
-        "-XX:ReservedCodeCacheSize=256M"
-//        "-XX:+AggressiveOpts"
-//        "-XX:MaxTrivialSize=12",
-//        "-XX:MaxInlineSize=270",
-//        "-XX:InlineSmallCode=2000",
-//        "-Djava.net.preferIPv4Stack=true"
-    );
+    return newArrayList("-server");
   }
 
   private static List<String> observabilityJavaOpts(GiraphConfiguration conf) {
