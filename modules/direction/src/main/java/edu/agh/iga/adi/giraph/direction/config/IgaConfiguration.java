@@ -9,10 +9,7 @@ import edu.agh.iga.adi.giraph.direction.IterativeComputation;
 import edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers;
 import edu.agh.iga.adi.giraph.direction.computation.InitialProblemType;
 import edu.agh.iga.adi.giraph.direction.computation.initialisation.InitialComputation;
-import edu.agh.iga.adi.giraph.direction.io.IgaEdgeInputFormat;
-import edu.agh.iga.adi.giraph.direction.io.InMemoryStepInputFormat;
-import edu.agh.iga.adi.giraph.direction.io.StepVertexInputFormat;
-import edu.agh.iga.adi.giraph.direction.io.StepVertexOutputFormat;
+import edu.agh.iga.adi.giraph.direction.io.*;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaElementWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
@@ -267,12 +264,12 @@ public class IgaConfiguration {
   }
 
   private static void setStoreTypes(GiraphConfiguration conf) {
-    MESSAGE_ENCODE_AND_STORE_TYPE.setIfUnset(conf, BYTEARRAY_PER_PARTITION);
+//    MESSAGE_ENCODE_AND_STORE_TYPE.setIfUnset(conf, BYTEARRAY_PER_PARTITION);
 
     INPUT_VERTEX_EDGES_CLASS.set(conf, ByteArrayEdges.class);
     VERTEX_EDGES_CLASS.set(conf, ByteArrayEdges.class);
 
-    MESSAGE_STORE_FACTORY_CLASS.set(conf, InMemoryMessageStoreFactory.class);
+    MESSAGE_STORE_FACTORY_CLASS.set(conf, InMemoryObjectMessageStoreFactory.class);
   }
 
   private static void failPartitionCountSetting() {
