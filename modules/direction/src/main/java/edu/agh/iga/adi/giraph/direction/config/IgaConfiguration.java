@@ -18,6 +18,7 @@ import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import edu.agh.iga.adi.giraph.direction.performance.MemoryLogger;
 import lombok.val;
+import org.apache.giraph.comm.messages.InMemoryMessageStoreFactory;
 import org.apache.giraph.conf.*;
 import org.apache.giraph.edge.ByteArrayEdges;
 import org.apache.giraph.io.VertexInputFormat;
@@ -105,6 +106,7 @@ public class IgaConfiguration {
     LOG.info("Configuring giraph");
 
     solverOptions(conf);
+    setStoreTypes(conf);
     generalTuning(conf);
     resiliencySettings(conf);
 
@@ -262,11 +264,15 @@ public class IgaConfiguration {
     MAX_EDGE_REQUEST_SIZE.setIfUnset(conf, ONE_MB);
 
     USE_MESSAGE_SIZE_ENCODING.setIfUnset(conf, true);
+  }
 
+  private static void setStoreTypes(GiraphConfiguration conf) {
     MESSAGE_ENCODE_AND_STORE_TYPE.setIfUnset(conf, BYTEARRAY_PER_PARTITION);
 
     INPUT_VERTEX_EDGES_CLASS.set(conf, ByteArrayEdges.class);
     VERTEX_EDGES_CLASS.set(conf, ByteArrayEdges.class);
+
+    MESSAGE_STORE_FACTORY_CLASS.set(conf, InMemoryMessageStoreFactory.class);
   }
 
   private static void failPartitionCountSetting() {

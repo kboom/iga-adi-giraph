@@ -88,6 +88,7 @@ public final class FactorisationComputation extends IgaComputation {
   }
 
   private void send(Vertex<IntWritable, IgaElementWritable, IgaOperationWritable> vertex, IgaElement element) {
+    IgaMessageWritable writable = new IgaMessageWritable();
     vertex.getEdges().forEach(edge -> {
       val igaOperation = edge.getValue().getIgaOperation();
       val dstIdWritable = edge.getTargetVertexId();
@@ -95,7 +96,7 @@ public final class FactorisationComputation extends IgaComputation {
       if (currentPhase.matchesDirection(element.id, dstId)) {
         val dstVertex = vertexOf(dstId);
         val msg = igaOperation.sendMessage(dstVertex, element);
-        sendMessage(dstIdWritable, new IgaMessageWritable(msg));
+        sendMessage(dstIdWritable, writable.withMessage(msg));
         if (LOG.isTraceEnabled()) {
           LOG.trace(format("Sending message to %d %s", dstId, igaOperation));
         }
