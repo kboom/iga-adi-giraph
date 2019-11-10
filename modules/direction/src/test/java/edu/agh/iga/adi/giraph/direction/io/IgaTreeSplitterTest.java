@@ -17,7 +17,6 @@ final class IgaTreeSplitterTest {
   private static final DirectionTree TREE_768 = new DirectionTree(768);
   private static final IgaTreeSplitter SPLITTER_768 = new IgaTreeSplitter(TREE_768);
 
-
   @Test
   void splits12Into1() {
     assertThat(SPLITTER_12.allSplitsFor(1))
@@ -37,6 +36,30 @@ final class IgaTreeSplitterTest {
   }
 
   @Test
+  void splits12Into4() {
+    assertThat(SPLITTER_12.allSplitsFor(4))
+        .containsExactlyInAnyOrder(
+            inputSplit(TREE_12, 1, 2),
+            inputSplit(TREE_12, 4, 1),
+            inputSplit(TREE_12, 5, 1),
+            inputSplit(TREE_12, 6, 1),
+            inputSplit(TREE_12, 7, 1)
+        );
+  }
+
+  @Test
+  void splits12Into8() {
+    assertThat(SPLITTER_12.allSplitsFor(8))
+        .containsExactlyInAnyOrder(
+            inputSplit(TREE_12, 1, 2),
+            inputSplit(TREE_12, 4, 1),
+            inputSplit(TREE_12, 5, 1),
+            inputSplit(TREE_12, 6, 1),
+            inputSplit(TREE_12, 7, 1)
+        );
+  }
+
+  @Test
   void splits24Into1() {
     assertThat(SPLITTER_24.allSplitsFor(1))
         .containsExactlyInAnyOrder(
@@ -48,9 +71,21 @@ final class IgaTreeSplitterTest {
   void splits24Into2() {
     assertThat(SPLITTER_24.allSplitsFor(2))
         .containsExactlyInAnyOrder(
+            inputSplit(TREE_24, 1, 1),
             inputSplit(TREE_24, 2, 3),
-            inputSplit(TREE_24, 3, 3),
-            inputSplit(TREE_24, 1, 1)
+            inputSplit(TREE_24, 3, 3)
+        );
+  }
+
+  @Test
+  void splits24Into4() {
+    assertThat(SPLITTER_24.allSplitsFor(4))
+        .containsExactlyInAnyOrder(
+            inputSplit(TREE_24, 1, 2),
+            inputSplit(TREE_24, 4, 2),
+            inputSplit(TREE_24, 5, 2),
+            inputSplit(TREE_24, 6, 2),
+            inputSplit(TREE_24, 7, 2)
         );
   }
 
@@ -58,65 +93,21 @@ final class IgaTreeSplitterTest {
   void splits768Into2() {
     assertThat(SPLITTER_768.allSplitsFor(2))
         .containsExactlyInAnyOrder(
-            inputSplit(TREE_768, 16, 5),
-            inputSplit(TREE_768, 17, 5),
-            inputSplit(TREE_768, 18, 5),
-            inputSplit(TREE_768, 19, 5),
-            inputSplit(TREE_768, 20, 5),
-            inputSplit(TREE_768, 21, 5),
-            inputSplit(TREE_768, 22, 5),
-            inputSplit(TREE_768, 23, 5),
-            inputSplit(TREE_768, 24, 5),
-            inputSplit(TREE_768, 25, 5),
-            inputSplit(TREE_768, 26, 5),
-            inputSplit(TREE_768, 27, 5),
-            inputSplit(TREE_768, 28, 5),
-            inputSplit(TREE_768, 29, 5),
-            inputSplit(TREE_768, 30, 5),
-            inputSplit(TREE_768, 31, 5),
-            inputSplit(TREE_768, 1, 4)
+            inputSplit(TREE_768, 1, 1),
+            inputSplit(TREE_768, 2, 8),
+            inputSplit(TREE_768, 3, 8)
         );
   }
 
   @Test
-  void splits768Into3() {
-    assertThat(SPLITTER_768.allSplitsFor(3))
+  void splits768Into4() {
+    assertThat(SPLITTER_768.allSplitsFor(4))
         .containsExactlyInAnyOrder(
-            inputSplit(TREE_768, 32, 4),
-            inputSplit(TREE_768, 33, 4),
-            inputSplit(TREE_768, 34, 4),
-            inputSplit(TREE_768, 35, 4),
-            inputSplit(TREE_768, 36, 4),
-            inputSplit(TREE_768, 37, 4),
-            inputSplit(TREE_768, 38, 4),
-            inputSplit(TREE_768, 39, 4),
-            inputSplit(TREE_768, 40, 4),
-            inputSplit(TREE_768, 41, 4),
-            inputSplit(TREE_768, 42, 4),
-            inputSplit(TREE_768, 43, 4),
-            inputSplit(TREE_768, 44, 4),
-            inputSplit(TREE_768, 45, 4),
-            inputSplit(TREE_768, 46, 4),
-            inputSplit(TREE_768, 47, 4),
-            inputSplit(TREE_768, 48, 4),
-            inputSplit(TREE_768, 49, 4),
-            inputSplit(TREE_768, 50, 4),
-            inputSplit(TREE_768, 51, 4),
-            inputSplit(TREE_768, 52, 4),
-            inputSplit(TREE_768, 53, 4),
-            inputSplit(TREE_768, 54, 4),
-            inputSplit(TREE_768, 55, 4),
-            inputSplit(TREE_768, 56, 4),
-            inputSplit(TREE_768, 57, 4),
-            inputSplit(TREE_768, 58, 4),
-            inputSplit(TREE_768, 59, 4),
-            inputSplit(TREE_768, 60, 4),
-            inputSplit(TREE_768, 61, 4),
-            inputSplit(TREE_768, 62, 4),
-            inputSplit(TREE_768, 63, 4),
-            inputSplit(TREE_768, 2, 4),
-            inputSplit(TREE_768, 3, 4),
-            inputSplit(TREE_768, 1, 1)
+            inputSplit(TREE_768, 1, 2),
+            inputSplit(TREE_768, 4, 7),
+            inputSplit(TREE_768, 5, 7),
+            inputSplit(TREE_768, 6, 7),
+            inputSplit(TREE_768, 7, 7)
         );
   }
 

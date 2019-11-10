@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.HEIGHT_PARTITIONS;
 import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.PROBLEM_SIZE;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
@@ -40,8 +39,7 @@ public final class IgaEdgeInputFormat extends EdgeInputFormat<IntWritable, IgaOp
     final int problemSize = PROBLEM_SIZE.get(config);
     final DirectionTree tree = new DirectionTree(problemSize);
     final IgaTreeSplitter igaTreeSplitter = new IgaTreeSplitter(tree);
-    final int heightPartitionCountHint = HEIGHT_PARTITIONS.get(config);
-    return igaTreeSplitter.allSplitsFor(heightPartitionCountHint)
+    return igaTreeSplitter.allSplitsFor(minSplitCountHint)
         .stream()
         .map(s -> (InputSplit) s)
         .collect(collectingAndThen(toList(), Collections::unmodifiableList));

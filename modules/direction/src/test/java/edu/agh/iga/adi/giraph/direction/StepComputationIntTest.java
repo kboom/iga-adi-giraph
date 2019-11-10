@@ -41,7 +41,6 @@ class StepComputationIntTest {
         .coefficientsOutputDir(outputDir)
         .configuration(conf -> {
           PROBLEM_SIZE.set(conf, 12);
-          HEIGHT_PARTITIONS.set(conf, 2);
           FIRST_INITIALISATION_TYPE.set(conf, SURFACE_PROBLEM.getType());
         })
         .build();
@@ -76,7 +75,6 @@ class StepComputationIntTest {
         .coefficientsOutputDir(outputDir)
         .configuration(conf -> {
           PROBLEM_SIZE.set(conf, 12);
-          HEIGHT_PARTITIONS.set(conf, 2);
           FIRST_INITIALISATION_TYPE.set(conf, COEFFICIENTS_PROBLEM.getType());
         })
         .build();
@@ -100,7 +98,6 @@ class StepComputationIntTest {
         .configuration(conf -> {
           STEP_COUNT.set(conf, 2);
           PROBLEM_SIZE.set(conf, 12);
-          HEIGHT_PARTITIONS.set(conf, 2);
           FIRST_INITIALISATION_TYPE.set(conf, SURFACE_PROBLEM.getType());
         })
         .build();
@@ -129,7 +126,6 @@ class StepComputationIntTest {
           STEP_COUNT.set(conf, 2);
           INITIAL_PROBLEM_TYPE.set(conf, LINEAR_X);
           PROBLEM_SIZE.set(conf, 12);
-          HEIGHT_PARTITIONS.set(conf, 2);
           FIRST_INITIALISATION_TYPE.set(conf, SURFACE_PROBLEM.getType());
         })
         .build();
@@ -158,7 +154,6 @@ class StepComputationIntTest {
           STEP_COUNT.set(conf, 2);
           INITIAL_PROBLEM_TYPE.set(conf, LINEAR_Y);
           PROBLEM_SIZE.set(conf, 12);
-          HEIGHT_PARTITIONS.set(conf, 2);
           FIRST_INITIALISATION_TYPE.set(conf, SURFACE_PROBLEM.getType());
         })
         .build();
@@ -187,7 +182,6 @@ class StepComputationIntTest {
           STEP_COUNT.set(conf, 2);
           INITIAL_PROBLEM_TYPE.set(conf, LINEAR_SUM);
           PROBLEM_SIZE.set(conf, 12);
-          HEIGHT_PARTITIONS.set(conf, 2);
           FIRST_INITIALISATION_TYPE.set(conf, SURFACE_PROBLEM.getType());
         })
         .build();
@@ -215,7 +209,6 @@ class StepComputationIntTest {
         .configuration(conf -> {
           STEP_COUNT.set(conf, 3);
           PROBLEM_SIZE.set(conf, 12);
-          HEIGHT_PARTITIONS.set(conf, 2);
           FIRST_INITIALISATION_TYPE.set(conf, SURFACE_PROBLEM.getType());
         })
         .build();

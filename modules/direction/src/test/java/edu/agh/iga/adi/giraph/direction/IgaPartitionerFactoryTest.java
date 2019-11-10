@@ -5,7 +5,8 @@ import org.apache.giraph.conf.ImmutableClassesGiraphConfiguration;
 import org.apache.hadoop.io.IntWritable;
 import org.junit.jupiter.api.Test;
 
-import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.*;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.PROBLEM_SIZE;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.igaConfiguration;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class IgaPartitionerFactoryTest {
@@ -14,7 +15,6 @@ class IgaPartitionerFactoryTest {
 
   static {
     GiraphConfiguration config = new GiraphConfiguration();
-    HEIGHT_PARTITIONS.set(config, 1);
     PROBLEM_SIZE.set(config, 12);
     igaConfiguration(config);
     PARTITIONER_FACTORY.setConf(new ImmutableClassesGiraphConfiguration<>(config));
