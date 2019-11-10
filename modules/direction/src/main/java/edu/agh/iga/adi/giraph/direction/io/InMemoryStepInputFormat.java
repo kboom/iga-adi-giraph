@@ -53,7 +53,7 @@ public class InMemoryStepInputFormat extends VertexValueInputFormat<IntWritable,
     );
   }
 
-  private Iterator<IgaVertex> vertices(IgaInputSplit vertexSplit) {
+  private static Iterator<IgaVertex> vertices(IgaInputSplit vertexSplit) {
     final IgaVertex root = vertexSplit.getRoot();
     final int height = vertexSplit.getHeight();
     if (root.is(RootVertex.class)) {

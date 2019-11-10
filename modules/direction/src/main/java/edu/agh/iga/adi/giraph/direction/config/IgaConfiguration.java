@@ -19,9 +19,9 @@ import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import edu.agh.iga.adi.giraph.direction.performance.MemoryLogger;
 import lombok.val;
 import org.apache.giraph.conf.*;
+import org.apache.giraph.edge.ByteArrayEdges;
 import org.apache.giraph.io.VertexInputFormat;
 import org.apache.giraph.partition.ByteArrayPartition;
-import org.apache.giraph.worker.MemoryObserver;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.log4j.Logger;
@@ -39,6 +39,7 @@ import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolve
 import static edu.agh.iga.adi.giraph.direction.computation.IgaComputationResolvers.SURFACE_PROBLEM;
 import static edu.agh.iga.adi.giraph.direction.computation.InitialProblemType.CONSTANT;
 import static java.lang.Integer.MAX_VALUE;
+import static java.lang.Integer.max;
 import static java.lang.String.valueOf;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.stream.Collectors.joining;
@@ -51,6 +52,7 @@ import static org.apache.giraph.conf.GiraphConstants.*;
 import static org.apache.giraph.master.BspServiceMaster.NUM_MASTER_ZK_INPUT_SPLIT_THREADS;
 import static org.apache.giraph.partition.PartitionBalancer.PARTITION_BALANCE_ALGORITHM;
 import static org.apache.giraph.partition.PartitionBalancer.STATIC_BALANCE_ALGORITHM;
+import static org.apache.giraph.worker.MemoryObserver.*;
 import static org.apache.log4j.Logger.getLogger;
 
 public class IgaConfiguration {
@@ -168,18 +170,20 @@ public class IgaConfiguration {
     conf.setIfUnset(NUM_MASTER_ZK_INPUT_SPLIT_THREADS, Integer.toString(cores));
     NUM_OUTPUT_THREADS.setIfUnset(conf, cores);
 
+    USE_INPUT_SPLIT_LOCALITY.setIfUnset(conf, true);
+
     int threadsDuringCommunication = Math.max(1,
         (int) (cores * CORES_FRACTION_DURING_COMMUNICATION.get(conf)));
     // Input overlaps with communication, set threads properly
-    GiraphConstants.NUM_INPUT_THREADS.setIfUnset(
+    NUM_INPUT_THREADS.setIfUnset(
         conf, threadsDuringCommunication);
     // Compute overlaps with communication, set threads properly
-    GiraphConstants.NUM_COMPUTE_THREADS.setIfUnset(
+    NUM_COMPUTE_THREADS.setIfUnset(
         conf, threadsDuringCommunication);
     // Netty server threads are the ones adding messages to stores,
     // or adding vertices and edges to stores during input,
     // these are expensive operations so set threads properly
-    GiraphConstants.NETTY_SERVER_THREADS.setIfUnset(
+    NETTY_SERVER_THREADS.setIfUnset(
         conf, threadsDuringCommunication);
 
     // Ensure we can utilize all communication threads by having enough
@@ -190,35 +194,43 @@ public class IgaConfiguration {
     customConfig(conf);
 
     // Pooled allocator in netty is faster
-    GiraphConstants.NETTY_USE_POOLED_ALLOCATOR.setIfUnset(conf, true);
+    NETTY_USE_POOLED_ALLOCATOR.setIfUnset(conf, true);
     // Turning off auto read is faster
-    GiraphConstants.NETTY_AUTO_READ.setIfUnset(conf, false);
+    NETTY_AUTO_READ.setIfUnset(conf, false);
 
     // Synchronize full gc calls across workers
-    MemoryObserver.USE_MEMORY_OBSERVER.setIfUnset(conf, true);
-    MemoryObserver.MIN_MS_BETWEEN_FULL_GCS.setIfUnset(conf, 60 * 1000);
+    USE_MEMORY_OBSERVER.setIfUnset(conf, true);
+    FREE_MEMORY_FRACTION_FOR_GC.setIfUnset(conf, 0.1f);
+    MIN_MS_BETWEEN_FULL_GCS.setIfUnset(conf, 1000);
 
     // Increase number of partitions per compute thread
-    if (!USER_PARTITION_COUNT.isDefaultValue(conf) || !PARTITION_COUNT_MULTIPLIER.isDefaultValue(conf)) {
+    if (!PARTITION_COUNT_MULTIPLIER.isDefaultValue(conf)) {
       failPartitionCountSetting();
     }
 
     MIN_PARTITIONS_PER_COMPUTE_THREAD.setIfUnset(conf, 1);
-    final int totalPartitions = MIN_PARTITIONS_PER_COMPUTE_THREAD.get(conf) * workers * cores;
-    if (totalPartitions > 1 && totalPartitions % 2 != 0) {
-      throw new IllegalArgumentException("Partition count should be divisible by 2 or equal to 1.");
+    if (USER_PARTITION_COUNT.isDefaultValue(conf)) {
+      final int totalPartitions = MIN_PARTITIONS_PER_COMPUTE_THREAD.get(conf) * workers * cores;
+      if (totalPartitions > 1 && totalPartitions % 2 != 0) {
+        throw new IllegalArgumentException("Partition count should be divisible by 2 or equal to 1.");
+      }
+    } else {
+      val userPartitionCount = USER_PARTITION_COUNT.get(conf);
+      if (userPartitionCount > 1 && userPartitionCount % 2 != 0) {
+        throw new IllegalArgumentException("Partition count should be divisible by 2 or equal to 1.");
+      }
     }
 
     // Prefer ip addresses
-    GiraphConstants.PREFER_IP_ADDRESSES.setIfUnset(conf, true);
+    PREFER_IP_ADDRESSES.setIfUnset(conf, true);
 
     // Track job progress
 //    GiraphConstants.TRACK_JOB_PROGRESS_ON_CLIENT.setIfUnset(conf, true); // todo this might cause problems in YARN
 
     // Thread-level debugging for easier understanding
-    GiraphConstants.LOG_THREAD_LAYOUT.setIfUnset(conf, true);
+    LOG_THREAD_LAYOUT.setIfUnset(conf, true);
     // Enable tracking and printing of metrics
-    GiraphConstants.METRICS_ENABLE.setIfUnset(conf, true);
+    METRICS_ENABLE.setIfUnset(conf, true);
 
     if (CONFIGURE_JAVA_OPTS.get(conf)) {
       List<String> javaOpts = getMemoryJavaOpts(conf);
@@ -240,7 +252,7 @@ public class IgaConfiguration {
 
     REQUEST_SIZE_WARNING_THRESHOLD.setIfUnset(conf, 1);
     // https://issues.apache.org/jira/projects/GIRAPH/issues/GIRAPH-1145?filter=allopenissues
-    NETTY_CLIENT_THREADS.setIfUnset(conf, CHANNELS_PER_SERVER.get(conf));
+    NETTY_CLIENT_THREADS.setIfUnset(conf, max(4, workers - 1));
     CLIENT_RECEIVE_BUFFER_SIZE.setIfUnset(conf, ONE_MB);
     CLIENT_SEND_BUFFER_SIZE.setIfUnset(conf, ONE_MB);
     SERVER_SEND_BUFFER_SIZE.setIfUnset(conf, ONE_MB);
@@ -252,6 +264,9 @@ public class IgaConfiguration {
     USE_MESSAGE_SIZE_ENCODING.setIfUnset(conf, true);
 
     MESSAGE_ENCODE_AND_STORE_TYPE.setIfUnset(conf, BYTEARRAY_PER_PARTITION);
+
+    INPUT_VERTEX_EDGES_CLASS.set(conf, ByteArrayEdges.class);
+    VERTEX_EDGES_CLASS.set(conf, ByteArrayEdges.class);
   }
 
   private static void failPartitionCountSetting() {

@@ -77,7 +77,7 @@ public class IgaSolverTool extends Configured implements Tool {
 
     options.getConfig()
         .stream()
-        .map(v -> v.split("="))
+        .map(v -> v.split("=", 2))
         .forEach(v -> config.set(v[0], v[1]));
   }
 
