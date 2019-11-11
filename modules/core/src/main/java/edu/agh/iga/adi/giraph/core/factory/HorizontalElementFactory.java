@@ -22,6 +22,8 @@ public final class HorizontalElementFactory implements ElementFactory {
   private static final BSpline2 b2 = new BSpline2();
   private static final BSpline3 b3 = new BSpline3();
 
+  private static final int[] OTHER_ROWS = {0, 1, 2};
+
   private final Mesh mesh;
   private final MethodCoefficients coefficients;
 
@@ -32,7 +34,7 @@ public final class HorizontalElementFactory implements ElementFactory {
 
   @Override
   public IgaElement createLeafElement(Problem problem, IgaVertex vertex) {
-    val ma = FACTORY.makeZero(LEAF_SIZE, LEAF_SIZE);
+    val ma = FACTORY.make(LEAF_SIZE, LEAF_SIZE);
     coefficients.coefficients().supplyTo(ma);
     return igaElement(
         vertex.id(),
@@ -48,15 +50,15 @@ public final class HorizontalElementFactory implements ElementFactory {
     if (vertex.isLeading()) {
       element.mx.fillMatching(coefficients);
     } else {
-      element.mx.regionByRows(0, 1, 2).fillMatching(coefficients);
+      element.mx.regionByRows(OTHER_ROWS).fillMatching(coefficients);
     }
     return element;
   }
 
   private IgaElement branchElement(IgaVertex vertex) {
-    val ma = FACTORY.makeZero(5, 5);
-    val mb = FACTORY.makeZero(5, mesh.getDofsX());
-    val mx = FACTORY.makeZero(5, mesh.getDofsX());
+    val ma = FACTORY.make(5, 5);
+    val mb = FACTORY.make(5, mesh.getDofsX());
+    val mx = FACTORY.make(5, mesh.getDofsX());
     return igaElement(vertex.id(), ma, mb, mx);
   }
 
