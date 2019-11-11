@@ -14,6 +14,9 @@ public final class BackwardsSubstituteBranchOperation implements IgaOperation<Ba
   public static final BackwardsSubstituteBranchOperation BACKWARDS_SUBSTITUTE_BRANCH_OPERATION
       = new BackwardsSubstituteBranchOperation();
 
+  private static final int[] LEFT_ROWS = {0, 1, 2, 3};
+  private static final int[] RIGHT_ROWS = {2, 3, 4, 5};
+
   @Override
   public IgaElement preConsume(IgaVertex vertex, IgaContext ctx, IgaElement element) {
     return element.withMx(FACTORY.make(5, ctx.getMesh().getDofsX()));
@@ -25,12 +28,12 @@ public final class BackwardsSubstituteBranchOperation implements IgaOperation<Ba
       case LEFT:
         return new BackwardsSubstituteBranchMessage(
             element.id,
-            element.mx.regionByRows(0, 1, 2, 3)
+            element.mx.regionByRows(LEFT_ROWS)
         );
       case RIGHT:
         return new BackwardsSubstituteBranchMessage(
             element.id,
-            element.mx.regionByRows(2, 3, 4, 5)
+            element.mx.regionByRows(RIGHT_ROWS)
         );
       default:
         throw new IllegalStateException("Could not send message");

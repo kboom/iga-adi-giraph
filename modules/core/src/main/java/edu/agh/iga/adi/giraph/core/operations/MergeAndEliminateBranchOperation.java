@@ -19,12 +19,16 @@ public final class MergeAndEliminateBranchOperation implements IgaOperation<Merg
   public static final MergeAndEliminateBranchOperation MERGE_AND_ELIMINATE_BRANCH_OPERATION
       = new MergeAndEliminateBranchOperation();
 
+  private static final int[] SEND_ROWS = {1, 2, 3, 4};
+  private static final int[] RECEIVE_ROWS_LEFT = {0, 1, 2, 3};
+  private static final int[] SEND_ROWS_RIGHT = {2, 3, 4, 5};
+
   @Override
   public MergeAndEliminateBranchMessage sendMessage(IgaVertex dstId, IgaElement element) {
     return new MergeAndEliminateBranchMessage(
         element.id,
         element.ma.regionByOffsets(1, 1),
-        element.mb.regionByRows(1, 2, 3, 4)
+        element.mb.regionByRows(SEND_ROWS)
     );
   }
 
@@ -40,11 +44,11 @@ public final class MergeAndEliminateBranchOperation implements IgaOperation<Merg
     switch (vertexOf(tree, message.getSrcId()).childPosition()) {
       case LEFT:
         element.ma.regionByLimits(4, 4).modifyMatching(ADD, message.ma);
-        element.mb.regionByRows(0, 1, 2, 3).modifyMatching(ADD, message.mb);
+        element.mb.regionByRows(RECEIVE_ROWS_LEFT).modifyMatching(ADD, message.mb);
         break;
       case RIGHT:
         element.ma.regionByLimits(6, 6).regionByOffsets(2, 2).modifyMatching(ADD, message.ma);
-        element.mb.regionByRows(2, 3, 4, 5).modifyMatching(ADD, message.mb);
+        element.mb.regionByRows(SEND_ROWS_RIGHT).modifyMatching(ADD, message.mb);
         break;
     }
   }
