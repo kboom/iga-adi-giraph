@@ -15,7 +15,6 @@ import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import edu.agh.iga.adi.giraph.direction.performance.MemoryLogger;
 import lombok.val;
-import org.apache.giraph.comm.messages.InMemoryMessageStoreFactory;
 import org.apache.giraph.conf.*;
 import org.apache.giraph.edge.ByteArrayEdges;
 import org.apache.giraph.io.VertexInputFormat;
@@ -44,7 +43,6 @@ import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.giraph.comm.flow_control.CreditBasedFlowControl.MAX_NUM_OF_OPEN_REQUESTS_PER_WORKER;
 import static org.apache.giraph.comm.flow_control.CreditBasedFlowControl.MAX_NUM_OF_UNSENT_REQUESTS;
-import static org.apache.giraph.comm.messages.MessageEncodeAndStoreType.BYTEARRAY_PER_PARTITION;
 import static org.apache.giraph.comm.netty.NettyClient.LIMIT_OPEN_REQUESTS_PER_WORKER;
 import static org.apache.giraph.conf.GiraphConstants.*;
 import static org.apache.giraph.master.BspServiceMaster.NUM_MASTER_ZK_INPUT_SPLIT_THREADS;
@@ -103,7 +101,7 @@ public class IgaConfiguration {
     LOG.info("Configuring giraph");
 
     solverOptions(conf);
-    setStoreTypes(conf);
+    setIgaStoreTypes(conf);
     generalTuning(conf);
     resiliencySettings(conf);
 
@@ -263,7 +261,7 @@ public class IgaConfiguration {
     USE_MESSAGE_SIZE_ENCODING.setIfUnset(conf, false); // TODO change me?
   }
 
-  private static void setStoreTypes(GiraphConfiguration conf) {
+  public static void setIgaStoreTypes(GiraphConfiguration conf) {
 //    MESSAGE_ENCODE_AND_STORE_TYPE.setIfUnset(conf, BYTEARRAY_PER_PARTITION);
 
     INPUT_VERTEX_EDGES_CLASS.set(conf, ByteArrayEdges.class);

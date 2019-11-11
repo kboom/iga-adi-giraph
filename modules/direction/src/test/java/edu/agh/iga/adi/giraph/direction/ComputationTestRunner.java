@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.PROBLEM_SIZE;
+import static edu.agh.iga.adi.giraph.direction.config.IgaConfiguration.setIgaStoreTypes;
 import static edu.agh.iga.adi.giraph.direction.test.SmallProblem.DIRECTION_TREE;
 import static edu.agh.iga.adi.giraph.direction.test.assertion.TestGraphAssertions.assertThatGraph;
 import static org.apache.giraph.conf.GiraphConstants.COMPUTATION_FACTORY_CLASS;
@@ -36,8 +37,9 @@ public class ComputationTestRunner {
     conf.setMasterComputeClass(masterCompute);
     conf.setWorkerContextClass(IgaWorkerContext.class);
     conf.setOutEdgesClass(HashMapEdges.class);
+    setIgaStoreTypes(conf);
     COMPUTATION_FACTORY_CLASS.set(conf, IgaComputationFactory.class);
-    USE_MESSAGE_SIZE_ENCODING.set(conf, true); // this has to be enabled as we don't use message merging
+    USE_MESSAGE_SIZE_ENCODING.set(conf, false);
     return new ComputationRunnerPreconditions(conf);
   }
 
