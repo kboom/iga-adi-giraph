@@ -260,7 +260,7 @@ public class IgaConfiguration {
     MAX_VERTEX_REQUEST_SIZE.setIfUnset(conf, ONE_MB);
     MAX_EDGE_REQUEST_SIZE.setIfUnset(conf, ONE_MB);
 
-    USE_MESSAGE_SIZE_ENCODING.setIfUnset(conf, true);
+    USE_MESSAGE_SIZE_ENCODING.setIfUnset(conf, false); // TODO change me?
   }
 
   private static void setStoreTypes(GiraphConfiguration conf) {

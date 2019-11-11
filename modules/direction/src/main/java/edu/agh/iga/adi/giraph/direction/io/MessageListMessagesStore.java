@@ -1,5 +1,6 @@
 package edu.agh.iga.adi.giraph.direction.io;
 
+import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -11,12 +12,13 @@ import org.apache.hadoop.io.Writable;
 import java.io.DataInput;
 import java.io.DataOutput;
 
-public final class MessageListMessagesStore<M extends Writable> extends InMemoryObjectMessagesStore<M, ObjectArrayList<M>> {
+public final class MessageListMessagesStore extends InMemoryObjectMessagesStore<IgaMessageWritable,
+    ObjectArrayList<IgaMessageWritable>> {
 
-  private final MessageValueFactory<M> messageValueFactory;
+  private final MessageValueFactory<IgaMessageWritable> messageValueFactory;
 
   public MessageListMessagesStore(
-      MessageValueFactory<M> messageValueFactory,
+      MessageValueFactory<IgaMessageWritable> messageValueFactory,
       CentralizedServiceWorker<IntWritable, Writable, Writable> service
   ) {
     super(service);
@@ -24,34 +26,34 @@ public final class MessageListMessagesStore<M extends Writable> extends InMemory
   }
 
   @Override
-  protected ObjectArrayList<M> createMessagesHolder() {
+  protected ObjectArrayList<IgaMessageWritable> createMessagesHolder() {
     return new ObjectArrayList<>();
   }
 
   @Override
-  protected Iterable<M> messagesOf(ObjectArrayList<M> data) {
+  protected Iterable<IgaMessageWritable> messagesOf(ObjectArrayList<IgaMessageWritable> data) {
     return data;
   }
 
   @Override
-  protected void store(ObjectArrayList<M> msgHolder, M currentData) {
-    msgHolder.add(currentData);
+  protected void store(ObjectArrayList<IgaMessageWritable> msgHolder, IgaMessageWritable currentData) {
+    msgHolder.add(messageValueFactory.newInstance().withData(currentData.getIgaMessage()));
   }
 
   @Override
   @SneakyThrows
-  protected void write(ObjectArrayList<M> value, DataOutput out) {
+  protected void write(ObjectArrayList<IgaMessageWritable> value, DataOutput out) {
     out.writeInt(value.size());
-    for (M m : value) {
+    for (IgaMessageWritable m : value) {
       m.write(out);
     }
   }
 
   @Override
   @SneakyThrows
-  protected ObjectArrayList<M> read(DataInput in) {
+  protected ObjectArrayList<IgaMessageWritable> read(DataInput in) {
     int size = in.readInt();
-    val data = new ObjectArrayList<M>(size);
+    val data = new ObjectArrayList<IgaMessageWritable>(size);
     while (size-- > 0) {
       val msg = messageValueFactory.newInstance();
       msg.readFields(in);

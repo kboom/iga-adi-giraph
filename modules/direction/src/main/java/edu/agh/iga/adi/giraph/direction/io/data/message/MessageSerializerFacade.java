@@ -78,17 +78,17 @@ public final class MessageSerializerFacade {
       val messageType = dataInput.readInt();
       val messageClazz = MESSAGE_TYPE_MAPPING.inverse().get(messageType);
       val messageSerializer = SERIALIZER_MAP.get(messageClazz);
-      if (message != null) {
-        if (message.getClass().equals(messageClazz)) {
-          if (LOG.isTraceEnabled()) {
-            LOG.trace("R " + messageClazz.getSimpleName());
-          }
-          return messageSerializer.readMessage(message, dataInput);
-        }
-      }
-      if (LOG.isTraceEnabled()) {
-        LOG.trace("C " + messageClazz.getSimpleName());
-      }
+//      if (message != null) {
+//        if (message.getClass().equals(messageClazz)) {
+//          if (LOG.isTraceEnabled()) {
+//            LOG.trace("R " + messageClazz.getSimpleName());
+//          }
+//          return messageSerializer.readMessage(message, dataInput);
+//        }
+//      }
+//      if (LOG.isTraceEnabled()) {
+//        LOG.trace("C " + messageClazz.getSimpleName());
+//      }
       return messageSerializer.readMessage(dataInput);
     } catch (IOException e) {
       throw new IllegalStateException("Could not deserialize message");

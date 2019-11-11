@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.ints.IntIterator;
 import lombok.val;
 import org.apache.giraph.bsp.CentralizedServiceWorker;
 import org.apache.giraph.comm.messages.MessageStore;
+import org.apache.giraph.utils.EmptyIterable;
 import org.apache.giraph.utils.VertexIdMessages;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Writable;
@@ -78,7 +79,12 @@ public abstract class InMemoryObjectMessagesStore<M extends Writable, T>
 
   @Override
   public Iterable<M> getVertexMessages(IntWritable vertexId) {
-    return messagesOf(getVertexMessagesHolder(vertexId));
+    val holder = getVertexMessagesHolder(vertexId);
+    if (holder != null) {
+      return messagesOf(holder);
+    } else {
+      return EmptyIterable.get();
+    }
   }
 
   @Override
