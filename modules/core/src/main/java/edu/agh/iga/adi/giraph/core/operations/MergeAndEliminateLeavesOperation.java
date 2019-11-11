@@ -17,6 +17,10 @@ public final class MergeAndEliminateLeavesOperation implements IgaOperation<Merg
   public static final MergeAndEliminateLeavesOperation MERGE_AND_ELIMINATE_LEAVES_OPERATION
       = new MergeAndEliminateLeavesOperation();
 
+  private static final int[] LEFT_ROWS = {0, 1, 2};
+  private static final int[] MIDDLE_ROWS = {1, 2, 3};
+  private static final int[] RIGHT_ROWS = {2, 3, 4};
+
   @Override
   public MergeAndEliminateLeavesMessage sendMessage(IgaVertex dst, IgaElement element) {
     return new MergeAndEliminateLeavesMessage(
@@ -31,15 +35,15 @@ public final class MergeAndEliminateLeavesOperation implements IgaOperation<Merg
     switch (vertexOf(tree, message.getSrcId()).childPosition()) {
       case LEFT:
         element.ma.regionByLimits(3, 3).modifyMatching(ADD, message.ma);
-        element.mb.regionByRows(0, 1, 2).modifyMatching(ADD, message.mb);
+        element.mb.regionByRows(LEFT_ROWS).modifyMatching(ADD, message.mb);
         break;
       case MIDDLE:
         element.ma.regionByLimits(4, 4).regionByOffsets(1, 1).modifyMatching(ADD, message.ma);
-        element.mb.regionByRows(1, 2, 3).modifyMatching(ADD, message.mb);
+        element.mb.regionByRows(MIDDLE_ROWS).modifyMatching(ADD, message.mb);
         break;
       case RIGHT:
         element.ma.regionByLimits(5, 5).regionByOffsets(2, 2).modifyMatching(ADD, message.ma);
-        element.mb.regionByRows(2, 3, 4).modifyMatching(ADD, message.mb);
+        element.mb.regionByRows(RIGHT_ROWS).modifyMatching(ADD, message.mb);
         break;
     }
   }

@@ -19,25 +19,28 @@ public final class TranspositionIgaOperation implements IgaOperation<Transpositi
   public static final TranspositionIgaOperation TRANSPOSITION_IGA_OPERATION
       = new TranspositionIgaOperation();
 
+  private static final int[] LEADING_ROWS = {0, 1, 2, 3, 4};
+  private static final int[] OTHER_ROWS = {2, 3, 4};
+
   @Override
   public TranspositionIgaMessage sendMessage(IgaVertex dst, IgaElement element) {
     val leftOffset = dst.offsetLeft();
     val columns = element.mx.regionByColumns(leftOffset, leftOffset + 1, leftOffset + 2);
     if (isLeading(dst, element)) {
-      return new TranspositionIgaMessage(element.id, columns.regionByRows(0, 1, 2, 3, 4));
+      return new TranspositionIgaMessage(element.id, columns.regionByRows(LEADING_ROWS));
     } else {
-      return new TranspositionIgaMessage(element.id, columns.regionByRows(2, 3, 4));
+      return new TranspositionIgaMessage(element.id, columns.regionByRows(OTHER_ROWS));
     }
   }
 
   @Override
   public IgaElement preConsume(IgaVertex vertex, IgaContext ctx, IgaElement element) {
-    val ma = FACTORY.makeZero(LEAF_SIZE, LEAF_SIZE);
+    val ma = FACTORY.make(LEAF_SIZE, LEAF_SIZE);
     ctx.getMethodCoefficients().coefficients().supplyTo(ma);
     return igaElement(
         vertex.id(),
         ma,
-        FACTORY.makeZero(LEAF_SIZE, ctx.getMesh().getDofsY()),
+        FACTORY.make(LEAF_SIZE, ctx.getMesh().getDofsY()),
         null
     );
   }
@@ -50,7 +53,7 @@ public final class TranspositionIgaOperation implements IgaOperation<Transpositi
 
     val srcVType = vertexType(tree, srcId);
 
-    val mo = (int) srcVType.offsetLeft(tree, srcId);
+    val mo = srcVType.offsetLeft(tree, srcId);
     val pp = new PartitionProvider(dstId, tree, (int) mxp.countRows());
 
     val targetBlock = element.mb

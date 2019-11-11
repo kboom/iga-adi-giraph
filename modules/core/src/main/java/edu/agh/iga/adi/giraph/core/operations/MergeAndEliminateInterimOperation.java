@@ -20,12 +20,16 @@ public final class MergeAndEliminateInterimOperation implements IgaOperation<Mer
   public static final MergeAndEliminateInterimOperation MERGE_AND_ELIMINATE_INTERIM_OPERATION
       = new MergeAndEliminateInterimOperation();
 
+  private static final int[] SEND_ROWS = {2, 3, 4, 5};
+  private static final int[] RECEIVE_ROWS_LEFT = {0, 1, 2, 3};
+  private static final int[] RECEIVE_ROWS_RIGHT = {2, 3, 4, 5};
+
   @Override
   public MergeAndEliminateInterimMessage sendMessage(IgaVertex dstId, IgaElement element) {
     return new MergeAndEliminateInterimMessage(
         element.id,
         element.ma.regionByLimits(6, 6).regionByOffsets(2, 2),
-        element.mb.regionByRows(2, 3, 4, 5)
+        element.mb.regionByRows(SEND_ROWS)
     );
   }
 
@@ -41,11 +45,11 @@ public final class MergeAndEliminateInterimOperation implements IgaOperation<Mer
     switch (vertexOf(tree, message.getSrcId()).childPosition()) {
       case LEFT:
         element.ma.regionByLimits(4, 4).modifyMatching(ADD, message.ma);
-        element.mb.regionByRows(0, 1, 2, 3).modifyMatching(ADD, message.mb);
+        element.mb.regionByRows(RECEIVE_ROWS_LEFT).modifyMatching(ADD, message.mb);
         break;
       case RIGHT:
         element.ma.regionByLimits(6, 6).regionByOffsets(2, 2).modifyMatching(ADD, message.ma);
-        element.mb.regionByRows(2, 3, 4, 5).modifyMatching(ADD, message.mb);
+        element.mb.regionByRows(RECEIVE_ROWS_RIGHT).modifyMatching(ADD, message.mb);
         break;
     }
   }

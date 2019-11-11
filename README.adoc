@@ -154,6 +154,20 @@ https://giraph.apache.org/options.html[Reference]
 
 == JVM tuning
 
+=== JIT debugging
+
+Add the following to the JVM arguments. This will print the details about the solver code in terms of JIT.
+```
+-XX:+PrintCompilation
+-Xbatch
+-XX:+PrintCompilation
+-XX:CompileCommandFile=/Users/kbhit/Sources/Personal/iga-adi-giraph/jit_debug_file
+```
+
+The contents of the `jit_debug_file` can be tuned using
+https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html[this guide].
+
+=== Other options
 ```
 -ea
 -XX:+UsePerfData
@@ -184,6 +198,7 @@ Can we hold of with creating X matrix for the merging stage as there are only ze
 
 == Links
 
+* https://metebalci.com/blog/demystifying-the-jvm-interpretation-jit-and-aot-compilation/[JIT and AOT]
 * https://docs.oracle.com/javase/8/embedded/develop-apps-platforms/codecache.htm[Code cache JVM tuning]
 * https://github.com/sakserv/hadoop-mini-clusters[Hadoop mini clusters]
 * https://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-common/yarn-default.xml[YARN property list]

@@ -16,6 +16,9 @@ public final class BackwardsSubstituteInterimOperation implements IgaOperation<B
   public static final BackwardsSubstituteInterimOperation BACKWARDS_SUBSTITUTE_INTERIM_OPERATION
       = new BackwardsSubstituteInterimOperation();
 
+  private static final int[] LEFT_ROWS = {0, 1, 2, 3};
+  private static final int[] RIGHT_ROWS = {2, 3, 4, 5};
+
   @Override
   public IgaElement preConsume(IgaVertex vertex, IgaContext ctx, IgaElement element) {
     return element.withMx(FACTORY.make(ROWS_BOUND_TO_NODE, ctx.getMesh().getDofsX()));
@@ -27,12 +30,12 @@ public final class BackwardsSubstituteInterimOperation implements IgaOperation<B
       case LEFT:
         return new BackwardsSubstituteInterimMessage(
             element.id,
-            element.mx.regionByRows(0, 1, 2, 3)
+            element.mx.regionByRows(LEFT_ROWS)
         );
       case RIGHT:
         return new BackwardsSubstituteInterimMessage(
             element.id,
-            element.mx.regionByRows(2, 3, 4, 5)
+            element.mx.regionByRows(RIGHT_ROWS)
         );
       default:
         throw new IllegalStateException("Could not send message");
