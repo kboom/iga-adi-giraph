@@ -44,9 +44,9 @@ public class IgaPartitionerFactory extends GraphPartitionerFactory<IntWritable, 
 
     val partition = partitioningStrategy.partitionFor(vid);
 
-    if (LOG.isTraceEnabled()) {
+    if (LOG.isDebugEnabled()) {
       val vertexType = vertexType(directionTree, vid);
-      LOG.trace(String.format("P-> %s,%d", vertexType.describe(directionTree, vid), partition));
+      LOG.debug(String.format("P-> %s,%d", vertexType.describe(directionTree, vid), partition));
     }
     return partition;
   }

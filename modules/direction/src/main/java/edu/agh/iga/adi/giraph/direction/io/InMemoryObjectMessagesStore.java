@@ -115,7 +115,8 @@ public abstract class InMemoryObjectMessagesStore<M extends Writable, T>
       val msgIterator = messages.getVertexIdMessageIterator();
       while (msgIterator.hasNext()) {
         msgIterator.next();
-        val msgHolder = getOrCreateMessageHolder(partitionMap, msgIterator.getCurrentVertexId().get());
+        val vertexId = msgIterator.getCurrentVertexId().get();
+        val msgHolder = getOrCreateMessageHolder(partitionMap, vertexId);
         store(msgHolder, msgIterator.getCurrentData());
       }
     }
