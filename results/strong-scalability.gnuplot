@@ -8,8 +8,8 @@ set rmargin 5
 
 set style data histograms
 set style histogram rowstacked
-set style fill solid
-set boxwidth 0.5
+set boxwidth 0.8
+set style fill solid 1.0 border -1
 set view map
 set grid
 set autoscale fix
