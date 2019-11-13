@@ -29,5 +29,5 @@ exec "${RUN_SCRIPT}" \
   --config giraph.yarn.task.overhead.percent="${IGA_MEMORY_OVERHEAD_PERCENT}" \
   --config giraph.useNettyDirectMemory="${IGA_USE_DIRECT_MEMORY}" \
   --config giraph.minPartitionsPerComputeThread="${IGA_MIN_PARTITIONS_PER_COMPUTE_THREAD}" \
-  --config iga.storeSolution=false \
+  --config iga.storeSolution=false
   "${@}"
