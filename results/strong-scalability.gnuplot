@@ -1,10 +1,9 @@
 set datafile separator ","
 set output 'strong-scalability.png'
 set term png size 1000, 1000
-set bmargin 5
-set tmargin 5
-set lmargin 5
-set rmargin 5
+set bmargin 4
+set tmargin 4
+set lmargin 9
 
 set style data histograms
 set style histogram rowstacked
