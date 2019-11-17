@@ -32,10 +32,10 @@ public class CoefficientSolution implements PartialSolution {
 
   @Override
   public double valueAt(double x, double y) {
-    return internalValueAt(y, x); // we rotate the plane
+    return internalValueAt(mesh, coef, y, x); // we rotate the plane
   }
 
-  private double internalValueAt(double x, double y) {
+  private static double internalValueAt(Mesh mesh, Access2D<Double> c, double x, double y) {
     val ielemx = (long) (x / mesh.getDx());
     val ielemy = (long) (y / mesh.getDy());
     val localx = x - mesh.getDx() * ielemx;
@@ -48,15 +48,15 @@ public class CoefficientSolution implements PartialSolution {
     val sp3x = b3.getValue(localx);
     val sp3y = b3.getValue(localy);
 
-    return coef.doubleValue(0, ielemy) * sp1x * sp1y +
-        coef.doubleValue(0, ielemy + 1) * sp1x * sp2y +
-        coef.doubleValue(0, ielemy + 2) * sp1x * sp3y +
-        coef.doubleValue(1, ielemy) * sp2x * sp1y +
-        coef.doubleValue(1, ielemy + 1) * sp2x * sp2y +
-        coef.doubleValue(1, ielemy + 2) * sp2x * sp3y +
-        coef.doubleValue(2, ielemy) * sp3x * sp1y +
-        coef.doubleValue(2, ielemy + 1) * sp3x * sp2y +
-        coef.doubleValue(2, ielemy + 2) * sp3x * sp3y;
+    return c.doubleValue(0, ielemy) * sp1x * sp1y +
+        c.doubleValue(0, ielemy + 1) * sp1x * sp2y +
+        c.doubleValue(0, ielemy + 2) * sp1x * sp3y +
+        c.doubleValue(1, ielemy) * sp2x * sp1y +
+        c.doubleValue(1, ielemy + 1) * sp2x * sp2y +
+        c.doubleValue(1, ielemy + 2) * sp2x * sp3y +
+        c.doubleValue(2, ielemy) * sp3x * sp1y +
+        c.doubleValue(2, ielemy + 1) * sp3x * sp2y +
+        c.doubleValue(2, ielemy + 2) * sp3x * sp3y;
   }
 
   @Override

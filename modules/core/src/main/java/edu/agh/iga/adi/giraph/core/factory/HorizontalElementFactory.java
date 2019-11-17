@@ -201,6 +201,7 @@ public final class HorizontalElementFactory implements ElementFactory {
           val vr = SPLINE_3_GAUSS_POINTS[l] * problem.valueAt(x, yr);
 
           val v = wkl * (vl + vm + vr);
+
           ds.add(0, i, b3gk * v);
           ds.add(1, i, b2gk * v);
           ds.add(2, i, b1gk * v);
