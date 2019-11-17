@@ -34,14 +34,10 @@ public class Initialisation {
   }
 
   public IgaElement receiveMessages(IgaVertex vertex, Stream<InitialisationIgaMessage> messages) {
-    if (vertex.is(LeafVertex.class)) {
-      return elementFactory.createLeafElement(
-          problemFactory.problemFor(partialSolutionFrom(messages)),
-          vertex
-      );
-    } else {
-      throw new IllegalStateException();
-    }
+    return elementFactory.createLeafElement(
+        problemFactory.problemFor(partialSolutionFrom(messages)),
+        vertex
+    );
   }
 
   /**
