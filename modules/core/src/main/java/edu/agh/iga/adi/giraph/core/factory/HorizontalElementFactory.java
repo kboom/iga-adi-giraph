@@ -67,7 +67,60 @@ public final class HorizontalElementFactory implements ElementFactory {
     initializeZero(problem, vertex, ds);
     initializeFirst(problem, vertex, ds);
     initializeCenter(problem, vertex, ds);
+    initializeLastElement(problem, vertex, ds);
+    initializeRightBorder(problem, vertex, ds);
     return ds;
+  }
+
+  private void initializeRightBorder(Problem problem, IgaVertex vertex, PrimitiveDenseStore ds) {
+    val dx = mesh.getDx();
+    val dy = mesh.getDy();
+    val leftSegment = vertex.getLeftSegment();
+    for (int i = mesh.getElementsY() + 1; i < mesh.getDofsY(); i++) {
+      for (int k = 0; k < GAUSS_POINT_COUNT; k++) {
+        val x = GAUSS_POINTS[k] * dx + leftSegment;
+        val gk = GAUSS_POINTS[k];
+
+        for (int l = 0; l < GAUSS_POINT_COUNT; l++) {
+          val wkl = GAUSS_POINTS_WEIGHTS_MULTIPLIED[k * GAUSS_POINT_COUNT + l];
+          val gl = GAUSS_POINTS[l];
+
+          val y = (gl + (i - 2)) * dy;
+          val v = wkl * b1.getValue(gl) * problem.valueAt(x, y);
+          ds.add(0, i, b3.getValue(gk) * v);
+          ds.add(1, i, b2.getValue(gk) * v);
+          ds.add(2, i, b1.getValue(gk) * v);
+        }
+      }
+    }
+  }
+
+  private void initializeLastElement(Problem problem, IgaVertex vertex, PrimitiveDenseStore ds) {
+    val elementCount = mesh.getElementsY();
+    val dx = mesh.getDx();
+    val dy = mesh.getDy();
+    val leftSegment = vertex.getLeftSegment();
+    for (int k = 0; k < GAUSS_POINT_COUNT; k++) {
+      val x = GAUSS_POINTS[k] * dx + leftSegment;
+      val gk = GAUSS_POINTS[k];
+
+      for (int l = 0; l < GAUSS_POINT_COUNT; l++) {
+        val wkl = GAUSS_POINTS_WEIGHTS_MULTIPLIED[k * GAUSS_POINT_COUNT + l];
+        val gl = GAUSS_POINTS[l];
+
+        val yf = (gl + (elementCount - 2)) * dy;
+        val vf = wkl * b1.getValue(gl) * problem.valueAt(x, yf);
+        ds.add(0, elementCount, b3.getValue(gk) * vf);
+        ds.add(1, elementCount, b2.getValue(gk) * vf);
+        ds.add(2, elementCount, b1.getValue(gk) * vf);
+
+        val yl = (gl + (elementCount - 1)) * dy;
+        val vl = wkl * b2.getValue(gl) * problem.valueAt(x, yl);
+        ds.add(0, elementCount, b3.getValue(gk) * vl);
+        ds.add(1, elementCount, b2.getValue(gk) * vl);
+        ds.add(2, elementCount, b1.getValue(gk) * vl);
+      }
+    }
   }
 
   private void initializeZero(Problem problem, IgaVertex vertex, PrimitiveDenseStore ds) {
@@ -122,7 +175,7 @@ public final class HorizontalElementFactory implements ElementFactory {
     val dx = mesh.getDx();
     val dy = mesh.getDy();
     val leftSegment = vertex.getLeftSegment();
-    for (int i = 2; i < mesh.getDofsY(); i++) {
+    for (int i = 2; i < mesh.getElementsY(); i++) {
       for (int k = 0; k < GAUSS_POINT_COUNT; k++) {
         val x = GAUSS_POINTS[k] * dx + leftSegment;
         val gk = GAUSS_POINTS[k];
