@@ -70,30 +70,29 @@ public final class HorizontalElementFactory implements ElementFactory {
     for (int i = 0; i < mesh.getDofsY(); i++) {
       for (int k = 0; k < GAUSS_POINT_COUNT; k++) {
         val x = GAUSS_POINTS[k] * dx + leftSegment;
-        val wk = GAUSS_POINT_WEIGHTS[k];
         val gk = GAUSS_POINTS[k];
 
         for (int l = 0; l < GAUSS_POINT_COUNT; l++) {
-          val wl = GAUSS_POINT_WEIGHTS[l];
+          val wkl = GAUSS_POINTS_WEIGHTS_MULTIPLIED[k * GAUSS_POINT_COUNT + l];
           val gl = GAUSS_POINTS[l];
 
           if (i > 1) {
             val y = (gl + (i - 2)) * dy;
-            val v = wk * wl * b1.getValue(gl) * problem.valueAt(x, y);
+            val v = wkl * b1.getValue(gl) * problem.valueAt(x, y);
             ds.add(0, i, b3.getValue(gk) * v);
             ds.add(1, i, b2.getValue(gk) * v);
             ds.add(2, i, b1.getValue(gk) * v);
           }
           if (i > 0 && (i - 1) < mesh.getElementsY()) {
             val y = (gl + (i - 1)) * dy;
-            val v = wk * wl * b2.getValue(gl) * problem.valueAt(x, y);
+            val v = wkl * b2.getValue(gl) * problem.valueAt(x, y);
             ds.add(0, i, b3.getValue(gk) * v);
             ds.add(1, i, b2.getValue(gk) * v);
             ds.add(2, i, b1.getValue(gk) * v);
           }
           if (i < mesh.getElementsY()) {
             val y = (gl + i) * dy;
-            val v = wk * wl * b3.getValue(gl) * problem.valueAt(x, y);
+            val v = wkl * b3.getValue(gl) * problem.valueAt(x, y);
             ds.add(0, i, b3.getValue(gk) * v);
             ds.add(1, i, b2.getValue(gk) * v);
             ds.add(2, i, b1.getValue(gk) * v);
