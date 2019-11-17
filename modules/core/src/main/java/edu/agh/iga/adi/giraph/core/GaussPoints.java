@@ -1,11 +1,26 @@
 package edu.agh.iga.adi.giraph.core;
 
+import edu.agh.iga.adi.giraph.core.splines.BSpline1;
+import edu.agh.iga.adi.giraph.core.splines.BSpline2;
+import edu.agh.iga.adi.giraph.core.splines.BSpline3;
+
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 public abstract class GaussPoints {
+
+  private static final BSpline1 bs1 = new BSpline1();
+  private static final BSpline2 bs2 = new BSpline2();
+  private static final BSpline3 bs3 = new BSpline3();
 
   public static final double[] GAUSS_POINTS;
   public static final double[] GAUSS_POINT_WEIGHTS;
   public static final double[] GAUSS_POINTS_WEIGHTS_MULTIPLIED;
   public static final int GAUSS_POINT_COUNT;
+
+  public static final double[] SPLINE_1_GAUSS_POINTS;
+  public static final double[] SPLINE_2_GAUSS_POINTS;
+  public static final double[] SPLINE_3_GAUSS_POINTS;
 
   static {
     GAUSS_POINTS = new double[10];
@@ -41,6 +56,12 @@ public abstract class GaussPoints {
             GAUSS_POINT_WEIGHTS[i] * GAUSS_POINT_WEIGHTS[j];
       }
     }
+
+    SPLINE_1_GAUSS_POINTS = Arrays.stream(GAUSS_POINTS).map(bs1::getValue).toArray();
+    SPLINE_2_GAUSS_POINTS = Arrays.stream(GAUSS_POINTS).map(bs2::getValue).toArray();
+    SPLINE_3_GAUSS_POINTS = Arrays.stream(GAUSS_POINTS).map(bs3::getValue).toArray();
+
+
   }
 
 }

@@ -79,7 +79,9 @@ public final class HorizontalElementFactory implements ElementFactory {
     for (int i = mesh.getElementsY() + 1; i < mesh.getDofsY(); i++) {
       for (int k = 0; k < GAUSS_POINT_COUNT; k++) {
         val x = GAUSS_POINTS[k] * dx + leftSegment;
-        val gk = GAUSS_POINTS[k];
+        val b1gk = SPLINE_1_GAUSS_POINTS[k];
+        val b2gk = SPLINE_2_GAUSS_POINTS[k];
+        val b3gk = SPLINE_3_GAUSS_POINTS[k];
 
         for (int l = 0; l < GAUSS_POINT_COUNT; l++) {
           val wkl = GAUSS_POINTS_WEIGHTS_MULTIPLIED[k * GAUSS_POINT_COUNT + l];
@@ -87,9 +89,9 @@ public final class HorizontalElementFactory implements ElementFactory {
 
           val y = (gl + (i - 2)) * dy;
           val v = wkl * b1.getValue(gl) * problem.valueAt(x, y);
-          ds.add(0, i, b3.getValue(gk) * v);
-          ds.add(1, i, b2.getValue(gk) * v);
-          ds.add(2, i, b1.getValue(gk) * v);
+          ds.add(0, i, b3gk * v);
+          ds.add(1, i, b2gk * v);
+          ds.add(2, i, b1gk * v);
         }
       }
     }
@@ -102,7 +104,9 @@ public final class HorizontalElementFactory implements ElementFactory {
     val leftSegment = vertex.getLeftSegment();
     for (int k = 0; k < GAUSS_POINT_COUNT; k++) {
       val x = GAUSS_POINTS[k] * dx + leftSegment;
-      val gk = GAUSS_POINTS[k];
+      val b1gk = SPLINE_1_GAUSS_POINTS[k];
+      val b2gk = SPLINE_2_GAUSS_POINTS[k];
+      val b3gk = SPLINE_3_GAUSS_POINTS[k];
 
       for (int l = 0; l < GAUSS_POINT_COUNT; l++) {
         val wkl = GAUSS_POINTS_WEIGHTS_MULTIPLIED[k * GAUSS_POINT_COUNT + l];
@@ -110,15 +114,15 @@ public final class HorizontalElementFactory implements ElementFactory {
 
         val yf = (gl + (elementCount - 2)) * dy;
         val vf = wkl * b1.getValue(gl) * problem.valueAt(x, yf);
-        ds.add(0, elementCount, b3.getValue(gk) * vf);
-        ds.add(1, elementCount, b2.getValue(gk) * vf);
-        ds.add(2, elementCount, b1.getValue(gk) * vf);
+        ds.add(0, elementCount, b3gk * vf);
+        ds.add(1, elementCount, b2gk * vf);
+        ds.add(2, elementCount, b1gk * vf);
 
         val yl = (gl + (elementCount - 1)) * dy;
         val vl = wkl * b2.getValue(gl) * problem.valueAt(x, yl);
-        ds.add(0, elementCount, b3.getValue(gk) * vl);
-        ds.add(1, elementCount, b2.getValue(gk) * vl);
-        ds.add(2, elementCount, b1.getValue(gk) * vl);
+        ds.add(0, elementCount, b3gk * vl);
+        ds.add(1, elementCount, b2gk * vl);
+        ds.add(2, elementCount, b1gk * vl);
       }
     }
   }
@@ -129,7 +133,9 @@ public final class HorizontalElementFactory implements ElementFactory {
     val leftSegment = vertex.getLeftSegment();
     for (int k = 0; k < GAUSS_POINT_COUNT; k++) {
       val x = GAUSS_POINTS[k] * dx + leftSegment;
-      val gk = GAUSS_POINTS[k];
+      val b1gk = SPLINE_1_GAUSS_POINTS[k];
+      val b2gk = SPLINE_2_GAUSS_POINTS[k];
+      val b3gk = SPLINE_3_GAUSS_POINTS[k];
 
       for (int l = 0; l < GAUSS_POINT_COUNT; l++) {
         val wkl = GAUSS_POINTS_WEIGHTS_MULTIPLIED[k * GAUSS_POINT_COUNT + l];
@@ -137,9 +143,9 @@ public final class HorizontalElementFactory implements ElementFactory {
 
         val y = gl * dy;
         val v = wkl * b3.getValue(gl) * problem.valueAt(x, y);
-        ds.add(0, 0, b3.getValue(gk) * v);
-        ds.add(1, 0, b2.getValue(gk) * v);
-        ds.add(2, 0, b1.getValue(gk) * v);
+        ds.add(0, 0, b3gk * v);
+        ds.add(1, 0, b2gk * v);
+        ds.add(2, 0, b1gk * v);
       }
     }
   }
@@ -150,23 +156,25 @@ public final class HorizontalElementFactory implements ElementFactory {
     val leftSegment = vertex.getLeftSegment();
     for (int k = 0; k < GAUSS_POINT_COUNT; k++) {
       val x = GAUSS_POINTS[k] * dx + leftSegment;
-      val gk = GAUSS_POINTS[k];
+      val b1gk = SPLINE_1_GAUSS_POINTS[k];
+      val b2gk = SPLINE_2_GAUSS_POINTS[k];
+      val b3gk = SPLINE_3_GAUSS_POINTS[k];
 
       for (int l = 0; l < GAUSS_POINT_COUNT; l++) {
         val wkl = GAUSS_POINTS_WEIGHTS_MULTIPLIED[k * GAUSS_POINT_COUNT + l];
         val gl = GAUSS_POINTS[l];
 
         val yf = gl * dy;
-        val vf = wkl * b2.getValue(gl) * problem.valueAt(x, yf);
-        ds.add(0, 1, b3.getValue(gk) * vf);
-        ds.add(1, 1, b2.getValue(gk) * vf);
-        ds.add(2, 1, b1.getValue(gk) * vf);
+        val vf = wkl * SPLINE_2_GAUSS_POINTS[l] * problem.valueAt(x, yf);
+        ds.add(0, 1, b3gk * vf);
+        ds.add(1, 1, b2gk * vf);
+        ds.add(2, 1, b1gk * vf);
 
         val ys = (gl + 1) * dy;
-        val vs = wkl * b3.getValue(gl) * problem.valueAt(x, ys);
-        ds.add(0, 1, b3.getValue(gk) * vs);
-        ds.add(1, 1, b2.getValue(gk) * vs);
-        ds.add(2, 1, b1.getValue(gk) * vs);
+        val vs = wkl * SPLINE_3_GAUSS_POINTS[l] * problem.valueAt(x, ys);
+        ds.add(0, 1, b3gk * vs);
+        ds.add(1, 1, b2gk * vs);
+        ds.add(2, 1, b1gk * vs);
       }
     }
   }
@@ -178,29 +186,32 @@ public final class HorizontalElementFactory implements ElementFactory {
     for (int i = 2; i < mesh.getElementsY(); i++) {
       for (int k = 0; k < GAUSS_POINT_COUNT; k++) {
         val x = GAUSS_POINTS[k] * dx + leftSegment;
-        val gk = GAUSS_POINTS[k];
+        val b1gk = SPLINE_1_GAUSS_POINTS[k];
+        val b2gk = SPLINE_2_GAUSS_POINTS[k];
+        val b3gk = SPLINE_3_GAUSS_POINTS[k];
 
         for (int l = 0; l < GAUSS_POINT_COUNT; l++) {
           val wkl = GAUSS_POINTS_WEIGHTS_MULTIPLIED[k * GAUSS_POINT_COUNT + l];
           val gl = GAUSS_POINTS[l];
 
           val yl = (gl + (i - 2)) * dy;
-          val vl = wkl * b1.getValue(gl) * problem.valueAt(x, yl);
-          ds.add(0, i, b3.getValue(gk) * vl);
-          ds.add(1, i, b2.getValue(gk) * vl);
-          ds.add(2, i, b1.getValue(gk) * vl);
+          val vl = wkl * SPLINE_1_GAUSS_POINTS[l] * problem.valueAt(x, yl);
+
+          ds.add(0, i, b3gk * vl);
+          ds.add(1, i, b2gk * vl);
+          ds.add(2, i, b1gk * vl);
 
           val ym = (gl + (i - 1)) * dy;
-          val vm = wkl * b2.getValue(gl) * problem.valueAt(x, ym);
-          ds.add(0, i, b3.getValue(gk) * vm);
-          ds.add(1, i, b2.getValue(gk) * vm);
-          ds.add(2, i, b1.getValue(gk) * vm);
+          val vm = wkl * SPLINE_2_GAUSS_POINTS[l] * problem.valueAt(x, ym);
+          ds.add(0, i, b3gk * vm);
+          ds.add(1, i, b2gk * vm);
+          ds.add(2, i, b1gk * vm);
 
           val yr = (gl + i) * dy;
-          val vr = wkl * b3.getValue(gl) * problem.valueAt(x, yr);
-          ds.add(0, i, b3.getValue(gk) * vr);
-          ds.add(1, i, b2.getValue(gk) * vr);
-          ds.add(2, i, b1.getValue(gk) * vr);
+          val vr = wkl * SPLINE_3_GAUSS_POINTS[l] * problem.valueAt(x, yr);
+          ds.add(0, i, b3gk * vr);
+          ds.add(1, i, b2gk * vr);
+          ds.add(2, i, b1gk * vr);
         }
       }
     }
