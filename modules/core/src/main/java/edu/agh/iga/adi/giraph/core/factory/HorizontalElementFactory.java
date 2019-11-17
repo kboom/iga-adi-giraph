@@ -184,27 +184,23 @@ public final class HorizontalElementFactory implements ElementFactory {
           val wkl = GAUSS_POINTS_WEIGHTS_MULTIPLIED[k * GAUSS_POINT_COUNT + l];
           val gl = GAUSS_POINTS[l];
 
-          if (i > 1) {
-            val y = (gl + (i - 2)) * dy;
-            val v = wkl * b1.getValue(gl) * problem.valueAt(x, y);
-            ds.add(0, i, b3.getValue(gk) * v);
-            ds.add(1, i, b2.getValue(gk) * v);
-            ds.add(2, i, b1.getValue(gk) * v);
-          }
-          if (i > 0 && (i - 1) < mesh.getElementsY()) {
-            val y = (gl + (i - 1)) * dy;
-            val v = wkl * b2.getValue(gl) * problem.valueAt(x, y);
-            ds.add(0, i, b3.getValue(gk) * v);
-            ds.add(1, i, b2.getValue(gk) * v);
-            ds.add(2, i, b1.getValue(gk) * v);
-          }
-          if (i < mesh.getElementsY()) {
-            val y = (gl + i) * dy;
-            val v = wkl * b3.getValue(gl) * problem.valueAt(x, y);
-            ds.add(0, i, b3.getValue(gk) * v);
-            ds.add(1, i, b2.getValue(gk) * v);
-            ds.add(2, i, b1.getValue(gk) * v);
-          }
+          val yl = (gl + (i - 2)) * dy;
+          val vl = wkl * b1.getValue(gl) * problem.valueAt(x, yl);
+          ds.add(0, i, b3.getValue(gk) * vl);
+          ds.add(1, i, b2.getValue(gk) * vl);
+          ds.add(2, i, b1.getValue(gk) * vl);
+
+          val ym = (gl + (i - 1)) * dy;
+          val vm = wkl * b2.getValue(gl) * problem.valueAt(x, ym);
+          ds.add(0, i, b3.getValue(gk) * vm);
+          ds.add(1, i, b2.getValue(gk) * vm);
+          ds.add(2, i, b1.getValue(gk) * vm);
+
+          val yr = (gl + i) * dy;
+          val vr = wkl * b3.getValue(gl) * problem.valueAt(x, yr);
+          ds.add(0, i, b3.getValue(gk) * vr);
+          ds.add(1, i, b2.getValue(gk) * vr);
+          ds.add(2, i, b1.getValue(gk) * vr);
         }
       }
     }
