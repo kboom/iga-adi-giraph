@@ -4,7 +4,6 @@ import edu.agh.iga.adi.giraph.core.IgaContext;
 import edu.agh.iga.adi.giraph.core.IgaElement;
 import edu.agh.iga.adi.giraph.core.IgaMessage;
 import edu.agh.iga.adi.giraph.core.IgaVertex;
-import edu.agh.iga.adi.giraph.core.IgaVertex.LeafVertex;
 import edu.agh.iga.adi.giraph.core.factory.ElementFactory;
 import edu.agh.iga.adi.giraph.core.problem.PartialSolution;
 import edu.agh.iga.adi.giraph.core.problem.ProblemFactory;
@@ -50,11 +49,14 @@ public class Initialisation {
   private PartialSolution partialSolutionFrom(Stream<InitialisationIgaMessage> messages) {
     InitialisationIgaMessage[] msgArr = messages.sorted().toArray(InitialisationIgaMessage[]::new);
     val leftMessage = msgArr[0];
-
     val leftMxp = leftMessage.getMxp();
-    val rightMxp = msgArr.length > 1 ? msgArr[1].getMxp() : null;
 
-    return new CoefficientSolution(igaContext.getMesh(), new InitialisationAccess2D(leftMxp, rightMxp));
+    if (msgArr.length > 1) {
+      val rightMxp = msgArr[1].getMxp();
+      return new CoefficientSolution(igaContext.getMesh(), new InitialisationAccess2D(leftMxp, rightMxp));
+    } else {
+      return new CoefficientSolution(igaContext.getMesh(), leftMxp);
+    }
   }
 
   @Getter
