@@ -8,7 +8,6 @@ import static edu.agh.iga.adi.giraph.core.IgaConstants.COLS_BOUND_TO_NODE;
 import static edu.agh.iga.adi.giraph.core.IgaConstants.ROWS_BOUND_TO_NODE;
 import static edu.agh.iga.adi.giraph.core.IgaElement.igaElement;
 import static edu.agh.iga.adi.giraph.core.IgaVertex.vertexOf;
-import static edu.agh.iga.adi.giraph.core.logging.ElementFormatter.formatElement;
 import static edu.agh.iga.adi.giraph.core.operations.MergeAndEliminateRootOperation.MergeAndEliminateRootMessage;
 import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.partialBackwardsSubstitution;
 import static edu.agh.iga.adi.giraph.core.operations.OperationUtil.partialForwardElimination;
@@ -57,7 +56,6 @@ public final class MergeAndEliminateRootOperation implements IgaOperation<MergeA
 
   @Override
   public void postConsume(IgaElement element, DirectionTree tree) {
-    formatElement(element);
     partialForwardElimination(element, 6, 6);
     partialBackwardsSubstitution(element, 6, 6);
   }

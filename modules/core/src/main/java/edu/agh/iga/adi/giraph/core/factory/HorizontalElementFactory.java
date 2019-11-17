@@ -66,7 +66,7 @@ public final class HorizontalElementFactory implements ElementFactory {
     val dx = mesh.getDx();
     val dy = mesh.getDy();
     val leftSegment = vertex.getLeftSegment();
-    PrimitiveDenseStore ds = FACTORY.makeZero(LEAF_SIZE, mesh.getDofsX());
+    PrimitiveDenseStore ds = FACTORY.make(LEAF_SIZE, mesh.getDofsX());
     for (int i = 0; i < mesh.getDofsY(); i++) {
       for (int k = 0; k < GAUSS_POINT_COUNT; k++) {
         val x = GAUSS_POINTS[k] * dx + leftSegment;

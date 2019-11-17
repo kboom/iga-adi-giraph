@@ -32,6 +32,7 @@ public class InitialisationComputation extends IgaComputation {
   private InitialisationPhase phase;
   private Initialisation initialisation;
 
+  private final IntWritable idWritable = new IntWritable();
 
   @Override
   public void preSuperstep() {
@@ -70,8 +71,9 @@ public class InitialisationComputation extends IgaComputation {
 
       initialisation.sendMessages(igaVertex, elementOf(vertex))
           .forEach(msg -> {
+            idWritable.set(msg.getDstId());
             sendMessage(
-                new IntWritable(msg.getDstId()),
+                idWritable,
                 new IgaMessageWritable(msg)
             );
           });

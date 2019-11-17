@@ -95,7 +95,7 @@ public final class FactorisationComputation extends IgaComputation {
       if (currentPhase.matchesDirection(element.id, dstId)) {
         val dstVertex = vertexOf(dstId);
         val msg = igaOperation.sendMessage(dstVertex, element);
-        sendMessage(new IntWritable(dstId), new IgaMessageWritable(msg));
+        sendMessage(dstIdWritable, new IgaMessageWritable(msg));
         if (LOG.isTraceEnabled()) {
           LOG.trace(format("Sending message to %d %s", dstId, igaOperation));
         }

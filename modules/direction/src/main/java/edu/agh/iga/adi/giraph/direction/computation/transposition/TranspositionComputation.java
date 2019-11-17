@@ -55,11 +55,15 @@ public class TranspositionComputation extends IgaComputation {
     val firstIndexOfLeafRow = getTree().firstIndexOfLeafRow();
     val dst = vertexOf(firstIndexOfLeafRow);
 
+    val idWritable = new IntWritable();
+
     for (int l = firstIndexOfLeafRow; l <= lastLeafIndex; l++) {
       dst.reuseSameTypeFor(l);
 
+      idWritable.set(l);
+
       sendMessage(
-          new IntWritable(l),
+          idWritable,
           new IgaMessageWritable(TRANSPOSITION_IGA_OPERATION.sendMessage(dst, element))
       );
     }
