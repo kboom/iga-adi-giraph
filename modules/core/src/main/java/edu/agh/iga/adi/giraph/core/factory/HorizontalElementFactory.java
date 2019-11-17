@@ -70,11 +70,12 @@ public final class HorizontalElementFactory implements ElementFactory {
     for (int i = 0; i < mesh.getDofsY(); i++) {
       for (int k = 0; k < GAUSS_POINT_COUNT; k++) {
         val x = GAUSS_POINTS[k] * dx + leftSegment;
+        val wk = GAUSS_POINT_WEIGHTS[k];
+        val gk = GAUSS_POINTS[k];
+
         for (int l = 0; l < GAUSS_POINT_COUNT; l++) {
-          val wk = GAUSS_POINT_WEIGHTS[k];
           val wl = GAUSS_POINT_WEIGHTS[l];
           val gl = GAUSS_POINTS[l];
-          val gk = GAUSS_POINTS[k];
 
           if (i > 1) {
             val y = (gl + (i - 2)) * dy;
