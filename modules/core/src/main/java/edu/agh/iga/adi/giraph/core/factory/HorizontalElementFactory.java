@@ -4,9 +4,6 @@ import edu.agh.iga.adi.giraph.core.IgaElement;
 import edu.agh.iga.adi.giraph.core.IgaVertex;
 import edu.agh.iga.adi.giraph.core.Mesh;
 import edu.agh.iga.adi.giraph.core.problem.Problem;
-import edu.agh.iga.adi.giraph.core.splines.BSpline1;
-import edu.agh.iga.adi.giraph.core.splines.BSpline2;
-import edu.agh.iga.adi.giraph.core.splines.BSpline3;
 import lombok.val;
 import org.ojalgo.matrix.store.PrimitiveDenseStore;
 import org.ojalgo.structure.Access2D;
@@ -17,10 +14,6 @@ import static edu.agh.iga.adi.giraph.core.IgaElement.igaElement;
 import static org.ojalgo.matrix.store.PrimitiveDenseStore.FACTORY;
 
 public final class HorizontalElementFactory implements ElementFactory {
-
-  private static final BSpline1 b1 = new BSpline1();
-  private static final BSpline2 b2 = new BSpline2();
-  private static final BSpline3 b3 = new BSpline3();
 
   private static final int[] OTHER_ROWS = {0, 1, 2};
 
@@ -113,7 +106,7 @@ public final class HorizontalElementFactory implements ElementFactory {
         val gl = GAUSS_POINTS[l];
 
         val yf = (gl + (elementCount - 2)) * dy;
-        val yl = (gl + (elementCount - 1)) * dy;
+        val yl = yf + dy;
 
         val vf = SPLINE_1_GAUSS_POINTS[l] * problem.valueAt(x, yf);
         val vl = SPLINE_2_GAUSS_POINTS[l] * problem.valueAt(x, yl);
@@ -164,7 +157,7 @@ public final class HorizontalElementFactory implements ElementFactory {
         val gl = GAUSS_POINTS[l];
 
         val yf = gl * dy;
-        val ys = (gl + 1) * dy;
+        val ys = yf + dy;
 
         val vf = SPLINE_2_GAUSS_POINTS[l] * problem.valueAt(x, yf);
         val vs = SPLINE_3_GAUSS_POINTS[l] * problem.valueAt(x, ys);
@@ -192,9 +185,9 @@ public final class HorizontalElementFactory implements ElementFactory {
           val wkl = GAUSS_POINTS_WEIGHTS_MULTIPLIED[k * GAUSS_POINT_COUNT + l];
           val gl = GAUSS_POINTS[l];
 
-          val yl = (gl + (i - 2)) * dy;
-          val ym = (gl + (i - 1)) * dy;
           val yr = (gl + i) * dy;
+          val ym = yr - dy;
+          val yl = ym - dy;
 
           val vl = SPLINE_1_GAUSS_POINTS[l] * problem.valueAt(x, yl);
           val vm = SPLINE_2_GAUSS_POINTS[l] * problem.valueAt(x, ym);

@@ -8,7 +8,6 @@ import edu.agh.iga.adi.giraph.core.splines.BSpline2;
 import edu.agh.iga.adi.giraph.core.splines.BSpline3;
 import lombok.val;
 import org.ojalgo.matrix.store.PrimitiveDenseStore;
-import org.ojalgo.netio.BasicLogger;
 import org.ojalgo.structure.Access2D;
 
 public class CoefficientSolution implements PartialSolution {
