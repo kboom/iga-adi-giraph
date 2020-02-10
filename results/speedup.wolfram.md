@@ -24,3 +24,12 @@ For initialisation:
 p = 0.975626
 s = 41.0273
  
+ 
+ Everything else single node 8t (12228):
+ 1-> 989345
+ 8 -> 
+ 
+ 
+ Everything else 10x (12288)
+ 1 -> 294796
+ 10 -> 63524
