@@ -24,7 +24,7 @@ exec "${RUN_SCRIPT}" \
 	-t surface \
 	-p HEAT \
 	--init-problem RADIAL \
-	--config giraph.zkList="iga-adi-m:2181" \
+    --config giraph.zkList="iga-adi-m:2181" \
   --config giraph.logLevel="${IGA_LOG_LEVEL}" \
   --config giraph.yarn.task.overhead.percent="${IGA_MEMORY_OVERHEAD_PERCENT}" \
   --config giraph.useNettyDirectMemory="${IGA_USE_DIRECT_MEMORY}" \
