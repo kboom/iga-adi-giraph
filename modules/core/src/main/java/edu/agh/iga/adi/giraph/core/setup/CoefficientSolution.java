@@ -21,12 +21,12 @@ public class CoefficientSolution implements PartialSolution {
 
   CoefficientSolution(Mesh mesh, Access2D<Double> coefficients) {
     this.mesh = mesh;
-    this.coef = coefficients;
-
-    int rows = (int) coefficients.countRows();
-    int cols = (int) coefficients.countColumns();
-    PrimitiveDenseStore ds = PrimitiveDenseStore.FACTORY.makeZero(rows, cols);
-    ds.fillMatching(coef);
+    /*
+     The next line is critical to performance (50%).
+     As it turns out the cost of referencing the values from within the array wrapper are much higher
+     than the cost of making a copy that can be used to access the elements directly.
+     */
+    this.coef = PrimitiveDenseStore.FACTORY.builder().makeWrapper(coefficients).copy();
   }
 
   @Override
