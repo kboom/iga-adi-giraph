@@ -41,7 +41,7 @@ public abstract class InMemoryObjectMessagesStore<M extends Writable, T>
     map = new Int2ObjectOpenHashMap<>(partitionStore.getNumPartitions());
     for (int partitionId : service.getPartitionStore().getPartitionIds()) {
       Int2ObjectOpenHashMap<T> partitionMap = new Int2ObjectOpenHashMap<>(
-          (int) service.getPartitionStore().getPartitionVertexCount(partitionId)
+          Math.max(10, (int) service.getPartitionStore().getPartitionVertexCount(partitionId))
       );
       map.put(partitionId, partitionMap);
     }
@@ -162,6 +162,8 @@ public abstract class InMemoryObjectMessagesStore<M extends Writable, T>
   @Override
   public void readFieldsForPartition(DataInput in, int partitionId) throws IOException {
     int size = in.readInt();
+    map.clear();
+    map.trim(size);
     val partitionMap = new Int2ObjectOpenHashMap<T>(size);
     while (size-- > 0) {
       int vertexId = in.readInt();
