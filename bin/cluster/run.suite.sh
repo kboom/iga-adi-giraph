@@ -40,6 +40,9 @@ for ((i=2;i<=$#;i++)); do
   echo "Copying suite file to the log dir"
   cp "${OUTPUT_FILE}"* "logs/${APP_ID}/"
 
+  echo "Copying parameters to the log dir"
+  printenv | grep "IGA_" | sed -e 's/^/export /' | cat - > "logs/${APP_ID}/parameters.sh"
+
   echo "Renaming dir to match suite"
   mv "logs/${APP_ID}" "logs/suite-${SUITE_NAME}-${APP_ID}"
 done

@@ -7,11 +7,11 @@ IGA_HOME=$(cd "${THIS_DIR}/../.." || exit ; pwd)
 IGA_DIST=$(cd "${IGA_HOME}/dist" || exit ; pwd)
 
 # Compile
-cd "${IGA_HOME}" && mvn clean package -DskipTests
-
+#cd "${IGA_HOME}" && mvn clean package -DskipTests
+#
 # Upload the JAR and these scripts
 gcloud compute scp \
   --zone "us-central1-a" \
   --tunnel-through-iap \
-  --recurse "${IGA_DIST}"/*.jar "${CLUSTER_DIR}"/* \
+  --recurse "${CLUSTER_DIR}"/* \
   "${MASTER_ID}":~/
