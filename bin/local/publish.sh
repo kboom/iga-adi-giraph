@@ -11,7 +11,7 @@ cd "${IGA_HOME}" && mvn clean package -DskipTests
 
 # Upload the JAR and these scripts
 gcloud compute scp \
-  --zone "europe-west4-a" \
+  --zone "us-central1-a" \
   --tunnel-through-iap \
   --recurse "${IGA_DIST}"/*.jar "${CLUSTER_DIR}"/* \
   "${MASTER_ID}":~/
