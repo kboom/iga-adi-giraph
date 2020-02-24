@@ -20,6 +20,7 @@ import org.apache.giraph.conf.*;
 import org.apache.giraph.edge.ByteArrayEdges;
 import org.apache.giraph.io.VertexInputFormat;
 import org.apache.giraph.partition.ByteArrayPartition;
+import org.apache.giraph.partition.SimplePartition;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.log4j.Logger;
@@ -111,7 +112,8 @@ public class IgaConfiguration {
 
 //    USE_MESSAGE_SIZE_ENCODING.set(conf, true);
     // todo out edge classes with custom typeops
-//    conf.setOutEdgesClass(ByteArrayEdges.class);
+    conf.setInputOutEdgesClass(IgaArrayEdges.class);
+    conf.setOutEdgesClass(IgaArrayEdges.class);
 
     // todo message store
 //    MESSAGE_STORE_FACTORY_CLASS.set(conf, InMemoryMessageStoreFactory.class); // already creates
@@ -144,7 +146,7 @@ public class IgaConfiguration {
     conf.setVertexInputFormatClass(inputFormatsByInitType.get(FIRST_INITIALISATION_TYPE.get(conf)));
     conf.setVertexOutputFormatClass(StepVertexOutputFormat.class);
     conf.addWorkerObserverClass(MemoryLogger.class); // does not appear to cause issue infinite wait issue
-    conf.setPartitionClass(ByteArrayPartition.class);
+    conf.setPartitionClass(SimplePartition.class);
     conf.setYarnLibJars(currentJar());
     STATIC_GRAPH.set(conf, true);
     VERTEX_ID_CLASS.set(conf, IntWritable.class);

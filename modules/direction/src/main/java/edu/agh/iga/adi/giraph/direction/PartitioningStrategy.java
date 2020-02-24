@@ -21,7 +21,7 @@ public class PartitioningStrategy {
   public int partitionFor(int vid) {
     val vt = vertexType(tree, vid);
     val ri = vt.rowIndexOf(tree, vid);
-    if (ri - 1 <= tipHeight) {
+    if (ri - 1 < tipHeight) {
       return 0;
     } else {
       val verticesPerPartition = vt.strengthOf(tree, vid) / partitions;
@@ -37,6 +37,7 @@ public class PartitioningStrategy {
     val leavesStrength = tree.strengthOfLeaves();
     val partitions = optimalPartitionCount(tree, partitionCountHint);
     val leavesPerPartition = leavesStrength / partitions;
+    // leaves should never be in the tip partition regardless of the number of threads
     val bottomTreeHeight = leavesPerPartition > 1 ? log2((leavesPerPartition + 1) / 3, UNNECESSARY) + 1 : 1;
     val tipTreeHeight = treeHeight - bottomTreeHeight;
 
