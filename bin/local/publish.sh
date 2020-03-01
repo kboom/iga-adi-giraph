@@ -13,5 +13,5 @@ IGA_DIST=$(cd "${IGA_HOME}/dist" || exit ; pwd)
 gcloud compute scp \
   --zone "us-central1-a" \
   --tunnel-through-iap \
-  --recurse "${CLUSTER_DIR}"/* \
+  --recurse "${IGA_DIST}"/*.jar "${CLUSTER_DIR}"/* \
   "${MASTER_ID}":~/
