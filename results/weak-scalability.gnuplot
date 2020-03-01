@@ -22,6 +22,5 @@ set style line 1 \
 o1(x) = a1*x + c1
 fit o1(x) 'weak.csv' using 1:9 via a1, c1
 
-
 plot 'weak.csv' using 1:9:xtic(1) \
 	with linespoints linestyle 1 title otitle("9M")
