@@ -17,11 +17,11 @@ set bmargin 5
 
 o(x) = a*x + c
 
-fit o(x) 'single.csv' using ($1**2):($2==1?$5:1/0) via a, c
-otitle = sprintf("O(N) = %.1f*10^{-2}N+%d (+/- %.2f\%)", a*100, c, a_err/a*100)
+fit o(x) 'strong-scalability.csv' using ($1**2):($3==1?$6:1/0) via a, c
+otitle = sprintf("O(N) = %.3f*10^{-6}N (+/- %.2f\%)", a*100000, a_err/a*100)
 
 plot \
-	'single.csv' using ($1**2):($2==1?$5:1/0):xtic($1) pt 7 ps 1.5 lc rgb '#ef5675' notitle, \
+	'strong-scalability.csv' using ($1**2):($3==1?$6:1/0):xtic($1**2) pt 7 ps 1.5 lc rgb '#ef5675' title "Data points", \
 	 o(x) with lines lc rgb '#ef5675' title otitle
 
 replot

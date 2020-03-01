@@ -1,4 +1,0 @@
-problemSize,cores,input_ms,initialisation_ms,total_ms, weak_scalability
-384        ,4    ,3534    ,1177             ,13908, 1
-768        ,2    ,4142    ,2988             ,20582, 1.48
-1536       ,8    ,2016    ,5748             ,25606, 1.24
