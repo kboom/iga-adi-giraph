@@ -5,12 +5,18 @@ set tmargin 4
 set lmargin 10
 set bmargin 5
 
-set grid
 set xlabel 'Threads [-]'
 set ylabel 'Weak speedup [-]'
+
+set grid
 set xrange [1:256]
+set xtics (1,16,64,256)
 set yrange [1:256]
+set ytics (1,16,32,48,64,96,128,192,256)
+
 set key right bottom
+set key box lt -1 lw 2 width 1 height 1 opaque
+
 
 set style line 1 lc rgb 'red' pt 5 ps 2   # square
 set style line 2 lc rgb 'blue' pt 7 ps 2  # circle
