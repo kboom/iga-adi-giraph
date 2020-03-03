@@ -12,7 +12,7 @@ set style fill solid 1.0 border -1
 set view map
 set grid
 set autoscale fix
-set xlabel 'Nodes [-]' offset -2
+set xlabel 'Threads [-]' offset -2
 set ylabel 'Time [ms]' offset -2
 set format y "10^{%T}"
 set logscale y
