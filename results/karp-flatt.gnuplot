@@ -10,6 +10,7 @@ set ylabel 'Serial fraction e(n,p)'
 
 set grid
 set autoscale fix
+set logscale x 2
 
 set key left top
 set key box lt -1 lw 2 width 1 height 1 opaque
@@ -20,7 +21,7 @@ set style line 3072 lc rgb 'green' pt 12 ps 1 lw 2  # square
 set style line 1536 lc rgb 'black' pt 12 ps 1 lw 2  # square
 
 plot \
-    "old/processed.csv" using 3:($1==12288?$24:1/0):xtic($3) with points ls 12288 title '12288', \
-    "old/processed.csv" using 3:($1==6144?$24:1/0):xtic($3) with points ls 6144 title '6144', \
-    "old/processed.csv" using 3:($1==3072?$24:1/0):xtic($3) with points ls 3072 title '3072', \
-    "old/processed.csv" using 3:($1==1536?$24:1/0):xtic($3) with points ls 1536 title '1536'
+    "strong-scalability.csv" using 3:($1==12288?$19:1/0):xtic($3) with points ls 12288 title '12288', \
+    "strong-scalability.csv" using 3:($1==6144?$19:1/0):xtic($3) with points ls 6144 title '6144', \
+    "strong-scalability.csv" using 3:($1==3072?$19:1/0):xtic($3) with points ls 3072 title '3072', \
+    "strong-scalability.csv" using 3:($1==1536?$19:1/0):xtic($3) with points ls 1536 title '1536'
