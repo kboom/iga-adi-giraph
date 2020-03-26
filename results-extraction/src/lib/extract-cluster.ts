@@ -1,15 +1,13 @@
 import { Cluster } from "simulation"
-import glob from "glob"
 import { readFileSync } from "fs"
 
-const workerMemoryPattern = /IGA_WORKER_MEMORY=(\\d+)/gm
-const workerCoresPattern = /IGA_WORKER_CORES=(\\d+)/gm
+const workerMemoryPattern = /IGA_WORKER_MEMORY=(\d+)$/m
+const workerCoresPattern = /IGA_WORKER_CORES=(\d+)$/m
 
 export function extractCluster(dir: string): Cluster {
-    const simulationDir = glob.sync(`${dir}/*`).shift()
-    const parameters = readFileSync(`${simulationDir}/parameters.sh`, 'utf8')
+    const parameters = readFileSync(`${dir}/parameters.sh`, 'utf8')
     return {
-        cores: +workerMemoryPattern.exec(parameters)[0],
-        memory: +workerCoresPattern.exec(parameters)[0]
+        cores: +parameters.match(workerCoresPattern)[1],
+        memory: +parameters.match(workerMemoryPattern)[1]
     }
 }

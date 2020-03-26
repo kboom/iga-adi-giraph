@@ -4,6 +4,7 @@ import { createProblem } from "./problem";
 import { extractCluster } from "./extract-cluster"
 import { extractWorkers } from "./extract-workers"
 import { extractAllSupersteps } from "./extract-all-supersteps";
+import path from 'path'
 
 function extractProblemSimulations(dir: string, problem: Problem): Array<Simulation> {
     return glob.sync(`${dir}/*`)
@@ -19,10 +20,9 @@ function extractProblemSimulations(dir: string, problem: Problem): Array<Simulat
 
 export function extractSuite(rootDir: string): Array<Simulation> {
     const problemDirectories = glob.sync(`${rootDir}/*`)
-    console.log(rootDir)
     return problemDirectories
         .flatMap(dir => extractProblemSimulations(
             dir,
-            createProblem(+dir.replace(rootDir, ""))
+            createProblem(+path.relative(rootDir, dir))
         ))
 }

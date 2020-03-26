@@ -19,31 +19,31 @@ giraph\\.superstep\\.\\d+:
     value = (?<computeAll>\\d+)
 
   compute-per-partition-ms:
-               sum = (?<computePerPartitionSum>[\\d,.]+)
-               min = (?<computePerPartitionMin>[\\d,.]+)
-               max = (?<computePerPartitionMax>[\\d,.]+)
-              mean = (?<computePerPartitionMean>[\\d,.]+)
-            stddev = (?<computePerPartitionStddev>[\\d,.]+)
-            median = (?<computePerPartitionMedian>[\\d,.]+)
-              75% <= (?<computePerPartitionP75>[\\d,.]+)
-              95% <= (?<computePerPartitionP95>[\\d,.]+)
-              98% <= (?<computePerPartitionP98>[\\d,.]+)
-              99% <= (?<computePerPartitionP99>[\\d,.]+)
-            99\\.9% <= (?<computePerPartitionP999>[\\d,.]+)
+               sum = (?<computePerPartitionSum>[\\d-,.]+)
+               min = (?<computePerPartitionMin>[\\d-,.]+)
+               max = (?<computePerPartitionMax>[\\d-,.]+)
+              mean = (?<computePerPartitionMean>[\\d-,.]+)
+            stddev = (?<computePerPartitionStddev>[\\d-,.]+)
+            median = (?<computePerPartitionMedian>[\\d-,.]+)
+              75% <= (?<computePerPartitionP75>[\\d-,.]+)
+              95% <= (?<computePerPartitionP95>[\\d-,.]+)
+              98% <= (?<computePerPartitionP98>[\\d-,.]+)
+              99% <= (?<computePerPartitionP99>[\\d-,.]+)
+            99\\.9% <= (?<computePerPartitionP999>[\\d-,.]+)
              count = (?<partitionsCount>\\d+)
 
   gc-per-thread-ms:
-               sum = (?<gcPerThreadSum>[\\d,.]+)
-               min = (?<gcPerThreadMin>[\\d,.]+)
-               max = (?<gcPerThreadMax>[\\d,.]+)
-              mean = (?<gcPerThreadMean>[\\d,.]+)
-            stddev = (?<gcPerThreadStdev>[\\d,.]+)
-            median = (?<gcPerThreadMedian>[\\d,.]+)
-              75% <= (?<gcPerThreadP75>[\\d,.]+)
-              95% <= (?<gcPerThreadP95>[\\d,.]+)
-              98% <= (?<gcPerThreadP98>[\\d,.]+)
-              99% <= (?<gcPerThreadP99>[\\d,.]+)
-            99\\.9% <= (?<gcPerThreadP999>[\\d,.]+)
+               sum = (?<gcPerThreadSum>[\\d-,.]+)
+               min = (?<gcPerThreadMin>[\\d-,.]+)
+               max = (?<gcPerThreadMax>[\\d-,.]+)
+              mean = (?<gcPerThreadMean>[\\d-,.]+)
+            stddev = (?<gcPerThreadStdev>[\\d-,.]+)
+            median = (?<gcPerThreadMedian>[\\d-,.]+)
+              75% <= (?<gcPerThreadP75>[\\d-,.]+)
+              95% <= (?<gcPerThreadP95>[\\d-,.]+)
+              98% <= (?<gcPerThreadP98>[\\d-,.]+)
+              99% <= (?<gcPerThreadP99>[\\d-,.]+)
+            99\\.9% <= (?<gcPerThreadP999>[\\d-,.]+)
              count = \\d+
 
   local-requests:
@@ -65,31 +65,31 @@ giraph\\.superstep\\.\\d+:
     value = (?<percentLocalRequests>[\\dNaN)]+)
 
   processing-per-thread-ms:
-               sum = (?<processingPerThreadSum>[\\d,.]+)
-               min = (?<processingPerThreadMin>[\\d,.]+)
-               max = (?<processingPerThreadMax>[\\d,.]+)
-              mean = (?<processingPerThreadMean>[\\d,.]+)
-            stddev = (?<processingPerThreadStddev>[\\d,.]+)
-            median = (?<processingPerThreadMedian>[\\d,.]+)
-              75% <= (?<processingPerThreadP75>[\\d,.]+)
-              95% <= (?<processingPerThreadP95>[\\d,.]+)
-              98% <= (?<processingPerThreadP98>[\\d,.]+)
-              99% <= (?<processingPerThreadP99>[\\d,.]+)
-            99\\.9% <= (?<processingPerThreadP999>[\\d,.]+)
+               sum = (?<processingPerThreadSum>[\\d-,.]+)
+               min = (?<processingPerThreadMin>[\\d-,.]+)
+               max = (?<processingPerThreadMax>[\\d-,.]+)
+              mean = (?<processingPerThreadMean>[\\d-,.]+)
+            stddev = (?<processingPerThreadStddev>[\\d-,.]+)
+            median = (?<processingPerThreadMedian>[\\d-,.]+)
+              75% <= (?<processingPerThreadP75>[\\d-,.]+)
+              95% <= (?<processingPerThreadP95>[\\d-,.]+)
+              98% <= (?<processingPerThreadP98>[\\d-,.]+)
+              99% <= (?<processingPerThreadP99>[\\d-,.]+)
+            99\\.9% <= (?<processingPerThreadP999>[\\d-,.]+)
              count = \\d+
 
   received-bytes:
-               sum = (?<receivedBytesSum>[\\d,.]+)
-               min = (?<receivedBytesMin>[\\d,.]+)
-               max = (?<receivedBytesMax>[\\d,.]+)
-              mean = (?<receivedBytesMean>[\\d,.]+)
-            stddev = (?<receivedBytesStddev>[\\d,.]+)
-            median = (?<receivedBytesMedian>[\\d,.]+)
-              75% <= (?<receivedBytesP75>[\\d,.]+)
-              95% <= (?<receivedBytesP95>[\\d,.]+)
-              98% <= (?<receivedBytesP98>[\\d,.]+)
-              99% <= (?<receivedBytesP99>[\\d,.]+)
-            99\\.9% <= (?<receivedBytesP999>[\\d,.]+)
+               sum = (?<receivedBytesSum>[\\d-,.]+)
+               min = (?<receivedBytesMin>[\\d-,.]+)
+               max = (?<receivedBytesMax>[\\d-,.]+)
+              mean = (?<receivedBytesMean>[\\d-,.]+)
+            stddev = (?<receivedBytesStddev>[\\d-,.]+)
+            median = (?<receivedBytesMedian>[\\d-,.]+)
+              75% <= (?<receivedBytesP75>[\\d-,.]+)
+              95% <= (?<receivedBytesP95>[\\d-,.]+)
+              98% <= (?<receivedBytesP98>[\\d-,.]+)
+              99% <= (?<receivedBytesP99>[\\d-,.]+)
+            99\\.9% <= (?<receivedBytesP999>[\\d-,.]+)
              count = \\d+
 
   remote-requests:
@@ -97,17 +97,17 @@ giraph\\.superstep\\.\\d+:
 
   requests-received:
              count = (?<requestsReceived>\\d+)
-         mean rate = (?<requestsReceivedMeanRate>[\\d,.]+) requests\\/s
-     1-minute rate = (?<requestsReceived1mRate>[\\d,.]+) requests\\/s
-     5-minute rate = (?<requestsReceived5mRate>[\\d,.]+) requests\\/s
-    15-minute rate = (?<requestsReceived15mRate>[\\d,.]+) requests\\/s
+         mean rate = (?<requestsReceivedMeanRate>[\\d-,.]+) requests\\/s
+     1-minute rate = (?<requestsReceived1mRate>[\\d-,.]+) requests\\/s
+     5-minute rate = (?<requestsReceived5mRate>[\\d-,.]+) requests\\/s
+    15-minute rate = (?<requestsReceived15mRate>[\\d-,.]+) requests\\/s
 
   requests-sent:
              count = (?<requestsSent>\\d+)
-         mean rate = (?<requestsSentMeanRate>[\\d,.]+) requests\\/s
-     1-minute rate = (?<requestsSent1mRate>[\\d,.]+) requests\\/s
-     5-minute rate = (?<requestsSent5mRate>[\\d,.]+) requests\\/s
-    15-minute rate = (?<requestsSent15mRate>[\\d,.]+) requests\\/s
+         mean rate = (?<requestsSentMeanRate>[\\d-,.]+) requests\\/s
+     1-minute rate = (?<requestsSent1mRate>[\\d-,.]+) requests\\/s
+     5-minute rate = (?<requestsSent5mRate>[\\d-,.]+) requests\\/s
+    15-minute rate = (?<requestsSent15mRate>[\\d-,.]+) requests\\/s
 
   send-aggregators-to-master-requests:
     count = \\d+
@@ -134,17 +134,17 @@ giraph\\.superstep\\.\\d+:
     count = \\d+
 
   sent-bytes:
-               sum = (?<sentBytesSum>[\\d,.]+)
-               min = (?<sentBytesMin>[\\d,.]+)
-               max = (?<sentBytesMax>[\\d,.]+)
-              mean = (?<sentBytesMean>[\\d,.]+)
-            stddev = (?<sentBytesStddev>[\\d,.]+)
-            median = (?<sentBytesMedian>[\\d,.]+)
-              75% <= (?<sentBytesP75>[\\d,.]+)
-              95% <= (?<sentBytesP95>[\\d,.]+)
-              98% <= (?<sentBytesP98>[\\d,.]+)
-              99% <= (?<sentBytesP99>[\\d,.]+)
-            99\\.9% <= (?<sentBytesP999>[\\d,.]+)
+               sum = (?<sentBytesSum>[\\d-,.]+)
+               min = (?<sentBytesMin>[\\d-,.]+)
+               max = (?<sentBytesMax>[\\d-,.]+)
+              mean = (?<sentBytesMean>[\\d-,.]+)
+            stddev = (?<sentBytesStddev>[\\d-,.]+)
+            median = (?<sentBytesMedian>[\\d-,.]+)
+              75% <= (?<sentBytesP75>[\\d-,.]+)
+              95% <= (?<sentBytesP95>[\\d-,.]+)
+              98% <= (?<sentBytesP98>[\\d-,.]+)
+              99% <= (?<sentBytesP99>[\\d-,.]+)
+            99\\.9% <= (?<sentBytesP999>[\\d-,.]+)
              count = \\d+
 
   superstep-gc-time-ms:
@@ -160,17 +160,17 @@ giraph\\.superstep\\.\\d+:
     value = (?<totalRequests>\\d+)
 
   wait-per-thread-ms:
-               sum = (?<waitPerThreadSum>[\\d,.]+)
-               min = (?<waitPerThreadMin>[\\d,.]+)
-               max = (?<waitPerThreadMax>[\\d,.]+)
-              mean = (?<waitPerThreadMean>[\\d,.]+)
-            stddev = (?<waitPerThreadStddev>[\\d,.]+)
-            median = (?<waitPerThreadMedian>[\\d,.]+)
-              75% <= (?<waitPerThreadP75>[\\d,.]+)
-              95% <= (?<waitPerThreadP95>[\\d,.]+)
-              98% <= (?<waitPerThreadP98>[\\d,.]+)
-              99% <= (?<waitPerThreadP99>[\\d,.]+)
-            99\\.9% <= (?<waitPerThreadP999>[\\d,.]+)
+               sum = (?<waitPerThreadSum>[\\d-,.]+)
+               min = (?<waitPerThreadMin>[\\d-,.]+)
+               max = (?<waitPerThreadMax>[\\d-,.]+)
+              mean = (?<waitPerThreadMean>[\\d-,.]+)
+            stddev = (?<waitPerThreadStddev>[\\d-,.]+)
+            median = (?<waitPerThreadMedian>[\\d-,.]+)
+              75% <= (?<waitPerThreadP75>[\\d-,.]+)
+              95% <= (?<waitPerThreadP95>[\\d-,.]+)
+              98% <= (?<waitPerThreadP98>[\\d-,.]+)
+              99% <= (?<waitPerThreadP99>[\\d-,.]+)
+            99\\.9% <= (?<waitPerThreadP999>[\\d-,.]+)
              count = \\d+
 
   wait-requests-us:

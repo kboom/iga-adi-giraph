@@ -8,3 +8,11 @@ const suite1Path = path.join(__dirname, "..", "..", "..", "logs", "suite1")
 test('can extract suite 1', t => {
     t.snapshot(extractSuite(suite1Path));
 });
+
+test('can extract worker results from suite simulations', t => {
+    const simulations = extractSuite(suite1Path)
+    t.snapshot(
+        simulations.flatMap(simulation => simulation.workers.map(worker => simulation.superstepsOf(worker)))
+    );
+});
+

@@ -16,7 +16,8 @@ before(() => {
 test('can extract all superstep from a single worker', t => {
     const simulation = createProblem(192)
     const worker: Worker = {
-        id: "1",
+        container: "1",
+        node: "w2/2",
         logsPath: file.name
     }
     t.snapshot(extractAllSupersteps(simulation, worker));

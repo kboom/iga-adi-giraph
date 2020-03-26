@@ -1,6 +1,7 @@
 declare module 'simulation' {
     export interface Worker {
-        id: string
+        container: string
+        node: string
         logsPath: string
     }
     export interface Problem {
