@@ -50,10 +50,12 @@
     "node": ">=8.9"
   },
   "dependencies": {
+    "@types/glob": "^7.1.1",
     "@types/lodash": "^4.14.149",
     "@types/npm": "^2.0.31",
     "@types/tmp": "^0.1.0",
     "fs": "0.0.1-security",
+    "glob": "^7.1.6",
     "lodash": "^4.17.15",
     "sha.js": "^2.4.11",
     "tmp": "^0.1.0"

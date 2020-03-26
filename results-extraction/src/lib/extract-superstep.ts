@@ -1,4 +1,4 @@
-import { Superstep } from 'superstep';
+import { Superstep } from 'simulation';
 
 const superstepSummaryMatcher = (superstep: number) => new RegExp(`\
 --- METRICS: superstep ${superstep} ---

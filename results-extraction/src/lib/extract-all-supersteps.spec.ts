@@ -4,7 +4,7 @@ import { fileSync, FileResult } from 'tmp';
 import { writeFileSync } from 'fs';
 import { extractAllSupersteps } from './extract-all-supersteps';
 import { Worker } from 'simulation';
-import { createSimulation } from './simulation';
+import { createProblem } from './problem';
 
 var file: FileResult
 
@@ -14,9 +14,9 @@ before(() => {
 })
 
 test('can extract all superstep from a single worker', t => {
-    const simulation = createSimulation(192)
+    const simulation = createProblem(192)
     const worker: Worker = {
-        id: 1,
+        id: "1",
         logsPath: file.name
     }
     t.snapshot(extractAllSupersteps(simulation, worker));
