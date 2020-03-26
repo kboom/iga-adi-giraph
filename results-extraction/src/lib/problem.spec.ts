@@ -2,6 +2,18 @@
 import test from 'ava';
 import { createProblem } from './problem';
 
+test('size of 192 is 192', t => {
+    t.is(createProblem(192).problemSize(), 192);
+});
+
+test('size of 384 is 384', t => {
+    t.is(createProblem(384).problemSize(), 384);
+});
+
+test('size of 12288 is 12288', t => {
+    t.is(createProblem(12288).problemSize(), 12288);
+});
+
 test('init step of 12288 is 55', t => {
     t.is(createProblem(12288).initSuperstep(), 55);
 });

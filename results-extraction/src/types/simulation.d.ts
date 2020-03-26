@@ -19,9 +19,14 @@ declare module 'simulation' {
         cores: number;
     }
 
+    export interface Suite {
+        simulations: Array<Simulation>
+    }
+
     export interface Simulation {
         problem: Problem
         cluster: Cluster
+        parentDir: string
         workers: Array<Worker>
 
         superstepsOf(worker: Worker): Array<Superstep>

@@ -8,7 +8,7 @@ class DefaultProblem implements Problem {
     }
 
     problemSize(): number {
-        return 3 * Math.pow(this.dagHeight - 1, 2)
+        return 3 * Math.pow(2, this.dagHeight)
     }
 
     superstepsInTimeStep(): number {

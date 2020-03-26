@@ -58,7 +58,8 @@
     "glob": "^7.1.6",
     "lodash": "^4.17.15",
     "sha.js": "^2.4.11",
-    "tmp": "^0.1.0"
+    "tmp": "^0.1.0",
+    "xlsx": "^0.15.6"
   },
   "devDependencies": {
     "@bitjson/npm-scripts-info": "^1.0.0",

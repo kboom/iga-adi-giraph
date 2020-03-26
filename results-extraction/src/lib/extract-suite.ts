@@ -1,4 +1,4 @@
-import { Simulation, Problem, Worker } from "simulation";
+import { Simulation, Problem, Worker, Suite } from "simulation";
 import glob from "glob";
 import { createProblem } from "./problem";
 import { extractCluster } from "./extract-cluster"
@@ -10,6 +10,7 @@ function extractProblemSimulations(dir: string, problem: Problem): Array<Simulat
     return glob.sync(`${dir}/*`)
         .map(simulationDir => ({
             problem: problem,
+            parentDir: dir,
             cluster: extractCluster(simulationDir),
             workers: extractWorkers(simulationDir),
             superstepsOf: (worker: Worker) => {
@@ -18,11 +19,13 @@ function extractProblemSimulations(dir: string, problem: Problem): Array<Simulat
         }))
 }
 
-export function extractSuite(rootDir: string): Array<Simulation> {
+export function extractSuite(rootDir: string): Suite {
     const problemDirectories = glob.sync(`${rootDir}/*`)
-    return problemDirectories
-        .flatMap(dir => extractProblemSimulations(
-            dir,
-            createProblem(+path.relative(rootDir, dir))
-        ))
+    return {
+        simulations: problemDirectories
+            .flatMap(dir => extractProblemSimulations(
+                dir,
+                createProblem(+path.relative(rootDir, dir))
+            ))
+    }
 }

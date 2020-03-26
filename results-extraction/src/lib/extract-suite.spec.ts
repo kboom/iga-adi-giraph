@@ -10,7 +10,7 @@ test('can extract suite 1', t => {
 });
 
 test('can extract worker results from suite simulations', t => {
-    const simulations = extractSuite(suite1Path)
+    const simulations = extractSuite(suite1Path).simulations
     t.snapshot(
         simulations.flatMap(simulation => simulation.workers.map(worker => ({
             worker: worker,
