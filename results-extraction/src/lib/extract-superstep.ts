@@ -188,7 +188,6 @@ export function extractSuperstepSummary(
   superstep: number
 ): Superstep {
   const groups = superstepSummaryMatcher(superstep).exec(input).groups;
-  console.log(groups)
   return {
     id: superstep,
     superstepTime: +groups.superstepTime,
