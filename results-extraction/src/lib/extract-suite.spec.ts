@@ -12,7 +12,9 @@ test('can extract suite 1', t => {
 test('can extract worker results from suite simulations', t => {
     const simulations = extractSuite(suite1Path)
     t.snapshot(
-        simulations.flatMap(simulation => simulation.workers.map(worker => simulation.superstepsOf(worker)))
+        simulations.flatMap(simulation => simulation.workers.map(worker => ({
+            worker: worker,
+            supersteps: simulation.superstepsOf(worker)
+        })))
     );
 });
-
