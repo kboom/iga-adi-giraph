@@ -9,8 +9,5 @@ export function extractAllSupersteps(simulation: Simulation, worker: Worker): Ar
     const firstSuperstep = simulation.initSuperstep()
     const lastSuperstep = simulation.initSuperstep() + simulation.superstepsInTimeStep()
     return range(firstSuperstep, lastSuperstep + 1)
-        .map(superstep => {
-            console.log(`Processing ${superstep}\n`)
-            return extractSuperstepSummary(logs, superstep)
-        })
+        .map(superstep => extractSuperstepSummary(logs, superstep))
 }
