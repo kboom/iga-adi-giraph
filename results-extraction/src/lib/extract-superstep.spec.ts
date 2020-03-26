@@ -53,19 +53,19 @@ giraph.superstep.5:
              count = 16
 
   local-requests:
-    count = 0
+    count = 1
 
   message-bytes-sent:
-    count = 0
+    count = 2
 
   messages-sent:
     count = 64
 
   ooc-bytes-load:
-    count = 0
+    count = 3
 
   ooc-bytes-store:
-    count = 0
+    count = 4
 
   percent-local-requests:
     value = NaN
@@ -99,7 +99,7 @@ giraph.superstep.5:
              count = 16
 
   remote-requests:
-    count = 0
+    count = 5
 
   requests-received:
              count = 16
@@ -116,28 +116,28 @@ giraph.superstep.5:
     15-minute rate = 0.00 requests/s
 
   send-aggregators-to-master-requests:
-    count = 1
+    count = 6
 
   send-aggregators-to-owner-requests:
-    count = 0
+    count = 7
 
   send-aggregators-to-worker-requests:
-    count = 3
+    count = 8
 
   send-partition-current-messages-requests:
-    count = 0
+    count = 9
 
   send-partition-mutations-requests:
-    count = 0
+    count = 10
 
   send-vertex-requests:
-    count = 0
+    count = 11
 
   send-worker-aggregators-requests:
-    count = 3
+    count = 12
 
   send-worker-messages-requests:
-    count = 0
+    count = 13
 
   sent-bytes:
                sum = 2,251.00
@@ -160,31 +160,31 @@ giraph.superstep.5:
     value = 177
 
   time-to-first-message-ms:
-    value = 0
+    value = 14
 
   total-requests:
-    value = 0
+    value = 15
 
   wait-per-thread-ms:
-               sum = 0.00
-               min = 0.00
-               max = 0.00
-              mean = 0.00
-            stddev = 0.00
-            median = 0.00
-              75% <= 0.00
-              95% <= 0.00
-              98% <= 0.00
-              99% <= 0.00
-            99.9% <= 0.00
+               sum = 1.00
+               min = 2.00
+               max = 3.00
+              mean = 4.00
+            stddev = 5.00
+            median = 6.00
+              75% <= 7.00
+              95% <= 8.00
+              98% <= 9.00
+              99% <= 10.00
+            99.9% <= 11.00
              count = 16
 
   wait-requests-us:
-    value = 8
+    value = 16
 
   worker-context-post-superstep:
-    value = 1
+    value = 17
 
   worker-context-pre-superstep:
-    value = 0
+    value = 18
 `;
