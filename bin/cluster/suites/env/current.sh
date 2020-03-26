@@ -1,3 +1,3 @@
-export SUITE_NAME="weak-scalability"
-export IGA_WORKERS=1
+export SUITE_NAME="strong-scalability"
+export IGA_WORKER_CORES=16
 export IGA_WORKER_MEMORY=36

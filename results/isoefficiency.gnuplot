@@ -1,5 +1,5 @@
 set datafile separator ","
-set output 'karp-flatt.png'
+set output 'isoefficiency.png'
 set term png size 800, 800
 set tmargin 4
 set lmargin 10

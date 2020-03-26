@@ -9,22 +9,25 @@ else
   SUITE_DIR="${1}"
 fi
 
-declare -A size2InitStep
-size2InitStep=(
-  ["24576"]=59
-  ["12288"]=55
-  ["6144"]=51
-  ["3072"]=47
-  ["1536"]=43
-  ["768"]=39
-  ["384"]=35
-  ["192"]=31
+declare -A size2height
+size2height=(
+  ["49152"]=14
+  ["24576"]=13
+  ["12288"]=12
+  ["6144"]=11
+  ["3072"]=10
+  ["1536"]=9
+  ["768"]=8
+  ["384"]=7
+  ["192"]=6
 )
+
+printf "problemSize,workers,threads,input_ms,shutdown_ms,step_solution_ms,total_ms,init_ms,factorization_ms,backwards_substitution_ms,transpose_map_ms,transpose_reduce_ms\n"
 
 for dir in "${SUITE_DIR}"/*
 do
     problemSize=$(basename "${dir}")
-    initSuperstep="${size2InitStep[${problemSize}]}"
-    export INIT_SUPERSTEP="${initSuperstep}" && "${SCRIPTPATH}/extract-results.sh" "${dir}"
+    dagHeight="${size2height[${problemSize}]}"
+    export DAG_HEIGHT="${dagHeight}" && "${SCRIPTPATH}/extract-results.sh" "${dir}"
 done
 
