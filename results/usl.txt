@@ -1,0 +1,35 @@
+[1] "================== Summary =================="
+
+Call:
+usl(formula = totalSpeedup ~ threads, data = scalability12288, 
+    method = "nls")
+
+Efficiency:
+   Min     1Q Median     3Q    Max 
+0.2196 0.4543 0.6708 0.8517 1.0371 
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.45183 -0.20353 -0.12576  0.06706  0.83378 
+
+Coefficients:
+        Estimate  Std. Error  t value  Pr(>|t|)     
+alpha  5.558e-02   1.485e-02    3.742  0.020086  *  
+beta   1.002e-05   1.398e-04    0.072  0.946315     
+gamma  1.157e+00   1.237e-01    9.355  0.000727  ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.5087 on 4 degrees of freedom
+
+Scalability bounds:
+limit: totalSpeedup 20.82 (Amdahl asymptote)
+peak:  totalSpeedup 18.75 at threads 307.1 
+opt:   totalSpeedup 10.69 at threads 17.99 
+
+[1] "================== Efficiency =================="
+       64        32        16         8         4         2         1 
+0.2196034 0.3706837 0.5378478 0.6708281 1.0371052 0.8394634 0.8640193 
+[1] "================== Coefficients =================="
+       alpha         beta        gamma 
+5.557829e-02 1.001577e-05 1.157382e+00 
