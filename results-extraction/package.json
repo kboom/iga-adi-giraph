@@ -1,5 +1,6 @@
 {
   "name": "iga-adi-results-extractor",
+  "bin": "./build/main/index.js",
   "version": "1.0.0",
   "description": "Extracts results from Giraph logs",
   "main": "build/main/index.js",
@@ -47,11 +48,12 @@
     "prepare-release": "One-step: clean, build, test, publish docs, and prep a release"
   },
   "engines": {
-    "node": ">=8.9"
+    "node": ">=11.00"
   },
   "dependencies": {
     "@types/glob": "^7.1.1",
     "@types/lodash": "^4.14.149",
+    "@types/node": "^12.12.31",
     "@types/npm": "^2.0.31",
     "@types/tmp": "^0.1.0",
     "fs": "0.0.1-security",
