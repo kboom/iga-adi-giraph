@@ -62,7 +62,7 @@ giraph\\.superstep\\.\\d+:
     count = \\d+
 
   percent-local-requests:
-    value = (?<percentLocalRequests>[\\dNaN)]+)
+    value = (?<percentLocalRequests>[\\d\\.NaN)]+)
 
   processing-per-thread-ms:
                sum = (?<processingPerThreadSum>[\\d-,.]+)

@@ -12,7 +12,7 @@ export function extractAllSupersteps(simulation: Problem, worker: Worker): Array
             try {
                 return extractSuperstepSummary(logs, superstep)
             } catch(e) {
-                console.error(`Superstep ${superstep} of ${worker.logsPath} was malformed:\n${logs}`)
+                console.error(`Superstep ${superstep} of ${worker.logsPath} was malformed.`)
                 throw e
             }
         })
