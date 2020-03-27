@@ -9,8 +9,9 @@ import path from 'path'
 function extractProblemSimulations(dir: string, problem: Problem): Array<Simulation> {
     return glob.sync(`${dir}/*`)
         .map(simulationDir => ({
+            id: path.basename(simulationDir),
             problem: problem,
-            parentDir: dir,
+            parentDir: simulationDir,
             cluster: extractCluster(simulationDir),
             workers: extractWorkers(simulationDir),
             superstepsOf: (worker: Worker) => {

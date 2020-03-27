@@ -1,5 +1,7 @@
 import { Suite } from "simulation";
 import { writeFile, utils } from 'xlsx';
+import deepMapKeys from 'deep-map-keys';
+import decamelize from 'decamelize';
 
 function suiteToJson(suite: Suite): any[] {
     return suite.simulations.flatMap(
@@ -7,6 +9,8 @@ function suiteToJson(suite: Suite): any[] {
             worker => simulation.superstepsOf(worker).flatMap(
                 superstep => ({
                     problemSize: simulation.problem.problemSize(),
+                    simulationId: simulation.id,
+                    parentDir: simulation.parentDir,
                     superstepsInTimeStep: simulation.problem.superstepsInTimeStep(),
                     transposeMapSuperstep: simulation.problem.transposeMapSuperstep(),
                     transposeReduceSuperstep: simulation.problem.transposeReduceSuperstep(),
@@ -16,7 +20,7 @@ function suiteToJson(suite: Suite): any[] {
                     ...simulation.cluster,
                     ...superstep
                 })
-            )
+            ).map(v => deepMapKeys(v, k => decamelize(k, '_')))
         ))
 }
 

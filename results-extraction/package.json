@@ -51,11 +51,14 @@
     "node": ">=11.00"
   },
   "dependencies": {
+    "@types/decamelize": "^3.0.3",
     "@types/glob": "^7.1.1",
     "@types/lodash": "^4.14.149",
     "@types/node": "^12.12.31",
     "@types/npm": "^2.0.31",
     "@types/tmp": "^0.1.0",
+    "decamelize": "^4.0.0",
+    "deep-map-keys": "^2.0.1",
     "fs": "0.0.1-security",
     "glob": "^7.1.6",
     "lodash": "^4.17.15",

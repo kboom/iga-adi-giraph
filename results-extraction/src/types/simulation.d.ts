@@ -24,6 +24,7 @@ declare module 'simulation' {
     }
 
     export interface Simulation {
+        id: string
         problem: Problem
         cluster: Cluster
         parentDir: string
