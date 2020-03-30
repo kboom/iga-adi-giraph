@@ -189,7 +189,7 @@ export function extractSuperstepSummary(
 ): Superstep {
   const groups = superstepSummaryMatcher(superstep).exec(input).groups;
   return {
-    id: superstep,
+    superstepId: superstep,
     superstepTime: +groups.superstepTime || 0,
     computeAllPartitions: +groups.computeAllPartitions || 0,
     timeSpentInGc: +groups.timeSpentInGc || 0,

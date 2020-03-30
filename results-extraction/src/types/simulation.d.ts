@@ -1,5 +1,6 @@
 declare module 'simulation' {
     export interface Worker {
+        workerId: number
         container: string
         node: string
         logsPath: string
@@ -33,7 +34,7 @@ declare module 'simulation' {
         superstepsOf(worker: Worker): Array<Superstep>
     }
     export interface Superstep {
-        id: number;
+        superstepId: number;
         superstepTime: number;
         computeAllPartitions: number;
         timeSpentInGc: number;

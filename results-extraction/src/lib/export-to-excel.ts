@@ -11,6 +11,7 @@ function suiteToJson(suite: Suite): any[] {
                     problemSize: simulation.problem.problemSize(),
                     simulationId: simulation.id,
                     parentDir: simulation.parentDir,
+                    initSuperstep: simulation.problem.initSuperstep(),
                     superstepsInTimeStep: simulation.problem.superstepsInTimeStep(),
                     transposeMapSuperstep: simulation.problem.transposeMapSuperstep(),
                     transposeReduceSuperstep: simulation.problem.transposeReduceSuperstep(),
