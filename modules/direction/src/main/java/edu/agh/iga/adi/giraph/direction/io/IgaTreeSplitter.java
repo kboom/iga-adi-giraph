@@ -22,7 +22,7 @@ final class IgaTreeSplitter {
   }
 
   List<IgaInputSplit> allSplitsFor(int partitionCountHint) {
-    val partitionStrategy = partitioningStrategy(tree, partitionCountHint);
+    val partitionStrategy = partitioningStrategy(tree, partitionCountHint, 1);
 
     return Stream.concat(
         rootSplitIfApplicable(partitionStrategy.getTipHeight()),

@@ -55,7 +55,8 @@ public class IgaPartitionerFactory extends GraphPartitionerFactory<IntWritable, 
         if(partitioningStrategy == null) {
           partitioningStrategy = partitioningStrategy(
               directionTree,
-              partitionCount
+              partitionCount,
+              workerCount
           );
         }
       }
