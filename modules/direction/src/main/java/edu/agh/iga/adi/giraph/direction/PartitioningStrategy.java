@@ -8,6 +8,8 @@ import lombok.val;
 import static com.google.common.math.IntMath.log2;
 import static edu.agh.iga.adi.giraph.core.IgaVertexType.vertexType;
 import static java.math.RoundingMode.UNNECESSARY;
+import static java.util.stream.IntStream.range;
+import static java.util.stream.IntStream.rangeClosed;
 
 @Builder
 @Value
@@ -17,21 +19,22 @@ public class PartitioningStrategy {
   int tipHeight;
   int bottomHeight;
   int partitions;
+  int [] rowFirstIndices;
+  int [] verticesPerPartitionByRow;
 
   public int partitionFor(int vid) {
     val vt = vertexType(tree, vid);
-    val ri = vt.rowIndexOf(tree, vid);
-    if (ri - 1 < tipHeight) {
+    val ri = vt.rowIndexOf(tree, vid) - 1;
+    if (ri < tipHeight) {
       return 0;
     } else {
-      val verticesPerPartition = vt.strengthOf(tree, vid) / partitions;
-      return vt.offsetLeft(tree, vid) / verticesPerPartition;
+      return (vid - rowFirstIndices[ri]) / verticesPerPartitionByRow[ri];
     }
   }
 
   public static PartitioningStrategy partitioningStrategy(
-      DirectionTree tree,
-      int partitionCountHint
+          DirectionTree tree,
+          int partitionCountHint
   ) {
     val treeHeight = tree.height();
     val leavesStrength = tree.strengthOfLeaves();
@@ -43,6 +46,8 @@ public class PartitioningStrategy {
 
     return PartitioningStrategy.builder()
         .tree(tree)
+        .verticesPerPartitionByRow(rangeClosed(1, treeHeight + 1).map(h -> tree.strengthOfRow(h) / partitions).toArray())
+        .rowFirstIndices(rangeClosed(0, treeHeight).map(h -> (int) Math.pow(2, h)).toArray())
         .tipHeight(tipTreeHeight)
         .bottomHeight(bottomTreeHeight)
         .partitions(partitions)

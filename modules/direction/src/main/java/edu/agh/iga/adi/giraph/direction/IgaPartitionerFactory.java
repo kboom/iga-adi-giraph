@@ -7,9 +7,7 @@ import lombok.val;
 import org.apache.giraph.conf.ImmutableClassesGiraphConfiguration;
 import org.apache.giraph.partition.GraphPartitionerFactory;
 import org.apache.giraph.partition.SimpleLongRangePartitionerFactory;
-import org.apache.giraph.worker.LocalData;
 import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.Writable;
 import org.apache.log4j.Logger;
 
 import static edu.agh.iga.adi.giraph.core.IgaVertexType.vertexType;
@@ -40,7 +38,7 @@ public class IgaPartitionerFactory extends GraphPartitionerFactory<IntWritable, 
   public int getPartition(IntWritable id, int partitionCount, int workerCount) {
     val vid = id.get();
 
-    assumePartitioningStrategy(partitionCount);
+    assumePartitioningStrategy(partitionCount, workerCount);
 
     val partition = partitioningStrategy.partitionFor(vid);
 
@@ -51,7 +49,7 @@ public class IgaPartitionerFactory extends GraphPartitionerFactory<IntWritable, 
     return partition;
   }
 
-  private void assumePartitioningStrategy(int partitionCount) {
+  private void assumePartitioningStrategy(int partitionCount, int workerCount) {
     if(partitioningStrategy == null) {
       synchronized (this) {
         if(partitioningStrategy == null) {
