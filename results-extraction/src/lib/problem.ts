@@ -7,6 +7,10 @@ class DefaultProblem implements Problem {
         this.dagHeight = dagHeight
     }
 
+    treeHeight(): number {
+        return this.dagHeight
+    }
+
     problemSize(): number {
         return 3 * Math.pow(2, this.dagHeight)
     }

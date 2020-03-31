@@ -7,6 +7,7 @@ declare module 'simulation' {
     }
     export interface Problem {
         problemSize(): number;
+        treeHeight(): number;
         superstepsInTimeStep(): number;
         initSuperstep(): number;
         firstRootSuperstep(): number;
@@ -30,6 +31,7 @@ declare module 'simulation' {
         cluster: Cluster
         parentDir: string
         workers: Array<Worker>
+        partitionBoundarySupersteps: Array<number>
 
         superstepsOf(worker: Worker): Array<Superstep>
     }

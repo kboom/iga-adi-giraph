@@ -17,6 +17,10 @@ function suiteToJson(suite: Suite): any[] {
                     transposeReduceSuperstep: simulation.problem.transposeReduceSuperstep(),
                     firstRootSuperstep: simulation.problem.firstRootSuperstep(),
                     secondRootSuperstep: simulation.problem.secondRootSuperstep(),
+                    firstGather: simulation.partitionBoundarySupersteps[0],
+                    firstScatter: simulation.partitionBoundarySupersteps[1],
+                    secondGather: simulation.partitionBoundarySupersteps[2],
+                    secondScatter: simulation.partitionBoundarySupersteps[3],
                     ...worker,
                     ...simulation.cluster,
                     ...superstep
