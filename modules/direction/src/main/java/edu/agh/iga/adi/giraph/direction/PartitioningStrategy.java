@@ -5,9 +5,8 @@ import lombok.Builder;
 import lombok.Value;
 import lombok.val;
 
-import static com.google.common.math.IntMath.log2;
+import static com.google.common.math.DoubleMath.log2;
 import static edu.agh.iga.adi.giraph.core.IgaVertexType.vertexType;
-import static java.math.RoundingMode.UNNECESSARY;
 import static java.util.stream.IntStream.rangeClosed;
 
 @Builder
@@ -15,59 +14,59 @@ import static java.util.stream.IntStream.rangeClosed;
 public class PartitioningStrategy {
 
   DirectionTree tree;
-  int tipHeight;
-  int bottomHeight;
+
   int partitions;
+  int partitioningThreadLevel;
+  int partitioningWorkerLevel;
   int partitionsPerWorker;
+
+  // for better efficiency
   int [] rowFirstIndices;
   int [] verticesPerPartitionByRow;
+
+  // x  w1 w2 w3
+  // 0  32 64 34
+  int [] partitionBoundaryOwnership;
 
   public int partitionFor(int vid) {
     val vt = vertexType(tree, vid);
     val ri = vt.rowIndexOf(tree, vid) - 1;
-    if (ri < tipHeight) {
-      return vid % partitionsPerWorker; // this is intentional round-robin as this is executed by a single worker
-    } else {
-      return (vid - rowFirstIndices[ri]) / verticesPerPartitionByRow[ri];
+    if (ri >= partitioningThreadLevel) {
+      return (vid - rowFirstIndices[ri]) / verticesPerPartitionByRow[ri]; // handled by a single thread up till the root
     }
+    if (ri >= partitioningWorkerLevel) {
+      // track till the root for partitioningWorkerLevel
+      val parentId = vt.nthParent(tree, vid, ri - partitioningWorkerLevel);
+      val workerIndex = parentId - rowFirstIndices[partitioningWorkerLevel];
+      val partitionBoundaryLeft = partitionBoundaryOwnership[workerIndex];
+      return partitionBoundaryLeft + vid % partitionsPerWorker;
+    }
+    return vid % partitionsPerWorker; // this is intentional round-robin as this is executed by a single worker
   }
 
   public static PartitioningStrategy partitioningStrategy(
           DirectionTree tree,
-          int partitionCountHint,
+          int partitions,
           int workers
   ) {
     val treeHeight = tree.height();
-    val leavesStrength = tree.strengthOfLeaves();
-    val partitions = optimalPartitionCount(tree, partitionCountHint);
-    val leavesPerPartition = leavesStrength / partitions;
-    // leaves should never be in the tip partition regardless of the number of threads
-    val bottomTreeHeight = leavesPerPartition > 1 ? log2((leavesPerPartition + 1) / 3, UNNECESSARY) + 1 : 1;
-    val tipTreeHeight = treeHeight - bottomTreeHeight;
+    val threadHeight = log2(partitions);
+    val workerHeight = log2(workers);
+    val partitionsPerWorker = partitions / workers;
+
+    val partitioningThreadLevel = (int) Math.min(threadHeight, tree.leafHeight());
+    val partitioningWorkerLevel = (int) Math.min(workerHeight, partitioningThreadLevel);
 
     return PartitioningStrategy.builder()
         .tree(tree)
-        .partitionsPerWorker(partitionCountHint / workers)
-        .verticesPerPartitionByRow(rangeClosed(1, treeHeight + 1).map(h -> tree.strengthOfRow(h) / partitions).toArray())
-        .rowFirstIndices(rangeClosed(0, treeHeight).map(h -> (int) Math.pow(2, h)).toArray())
-        .tipHeight(tipTreeHeight)
-        .bottomHeight(bottomTreeHeight)
         .partitions(partitions)
+        .rowFirstIndices(rangeClosed(0, treeHeight).map(h -> (int) Math.pow(2, h)).toArray())
+        .partitionBoundaryOwnership(rangeClosed(0, workers).map(w -> partitionsPerWorker * w).toArray())
+        .partitioningThreadLevel(partitioningThreadLevel)
+        .partitioningWorkerLevel(partitioningWorkerLevel)
+        .partitionsPerWorker(partitionsPerWorker)
+        .verticesPerPartitionByRow(rangeClosed(1, treeHeight + 1).map(h -> tree.strengthOfRow(h) / partitions).toArray())
         .build();
-  }
-
-  private static int optimalPartitionCount(
-      DirectionTree tree,
-      int partitionCountHint
-  ) {
-    val branchStrength = tree.strengthOfLeaves() / 3;
-    if (branchStrength / partitionCountHint < 1) {
-      return branchStrength;
-    } else if (partitionCountHint == 1 || partitionCountHint % 2 == 0) {
-      return partitionCountHint;
-    } else {
-      throw new IllegalStateException("Invalid partition count. Should be an even number or equal to 1.");
-    }
   }
 
 }
