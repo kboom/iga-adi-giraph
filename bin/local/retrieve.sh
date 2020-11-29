@@ -6,7 +6,7 @@ IGA_HOME=$(cd "${BIN_DIR}/../.." || exit ; pwd)
 
 # Upload the JAR and these scripts
 gcloud compute scp \
-  --zone "us-central1-a" \
-  --tunnel-through-iap  \
+  --zone "europe-west4-a" \
+  --project "hyperflow-268022" \
   --recurse "${MASTER_ID}":~/logs/* \
   "${IGA_HOME}/logs"

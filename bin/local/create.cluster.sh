@@ -6,7 +6,7 @@ gcloud auth activate-service-account grzegorz-gurgul-584@hyperflow-268022.iam.gs
   --key-file="/Users/ggurgul/Keys/hyperflow-key"
 
 gcloud \
-    dataproc clusters create iga-adi \
+    dataproc clusters create iga-adi-2 \
     --region=europe-west4 \
     --service-account=grzegorz-gurgul-584@hyperflow-268022.iam.gserviceaccount.com \
     --master-boot-disk-size=50GB \
@@ -16,7 +16,5 @@ gcloud \
     --num-workers=2 \
     --max-idle=1h \
     --max-age=1d \
-    --no-address \
-    --subnet=iga-adi \
     --optional-components=ZOOKEEPER \
     --properties=yarn:yarn.log-aggregation-enable=true
