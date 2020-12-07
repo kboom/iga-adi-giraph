@@ -42,8 +42,7 @@ You can find the logs under:
 There is an https://issues.apache.org/jira/browse/GIRAPH-859[unresolved issue] in Giraph which translates into inability to automatically upload JARs to the workers if the user launching the computations is different than yarn (Giraph would upload the JARs to the directory belonging to the user launching the application but look for them in the yarn user directory so they would be missing).
 
 There are severeal possible workarounds to this:
-* just to run the application using yarn user
-* upload the jars manually before each computation.
+* just to run the application using yarn user * upload the jars manually before each computation.
 * apply the patch and build against this version of Giraph
 
 We use the 3rd solution here using the fork https://github.com/kboom/giraph.
@@ -56,7 +55,14 @@ cd bin
 ./bin/publish.cloud.sh <your master instance number>
 ----
 
-The to run
+Then you need to connect to the instance.
+
+[source,bash]
+----
+./connect.sh
+----
+
+Then either run a single experiment with customized values
 
 [source,bash]
 ----
@@ -69,6 +75,23 @@ Or one of the defaults
 ----
 ./run.default.sh
 ----
+
+You may also want to run a complete suite of tests.
+This is useful to conduct full scalability experiments.
+
+[source,bash]
+----
+./suites/xyz-your-suite.sh
+----
+
+If you do this it will automatically download all results to the host which then allows you to fetch all of them from your local machine.
+Execute
+
+[source,bash]
+----
+./retrieve.cloud.sh
+----
+
 
 == Configuration parameters
 
@@ -240,7 +263,9 @@ https://giraph.apache.org/options.html[Reference]
 
 === JIT debugging
 
-Add the following to the JVM arguments. This will print the details about the solver code in terms of JIT.
+Add the following to the JVM arguments.
+This will print the details about the solver code in terms of JIT.
+
 ```
 -XX:+PrintCompilation
 -Xbatch
@@ -252,6 +277,7 @@ The contents of the `jit_debug_file` can be tuned using
 https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html[this guide].
 
 === Other options
+
 ```
 -ea
 -XX:+UsePerfData

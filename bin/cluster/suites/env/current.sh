@@ -1,4 +1,4 @@
 export SUITE_NAME="weak-scaling"
-export IGA_WORKER_CORES=4
-export IGA_WORKER_MEMORY=4
-export RUNS=2
+export IGA_WORKER_CORES=16
+export IGA_WORKER_MEMORY=40
+export RUNS=3
