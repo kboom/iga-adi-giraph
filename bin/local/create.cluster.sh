@@ -10,10 +10,10 @@ gcloud \
     --region=europe-west4 \
     --service-account=grzegorz-gurgul-584@hyperflow-268022.iam.gserviceaccount.com \
     --master-boot-disk-size=50GB \
-    --worker-boot-disk-size=25GB \
-    --master-machine-type=n2-standard-2 \
-    --worker-machine-type=n2-standard-4 \
-    --num-workers=2 \
+    --worker-boot-disk-size=50GB \
+    --master-machine-type=n2-standard-16 \
+    --worker-machine-type=n2-standard-16 \
+    --num-workers=4 \
     --max-idle=1h \
     --max-age=1d \
     --no-address \

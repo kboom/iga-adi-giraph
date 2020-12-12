@@ -4,7 +4,7 @@ set -ex
 SUITE_DIR="$( cd "$(dirname "$0")" || exit ; pwd -P )"
 RUN_SCRIPT="${SUITE_DIR}/../run.suite.sh"
 
-. "${SUITE_DIR}/env/current.sh"
+. "${SUITE_DIR}/env/n2-standard-16.sh"
 
  function execute {
    problemSize=$1
@@ -17,6 +17,5 @@ RUN_SCRIPT="${SUITE_DIR}/../run.suite.sh"
 
 for run in 1..${RUNS};
 do
-  execute 768 2 "$run"
-  execute 1536 2 "$run"
+  execute 49152 64 "$run"
 done;
