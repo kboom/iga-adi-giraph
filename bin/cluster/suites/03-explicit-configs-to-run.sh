@@ -15,7 +15,9 @@ RUN_SCRIPT="${SUITE_DIR}/../run.suite.sh"
         && ${RUN_SCRIPT} IGA_WORKERS $workers
  }
 
-for run in 1..${RUNS};
+echo "Going to run ${RUNS} times"
+
+for run in $(seq 1 1 "${RUNS}");
 do
-  execute 49152 64 "$run"
+  execute 6144 2 "$run"
 done;
