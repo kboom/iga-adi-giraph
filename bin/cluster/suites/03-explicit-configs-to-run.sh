@@ -25,8 +25,8 @@ echo "Going to run ${RUNS} times"
 
 for run in $(seq 1 1 "${RUNS}");
 do
-  execute 1536 1 4 "$run"
-  execute 1536 2 2 "$run"
+  execute 384 1 4 "$run"
+  execute 384 2 2 "$run"
 #  execute 3072 1 64 "$run"
 #  execute 3072 4 16 "$run"
 #  execute 3072 2 32 "$run"

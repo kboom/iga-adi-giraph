@@ -14,6 +14,7 @@ PERF_VARIABLE_NAME="${1}"
 SCRIPTPATH="$( cd "$(dirname "$0")" || exit ; pwd -P )"
 RUN_SCRIPT="${SCRIPTPATH}/run.parameterized.sh"
 DOWNLOAD_LOGS_SCRIPT="${SCRIPTPATH}/download.logs.sh"
+RECORD_USAGE_SCRIPT="${SCRIPTPATH}/record.cpu.usage.sh"
 
 # Naming
 TIMESTAMP=$(date +%s)
@@ -22,7 +23,12 @@ for ((i=2;i<=$#;i++)); do
   VARIABLE_VALUE="${!i}"
   export "${PERF_VARIABLE_NAME}"="${VARIABLE_VALUE}"
   OUTPUT_FILE="suite-${TIMESTAMP}-${PERF_VARIABLE_NAME}-${VARIABLE_VALUE}.txt"
+
+  echo "Starting CPU times recording"
+  bash -c "$RECORD_USAGE_SCRIPT $SUITE_NAME" &
   "${RUN_SCRIPT}" |& tee  "${OUTPUT_FILE}"
+  echo "Stopping CPU times recording"
+  kill "$(jobs -p)"
   sleep "${COOLDOWN}"
 
   echo "Storing application state"
