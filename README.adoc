@@ -41,7 +41,7 @@ You can find the logs under:
 
 There is an https://issues.apache.org/jira/browse/GIRAPH-859[unresolved issue] in Giraph which translates into inability to automatically upload JARs to the workers if the user launching the computations is different than yarn (Giraph would upload the JARs to the directory belonging to the user launching the application but look for them in the yarn user directory so they would be missing).
 
-There are severeal possible workarounds to this:
+There are several possible workarounds to this:
 * just to run the application using yarn user * upload the jars manually before each computation.
 * apply the patch and build against this version of Giraph
 

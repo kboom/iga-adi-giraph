@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 set +xe
 
-less /proc/cpuinfo > logs/cpu_info.txt
+mkdir -p logs
+lscpu > logs/cpu_info.txt
+less /proc/cpuinfo > logs/cpu_details.txt

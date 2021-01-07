@@ -15,11 +15,9 @@ import edu.agh.iga.adi.giraph.direction.io.data.IgaMessageWritable;
 import edu.agh.iga.adi.giraph.direction.io.data.IgaOperationWritable;
 import edu.agh.iga.adi.giraph.direction.performance.MemoryLogger;
 import lombok.val;
-import org.apache.giraph.comm.messages.InMemoryMessageStoreFactory;
 import org.apache.giraph.conf.*;
 import org.apache.giraph.edge.ByteArrayEdges;
 import org.apache.giraph.io.VertexInputFormat;
-import org.apache.giraph.partition.ByteArrayPartition;
 import org.apache.giraph.partition.SimplePartition;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.IntWritable;
@@ -45,7 +43,6 @@ import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.giraph.comm.flow_control.CreditBasedFlowControl.MAX_NUM_OF_OPEN_REQUESTS_PER_WORKER;
 import static org.apache.giraph.comm.flow_control.CreditBasedFlowControl.MAX_NUM_OF_UNSENT_REQUESTS;
-import static org.apache.giraph.comm.messages.MessageEncodeAndStoreType.POINTER_LIST_PER_VERTEX;
 import static org.apache.giraph.comm.netty.NettyClient.LIMIT_OPEN_REQUESTS_PER_WORKER;
 import static org.apache.giraph.conf.GiraphConstants.*;
 import static org.apache.giraph.master.BspServiceMaster.NUM_MASTER_ZK_INPUT_SPLIT_THREADS;
@@ -56,290 +53,280 @@ import static org.apache.log4j.Logger.getLogger;
 
 public class IgaConfiguration {
 
-  private static final Logger LOG = getLogger(IgaConfiguration.class);
+    private static final Logger LOG = getLogger(IgaConfiguration.class);
 
-  public static final BooleanConfOption CONFIGURE_JAVA_OPTS = new BooleanConfOption("giraph.configureJavaOpts", true, "Whether to configure java opts");
+    public static final BooleanConfOption CONFIGURE_JAVA_OPTS = new BooleanConfOption("giraph.configureJavaOpts", true, "Whether to configure java opts");
 
-  public static final BooleanConfOption STORE_SOLUTION = new BooleanConfOption("iga.storeSolution", true, "Whether " +
-      "to store the solution or not.");
+    public static final BooleanConfOption STORE_SOLUTION = new BooleanConfOption("iga.storeSolution", true, "Whether " +
+            "to store the solution or not.");
 
-  public static final BooleanConfOption USE_G1_COLLECTOR = new BooleanConfOption("iga.useG1", false, "Use G1GC " +
-      "collector"); // it crashes the solver for larger computation sizes
+    public static final BooleanConfOption HEAP_DUMP_ON_OOM = new BooleanConfOption("iga.heap.dump", false, "Use heap " +
+            "dump on OOM"); // it crashes the solver for larger computation sizes
 
-  public static final BooleanConfOption HEAP_DUMP_ON_OOM = new BooleanConfOption("iga.heap.dump", false, "Use heap " +
-      "dump on OOM"); // it crashes the solver for larger computation sizes
+    public static final IntConfOption WORKER_CORES = new IntConfOption("iga.cores", 1, "The number of cores per worker");
+    public static final IntConfOption WORKER_MEMORY = new IntConfOption("iga.memory", 1, "The amount of memory per worker in gigabytes");
 
-  public static final IntConfOption WORKER_CORES = new IntConfOption("iga.cores", 1, "The number of cores per worker");
-  public static final IntConfOption WORKER_MEMORY = new IntConfOption("iga.memory", 1, "The amount of memory per worker in gigabytes");
+    public static final FloatConfOption NEW_GEN_MEMORY_FRACTION = new FloatConfOption("iga.newGenMemoryFraction", 0.1f, "Fraction of total mapper memory to use for new generation");
+    public static final FloatConfOption CORES_FRACTION_DURING_COMMUNICATION = new FloatConfOption("iga" +
+            ".coresFractionDuringCommunication", 1f, "Fraction of mapper cores to use for threads which overlap with" +
+            " network communication");
 
-  public static final FloatConfOption NEW_GEN_MEMORY_FRACTION = new FloatConfOption("iga.newGenMemoryFraction", 0.1f, "Fraction of total mapper memory to use for new generation");
-  public static final FloatConfOption CORES_FRACTION_DURING_COMMUNICATION = new FloatConfOption("iga" +
-      ".coresFractionDuringCommunication", 1f, "Fraction of mapper cores to use for threads which overlap with" +
-      " network communication");
+    public static final StrConfOption JAVA_JOB_OPTIONS = new StrConfOption("container.java.opts", null, "Java options " +
+            "passed " +
+            "to the workers");
 
-  public static final StrConfOption JAVA_JOB_OPTIONS = new StrConfOption("container.java.opts", null, "Java options " +
-      "passed " +
-      "to the workers");
+    public static final IntConfOption PROBLEM_SIZE = new IntConfOption("iga.problem.size", 12, "The number of elements in one direction");
+    public static final EnumConfOption<ProblemType> PROBLEM_TYPE = new EnumConfOption<>("iga.problem.type", ProblemType.class, PROJECTION, "The type of the problem to simulate");
+    public static final EnumConfOption<InitialProblemType> INITIAL_PROBLEM_TYPE = new EnumConfOption<>("iga.problem.initial.type", InitialProblemType.class, CONSTANT, "The type of the initial surface to generate");
+    public static final FloatConfOption STEP_DELTA = new FloatConfOption("iga.step.delta", 0.000000001f, "The length of the time step");
+    public static final IntConfOption STEP_COUNT = new IntConfOption("iga.problem.steps", 1, "The number of steps to run");
+    public static final StrConfOption FIRST_INITIALISATION_TYPE = new StrConfOption("iga.initialisation.type", SURFACE_PROBLEM.getType(), "The type of initialisation - " + resolverTypes() + " - use surface if you initialise the leaves or coefficients if you initialize the branches");
+    public static final StrConfOption COEFFICIENTS_INPUT = new StrConfOption("giraph.vertex.input.dir", createTempDir().getPath(), "The (HDFS) directory to read the coefficients from");
+    public static final StrConfOption COEFFICIENTS_OUTPUT = new StrConfOption("mapred.output.dir", createTempDir().getPath(), "The (HDFS) directory to put the coefficients to");
+    public static final StrConfOption ZK_DIR = new StrConfOption("giraph.zkDir", createTempDir().getPath(), "The zookeeper directory to put coefficients to");
 
-  public static final IntConfOption PROBLEM_SIZE = new IntConfOption("iga.problem.size", 12, "The number of elements in one direction");
-  public static final EnumConfOption<ProblemType> PROBLEM_TYPE = new EnumConfOption<>("iga.problem.type", ProblemType.class, PROJECTION, "The type of the problem to simulate");
-  public static final EnumConfOption<InitialProblemType> INITIAL_PROBLEM_TYPE = new EnumConfOption<>("iga.problem.initial.type", InitialProblemType.class, CONSTANT, "The type of the initial surface to generate");
-  public static final FloatConfOption STEP_DELTA = new FloatConfOption("iga.step.delta", 0.000000001f, "The length of the time step");
-  public static final IntConfOption STEP_COUNT = new IntConfOption("iga.problem.steps", 1, "The number of steps to run");
-  public static final StrConfOption FIRST_INITIALISATION_TYPE = new StrConfOption("iga.initialisation.type", SURFACE_PROBLEM.getType(), "The type of initialisation - " + resolverTypes() + " - use surface if you initialise the leaves or coefficients if you initialize the branches");
-  public static final StrConfOption COEFFICIENTS_INPUT = new StrConfOption("giraph.vertex.input.dir", createTempDir().getPath(), "The (HDFS) directory to read the coefficients from");
-  public static final StrConfOption COEFFICIENTS_OUTPUT = new StrConfOption("mapred.output.dir", createTempDir().getPath(), "The (HDFS) directory to put the coefficients to");
-  public static final StrConfOption ZK_DIR = new StrConfOption("giraph.zkDir", createTempDir().getPath(), "The zookeeper directory to put coefficients to");
+    private static String resolverTypes() {
+        return Stream.of(IgaComputationResolvers.values()).map(IgaComputationResolvers::getType).collect(joining(","));
+    }
 
-  private static String resolverTypes() {
-    return Stream.of(IgaComputationResolvers.values()).map(IgaComputationResolvers::getType).collect(joining(","));
-  }
+    private static final Map<String, Class<? extends VertexInputFormat>> inputFormatsByInitType = ImmutableMap.of(
+            SURFACE_PROBLEM.getType(), InMemoryStepInputFormat.class,
+            COEFFICIENTS_PROBLEM.getType(), StepVertexInputFormat.class
+    );
 
-  private static final Map<String, Class<? extends VertexInputFormat>> inputFormatsByInitType = ImmutableMap.of(
-      SURFACE_PROBLEM.getType(), InMemoryStepInputFormat.class,
-      COEFFICIENTS_PROBLEM.getType(), StepVertexInputFormat.class
-  );
+    public static GiraphConfiguration igaConfiguration(GiraphConfiguration conf) {
+        LOG.info("Configuring giraph");
 
-  public static GiraphConfiguration igaConfiguration(GiraphConfiguration conf) {
-    LOG.info("Configuring giraph");
+        solverOptions(conf);
+        setIgaStoreTypes(conf);
+        generalTuning(conf);
+        resiliencySettings(conf);
 
-    solverOptions(conf);
-    setIgaStoreTypes(conf);
-    generalTuning(conf);
-    resiliencySettings(conf);
-
-    HDFS_FILE_CREATION_RETRY_WAIT_MS.set(conf, 1000);
+        HDFS_FILE_CREATION_RETRY_WAIT_MS.set(conf, 1000);
 
 //    USE_MESSAGE_SIZE_ENCODING.set(conf, true);
-    // todo out edge classes with custom typeops
-    conf.setInputOutEdgesClass(IgaArrayEdges.class);
-    conf.setOutEdgesClass(IgaArrayEdges.class);
+        // todo out edge classes with custom typeops
+        conf.setInputOutEdgesClass(IgaArrayEdges.class);
+        conf.setOutEdgesClass(IgaArrayEdges.class);
 
-    // todo message store
+        // todo message store
 //    MESSAGE_STORE_FACTORY_CLASS.set(conf, InMemoryMessageStoreFactory.class); // already creates
 //    LongByteArrayMessageStore by default
-    setPartitioning(conf);
-    return conf;
-  }
-
-  private static void setPartitioning(GiraphConfiguration conf) {
-    // Seems that no re-balancing is required
-    conf.setIfUnset(PARTITION_BALANCE_ALGORITHM, STATIC_BALANCE_ALGORITHM);
-    conf.setGraphPartitionerFactoryClass(IgaPartitionerFactory.class);
-  }
-
-  private static void resiliencySettings(GiraphConfiguration conf) {
-    WAIT_TASK_DONE_TIMEOUT_MS.setIfUnset(conf, (int) MINUTES.toMillis(1));
-    MAX_MASTER_SUPERSTEP_WAIT_MSECS.setIfUnset(conf, (int) MINUTES.toMillis(1));
-    MAX_REQUEST_MILLISECONDS.setIfUnset(conf, (int) MINUTES.toMinutes(15));
-    NETTY_MAX_CONNECTION_FAILURES.setIfUnset(conf, 10);
-    WAIT_TIME_BETWEEN_CONNECTION_RETRIES_MS.setIfUnset(conf, 1000);
-    conf.setIfUnset("giraph.resendTimedOutRequests", "true");
-    conf.setIfUnset("giraph.waitForOtherWorkersMsec", valueOf(MINUTES.toMillis(60)));
-  }
-
-  private static void solverOptions(GiraphConfiguration conf) {
-    conf.setComputationClass(InitialComputation.class);
-    conf.setMasterComputeClass(IterativeComputation.class);
-    conf.setWorkerContextClass(IgaWorkerContext.class);
-    conf.setEdgeInputFormatClass(IgaEdgeInputFormat.class);
-    conf.setVertexInputFormatClass(inputFormatsByInitType.get(FIRST_INITIALISATION_TYPE.get(conf)));
-    conf.setVertexOutputFormatClass(StepVertexOutputFormat.class);
-    conf.addWorkerObserverClass(MemoryLogger.class); // does not appear to cause issue infinite wait issue
-    conf.setPartitionClass(SimplePartition.class);
-    conf.setYarnLibJars(currentJar());
-    STATIC_GRAPH.set(conf, true);
-    VERTEX_ID_CLASS.set(conf, IntWritable.class);
-    VERTEX_VALUE_CLASS.set(conf, IgaElementWritable.class);
-    EDGE_VALUE_CLASS.set(conf, IgaOperationWritable.class);
-    OUTGOING_MESSAGE_VALUE_CLASS.set(conf, IgaMessageWritable.class);
-    MAX_NUMBER_OF_SUPERSTEPS.set(conf, MAX_VALUE);
-    USE_SUPERSTEP_COUNTERS.set(conf, false);
-    conf.setDoOutputDuringComputation(true); // to support multiple steps, we're not using checkpoints, we can just restart the job where we left off from the last step (load saved coefficients)
-    VERTEX_OUTPUT_FORMAT_THREAD_SAFE.set(conf, false); // is not thread safe
-  }
-
-  private static void generalTuning(GiraphConfiguration conf) {
-    int workers = conf.getInt(MIN_WORKERS, -1);
-    int cores = WORKER_CORES.get(conf);
-    int workerMemoryGB = WORKER_MEMORY.get(conf);
-
-    ASYNC_MESSAGE_STORE_THREADS_COUNT.setIfUnset(conf, cores);
-
-    conf.setInt("giraph.yarn.task.heap.mb", workerMemoryGB * ONE_KB);
-
-    conf.setIfUnset(NUM_MASTER_ZK_INPUT_SPLIT_THREADS, Integer.toString(cores));
-    NUM_OUTPUT_THREADS.setIfUnset(conf, cores);
-
-    USE_INPUT_SPLIT_LOCALITY.setIfUnset(conf, true);
-
-    int threadsDuringCommunication = Math.max(1,
-        (int) (cores * CORES_FRACTION_DURING_COMMUNICATION.get(conf)));
-    // Input overlaps with communication, set threads properly
-    NUM_INPUT_THREADS.setIfUnset(
-        conf, threadsDuringCommunication);
-    // Compute overlaps with communication, set threads properly
-    NUM_COMPUTE_THREADS.setIfUnset(
-        conf, threadsDuringCommunication);
-    // Netty server threads are the ones adding messages to stores,
-    // or adding vertices and edges to stores during input,
-    // these are expensive operations so set threads properly
-    NETTY_SERVER_THREADS.setIfUnset(
-        conf, threadsDuringCommunication);
-
-    // Ensure we can utilize all communication threads by having enough
-    // channels per server, in cases when we have just a few machines
-    CHANNELS_PER_SERVER.setIfUnset(conf,
-        Math.max(1, 2 * threadsDuringCommunication / workers));
-
-    customConfig(conf);
-
-    // Pooled allocator in netty is faster
-    NETTY_USE_POOLED_ALLOCATOR.setIfUnset(conf, true);
-    // Turning off auto read is faster
-    NETTY_AUTO_READ.setIfUnset(conf, false);
-
-    // Synchronize full gc calls across workers
-    USE_MEMORY_OBSERVER.setIfUnset(conf, true);
-    FREE_MEMORY_FRACTION_FOR_GC.setIfUnset(conf, 0.1f);
-    MIN_MS_BETWEEN_FULL_GCS.setIfUnset(conf, 1000);
-
-    // Increase number of partitions per compute thread
-    if (!PARTITION_COUNT_MULTIPLIER.isDefaultValue(conf)) {
-      failPartitionCountSetting();
+        setPartitioning(conf);
+        return conf;
     }
 
-    MIN_PARTITIONS_PER_COMPUTE_THREAD.setIfUnset(conf, 1);
-    if (USER_PARTITION_COUNT.isDefaultValue(conf)) {
-      final int totalPartitions = MIN_PARTITIONS_PER_COMPUTE_THREAD.get(conf) * workers * cores;
-      if (totalPartitions > 1 && totalPartitions % 2 != 0) {
-        throw new IllegalArgumentException("Partition count should be divisible by 2 or equal to 1.");
-      }
-    } else {
-      val userPartitionCount = USER_PARTITION_COUNT.get(conf);
-      if (userPartitionCount > 1 && userPartitionCount % 2 != 0) {
-        throw new IllegalArgumentException("Partition count should be divisible by 2 or equal to 1.");
-      }
+    private static void setPartitioning(GiraphConfiguration conf) {
+        // Seems that no re-balancing is required
+        conf.setIfUnset(PARTITION_BALANCE_ALGORITHM, STATIC_BALANCE_ALGORITHM);
+        conf.setGraphPartitionerFactoryClass(IgaPartitionerFactory.class);
     }
 
-    // Prefer ip addresses
-    PREFER_IP_ADDRESSES.setIfUnset(conf, true);
+    private static void resiliencySettings(GiraphConfiguration conf) {
+        WAIT_TASK_DONE_TIMEOUT_MS.setIfUnset(conf, (int) MINUTES.toMillis(1));
+        MAX_MASTER_SUPERSTEP_WAIT_MSECS.setIfUnset(conf, (int) MINUTES.toMillis(1));
+        MAX_REQUEST_MILLISECONDS.setIfUnset(conf, (int) MINUTES.toMinutes(15));
+        NETTY_MAX_CONNECTION_FAILURES.setIfUnset(conf, 10);
+        WAIT_TIME_BETWEEN_CONNECTION_RETRIES_MS.setIfUnset(conf, 1000);
+        conf.setIfUnset("giraph.resendTimedOutRequests", "true");
+        conf.setIfUnset("giraph.waitForOtherWorkersMsec", valueOf(MINUTES.toMillis(60)));
+    }
 
-    // Track job progress
+    private static void solverOptions(GiraphConfiguration conf) {
+        conf.setComputationClass(InitialComputation.class);
+        conf.setMasterComputeClass(IterativeComputation.class);
+        conf.setWorkerContextClass(IgaWorkerContext.class);
+        conf.setEdgeInputFormatClass(IgaEdgeInputFormat.class);
+        conf.setVertexInputFormatClass(inputFormatsByInitType.get(FIRST_INITIALISATION_TYPE.get(conf)));
+        conf.setVertexOutputFormatClass(StepVertexOutputFormat.class);
+        conf.addWorkerObserverClass(MemoryLogger.class); // does not appear to cause issue infinite wait issue
+        conf.setPartitionClass(SimplePartition.class);
+        conf.setYarnLibJars(currentJar());
+        STATIC_GRAPH.set(conf, true);
+        VERTEX_ID_CLASS.set(conf, IntWritable.class);
+        VERTEX_VALUE_CLASS.set(conf, IgaElementWritable.class);
+        EDGE_VALUE_CLASS.set(conf, IgaOperationWritable.class);
+        OUTGOING_MESSAGE_VALUE_CLASS.set(conf, IgaMessageWritable.class);
+        MAX_NUMBER_OF_SUPERSTEPS.set(conf, MAX_VALUE);
+        USE_SUPERSTEP_COUNTERS.set(conf, false);
+        conf.setDoOutputDuringComputation(true); // to support multiple steps, we're not using checkpoints, we can just restart the job where we left off from the last step (load saved coefficients)
+        VERTEX_OUTPUT_FORMAT_THREAD_SAFE.set(conf, false); // is not thread safe
+    }
+
+    private static void generalTuning(GiraphConfiguration conf) {
+        int workers = conf.getInt(MIN_WORKERS, -1);
+        int cores = WORKER_CORES.get(conf);
+        int workerMemoryGB = WORKER_MEMORY.get(conf);
+
+        ASYNC_MESSAGE_STORE_THREADS_COUNT.setIfUnset(conf, cores);
+
+        conf.setInt("giraph.yarn.task.heap.mb", workerMemoryGB * ONE_KB);
+
+        conf.setIfUnset(NUM_MASTER_ZK_INPUT_SPLIT_THREADS, Integer.toString(cores));
+        NUM_OUTPUT_THREADS.setIfUnset(conf, cores);
+
+        USE_INPUT_SPLIT_LOCALITY.setIfUnset(conf, true);
+
+        int threadsDuringCommunication = Math.max(1,
+                (int) (cores * CORES_FRACTION_DURING_COMMUNICATION.get(conf)));
+        // Input overlaps with communication, set threads properly
+        NUM_INPUT_THREADS.setIfUnset(
+                conf, threadsDuringCommunication);
+        // Compute overlaps with communication, set threads properly
+        NUM_COMPUTE_THREADS.setIfUnset(
+                conf, threadsDuringCommunication);
+        // Netty server threads are the ones adding messages to stores,
+        // or adding vertices and edges to stores during input,
+        // these are expensive operations so set threads properly
+        NETTY_SERVER_THREADS.setIfUnset(
+                conf, threadsDuringCommunication);
+
+        // Ensure we can utilize all communication threads by having enough
+        // channels per server, in cases when we have just a few machines
+        CHANNELS_PER_SERVER.setIfUnset(conf,
+                Math.max(1, 2 * threadsDuringCommunication / workers));
+
+        customConfig(conf);
+
+        // Pooled allocator in netty is faster
+        NETTY_USE_POOLED_ALLOCATOR.setIfUnset(conf, true);
+        // Turning off auto read is faster
+        NETTY_AUTO_READ.setIfUnset(conf, false);
+
+        // Synchronize full gc calls across workers
+        USE_MEMORY_OBSERVER.setIfUnset(conf, true);
+        FREE_MEMORY_FRACTION_FOR_GC.setIfUnset(conf, 0.1f);
+        MIN_MS_BETWEEN_FULL_GCS.setIfUnset(conf, 1000);
+
+        // Increase number of partitions per compute thread
+        if (!PARTITION_COUNT_MULTIPLIER.isDefaultValue(conf)) {
+            failPartitionCountSetting();
+        }
+
+        MIN_PARTITIONS_PER_COMPUTE_THREAD.setIfUnset(conf, 1);
+        if (USER_PARTITION_COUNT.isDefaultValue(conf)) {
+            final int totalPartitions = MIN_PARTITIONS_PER_COMPUTE_THREAD.get(conf) * workers * cores;
+            if (totalPartitions > 1 && totalPartitions % 2 != 0) {
+                throw new IllegalArgumentException("Partition count should be divisible by 2 or equal to 1.");
+            }
+        } else {
+            val userPartitionCount = USER_PARTITION_COUNT.get(conf);
+            if (userPartitionCount > 1 && userPartitionCount % 2 != 0) {
+                throw new IllegalArgumentException("Partition count should be divisible by 2 or equal to 1.");
+            }
+        }
+
+        // Prefer ip addresses
+        PREFER_IP_ADDRESSES.setIfUnset(conf, true);
+
+        // Track job progress
 //    GiraphConstants.TRACK_JOB_PROGRESS_ON_CLIENT.setIfUnset(conf, true); // todo this might cause problems in YARN
 
-    // Thread-level debugging for easier understanding
-    LOG_THREAD_LAYOUT.setIfUnset(conf, true);
-    // Enable tracking and printing of metrics
-    METRICS_ENABLE.setIfUnset(conf, true);
+        // Thread-level debugging for easier understanding
+        LOG_THREAD_LAYOUT.setIfUnset(conf, true);
+        // Enable tracking and printing of metrics
+        METRICS_ENABLE.setIfUnset(conf, true);
 
-    if (CONFIGURE_JAVA_OPTS.get(conf)) {
-      List<String> javaOpts = getMemoryJavaOpts(conf);
-      javaOpts.addAll(getGcJavaOpts(conf));
-      javaOpts.addAll(tuningJavaOpts());
-      javaOpts.addAll(observabilityJavaOpts(conf));
-      val options = join(javaOpts, " ");
-      JAVA_JOB_OPTIONS.setIfUnset(conf, options);
-      LOG.info("Configuring java options: " + JAVA_JOB_OPTIONS.get(conf));
-    } else {
-      LOG.info("Using default java options");
+        if (CONFIGURE_JAVA_OPTS.get(conf)) {
+            List<String> javaOpts = getMemoryJavaOpts(conf);
+            javaOpts.addAll(getGcJavaOpts(conf));
+            javaOpts.addAll(tuningJavaOpts());
+            javaOpts.addAll(observabilityJavaOpts(conf));
+            val options = join(javaOpts, " ");
+            JAVA_JOB_OPTIONS.setIfUnset(conf, options);
+            LOG.info("Configuring java options: " + JAVA_JOB_OPTIONS.get(conf));
+        } else {
+            LOG.info("Using default java options");
+        }
+
+        /**
+         * Netty tuning (custom, not verified other than the buffer sizes)
+         */
+        NETTY_USE_DIRECT_MEMORY.setIfUnset(conf, true); // this allows to avoid copying objects before sending, but needs
+        // some free space
+
+        REQUEST_SIZE_WARNING_THRESHOLD.setIfUnset(conf, 1);
+        // https://issues.apache.org/jira/projects/GIRAPH/issues/GIRAPH-1145?filter=allopenissues
+        NETTY_CLIENT_THREADS.setIfUnset(conf, max(4, workers - 1));
+        CLIENT_RECEIVE_BUFFER_SIZE.setIfUnset(conf, ONE_MB);
+        CLIENT_SEND_BUFFER_SIZE.setIfUnset(conf, ONE_MB);
+        SERVER_SEND_BUFFER_SIZE.setIfUnset(conf, ONE_MB);
+        SERVER_RECEIVE_BUFFER_SIZE.setIfUnset(conf, ONE_MB);
+        MAX_MSG_REQUEST_SIZE.setIfUnset(conf, ONE_MB);
+        MAX_VERTEX_REQUEST_SIZE.setIfUnset(conf, ONE_MB);
+        MAX_EDGE_REQUEST_SIZE.setIfUnset(conf, ONE_MB);
+
+        USE_MESSAGE_SIZE_ENCODING.setIfUnset(conf, false); // TODO change me?
     }
 
-    /**
-     * Netty tuning (custom, not verified other than the buffer sizes)
-     */
-    NETTY_USE_DIRECT_MEMORY.setIfUnset(conf, true); // this allows to avoid copying objects before sending, but needs
-    // some free space
-
-    REQUEST_SIZE_WARNING_THRESHOLD.setIfUnset(conf, 1);
-    // https://issues.apache.org/jira/projects/GIRAPH/issues/GIRAPH-1145?filter=allopenissues
-    NETTY_CLIENT_THREADS.setIfUnset(conf, max(4, workers - 1));
-    CLIENT_RECEIVE_BUFFER_SIZE.setIfUnset(conf, ONE_MB);
-    CLIENT_SEND_BUFFER_SIZE.setIfUnset(conf, ONE_MB);
-    SERVER_SEND_BUFFER_SIZE.setIfUnset(conf, ONE_MB);
-    SERVER_RECEIVE_BUFFER_SIZE.setIfUnset(conf, ONE_MB);
-    MAX_MSG_REQUEST_SIZE.setIfUnset(conf, ONE_MB);
-    MAX_VERTEX_REQUEST_SIZE.setIfUnset(conf, ONE_MB);
-    MAX_EDGE_REQUEST_SIZE.setIfUnset(conf, ONE_MB);
-
-    USE_MESSAGE_SIZE_ENCODING.setIfUnset(conf, false); // TODO change me?
-  }
-
-  public static void setIgaStoreTypes(GiraphConfiguration conf) {
+    public static void setIgaStoreTypes(GiraphConfiguration conf) {
 //    MESSAGE_ENCODE_AND_STORE_TYPE.setIfUnset(conf, POINTER_LIST_PER_VERTEX);
 
-    INPUT_VERTEX_EDGES_CLASS.set(conf, ByteArrayEdges.class);
-    VERTEX_EDGES_CLASS.set(conf, ByteArrayEdges.class);
+        INPUT_VERTEX_EDGES_CLASS.set(conf, ByteArrayEdges.class);
+        VERTEX_EDGES_CLASS.set(conf, ByteArrayEdges.class);
 
-    MESSAGE_STORE_FACTORY_CLASS.set(conf, InMemoryObjectMessageStoreFactory.class);
+        MESSAGE_STORE_FACTORY_CLASS.set(conf, InMemoryObjectMessageStoreFactory.class);
 //    MESSAGE_STORE_FACTORY_CLASS.set(conf, InMemoryMessageStoreFactory.class);
-  }
+    }
 
-  private static void failPartitionCountSetting() {
-    throw new IllegalArgumentException("Partition count should not be set manually. Modify " +
-        "MIN_PARTITIONS_PER_COMPUTE_THREAD and/or PARTITION_COUNT_MULTIPLIER and /or  the number of workers and " +
-        "cores per worker");
-  }
+    private static void failPartitionCountSetting() {
+        throw new IllegalArgumentException("Partition count should not be set manually. Modify " +
+                "MIN_PARTITIONS_PER_COMPUTE_THREAD and/or PARTITION_COUNT_MULTIPLIER and /or  the number of workers and " +
+                "cores per worker");
+    }
 
-  private static void customConfig(GiraphConfiguration conf) {
-    // Limit number of open requests to 2000
+    private static void customConfig(GiraphConfiguration conf) {
+        // Limit number of open requests to 2000
 //    LIMIT_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, true);
 //    StaticFlowControl.MAX_NUMBER_OF_OPEN_REQUESTS.setIfUnset(conf, 10000);
 
-    // we use this instead
-    LIMIT_OPEN_REQUESTS_PER_WORKER.setIfUnset(conf, true);
-    MAX_NUM_OF_UNSENT_REQUESTS.setIfUnset(conf, 10000);
-    MAX_NUM_OF_OPEN_REQUESTS_PER_WORKER.setIfUnset(conf, 1000);
-  }
-
-  private static String currentJar() {
-    return new File(IgaConfiguration.class.getProtectionDomain()
-        .getCodeSource()
-        .getLocation()
-        .getPath()).getName();
-  }
-
-  private static List<String> getMemoryJavaOpts(Configuration conf) {
-    return Lists.newArrayList(
-        "-XX:+UseNUMA"
-    );
-  }
-
-  private static List<String> getGcJavaOpts(Configuration conf) {
-    List<String> gcJavaOpts = new ArrayList<>();
-    if (USE_G1_COLLECTOR.get(conf)) {
-      gcJavaOpts.add("-XX:+UseG1GC");
-      gcJavaOpts.add("-XX:MaxGCPauseMillis=500");
-      gcJavaOpts.add("-XX:+UseStringDeduplication");
-//      gcJavaOpts.add("-XX:G1HeapRegionSize=");
-    } else {
-      int newGenMemoryGb = Math.max(1, (int) (WORKER_MEMORY.get(conf) * NEW_GEN_MEMORY_FRACTION.get(conf)));
-      // Use parallel gc collector
-      gcJavaOpts.add("-XX:+UseParallelGC");
-      gcJavaOpts.add("-XX:+UseParallelOldGC");
-      // Fix new size generation
-      gcJavaOpts.add("-XX:NewSize=" + newGenMemoryGb + "G");
-      gcJavaOpts.add("-XX:MaxNewSize=" + newGenMemoryGb + "G");
+        // we use this instead
+        LIMIT_OPEN_REQUESTS_PER_WORKER.setIfUnset(conf, true);
+        MAX_NUM_OF_UNSENT_REQUESTS.setIfUnset(conf, 10000);
+        MAX_NUM_OF_OPEN_REQUESTS_PER_WORKER.setIfUnset(conf, 1000);
     }
-    return gcJavaOpts;
-  }
 
-  private static List<String> tuningJavaOpts() {
-    return newArrayList("-server");
-  }
-
-  private static List<String> observabilityJavaOpts(GiraphConfiguration conf) {
-    List<String> opts = Lists.newArrayList(
-        "-XX:+UnlockDiagnosticVMOptions",
-        "-XX:+PrintFlagsFinal",
-        "-XX:OnOutOfMemoryError='free -m'"
-    );
-    if (HEAP_DUMP_ON_OOM.get(conf)) {
-      opts.add("-XX:+HeapDumpOnOutOfMemoryError");
-      opts.add("-XX:HeapDumpPath=<LOG_DIR>/@taskid@.hprof");
+    private static String currentJar() {
+        return new File(IgaConfiguration.class.getProtectionDomain()
+                .getCodeSource()
+                .getLocation()
+                .getPath()).getName();
     }
-    return opts;
-  }
+
+    private static List<String> getMemoryJavaOpts(Configuration conf) {
+        return Lists.newArrayList(
+                "-XX:+UseNUMA"
+        );
+    }
+
+    private static List<String> getGcJavaOpts(Configuration conf) {
+        List<String> gcJavaOpts = new ArrayList<>();
+        int newGenMemoryGb = Math.max(1, (int) (WORKER_MEMORY.get(conf) * NEW_GEN_MEMORY_FRACTION.get(conf)));
+        // Use parallel gc collector
+        gcJavaOpts.add("-XX:+UseParallelGC");
+        gcJavaOpts.add("-XX:+UseParallelOldGC");
+        // Fix new size generation
+        gcJavaOpts.add("-XX:NewSize=" + newGenMemoryGb + "G");
+        gcJavaOpts.add("-XX:MaxNewSize=" + newGenMemoryGb + "G");
+        return gcJavaOpts;
+    }
+
+    private static List<String> tuningJavaOpts() {
+        return newArrayList("-server");
+    }
+
+    private static List<String> observabilityJavaOpts(GiraphConfiguration conf) {
+        List<String> opts = Lists.newArrayList(
+                "-XX:+UnlockDiagnosticVMOptions",
+                "-XX:+PrintFlagsFinal",
+                "-XX:OnOutOfMemoryError='free -m'"
+        );
+        if (HEAP_DUMP_ON_OOM.get(conf)) {
+            opts.add("-XX:+HeapDumpOnOutOfMemoryError");
+            opts.add("-XX:HeapDumpPath=<LOG_DIR>/@taskid@.hprof");
+        }
+        return opts;
+    }
 
 
 }

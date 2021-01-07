@@ -1,2 +1,2 @@
-export IGA_WORKER_MEMORY=32
-export RUNS=10
+export IGA_WORKER_MEMORY=50
+export RUNS=3
