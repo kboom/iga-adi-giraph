@@ -3,6 +3,7 @@
 # Get the directories
 SCRIPTPATH="$( cd "$(dirname "$0")" || exit ; pwd -P )"
 RUN_SCRIPT="${SCRIPTPATH}/run.cloud.sh"
+RECORD_USAGE_SCRIPT="${SCRIPTPATH}/record.cpu.usage.sh"
 
 set -x
 IGA_STEPS=${IGA_STEPS:-2}
@@ -14,6 +15,9 @@ IGA_MEMORY_OVERHEAD_PERCENT=${IGA_MEMORY_OVERHEAD_PERCENT:-0.2}
 IGA_USE_DIRECT_MEMORY=${IGA_USE_DIRECT_MEMORY:-true}
 IGA_MIN_PARTITIONS_PER_COMPUTE_THREAD=${IGA_MIN_PARTITIONS_PER_COMPUTE_THREAD:-1}
 IGA_LOG_LEVEL=${IGA_LOG_LEVEL:-error}
+SUITE_NAME=${SUITE_NAME:-oneoff}
+
+bash -c "$RECORD_USAGE_SCRIPT $SUITE_NAME" &
 
 exec "${RUN_SCRIPT}" \
   -s "${IGA_STEPS}" \
@@ -31,3 +35,5 @@ exec "${RUN_SCRIPT}" \
   --config giraph.minPartitionsPerComputeThread="${IGA_MIN_PARTITIONS_PER_COMPUTE_THREAD}" \
   --config iga.storeSolution=false
   "${@}"
+
+pkill -P $$
