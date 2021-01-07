@@ -14,21 +14,30 @@ PERF_VARIABLE_NAME="${1}"
 SCRIPTPATH="$( cd "$(dirname "$0")" || exit ; pwd -P )"
 RUN_SCRIPT="${SCRIPTPATH}/run.parameterized.sh"
 DOWNLOAD_LOGS_SCRIPT="${SCRIPTPATH}/download.logs.sh"
-RECORD_USAGE_SCRIPT="${SCRIPTPATH}/record.cpu.usage.sh"
+RECORD_CPU_USAGE_SCRIPT="${SCRIPTPATH}/record.cpu.usage.sh"
+RECORD_MEMORY_USAGE_SCRIPT="${SCRIPTPATH}/record.memory.usage.sh"
+PRINT_SYSTEM_INFO="${SCRIPTPATH}/print.sys.info.sh"
 
 # Naming
 TIMESTAMP=$(date +%s)
+
+# Make sure recordings write to this directory
+export OUTPUT_DIR="$(pwd)"
 
 for ((i=2;i<=$#;i++)); do
   VARIABLE_VALUE="${!i}"
   export "${PERF_VARIABLE_NAME}"="${VARIABLE_VALUE}"
   OUTPUT_FILE="suite-${TIMESTAMP}-${PERF_VARIABLE_NAME}-${VARIABLE_VALUE}.txt"
 
-  echo "Starting CPU times recording"
-  bash -c "$RECORD_USAGE_SCRIPT $SUITE_NAME" &
+  echo "Printing system info"
+  bash -c "$PRINT_SYSTEM_INFO $SUITE_NAME"
+  echo "Starting CPU usage recording"
+  bash -c "$RECORD_CPU_USAGE_SCRIPT $SUITE_NAME" &
+  echo "Starting memory usage recording"
+  bash -c "$RECORD_MEMORY_USAGE_SCRIPT $SUITE_NAME" &
   "${RUN_SCRIPT}" |& tee  "${OUTPUT_FILE}"
-  echo "Stopping CPU times recording"
-  kill "$(jobs -p)"
+  echo "Stopping recordings"
+  jobs -p | xargs kill
   sleep "${COOLDOWN}"
 
   echo "Storing application state"
@@ -43,8 +52,9 @@ for ((i=2;i<=$#;i++)); do
   echo "Downloading logs for ${APP_ID}"
   "${DOWNLOAD_LOGS_SCRIPT}" "${APP_ID}"
 
-  echo "Copying suite file to the log dir"
+  echo "Copying suite files to the log dir"
   cp "${OUTPUT_FILE}"* "logs/${APP_ID}/"
+  cp "${SUITE_NAME}"*.txt "logs/${APP_ID}/"
 
   echo "Copying parameters to the log dir"
   printenv | grep "IGA_" | sed -e 's/^/export /' | cat - > "logs/${APP_ID}/parameters.sh"
