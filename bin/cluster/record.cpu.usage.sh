@@ -16,7 +16,7 @@ LOG_PSH_FILE="$LOGS_DIR/$RUN-psh.txt"
 SCHEDSTAT_CPU_FILE="$LOGS_DIR/$RUN-schedstat-cpu.txt"
 SCHEDSTAT_PROC_FILE="$LOGS_DIR/$RUN-schedstat-proc.txt"
 
-DELTA=1
+DELTA=0.1
 
 #top -1 -bSHEk -u yarn  | grep -Fv -e '%Cpu' -e 'KiB Mem' -e 'KiB Swap' -e 'Threads:' -e 'top -' -e ' PPID ' | grep -v -e '^$' | while IFS= read -r line; do printf '%s %s\n' "$(date +%s%3N)" "$line"; done
 CONVERT_SPACES_TO_COMMAS="sed 's/\( \{1,\}\)/,/g'"
@@ -51,6 +51,6 @@ PSH_COMMAND="ps -AH -o $PS_COLUMNS_OF_INTEREST --sort=cp | sed \"s#^#\$(date +%s
 PS_TO_SUITE_CSV="awk -v suite=\"$RUN\" '{ cmd=substr(\$0,100); gsub(/ +/, \"-\", cmd); print suite,substr(\$0,0,99), cmd}' | sed '1d;\$d' | sed 's/\( \{1,\}\)/,/g'"
 bash -c "$PS_HEADER_COMMAND" > "$LOG_PS_FILE"
 watch -t -n $DELTA "($PS_COMMAND | $PS_TO_SUITE_CSV) | tee -a $LOG_PS_FILE" > /dev/null 2>&1 &
-watch -t -n "$(("$DELTA"*10))" "($PSH_COMMAND) | tee -a $LOG_PSH_FILE" > /dev/null 2>&1 &
+watch -t -n "$(echo "$DELTA*10" | bc)" "($PSH_COMMAND) | tee -a $LOG_PSH_FILE" > /dev/null 2>&1 &
 
 for job in $(jobs -p); do wait "${job}"; done
