@@ -3,6 +3,8 @@ set +xe
 # This will sample the usage without computing running averages like top does.
 # Therefore we might not have 100% accurate results particularly for short-duration changes.
 # We lower the watch interval to every 100 ms (the lowest value possible).
+trap "exit" INT TERM
+trap "kill 0" EXIT
 
 # https://man7.org/linux/man-pages/man1/ps.1.html
 RUN="$1"
@@ -53,5 +55,4 @@ bash -c "$PS_HEADER_COMMAND" > "$LOG_PS_FILE"
 watch -t -n $DELTA "($PS_COMMAND | $PS_TO_SUITE_CSV) | tee -a $LOG_PS_FILE" > /dev/null 2>&1 &
 watch -t -n "$(echo "$DELTA*10" | bc)" "($PSH_COMMAND) | tee -a $LOG_PSH_FILE" > /dev/null 2>&1 &
 
-trap 'jobs -p | xargs kill' EXIT
 for job in $(jobs -p); do wait "${job}"; done

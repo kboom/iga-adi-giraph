@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 set -ex
+trap "exit" INT TERM
+trap "kill 0" EXIT
 
 COOLDOWN=${COOLDOWN:-30s}
 
