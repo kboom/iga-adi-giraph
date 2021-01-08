@@ -44,7 +44,7 @@ watch -t -n $DELTA "($SCHEDSTAT_CPU_CMD) | tee -a $SCHEDSTAT_CPU_FILE" > /dev/nu
 watch -t -n $DELTA "($SCHEDSTAT_PROC_CMD | $CONVERT_TO_SUITE_CSV) | tee -a $SCHEDSTAT_PROC_FILE" > /dev/null 2>&1 &
 
 # PS
-PS_COLUMNS_OF_INTEREST="pgrp,ppid,pid,thcount,tid,numa,psr,sgi_p,state,stat,cp,%mem,pri,rtprio,policy,sched,cputime,comm"
+PS_COLUMNS_OF_INTEREST="pgrp,ppid,pid,thcount,tid,numa,psr,sgi_p,state,stat,cp,%mem,pri,rtprio,policy,sched,cputime,comm" # add utime and stime to see what is the proportion or running time in user and kernel mode
 PS_HEADER_COMMAND="ps -o $PS_COLUMNS_OF_INTEREST | head -n 1 | echo \"SUITE SYSTIME      \$(cat -)\" | $CONVERT_SPACES_TO_COMMAS"
 PS_COMMAND="ps --no-headers Hr -u yarn -o $PS_COLUMNS_OF_INTEREST --sort=cp | sed \"s#^#\$(date +%s%3N) #\""
 PSH_COMMAND="ps -AH -o $PS_COLUMNS_OF_INTEREST --sort=cp | sed \"s#^#\$(date +%s%3N) #\""
@@ -53,4 +53,5 @@ bash -c "$PS_HEADER_COMMAND" > "$LOG_PS_FILE"
 watch -t -n $DELTA "($PS_COMMAND | $PS_TO_SUITE_CSV) | tee -a $LOG_PS_FILE" > /dev/null 2>&1 &
 watch -t -n "$(echo "$DELTA*10" | bc)" "($PSH_COMMAND) | tee -a $LOG_PSH_FILE" > /dev/null 2>&1 &
 
+trap 'jobs -p | xargs kill' EXIT
 for job in $(jobs -p); do wait "${job}"; done
