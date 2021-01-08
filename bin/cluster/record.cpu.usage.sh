@@ -13,7 +13,7 @@ HEADER_COMMAND="ps -o $COLUMNS_OF_INTEREST | head -n 1 | echo \" SYSTIME      \$
 PS_COMMAND="ps --no-headers Hr -u yarn -o $COLUMNS_OF_INTEREST --sort=cp | sed \"s#^#\$(date +%s%3N) #\""
 PSH_COMMAND="ps -AH -o $COLUMNS_OF_INTEREST --sort=cp | sed \"s#^#\$(date +%s%3N) #\""
 
-bash -c "$HEADER_COMMAND" >"$LOG_PS_FILE"
+bash -c "$HEADER_COMMAND" > "$LOG_PS_FILE"
 watch -t -n 1 "($PS_COMMAND) | tee -a $LOG_PS_FILE" > /dev/null 2>&1 &
 watch -t -n 10 "($PSH_COMMAND) | tee -a $LOG_PSH_FILE" > /dev/null 2>&1 &
 
