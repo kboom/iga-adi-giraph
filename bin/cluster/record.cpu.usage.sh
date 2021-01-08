@@ -20,10 +20,11 @@ PSH_COMMAND="ps -AH -o $COLUMNS_OF_INTEREST --sort=cp | sed \"s#^#\$(date +%s%3N
 
 #top -1 -bSHEk -u yarn  | grep -Fv -e '%Cpu' -e 'KiB Mem' -e 'KiB Swap' -e 'Threads:' -e 'top -' -e ' PPID ' | grep -v -e '^$' | while IFS= read -r line; do printf '%s %s\n' "$(date +%s%3N)" "$line"; done
 TOP_COMMAND="top -1 -bSHEk -u yarn  | grep -Fv -e '%Cpu' -e 'KiB Mem' -e 'KiB Swap' -e 'Threads:' -e 'top -' -e ' PPID ' | grep -v -e '^$' | while IFS= read -r line; do printf '%s %s\n' \"\$(date +%s%3N)\" \"\$line\"; done" # all configuration is expected to be in toprc file
+CONVERT_TO_CSV="awk -v suite=\"$RUN\" '{ cmd=substr(\$0,147); gsub(/ +/, \"-\", cmd); print suite,substr(\$0,0,146), cmd}' | sed 's/\( \{1,\}\)/,/g'"
 
 bash -c "$PS_HEADER_COMMAND" > "$LOG_PS_FILE"
 watch -t -n 0.1 "($PS_COMMAND) | tee -a $LOG_PS_FILE" > /dev/null 2>&1 &
 watch -t -n 10 "($PSH_COMMAND) | tee -a $LOG_PSH_FILE" > /dev/null 2>&1 &
-bash -c "$TOP_COMMAND" > "$LOG_TOP_FILE" &
+bash -c "$TOP_COMMAND | $CONVERT_TO_CSV" > "$LOG_TOP_FILE" &
 
 for job in $(jobs -p); do wait "${job}"; done
