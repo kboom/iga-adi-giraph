@@ -17,4 +17,4 @@ else
   ROW_PREFIX="${2}"
 fi
 
-awk -v suite="$ROW_PREFIX" '{ cmd=substr($0,100); gsub(/ +/, "-", cmd); print suite,substr($0,0,99), cmd}' < "$INPUT" | sed 's/\( \{1,\}\)/,/g'
+awk -v suite="$ROW_PREFIX" '{ cmd=substr($0,100); gsub(/ +/, "-", cmd); print suite,substr($0,0,99), cmd}' < "$INPUT" | sed '1d;$d' | sed 's/\( \{1,\}\)/,/g'

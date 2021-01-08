@@ -12,6 +12,7 @@ else
   SUITE_DIR="${1}"
 fi
 
+echo "EXP,SYSTIME,PGRP,PPID,PID,THCNT,TID,NUMA,PSR,P,S,STAT,CP,%MEM,PRI,RTPRIO,POL,SCH,TIME,COMMAND"
 for dir in "${SUITE_DIR}"/*; do
   ps_filename=$(realpath "$dir"/*-ps.txt)
   suite_exp_name=$(basename "$dir")
