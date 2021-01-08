@@ -35,7 +35,7 @@ for ((i=2;i<=$#;i++)); do
   bash -c "$RECORD_CPU_USAGE_SCRIPT $SUITE_NAME" &
   echo "Starting memory usage recording"
   bash -c "$RECORD_MEMORY_USAGE_SCRIPT $SUITE_NAME" &
-  "${RUN_SCRIPT}" |& tee  "${OUTPUT_FILE}"
+  time("$RUN_SCRIPT") |& tee  "${OUTPUT_FILE}"
   echo "Stopping recordings"
   jobs -p | xargs kill
   sleep "${COOLDOWN}"
