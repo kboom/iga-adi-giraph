@@ -16,5 +16,5 @@ gcloud compute scp \
   --zone "europe-west4-a" \
   --project "hyperflow-268022" \
   --tunnel-through-iap \
-  --recurse "${IGA_DIST}"/*.jar "${CLUSTER_DIR}"/* \
+  --recurse "${IGA_DIST}"/*.jar "${CLUSTER_DIR}"/* "${CLUSTER_DIR}"/.config "${CLUSTER_DIR}"/.bashrc \
   "${MASTER_ID}":~/
