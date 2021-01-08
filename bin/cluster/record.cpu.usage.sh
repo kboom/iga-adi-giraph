@@ -16,6 +16,8 @@ LOG_PSH_FILE="$LOGS_DIR/$RUN-psh.txt"
 SCHEDSTAT_CPU_FILE="$LOGS_DIR/$RUN-schedstat-cpu.txt"
 SCHEDSTAT_PROC_FILE="$LOGS_DIR/$RUN-schedstat-proc.txt"
 
+DELTA=1
+
 #top -1 -bSHEk -u yarn  | grep -Fv -e '%Cpu' -e 'KiB Mem' -e 'KiB Swap' -e 'Threads:' -e 'top -' -e ' PPID ' | grep -v -e '^$' | while IFS= read -r line; do printf '%s %s\n' "$(date +%s%3N)" "$line"; done
 CONVERT_SPACES_TO_COMMAS="sed 's/\( \{1,\}\)/,/g'"
 PREPEND_WITH_SUITE="awk -v suite=\"$RUN\" '{ print suite,\$0}'"
@@ -38,8 +40,8 @@ bash -c "$TOP_BASE_CMD" | tee >(bash -c "$TOP_PROCESSES_FILTER | $TOP_PROCESSES_
 # http://eaglet.pdxhosts.com/rick/linux/schedstat/v4/format-4.html
 SCHEDSTAT_CPU_CMD="cat /proc/schedstat | grep cpu | sed 's/\( \{1,\}\)/,/g' | sed \"s#^#\$(date +%s%3N),#\""
 SCHEDSTAT_PROC_CMD="tail -n +1 /proc/*/schedstat | awk -v tag=\"^[\d ]+$\" '/^==>.*<==$/ { block = \$0; output = 0; next } { gsub(/==> \/proc\//, \"\", block); gsub(/\/schedstat <==/, \" \", block); block = block \$0 } { if(NR%2==0) print block }'"
-watch -t -n 0.1 "($SCHEDSTAT_CPU_CMD) | tee -a $SCHEDSTAT_CPU_FILE" > /dev/null 2>&1 &
-watch -t -n 1 "($SCHEDSTAT_PROC_CMD | $CONVERT_TO_SUITE_CSV) | tee -a $SCHEDSTAT_PROC_FILE" > /dev/null 2>&1 &
+watch -t -n $DELTA "($SCHEDSTAT_CPU_CMD) | tee -a $SCHEDSTAT_CPU_FILE" > /dev/null 2>&1 &
+watch -t -n $DELTA "($SCHEDSTAT_PROC_CMD | $CONVERT_TO_SUITE_CSV) | tee -a $SCHEDSTAT_PROC_FILE" > /dev/null 2>&1 &
 
 # PS
 PS_COLUMNS_OF_INTEREST="pgrp,ppid,pid,thcount,tid,numa,psr,sgi_p,state,stat,cp,%mem,pri,rtprio,policy,sched,cputime,comm"
@@ -48,7 +50,7 @@ PS_COMMAND="ps --no-headers Hr -u yarn -o $PS_COLUMNS_OF_INTEREST --sort=cp | se
 PSH_COMMAND="ps -AH -o $PS_COLUMNS_OF_INTEREST --sort=cp | sed \"s#^#\$(date +%s%3N) #\""
 PS_TO_SUITE_CSV="awk -v suite=\"$RUN\" '{ cmd=substr(\$0,100); gsub(/ +/, \"-\", cmd); print suite,substr(\$0,0,99), cmd}' | sed '1d;\$d' | sed 's/\( \{1,\}\)/,/g'"
 bash -c "$PS_HEADER_COMMAND" > "$LOG_PS_FILE"
-watch -t -n 0.1 "($PS_COMMAND | $PS_TO_SUITE_CSV) | tee -a $LOG_PS_FILE" > /dev/null 2>&1 &
-watch -t -n 10 "($PSH_COMMAND) | tee -a $LOG_PSH_FILE" > /dev/null 2>&1 &
+watch -t -n $DELTA "($PS_COMMAND | $PS_TO_SUITE_CSV) | tee -a $LOG_PS_FILE" > /dev/null 2>&1 &
+watch -t -n "$(("$DELTA"*10))" "($PSH_COMMAND) | tee -a $LOG_PSH_FILE" > /dev/null 2>&1 &
 
 for job in $(jobs -p); do wait "${job}"; done
