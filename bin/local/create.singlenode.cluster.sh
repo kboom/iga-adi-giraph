@@ -11,9 +11,9 @@ gcloud \
     dataproc clusters create iga-adi \
     --region=europe-west4 \
     --service-account=grzegorz-gurgul-584@hyperflow-268022.iam.gserviceaccount.com \
-    --master-boot-disk-size=500GB \
+    --master-boot-disk-size=100GB \
     --single-node \
-    --master-machine-type=n1-standard-96 \
+    --master-machine-type=n1-standard-8 \
     --master-min-cpu-platform="Intel Skylake" \
     --image-version="1.5-debian10" \
     --max-age=1d \
