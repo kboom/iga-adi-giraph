@@ -7,4 +7,4 @@
 
 export SUITE_NAME="weak-scaling"
 export IGA_TOTAL_MEMORY=300
-export RUNS=5
+export RUNS=3

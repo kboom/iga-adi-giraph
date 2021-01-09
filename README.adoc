@@ -293,6 +293,10 @@ https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html[this guide]
 
 https://exceptionshub.com/hadoop-no-filesystem-for-scheme-file.html[Missing filesystem]
 
+== Meaning of collected metrics
+
+* link:https://www.reddit.com/r/linux/comments/1hk5ow/free_buffer_swap_dirty_procmeminfo_explained/[Meminfo]
+
 == Caveats
 
 * `giraph.SplitMasterWorker` cannot be `false` for yarn jobs.
