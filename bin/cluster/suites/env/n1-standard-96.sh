@@ -6,5 +6,5 @@
 # N = 49152^2
 
 export SUITE_NAME="weak-scaling"
-export IGA_TOTAL_MEMORY=8
-export RUNS=3
+export IGA_TOTAL_MEMORY=300
+export RUNS=5

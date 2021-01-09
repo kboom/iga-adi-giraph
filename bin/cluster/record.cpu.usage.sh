@@ -4,7 +4,7 @@ set +xe
 # Therefore we might not have 100% accurate results particularly for short-duration changes.
 # We lower the watch interval to every 100 ms (the lowest value possible).
 trap "exit" INT TERM
-trap "kill 0" EXIT
+trap 'jobs -p | xargs kill' EXIT
 
 # https://man7.org/linux/man-pages/man1/ps.1.html
 RUN="$1"

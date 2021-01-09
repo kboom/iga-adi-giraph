@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set +xe
 trap "exit" INT TERM
-trap "kill 0" EXIT
+trap 'jobs -p | xargs kill' EXIT
 
 # https://man7.org/linux/man-pages/man1/ps.1.html
 RUN="$1"
