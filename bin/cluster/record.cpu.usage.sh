@@ -18,7 +18,7 @@ LOG_PSH_FILE="$LOGS_DIR/$RUN-psh.txt"
 SCHEDSTAT_CPU_FILE="$LOGS_DIR/$RUN-schedstat-cpu.csv"
 SCHEDSTAT_PROC_FILE="$LOGS_DIR/$RUN-schedstat-proc.csv"
 
-DELTA=0.1
+DELTA=1
 
 #top -1 -bSHEk -u yarn  | grep -Fv -e '%Cpu' -e 'KiB Mem' -e 'KiB Swap' -e 'Threads:' -e 'top -' -e ' PPID ' | grep -v -e '^$' | while IFS= read -r line; do printf '%s %s\n' "$(date +%s%3N)" "$line"; done
 CONVERT_SPACES_TO_COMMAS="sed 's/\( \{1,\}\)/,/g'"
@@ -34,8 +34,8 @@ bash -c "$TOP_PROCESS_HEADER" > "$LOG_TOP_PROCESS_FILE"
 bash -c "$TOP_CPUS_HEADER" > "$LOG_TOP_CPUS_FILE"
 
 # Use the same input for all outputs to save some CPU time
-TOP_PROCESSES_FILTER="grep -Fv -e '%Cpu' -e 'KiB Mem' -e 'KiB Swap' -e 'Threads:' -e 'top -' -e ' PPID ' | grep -v -e '^$' | while IFS= read -r line; do printf '%s %s\n' \"\$(date +%s%3N)\" \"\$line\"; done" # all configuration is expected to be in toprc file
-TOP_PROCESSES_TO_SUITE_CSV="awk -v suite=\"$RUN\" '{ cmd=substr(\$0,147); gsub(/ +/, \"-\", cmd); print suite,substr(\$0,0,146), cmd}' | $CONVERT_SPACES_TO_COMMAS"
+TOP_PROCESSES_FILTER="awk -v RS='top - ' -v FS='\n' '{date=substr(\$0,0,9); for(i=15;i<=NF-2;i++) { print date,\$i }}'" # all configuration is expected to be in toprc file
+TOP_PROCESSES_TO_SUITE_CSV="awk -v suite=\"$RUN\" '{ cmd=substr(\$0,142); gsub(/ +/, \"-\", cmd); print suite,substr(\$0,0,141), cmd}' | $CONVERT_SPACES_TO_COMMAS"
 TOP_CPUS_FILTER="grep %Cpu | sed 's/[%A-Za-z ]\+//g' | sed 's/:/,/g' | while IFS= read -r line; do printf '%s %s\n' \"\$(date +%s%3N)\" \"\$line\"; done"
 bash -c "$TOP_BASE_CMD" | tee >(bash -c "$TOP_PROCESSES_FILTER | $TOP_PROCESSES_TO_SUITE_CSV" >> "$LOG_TOP_PROCESS_FILE") >(bash -c "$TOP_CPUS_FILTER | $CONVERT_TO_SUITE_CSV" >> "$LOG_TOP_CPUS_FILE") > /dev/null &
 
@@ -59,3 +59,4 @@ watch -t -n $DELTA "($PS_COMMAND | $PS_TO_SUITE_CSV) | tee -a $LOG_PS_FILE" > /d
 watch -t -n "$(echo "$DELTA*10" | bc)" "($PSH_COMMAND) | tee -a $LOG_PSH_FILE" > /dev/null 2>&1 &
 
 for job in $(jobs -p); do wait "${job}"; done
+

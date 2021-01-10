@@ -14,6 +14,7 @@ IGA_MEMORY_OVERHEAD_PERCENT=${IGA_MEMORY_OVERHEAD_PERCENT:-0.2}
 IGA_USE_DIRECT_MEMORY=${IGA_USE_DIRECT_MEMORY:-true}
 IGA_MIN_PARTITIONS_PER_COMPUTE_THREAD=${IGA_MIN_PARTITIONS_PER_COMPUTE_THREAD:-1}
 IGA_LOG_LEVEL=${IGA_LOG_LEVEL:-error}
+IGA_CONTAINER_JVM_ADDITIONAL_OPTIONS=${IGA_CONTAINER_JVM_ADDITIONAL_OPTIONS:-""}
 
 exec "${RUN_SCRIPT}" \
   -s "${IGA_STEPS}" \
@@ -29,5 +30,6 @@ exec "${RUN_SCRIPT}" \
   --config giraph.yarn.task.overhead.percent="${IGA_MEMORY_OVERHEAD_PERCENT}" \
   --config giraph.useNettyDirectMemory="${IGA_USE_DIRECT_MEMORY}" \
   --config giraph.minPartitionsPerComputeThread="${IGA_MIN_PARTITIONS_PER_COMPUTE_THREAD}" \
-  --config iga.storeSolution=false
+  --config iga.storeSolution=false \
+  --config iga.container.java.additional.opts="${IGA_CONTAINER_JVM_ADDITIONAL_OPTIONS}" \
   "${@}"

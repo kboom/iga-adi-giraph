@@ -17,6 +17,5 @@ gcloud \
     --master-min-cpu-platform="Intel Skylake" \
     --image-version="1.5-debian10" \
     --max-age=1d \
-    --no-address \
     --optional-components=ZOOKEEPER \
     --properties=yarn:yarn.log-aggregation-enable=true

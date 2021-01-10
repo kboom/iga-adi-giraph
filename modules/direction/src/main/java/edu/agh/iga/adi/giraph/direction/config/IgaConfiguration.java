@@ -75,6 +75,10 @@ public class IgaConfiguration {
             "passed " +
             "to the workers");
 
+    public static final StrConfOption JAVA_JOB_ADDITIONAL_OPTIONS = new StrConfOption("iga.container.java.additional.opts", null, "Additional java options " +
+            "passed " +
+            "to the workers");
+
     public static final IntConfOption PROBLEM_SIZE = new IntConfOption("iga.problem.size", 12, "The number of elements in one direction");
     public static final EnumConfOption<ProblemType> PROBLEM_TYPE = new EnumConfOption<>("iga.problem.type", ProblemType.class, PROJECTION, "The type of the problem to simulate");
     public static final EnumConfOption<InitialProblemType> INITIAL_PROBLEM_TYPE = new EnumConfOption<>("iga.problem.initial.type", InitialProblemType.class, CONSTANT, "The type of the initial surface to generate");
@@ -233,7 +237,8 @@ public class IgaConfiguration {
             javaOpts.addAll(tuningJavaOpts());
             javaOpts.addAll(observabilityJavaOpts(conf));
             val options = join(javaOpts, " ");
-            JAVA_JOB_OPTIONS.setIfUnset(conf, options);
+            val additionalOptions = JAVA_JOB_ADDITIONAL_OPTIONS.get(conf);
+            JAVA_JOB_OPTIONS.setIfUnset(conf, options + " " + additionalOptions);
             LOG.info("Configuring java options: " + JAVA_JOB_OPTIONS.get(conf));
         } else {
             LOG.info("Using default java options");
@@ -301,13 +306,9 @@ public class IgaConfiguration {
 
     private static List<String> getGcJavaOpts(Configuration conf) {
         List<String> gcJavaOpts = new ArrayList<>();
-        int newGenMemoryGb = Math.max(1, (int) (WORKER_MEMORY.get(conf) * NEW_GEN_MEMORY_FRACTION.get(conf)));
         // Use parallel gc collector
         gcJavaOpts.add("-XX:+UseParallelGC");
         gcJavaOpts.add("-XX:+UseParallelOldGC");
-        // Fix new size generation
-        gcJavaOpts.add("-XX:NewSize=" + newGenMemoryGb + "G");
-        gcJavaOpts.add("-XX:MaxNewSize=" + newGenMemoryGb + "G");
         return gcJavaOpts;
     }
 
@@ -319,7 +320,8 @@ public class IgaConfiguration {
         List<String> opts = Lists.newArrayList(
                 "-XX:+UnlockDiagnosticVMOptions",
                 "-XX:+PrintFlagsFinal",
-                "-XX:OnOutOfMemoryError='free -m'"
+                "-XX:OnOutOfMemoryError='free -m'",
+                "-XX:+ExitOnOutOfMemoryError"
         );
         if (HEAP_DUMP_ON_OOM.get(conf)) {
             opts.add("-XX:+HeapDumpOnOutOfMemoryError");

@@ -11,8 +11,8 @@ gcloud \
     --service-account=grzegorz-gurgul-584@hyperflow-268022.iam.gserviceaccount.com \
     --master-boot-disk-size=50GB \
     --worker-boot-disk-size=50GB \
-    --master-machine-type=n1-standard-8 \
-    --worker-machine-type=n1-standard-96 \
+    --master-machine-type=n1-standard-4 \
+    --worker-machine-type=n1-standard-8 \
     --num-workers=4 \
     --max-idle=1h \
     --max-age=1d \

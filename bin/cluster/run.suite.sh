@@ -37,7 +37,7 @@ for ((i=2;i<=$#;i++)); do
   bash -c "$RECORD_MEMORY_USAGE_SCRIPT $SUITE_NAME" &
   time("$RUN_SCRIPT") |& tee  "${OUTPUT_FILE}"
   echo "Stopping recordings"
-  jobs -p | xargs kill
+  jobs -p | xargs kill || true
   sleep "${COOLDOWN}"
 
   echo "Storing application state"
