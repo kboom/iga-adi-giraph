@@ -22,7 +22,7 @@ size2height=(
   ["192"]=6
 )
 
-printf "problemSize,workers,threads,input_ms,shutdown_ms,step_solution_ms,total_ms,init_ms,factorization_ms,backwards_substitution_ms,transpose_map_ms,transpose_reduce_ms\n"
+printf "problemSize,workers,threads,steps,input_ms,shutdown_ms,step_solution_ms,total_ms,init_ms,factorization_ms,backwards_substitution_ms,transpose_map_ms,transpose_reduce_ms\n"
 
 for dir in "${SUITE_DIR}"/*
 do
