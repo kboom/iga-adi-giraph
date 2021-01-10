@@ -57,7 +57,7 @@ for ((i=2;i<=$#;i++)); do
   cp "${SUITE_NAME}"*.txt "${SUITE_NAME}"*.csv "logs/${APP_ID}/"
 
   echo "Copying parameters to the log dir"
-  printenv | grep "IGA_" | sed -e 's/^/export /' | cat - > "logs/${APP_ID}/parameters.sh"
+  printenv | grep "IGA_" | sed -e 's/^\(.*\)=\(.*\)$/export \1="\2"/' | cat - > "logs/${APP_ID}/parameters.sh"
 
   echo "Renaming dir to match suite"
   mv "logs/${APP_ID}" "logs/suite-${SUITE_NAME}-${APP_ID}"
