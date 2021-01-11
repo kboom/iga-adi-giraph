@@ -36,7 +36,7 @@ bash -c "$TOP_CPUS_HEADER" > "$LOG_TOP_CPUS_FILE"
 # Use the same input for all outputs to save some CPU time
 TOP_PROCESSES_FILTER="awk -v RS='top - ' -v FS='\n' '{date=substr(\$0,0,9); start=0; for(i=1;i<=NF-2;i++) { if(match(\$i,/ PPID /)) start++; else if(start>0) print date,\$i }}'" # all configuration is expected to be in toprc file
 TOP_PROCESSES_TO_SUITE_CSV="awk -v suite=\"$RUN\" '{ cmd=substr(\$0,142); gsub(/ +/, \"-\", cmd); print suite,substr(\$0,0,141), cmd}' | $CONVERT_SPACES_TO_COMMAS"
-TOP_CPUS_FILTER="awk -v RS='top - ' -v FS='\n' '{date=substr(\$0,0,9); load=\$1; gsub(/^.*load average: /, \"\", load); for(i=3;i<=10;i++) { l=substr(\$i,5); sub(/  :/,\",\",l); gsub(/ [a-z]+/,\"\",l); printf \"%s, %s, %s\n\",date,load,l }}' | sed 's/ //g'"
+TOP_CPUS_FILTER="awk -v RS='top - ' -v FS='\n' '{date=substr(\$0,0,9); load=\$1; gsub(/^.*load average: /, \"\", load); for(i=3;i<=NF;i++) { if(match(\$i,/Mem/)) break; l=substr(\$i,5); sub(/  :/,\",\",l); gsub(/ [a-z]+/,\"\",l); printf \"%s, %s, %s\n\",date,load,l }}' | sed 's/ //g'"
 bash -c "$TOP_BASE_CMD" | tee >(bash -c "$TOP_PROCESSES_FILTER | $TOP_PROCESSES_TO_SUITE_CSV" >> "$LOG_TOP_PROCESS_FILE") >(bash -c "$TOP_CPUS_FILTER | $CONVERT_TO_SUITE_CSV" >> "$LOG_TOP_CPUS_FILE") > /dev/null &
 
 # Schedstat reveals what happens with our CPUs (cumulative sum)
