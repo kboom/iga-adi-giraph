@@ -65,7 +65,9 @@ public class IgaPartitionerFactory extends GraphPartitionerFactory<IntWritable, 
 
   @Override
   public int getWorker(int partition, int partitionCount, int workerCount) {
-    return getPartitionInRange(partition, partitionCount, workerCount);
+    int numRows = partitionCount / workerCount;
+    numRows = (numRows * workerCount == partitionCount) ? numRows : numRows + 1;
+    return partition / numRows;
   }
 
   @Override
