@@ -30,16 +30,11 @@ public class IgaMessageWritable implements WritableComparable {
   @Override
   public int compareTo(Object o) {
     IgaMessageWritable other = (IgaMessageWritable) o;
-    return (int) (igaMessage.getSrcId() - other.igaMessage.getSrcId());
+    return igaMessage.getSrcId() - other.igaMessage.getSrcId();
   }
 
   public IgaMessage getIgaMessage() {
     return igaMessage;
-  }
-
-  public IgaMessageWritable withMessage(IgaMessage msg) {
-    igaMessage = msg;
-    return this;
   }
 
   @SuppressWarnings("unused")
@@ -51,7 +46,8 @@ public class IgaMessageWritable implements WritableComparable {
     return (T) igaMessage;
   }
 
-  public void set(IgaMessage igaMessage) {
-    this.igaMessage = igaMessage;
+  public IgaMessageWritable withData(IgaMessage currentData) {
+    this.igaMessage = currentData;
+    return this;
   }
 }

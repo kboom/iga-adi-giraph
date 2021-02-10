@@ -34,6 +34,16 @@ class MemoryCalculatorTest {
       .workers(1)
       .build();
 
+  private static final Problem PROBLEM_24576 = Problem.builder()
+      .size(24576)
+      .workers(1)
+      .build();
+
+  private static final Problem PROBLEM_49152 = Problem.builder()
+          .size(49152)
+          .workers(1)
+          .build();
+
   @Test
   void memoryRequirementsFor12Elements() {
     assertThat(memoryRequirementsFor(PROBLEM_12)).isEqualToComparingFieldByField(
@@ -72,7 +82,7 @@ class MemoryCalculatorTest {
     assertThat(memoryRequirementsFor(PROBLEM_6144)).isEqualToComparingFieldByField(
         MemoryRequirements.builder()
             .problem(PROBLEM_6144)
-            .totalMemory(bytes(3826941952L)) // 8579 MB
+            .totalMemory(bytes(3826941952L)) // 8579 MB // 4.5gib?
             .workerMemory(bytes(3826941952L))
             .build()
     );
@@ -86,6 +96,28 @@ class MemoryCalculatorTest {
             .totalMemory(bytes(15304294400L)) // 34835 MB
             .workerMemory(bytes(15304294400L))
             .build()
+    );
+  }
+
+  @Test
+  void memoryRequirementsFor24576Elements() {
+    assertThat(memoryRequirementsFor(PROBLEM_24576)).isEqualToComparingFieldByField(
+            MemoryRequirements.builder()
+                    .problem(PROBLEM_24576)
+                    .totalMemory(bytes(61210230784L)) // 61210 MB
+                    .workerMemory(bytes(61210230784L))
+                    .build()
+    );
+  }
+
+  @Test
+  void memoryRequirementsFor49152Elements() {
+    assertThat(memoryRequirementsFor(PROBLEM_49152)).isEqualToComparingFieldByField(
+            MemoryRequirements.builder()
+                    .problem(PROBLEM_49152)
+                    .totalMemory(bytes(244827029504L)) // 244827 MB
+                    .workerMemory(bytes(244827029504L))
+                    .build()
     );
   }
 

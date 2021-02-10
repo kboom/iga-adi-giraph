@@ -12,18 +12,19 @@ set style fill solid 1.0 border -1
 set view map
 set grid
 set autoscale fix
-set xlabel 'Nodes [-]' offset -2
+set xlabel 'Threads [-]' offset -2
 set ylabel 'Time [ms]' offset -2
 set format y "10^{%T}"
 set logscale y
+set logscale x 2
 
-set multiplot layout 2,2 columnsfirst title "{/:Bold=15 Strong scalability}"
+set multiplot layout 2,2 columnsfirst
 
 do for [indx in "12288 6144 3072 1536"] {
-	set title sprintf("Problem %s^2",indx)
+	set title sprintf("%s^2 elements",indx)
 	plot \
-		'cluster.csv' using 2:($1==indx?$5:1/0):xtic(2) \
+		'strong-scalability.csv' using 3:($1==indx?$6:1/0):xtic(3) \
 		with boxes t "Total", \
-		'cluster.csv' using 2:($1==indx?$4:1/0):xtic(2) \
+		'strong-scalability.csv' using 3:($1==indx?$5:1/0):xtic(3) \
 		with boxes t "Initialisation" \
 }

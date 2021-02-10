@@ -1,0 +1,77 @@
+library(usl)
+library(usl)
+library(usl)
+library(usl)
+data(raytracer)
+raytracer
+plot(throughput ~ processors, data = raytracer)
+usl.model <- usl(throughput ~ processors, data = raytracer)
+summary(usl.model)
+efficiency(usl.model)
+barplot(efficiency(usl.model), ylab = "efficiency / processor", xlab = "processors")
+coef(usl.model)
+plot(throughput ~ processors, data = raytracer, pch = 16, ylim = c(0, 400))
+plot(usl.model, add = TRUE, bounds = TRUE)
+confint(usl.model, level = 0.95)
+predict(usl.model, data.frame(processors = c(96, 128)))
+library(gdata)
+library(gdata)
+scalability = read.xls("/Users/kbhit/Sources/Personal/iga-adi-giraph/results/strong-scalability-multiworker.csv")
+scalability = read.xls("/Users/kbhit/Sources/Personal/iga-adi-giraph/results/strong-scalability-multiworker.xlsx")
+getwd()
+setwd("/Users/kbhit/Sources/Personal/iga-adi-giraph/results")
+getwd()
+scalability
+cls
+clear
+scalability
+plot(total_ms ~ threads, data = scalability)
+plot(total_ms ~ threads, data = filter(scalability, problemSize = 12288))
+plot(total_ms ~ threads, data = filter(scalability, problemSize == 12288))
+plot(total_ms ~ threads, data = filter(scalability, problemSize == "12288"))
+plot(total_ms ~ threads, data = filter(scalability, "problemSize" == "12288"))
+filter(scalability, "problemSize" == "12288")
+filter(scalability, "problemSize" == 12288)
+filter(scalability, problemSize == 12288)
+filter(.scalability, problemSize == 12288)
+filter(scalability, problemSize == 12288)
+library(dplyr)
+expr[expr$cell_type == "hesc", ]
+scalability[scalability$problemSize == 12288]
+scalability[scalability$problemSize == 12288,]
+USR.r
+load(USL.r)
+getwd()
+USL.r
+./USL.r
+./USL
+source("/Users/kbhit/Sources/Personal/iga-adi-giraph/results/USL.r")
+setwd("/Users/kbhit/Sources/Personal/iga-adi-giraph/results")
+scalability = read.xls("strong-scalability-multiworker.xlsx")#
+scalability12288 = scalability[scalability$problemSize == 12288,]
+scalability12288
+plot(total_ms ~ threads, data = scalability12288)
+plot(totalSpeedup ~ threads, data = scalability12288)
+usl.model <- usl(totalSpeedup ~ threads, data = scalability12288)
+summary(usl.model)
+efficiency(usl.model)
+barplot(efficiency(usl.model), ylab = "efficiency / processor", xlab = "processors")
+coef(usl.model)
+plot(throughput ~ processors, data =
+exit
+q
+plot(totalSpeedup ~ threads, data = scalability12288)
+plot(usl.model, add = TRUE, bounds = TRUE)
+confint(usl.model, level = 0.95)
+predict(usl.model, data.frame(processors = c(96, 128)))
+predict(usl.model, data.frame(processors = cpeak.scalability(usl.model)(96, 128)))
+peak.scalability(usl.model)
+peak.scalability(usl.model, beta = 0.00005)
+source("/Users/kbhit/Sources/Personal/iga-adi-giraph/results/USL.r")
+variales
+library(rstudioapi)
+installXLSXsupport()
+scalability = read.xls("/Users/kbhit/Sources/Personal/iga-adi-giraph/results/strong-scalability-multiworker.csv")
+scalability = read.xls("/Users/kbhit/Sources/Personal/iga-adi-giraph/results/strong-scalability-multiworker.xlsx")
+library()$results[,1]
+(.packages())

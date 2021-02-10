@@ -22,14 +22,15 @@ final class IgaTreeSplitter {
   }
 
   List<IgaInputSplit> allSplitsFor(int partitionCountHint) {
-    val partitionStrategy = partitioningStrategy(tree, partitionCountHint);
+    val partitionStrategy = partitioningStrategy(tree, partitionCountHint, 1);
 
+    // splits have to be assigned to workers, doesn't matter to which threads as no computation takes place there
     return Stream.concat(
-        rootSplitIfApplicable(partitionStrategy.getTipHeight()),
+        rootSplitIfApplicable(partitionStrategy.getPartitioningThreadLevel()),
         leafSplits(
             partitionStrategy.getPartitions(),
-            partitionStrategy.getBottomHeight(),
-            partitionStrategy.getTipHeight()
+            partitionStrategy.getTree().height() - partitionStrategy.getPartitioningThreadLevel(),
+            partitionStrategy.getPartitioningThreadLevel()
         )
     ).collect(collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
   }

@@ -45,11 +45,6 @@
         <appender-ref ref="default.console"/>
     </logger>
 
-    <logger name="edu.agh.iga.adi.giraph.direction.IgaPartitionerFactory" additivity="false">
-        <level value="debug" />
-        <appender-ref ref="default.console" />
-    </logger>
-
     <root>
         <priority value="error"/>
         <appender-ref ref="default.console"/>

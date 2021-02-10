@@ -41,9 +41,8 @@ You can find the logs under:
 
 There is an https://issues.apache.org/jira/browse/GIRAPH-859[unresolved issue] in Giraph which translates into inability to automatically upload JARs to the workers if the user launching the computations is different than yarn (Giraph would upload the JARs to the directory belonging to the user launching the application but look for them in the yarn user directory so they would be missing).
 
-There are severeal possible workarounds to this:
-* just to run the application using yarn user
-* upload the jars manually before each computation.
+There are several possible workarounds to this:
+* just to run the application using yarn user * upload the jars manually before each computation.
 * apply the patch and build against this version of Giraph
 
 We use the 3rd solution here using the fork https://github.com/kboom/giraph.
@@ -56,7 +55,14 @@ cd bin
 ./bin/publish.cloud.sh <your master instance number>
 ----
 
-The to run
+Then you need to connect to the instance.
+
+[source,bash]
+----
+./connect.sh
+----
+
+Then either run a single experiment with customized values
 
 [source,bash]
 ----
@@ -69,6 +75,23 @@ Or one of the defaults
 ----
 ./run.default.sh
 ----
+
+You may also want to run a complete suite of tests.
+This is useful to conduct full scalability experiments.
+
+[source,bash]
+----
+./suites/xyz-your-suite.sh
+----
+
+If you do this it will automatically download all results to the host which then allows you to fetch all of them from your local machine.
+Execute
+
+[source,bash]
+----
+./retrieve.cloud.sh
+----
+
 
 == Configuration parameters
 
@@ -89,6 +112,90 @@ Or one of the defaults
 |===
 
 https://giraph.apache.org/options.html[Reference]
+
+== Supersteps of interest
+
+|===
+|Problem |DAG Height |Steps in next time steps |First problem step |Init |First Root | Init map |Init reduce |Second Root |Final
+
+|ANY
+|H=log2(N/3)+1
+|S=4H+6
+|P=St+1
+|I=P+St
+|I + H + 1
+|I + 2H + 3
+|I + 2H + 4
+|I + 3H + 5
+|I + St
+
+|24576
+|13
+|58
+|59
+|59 + 58s (59)
+|59 + 58s + 13 (68)
+|59 + 58s + 27 (88)
+|59 + 58s + 28 (89)
+|59 + 58s + 44 (103)
+|59 + 58s + 58 (117)
+
+|12288
+|12
+|54
+|55
+|55 + 54s (55)
+|55 + 54s + 13 (68)
+|55 + 54s + 27 (82)
+|55 + 54s + 28 (83)
+|55 + 54s + 41 (96)
+|55 + 54s + 54 (109)
+
+|6144
+|11
+|50
+|51
+|51 + 50s (51)
+|51 + 50s + 12 (64)
+|51 + 50s + 25 (76)
+|51 + 50s + 26 (77)
+|51 + 50s + 38 (89)
+|51 + 50s + 50 (101)
+
+|3072
+|10
+|46
+|47
+|47 + 46s (47)
+|47 + 46s + 11 (58)
+|47 + 46s + 23 (70)
+|47 + 46s + 24 (71)
+|47 + 46s + 35 (82)
+|47 + 46s + 46 (93)
+
+|1536
+|9
+|42
+|43
+|43 + 42s (43
+|43 + 42s + 10 (53)
+|43 + 42s + 21 (64)
+|43 + 42s + 22 (65)
+|43 + 42s + 32 (75)
+|43 + 42s + 42 (83)
+
+|768
+|8
+|38
+|39
+|39 + 38s (43)
+|39 + 38s + 9 (48)
+|39 + 38s + 19 (58)
+|39 + 38s + 20 (59)
+|39 + 38s + 29 (68)
+|39 + 38s + 38 (77)
+
+|===
 
 == Results
 
@@ -156,7 +263,9 @@ https://giraph.apache.org/options.html[Reference]
 
 === JIT debugging
 
-Add the following to the JVM arguments. This will print the details about the solver code in terms of JIT.
+Add the following to the JVM arguments.
+This will print the details about the solver code in terms of JIT.
+
 ```
 -XX:+PrintCompilation
 -Xbatch
@@ -168,6 +277,7 @@ The contents of the `jit_debug_file` can be tuned using
 https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html[this guide].
 
 === Other options
+
 ```
 -ea
 -XX:+UsePerfData
@@ -182,6 +292,10 @@ https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html[this guide]
 == Solved issues
 
 https://exceptionshub.com/hadoop-no-filesystem-for-scheme-file.html[Missing filesystem]
+
+== Meaning of collected metrics
+
+* link:https://www.reddit.com/r/linux/comments/1hk5ow/free_buffer_swap_dirty_procmeminfo_explained/[Meminfo]
 
 == Caveats
 

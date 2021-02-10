@@ -32,7 +32,6 @@ public class InitialisationComputation extends IgaComputation {
   private InitialisationPhase phase;
   private Initialisation initialisation;
 
-  private final IgaMessageWritable msgWritable = new IgaMessageWritable();
   private final IntWritable idWritable = new IntWritable();
 
   @Override
@@ -75,7 +74,7 @@ public class InitialisationComputation extends IgaComputation {
             idWritable.set(msg.getDstId());
             sendMessage(
                 idWritable,
-                msgWritable.withMessage(msg)
+                new IgaMessageWritable(msg)
             );
           });
     }

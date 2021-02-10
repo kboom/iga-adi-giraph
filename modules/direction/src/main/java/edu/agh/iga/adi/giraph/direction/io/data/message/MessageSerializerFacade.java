@@ -63,6 +63,9 @@ public final class MessageSerializerFacade {
   @SuppressWarnings("unchecked")
   public void writeMessage(DataOutput dataOutput, IgaMessage message) {
     final Class<? extends IgaMessage> clazz = message.getClass();
+    if (LOG.isTraceEnabled()) {
+      LOG.trace("S -> W " + clazz.getSimpleName());
+    }
     try {
       int mapping = MESSAGE_TYPE_MAPPING.get(clazz);
       dataOutput.writeInt(mapping);
@@ -87,7 +90,7 @@ public final class MessageSerializerFacade {
         }
       }
       if (LOG.isTraceEnabled()) {
-        LOG.trace("C " + messageClazz.getSimpleName());
+        LOG.trace("S -> R " + messageClazz.getSimpleName());
       }
       return messageSerializer.readMessage(dataInput);
     } catch (IOException e) {
