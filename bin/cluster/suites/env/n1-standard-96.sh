@@ -5,6 +5,5 @@
 # Price total: $65 / H
 # N = 49152^2
 
-export SUITE_NAME="weak-scaling"
-export IGA_TOTAL_MEMORY=300
-export RUNS=3
+export IGA_TOTAL_MEMORY=320
+export RUNS=1
