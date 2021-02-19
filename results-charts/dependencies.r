@@ -1,0 +1,22 @@
+# install.packages("readxl", repos="https://cloud.r-project.org", dependencies = TRUE)
+# install.packages("usl", repos="https://cloud.r-project.org", dependencies = TRUE)
+# install.packages("dplyr", repos="https://cloud.r-project.org", dependencies = TRUE)
+# install.packages("RColorBrewer", repos="https://cloud.r-project.org", dependencies = TRUE)
+# install.packages("stringr", repos="https://cloud.r-project.org", dependencies = TRUE)
+# install.packages("BiocManager", repos="https://cloud.r-project.org", dependencies = TRUE)
+# install.packages("tidyr", repos="https://cloud.r-project.org", dependencies = TRUE)
+# install.packages("tibble", repos="https://cloud.r-project.org", dependencies = TRUE)
+# install.packages("vegetarian", repos="https://cloud.r-project.org", dependencies = TRUE)
+# install.packages("lattice", repos="https://cloud.r-project.org", dependencies = TRUE)
+# install.packages("latticeExtra", repos="https://cloud.r-project.org", dependencies = TRUE)
+# install.packages("ggplot2", repos="https://cloud.r-project.org", dependencies = TRUE)
+# install.packages("ggExtra", repos="https://cloud.r-project.org", dependencies = TRUE)
+# install.packages("patchwork", repos="https://cloud.r-project.org", dependencies = TRUE)
+# install.packages("ggrepel", repos="https://cloud.r-project.org", dependencies = TRUE)
+# install.packages("ggpubr", repos="https://cloud.r-project.org", dependencies = TRUE)
+install.packages("fmsb", repos="https://cloud.r-project.org", dependencies = TRUE)
+
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
+    library(BiocManager)
+    BiocManager::install("ComplexHeatmap")
+}

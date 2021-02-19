@@ -1,8 +1,0 @@
-quiet
-exclude java/* *
-exclude jdk/* *
-exclude sun/* *
-exclude org/* *
-print java/lang/String toString
-print edu/agh/iga/adi/giraph/core/factory/HorizontalElementFactory rhs
-log edu/agh/iga/adi/giraph/core/factory/HorizontalElementFactory rhs

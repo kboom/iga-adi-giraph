@@ -16,7 +16,7 @@ gcloud \
     --master-min-cpu-platform="Intel Skylake" \
     --worker-min-cpu-platform="Intel Skylake" \
     --image-version="1.3-debian10" \
-    --num-workers=2 \
+    --num-workers=4 \
     --max-age=1d \
     --no-address \
     --optional-components=ZOOKEEPER \

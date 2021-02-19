@@ -2,322 +2,123 @@
 
 image:https://travis-ci.com/kboom/iga-adi-giraph.svg?token=wBhPe1ndPxyFXb6jUk8s&branch=master[Build Status,link=https://travis-ci.com/kboom/iga-adi-giraph]
 
-== Running the solver
+== Prerequisites
 
-This repository contains a number of complete simulations with the input and output values stored under `examples` directory.
+You have to have JDK 11 installed to be able to compile the project.
+You might want to use link:https://sdkman.io[SdkMan] to manage this.
+You also have to have mvn 3.5.3 installed in your system.
+For processing the results you need Excel and Node `12.10.0`.
+You might want to use `nvm` (node version manager) to help you.
 
-=== Prerequisites
+== How to run
 
-You have to have JDK 11 installed.
+This solver can be run in the cloud in the matter of minutes.
+The scripts in this repository are prepared for Google Cloud Platform (GCP), although it
+would work in the similar way in any cloud. In fact, it has been tested in Azure and AWS.
 
-=== Snapshot of Giraph
+First, you have to create appropriate Hadoop cluster.
+In case of GCP it is called __Dataproc__.
 
-Download the latest Giraph, switch to release_1.2 branch, and run the following command from the repository root directory:
+Modify one of two scripts to match your needs:
 
-`mvn -pl giraph-core -Phadoop_yarn -Dhadoop.version=2.9.2 -fae -DskipTests -Dcheckstyle.skip  clean install`
+* `bin/local/create.cluster.sh`, good for running experiments
+* `bin/local/create.singlenode.cluster.sh`, good for testing the setup
 
-=== Running from maven
+The most important options there are:
 
-You can run any of the available examples using the maven command
+* `--master-machine-type=n1-standard-4`, which selects the node type for the master
+* `--worker-machine-type=n1-standard-8`, which selects the node type for the workers
+* `--master-min-cpu-platform="Intel Skylake"`, which selects the minimum CPU platform for the master
+* `--worker-min-cpu-platform="Intel Skylake"`, which selects the minimum CPU platform for the workers
+* `--num-workers=4`, which selects the number of workers
 
-----
-mvn exec:exec@[YOUR SIMULATION]
-----
-
-where `[YOUR SIMULATION]` has to be replaced with one of
-
-|===
-|Simulation |Value
-
-|Identity |identity
-|===
-
-=== Running locally using docker
-
-You can find the logs under:
-`/hadoop/logs/userlogs/application`
-
-=== Running on cloud
-
-There is an https://issues.apache.org/jira/browse/GIRAPH-859[unresolved issue] in Giraph which translates into inability to automatically upload JARs to the workers if the user launching the computations is different than yarn (Giraph would upload the JARs to the directory belonging to the user launching the application but look for them in the yarn user directory so they would be missing).
-
-There are several possible workarounds to this:
-* just to run the application using yarn user * upload the jars manually before each computation.
-* apply the patch and build against this version of Giraph
-
-We use the 3rd solution here using the fork https://github.com/kboom/giraph.
-
-To build &amp; publish the JAR with the solver just run
+Once you modify the script according to your liking execute it and wait for the cluster to be created.
+Next, you can issue the command that will package the solver and then publish it along with all necessary scripts into the master node of your newly created cluster.
 
 [source,bash]
 ----
-cd bin
-./bin/publish.cloud.sh <your master instance number>
+./bin/local/publish.cloud.sh <your master instance number>
 ----
+where `<your master instance number>` by default is `iga-adi-m`
 
 Then you need to connect to the instance.
 
 [source,bash]
 ----
-./connect.sh
+./bin/local/connect.sh <your master instance number>
 ----
+where `<your master instance number>` by default is `iga-adi-m`
 
-Then either run a single experiment with customized values
+=== Running the experiments
+
+Once you're connected you have multiple ways of running the experiments.
+You can run a series of experiments, one for each value of the modified parameter like in the following example:
 
 [source,bash]
 ----
-./run.cloud.sh # your IGA parameters
+IGA_PROBLEM_SIZE=3072 \
+IGA_WORKERS=4 \
+IGA_WORKER_MEMORY=8 \
+IGA_WORKER_CORES=8 \
+IGA_STEPS=2 \
+RUNS=1 \
+SUITE_NAME=my-experiment-name \
+IGA_CONTAINER_JVM_OPTIONS="-XX:+PrintFlagsFinal -XX:+UnlockDiagnosticVMOptions -XX:+UseParallelGC -XX:+UseParallelOldGC" \
+./run.suite.sh IGA_WORKERS 4 2 1
 ----
 
-Or one of the defaults
+In here, all values passed as environment variables are static in this suite, and we change the number of the workers used by changing the variable IGA_WORKERS using first 4, then 2 and 1 at the end. You can use any variable in here provided you want to fix the number of workers.
+
+You may want to change the value of `SUITE_NAME` to introduce some order into your result files as they will be catalogued based on this name.
+
+
+You can also define your own test suites in and keep them in the repository.
+See `bin/suites` for the details. For instance,
+`bin/cluster/suites/03-explicit-configs-to-run.sh` provides a list of explicit configs to run in a sequence.
 
 [source,bash]
 ----
-./run.default.sh
+./suites/<your suite>.sh
 ----
 
-You may also want to run a complete suite of tests.
-This is useful to conduct full scalability experiments.
+Once the experiment is complete, make sure to retrieve your results to your local machine before you delete your cluster. Issue the following command from your local machine.
 
 [source,bash]
 ----
-./suites/xyz-your-suite.sh
+./bin/local/retrieve.cloud.sh <your master instance number>
 ----
+where `<your master instance number>` by default is `iga-adi-m`
 
-If you do this it will automatically download all results to the host which then allows you to fetch all of them from your local machine.
-Execute
+== Processing the results
+
+This repository contains a number of scripts which allow computing various statistics using the results generated in the experiments and visualising their properties.
+
+Once you retrieve your results look into the `logs` directory. There will be a separate directory for each run in the suite of your experiments. It will start with the suite name, followed by the unique application identifier.
+
+In order to process the results aggregate them in the structure similar to what is in `results-sample` directory, that is group by problem size.
+
+Once you do this, you should be able to run
+[source,bash]
+----
+./results-external-extraction/extract-suite.sh <the directory of your suite>
+----
+where `<the directory of your suite>` is the base directory of the directories which correspond to your problem sizes. That will generate the CSV file to the console. Copy it over into the template Excel file located under `results-external-extraction/scalability_template.xlsx`. You might need to use a regular "text into columns" functionality to make it fill individual cells correctly. This will calculate speedup and other global metrics for you which are necessary for some visualisations. Save it in a separate file.
+
+Most times you will also need to learn the internals of your experiments - what was happening in the cluster. For that, you need to run:
 
 [source,bash]
 ----
-./retrieve.cloud.sh
+node build/main/index.js -i <the path to your simulations directory> -o <the path to the output excel file>
 ----
 
+This should produce an Excel file with many rows and columns, each describing a particular superstep for all experiments.
 
-== Configuration parameters
+Finally, using these two Excel files, you can regenerate images. Do this by executing:
 
-|===
-|Name |Value |Meaning |Influence
+[source,bash]
+----
+./results-charts/regenerate-images.sh <SCALABILITY_XLSX> <SUPERSTEPS_XLSX>
+----
 
-|_giraph.useNettyDirectMemory_ |true |netty direct buffers |speeds up
-|_giraph.useUnsafeSerialization_ |true |unsafe serialisation uses unsafe memory allocation |speeds up
-|_giraph.masterPartitionCountMultiplier_ |1 |the number of partitions per worker |netural
-|_giraph.numComputeThreads_| 1|the number of threads to use per worker|the default one is better
-|_giraph.numInputThreads_| 1|the number of threads to use for input split|the default one is better
-|_giraph.numOutputThreads_| 1|the number of threads to use for output split|the default one is better
-|_giraph.nettyRequestEncoderBufferSize_| 327680|?|high reduction of computation times for larger problems
-|_giraph.clientReceiveBufferSize_| 327680|?|high reduction of computation times for larger problems
-|_giraph.clientSendBufferSize_| 5242880|?|high reduction of computation times for larger problems
-|_giraph.serverSendBufferSize_| 327680|?|no difference
-|_giraph.serverReceiveBufferSize_| 5242880|?|no difference
-|===
-
-https://giraph.apache.org/options.html[Reference]
-
-== Supersteps of interest
-
-|===
-|Problem |DAG Height |Steps in next time steps |First problem step |Init |First Root | Init map |Init reduce |Second Root |Final
-
-|ANY
-|H=log2(N/3)+1
-|S=4H+6
-|P=St+1
-|I=P+St
-|I + H + 1
-|I + 2H + 3
-|I + 2H + 4
-|I + 3H + 5
-|I + St
-
-|24576
-|13
-|58
-|59
-|59 + 58s (59)
-|59 + 58s + 13 (68)
-|59 + 58s + 27 (88)
-|59 + 58s + 28 (89)
-|59 + 58s + 44 (103)
-|59 + 58s + 58 (117)
-
-|12288
-|12
-|54
-|55
-|55 + 54s (55)
-|55 + 54s + 13 (68)
-|55 + 54s + 27 (82)
-|55 + 54s + 28 (83)
-|55 + 54s + 41 (96)
-|55 + 54s + 54 (109)
-
-|6144
-|11
-|50
-|51
-|51 + 50s (51)
-|51 + 50s + 12 (64)
-|51 + 50s + 25 (76)
-|51 + 50s + 26 (77)
-|51 + 50s + 38 (89)
-|51 + 50s + 50 (101)
-
-|3072
-|10
-|46
-|47
-|47 + 46s (47)
-|47 + 46s + 11 (58)
-|47 + 46s + 23 (70)
-|47 + 46s + 24 (71)
-|47 + 46s + 35 (82)
-|47 + 46s + 46 (93)
-
-|1536
-|9
-|42
-|43
-|43 + 42s (43
-|43 + 42s + 10 (53)
-|43 + 42s + 21 (64)
-|43 + 42s + 22 (65)
-|43 + 42s + 32 (75)
-|43 + 42s + 42 (83)
-
-|768
-|8
-|38
-|39
-|39 + 38s (43)
-|39 + 38s + 9 (48)
-|39 + 38s + 19 (58)
-|39 + 38s + 20 (59)
-|39 + 38s + 29 (68)
-|39 + 38s + 38 (77)
-
-|===
-
-== Results
-
-|===
-|Problem |Mesh |Machine |Memory / W |Workers |Options |Time
-
-|Radial Heat
-|1536^2
-|n2-standard-2 (2P/8GB)
-|2048MB
-|4
-|-
-|196s
-
-|Radial Heat
-|1536^2
-|c2-standard-4 (4P/16GB)
-|2600MB
-|16
-|-
-|38.9s
-
-|Radial Heat
-|384^2
-|c2-standard-4 (4P/16GB)
-|2600MB
-|16
-|10x buffers sizes
-|21.30s
-
-|Radial Heat
-|768^2
-|c2-standard-4 (4P/16GB)
-|2600MB
-|16
-|10x buffers sizes
-|26.12s
-
-|Radial Heat
-|3072^2
-|c2-standard-4 (4P/16GB)
-|2600MB
-|16
-|-
-|83.56s
-
-|Radial Heat
-|3072^2
-|c2-standard-4 (4P/16GB)
-|2600MB
-|16
-|10x buffers sizes
-|83.56s
-
-|Radial Heat
-|6144^2
-|c2-standard-4 (4P/16GB)
-|2600MB
-|16
-|10x buffers sizes
-|201s
-|===
-
-== JVM tuning
-
-=== JIT debugging
-
-Add the following to the JVM arguments.
-This will print the details about the solver code in terms of JIT.
-
-```
--XX:+PrintCompilation
--Xbatch
--XX:+PrintCompilation
--XX:CompileCommandFile=/Users/kbhit/Sources/Personal/iga-adi-giraph/jit_debug_file
-```
-
-The contents of the `jit_debug_file` can be tuned using
-https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html[this guide].
-
-=== Other options
-
-```
--ea
--XX:+UsePerfData
--server
--d64
--XX:+TieredCompilation
--XX:-BackgroundCompilation
--XX:+PrintAdaptiveSizePolicy
--XX:+PrintNMTStatistics
-```
-
-== Solved issues
-
-https://exceptionshub.com/hadoop-no-filesystem-for-scheme-file.html[Missing filesystem]
-
-== Meaning of collected metrics
-
-* link:https://www.reddit.com/r/linux/comments/1hk5ow/free_buffer_swap_dirty_procmeminfo_explained/[Meminfo]
-
-== Caveats
-
-* `giraph.SplitMasterWorker` cannot be `false` for yarn jobs.
-This means there always will be an additional container next to the workers which just handle master tasks.
-When choosing memory this means that the memory requirement is not `workers * memory` but `(workers + 1) * memory + 512mb`
-as there is a 4th container that sets up other containers.
-* `giraph.zkList` has to be set to the zookeeper address - if not, Giraph would bring up 2 additional nodes just to handle Zookeeper which is generally slower and wastes memory.
-
-== Remaining ideas
-
-[qanda]
-Can we hold of with creating X matrix for the merging stage as there are only zeros and do this only before the substitutions?
-
-== Links
-
-* https://metebalci.com/blog/demystifying-the-jvm-interpretation-jit-and-aot-compilation/[JIT and AOT]
-* https://docs.oracle.com/javase/8/embedded/develop-apps-platforms/codecache.htm[Code cache JVM tuning]
-* https://github.com/sakserv/hadoop-mini-clusters[Hadoop mini clusters]
-* https://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-common/yarn-default.xml[YARN property list]
-* https://github.com/uwsampa/giraph-docker[Giraph on Docker]
-* https://github.com/o19s/Hadoopadoop/blob/master/matrixtranspose/MatrixTranspose.java[Hadoop Matrix Transposition]
-* https://www.ojalgo.org/code-examples/[ojAlgo examples]
-* https://ftp.icm.edu.pl/packages/gnuplot/5.2.2/gnuplot.pdf[Gnuplot full documentation]
-* http://www.gnuplot.info/docs_4.0/gpcard.pdf[Gnuplot quick reference]
+This will take some time depending on the number of your experiments (sometimes even an hour).
+The images will be continuously generated under `results-charts/out` directory.
